@@ -12,8 +12,52 @@
       body {
          background-color: #f9f9f9;
          color: #333;
-         font-family: 'Poppins', sans-weight;
+         font-family: 'Poppins', sans-serif;
       }
+      /* Header Fixes */
+      header {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         z-index: 1000;
+         background-color: #01143e;
+         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      header .container {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 15px 20px;
+         max-width: 1200px;
+         margin: 0 auto;
+      }
+      header .logo {
+         color: #fff;
+         font-size: 24px;
+         font-weight: 700;
+         text-decoration: none;
+      }
+      header .navbar ul {
+         list-style: none;
+         margin: 0;
+         padding: 0;
+         display: flex;
+      }
+      header .navbar ul li {
+         margin-left: 20px;
+      }
+      header .navbar ul li a {
+         color: #fff;
+         text-decoration: none;
+         font-size: 16px;
+         transition: color 0.3s;
+      }
+      header .navbar ul li a:hover {
+         color: #5f88e0;
+      }
+      /* End Header Fixes */
+
       .project-detail-container {
          max-width: 1000px;
          margin: 120px auto 50px auto;
@@ -75,18 +119,14 @@
    </style>
 </head>
 <body>
-   <header class="fixed" style="background-color: #01143e;">
+   <header>
       <div class="container">
-         <div class="row">
-            <div class="brand-name">
-               <a href="/" class="logo">CaiJiechao</a>
-            </div>
-            <div class="navbar">
-               <ul>
-                  <li><a href="/">Back to Home</a></li>
-               </ul>
-            </div>
-         </div>
+         <a href="/" class="logo">CaiJiechao</a>
+         <nav class="navbar">
+            <ul>
+               <li><a href="/">Back to Home</a></li>
+            </ul>
+         </nav>
       </div>
    </header>
 
