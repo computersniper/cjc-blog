@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="keywords" content="HTML, CSS, JavaScript">
+   <meta name="description"
+      content="A clean, beautiful and responsive portfolio template for Developers! using only Html, CSS, and JavaScript">
+   <meta name="author" content="Cai Jiechao">
+   <title>Cai Jiechao | Software Developer</title>
+   <link rel="icon" href="index_page/img/favicon.ico" type="image/x-icon">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link href="./index_page/css/header.css" rel="stylesheet" />
+   <link href="./index_page/css/main.css" rel="stylesheet" />
+   <link href="./index_page/css/home.css" rel="stylesheet" />
+   <link href="./index_page/css/about.css" rel="stylesheet" />
+   <link href="./index_page/css/service.css" rel="stylesheet" />
+   <link href="./index_page/css/portfolio.css" rel="stylesheet" />
+   <link href="./index_page/css/testimonials.css" rel="stylesheet" />
+   <link href="./index_page/css/certificate.css" rel="stylesheet" />
+   <link href="./index_page/css/blog.css" rel="stylesheet" />
+   <link href="./index_page/css/contact.css" rel="stylesheet" />
+   <link href="./index_page/css/footer.css" rel="stylesheet" />
+   <!-- AOS Animation CSS -->
+   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <style>
+      /* 弹出框的样式 */
+      .modal {
+         display: none;
+         position: fixed;
+         z-index: 1;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         overflow: auto;
+         background-color: rgb(0, 0, 0);
+         background-color: rgba(0, 0, 0, 0.4);
+         padding-top: 60px;
+      }
+
+      .modal-content {
+         background-color: #fefefe;
+         margin: 5% auto;
+         padding: 20px;
+         border: 1px solid #888;
+         width: 80%;
+         max-width: 300px;
+         text-align: center;
+      }
+
+      .modal-content h2 {
+         color: #01143e;
+      }
+
+      .close {
+         color: #aaa;
+         float: right;
+         font-size: 28px;
+         font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+         color: black;
+         text-decoration: none;
+         cursor: pointer;
+      }
+
+      .btn {
+         display: inline-block;
+         padding: 10px 20px;
+         margin: 10px;
+         cursor: pointer;
+         background-color: #0056b3;
+         color: white;
+         border: none;
+         border-radius: 5px;
+         text-decoration: none;
+      }
+
+      .btn:hover {
+         background-color: #5f88e0;
+      }
+   </style>
+</head>
+
+<body>
+   <header>
+      <div class="container">
+         <div class="row">
+            <div class="brand-name">
+               <a href="/" class="logo">CaiJiechao</a>
+            </div>
+            <div class="hamburger">
+               <i class="fa fa-bars"></i>
+            </div>
+            <div class="navbar">
+               <ul>
+                  <li><a href="#home" class="active">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#services">Skills</a></li>
+                  <li><a href="#portfolio">Portfolio</a></li>
+                  <li><a href="#blog">Article</a></li>
+                  <li><a href="#contact">Contact</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </header>
+   <section class="home" id="home">
+      <div class="container">
+         <div class="row full-screen">
+            <div class="home-content">
+               <div class="block">
+                  <h6>Hi, my name is</h6>
+                  <h1>Cai Jiechao</h1>
+                  <h3>I build things for the world</h3>
+                  <div class="cv-btn">
+                     <a href="#" onclick="showLanguageSelection(event)">Download CV</a>
+                  </div>
+
+                  <!-- 弹出框 -->
+                  <div id="languageModal" class="modal">
+                     <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <h2>Choose language</h2>
+                        <a class="btn" href="contact/caijiechao-cv-chinese.pdf" target="_blank"
+                           onclick="closeModal()">中文</a>
+                        <a class="btn" href="contact/caijiechao-cv-english.pdf" target="_blank"
+                           onclick="closeModal()">English</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="about" id="about" data-aos="fade-up">
+      <div class="container">
+         <div class="row">
+            <div class="title">
+               <h1>About Me</h1>
+               <p>Know more about me</p>
+            </div>
+         </div>
+         <div class="row">
+            <div class="about-content">
+               <div class="row">
+                  <div class="img">
+                     <img src="index_page/img/me.jpg" alt='me' />
+                  </div>
+                  <div class="text">
+                     <h4>I'm Cai Jiechao</h4>
+                     <h6>A <span>Computer Science Student</span> based in Guangzhou, China
+                     </h6>
+                     <p>
+                        I'm passionate about creating useful, unique, and elegant products. I keep my code clean, readable, modular, and well-refactored. Currently, I am deeply focused on <strong>Agent & LLM Engineering</strong>, exploring LLM capability boundaries, and constructing RAG knowledge bases. 
+                        <br/><br/>
+                        Moreover, I am fluent in English (passed CET4 and CET6 exams, IELTS 6.5), which enables me to effectively communicate and collaborate with programmers globally.
+                     </p>
+                     
+                     <div class="education-section" style="margin-top: 30px;">
+                        <h6>Education Background:</h6>
+                        <ul class="fa-ul" style="margin-bottom: 20px;">
+                           <li><span class="fa-li"><i class="fa fa-graduation-cap" style="color:#5f88e0;"></i></span><strong>The University of Hong Kong (HKU)</strong><br/><span style="color:#666; font-size:14px;">MSc in Computer Science (2026.9 - 2027.8 Expected) | Focus: Large Models & NLP, Multi-Agent Systems</span></li>
+                           <li style="margin-top: 10px;"><span class="fa-li"><i class="fa fa-graduation-cap" style="color:#5f88e0;"></i></span><strong>BNU-HKBU UIC & University of Malaya (Exchange)</strong><br/><span style="color:#666; font-size:14px;">BSc in Computer Science (2022.9 - 2026.6) | Top 15%, Second-Class Scholarship</span></li>
+                        </ul>
+                     </div>
+
+                     <div class="skills">
+                        <h6>Core Tech Stack:</h6>
+                        <div class="skills-list">
+                           <ul class="fa-ul">
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Python, Java, TS, Kotlin</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>FastAPI, Next.js, SQLAlchemy</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Agent, RAG, Playwright</li>
+                           </ul>
+                           <ul class="fa-ul">
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Docker, Asyncio, PostgreSQL</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Data Structures & Networking</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Vibe-Coding, Cursor, Trae, Claude Code</li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="social">
+                        <a href="index_page/qr_code.html" title="Wechat"><i class="fa fa-weixin"></i></a>
+                        <a href="index.html#copyright" title="Phone"><i class="fa fa-mobile-phone"></i></a>
+                        <a href="index.html#copyright" title="email"><i class="fa fa-envelope-open-o"></i></a>
+                        <a href="" title="github"><i class="fa fa-github"></i></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+       </div>
+   </section>
+   <section class="services" id="services" data-aos="fade-up" data-aos-delay="200">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Experience & Internship</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="service-content">
+               <div class="box">
+                  <div class="icon"><i class="fa fa-code"></i></div>
+                  <h5>Data Structure & Algorithm design & Algorithm analysis</h5>
+                  <p>Learn from simple data structure & algorithm to achieve complex data structure & algorithm,
+                     analyse the time & space complexity of the algorithm, and optimize the algorithm.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-laptop"></i></div>
+                  <h5>System Web Development</h5>
+                  <p>From single landing pages to a fully-blown fruit store, I can create a design of web with
+                     HTML/CSS/JavaScript, communicate with
+                     backend database using PHP.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-linux"></i></div>
+                  <h5>Operating System</h5>
+                  <p>I learn the basic principles of operating system, including process scheduling, memory management,
+                     and file system.
+                     Also we study Linux system programming and do some projects to gain a deeper understanding of how
+                     OS works.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fas fa-database"></i></div>
+                  <h5>Database Management System</h5>
+                  <p>I take an database management coures to study how to build a huge, systematic, and secure database,
+                     with a strong foundation in SQL and database design.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-wifi"></i></div>
+                  <h5>Data communications and networking</h5>
+                  <p>I learn the basic principles of data communication and networking,
+                     including OSI reference model, Transmission Media, TCP/IP, many data transfer protocols and etc.
+                     Furthermore, I study socket C++ programming to apply relevant theory and build a simple chat
+                     program.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-ellipsis-h"></i></div>
+                  <h5>Others</h5>
+                  <p>Other completed courese like: calculus, linear algebra, discrete mathematics, object oriented
+                     programming, computer organization, python programming, computer-aided data analysis
+                     and many other free elective courese.
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="portfolio" id="portfolio" data-aos="fade-up" data-aos-delay="300">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Latest Projects</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="gallery" id="dynamic-projects">
+               <!-- Projects will be loaded here dynamically from backend -->
+               <div style="text-align:center; width:100%;"><p>Loading projects...</p></div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="message">
+      <div class="container">
+         <div class="row align-items-center">
+            <div class="message-text">
+               <h2>My inbox is always open. Whether you have a question or just want to say hi or want to hire me, I'll
+                  try my best to get back to you!</h2>
+            </div>
+            <div class="button ">
+               <a href='index.html#contact'>Get In Touch</a>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!--certificate-->
+   <section class="certificate" id="certificate">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Certificates</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="certificate-content">
+               <div class="certificate-box">
+                  <div class="certificate-img">
+                     <img src='./certificate/2402369.jpg' />
+                  </div>
+                  <div class="certificate-text">
+                     <div class="certificate-info">
+                        <span>Jun 27, 2024</span>
+                        <span>Mathematical modeling</span>
+                     </div>
+                     <h3>Successful participation in 2024 MCM competition</h3>
+                     <p>Our topic is: An Analytical Framework for Assessing“ Momentum”
+                        in Sports: Leveraging Random Forest and Fourier
+                        Transform Analysis
+                     </p>
+                  </div>
+               </div>
+               <div class="certificate-box">
+                  <div class="certificate-img">
+                     <img src='./certificate/ielts.png' />
+                  </div>
+                  <div class="certificate-text">
+                     <div class="certificate-info">
+                        <span>Aug 19, 2024</span>
+                        <span>English Proficiency</span>
+                     </div>
+                     <h3>IELTS Test</h3>
+                     <p>IELTS Overall Band Score: 6.5 (Speaking: 7.5)
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!--testimonials-->
+   <!--<section class="testimonials">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Testimonials</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="testimonials-content">
+               <div class="testimonials-box">
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/1.jpeg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Mosh Hamedani</h6>
+                        <p>Software Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/2.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Kyle Simpson</h6>
+                        <p>JavaScript Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/3.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Ryan Florence</h6>
+                        <p>ReactJS Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/4.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Amelia Madyson</h6>
+                        <p>Front-End Developer</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="slider"></div>
+            </div>
+         </div>
+      </div>
+   </section>-->
+   <section class="blog" id="blog" data-aos="fade-up" data-aos-delay="400">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Latest Articles</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="blog-content" id="dynamic-articles">
+               <!-- Articles will be loaded here dynamically from backend -->
+               <div style="text-align:center; width:100%;"><p>Loading articles...</p></div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="contact" id="contact">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Get In Touch</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="contact-form">
+               <form id="contactForm" method="post">
+                  <div class="row">
+                     <div class="contact-text">
+                        <h2>Drop Me message</h2>
+                        <p>My inbox is always open I'll try my best to get back to you!</p>
+                     </div>
+                  </div>
+                  <div class="row space-between">
+                     <div class="col-6">
+                        <input type="text" class="form-control" name="name" placeholder="Name" required/>
+                     </div>
+                     <div class="col-6">
+                        <input type="email" class="form-control" name="email" placeholder="Email" required/>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-12">
+                        <textarea class="form-control" name="message" placeholder="Your Message" required></textarea>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="button btn" style="background-color: transparent;">
+                        <a href="#" class="submit-link">Get In Touch</a>
+                        <!--<input type="submit" name="submit" value="Get In Touch"/>-->
+                     </div>
+                  </div>
+               </form> 
+            </div>
+         </div>
+      </div>
+   </section>
+   <footer>
+      <div class="container">
+         <div class="row">
+            <div class="footer-logo">CaiJiechao</div>
+            <div class="social-link">
+               <a href="index_page/qr_code.html" title="Wechat"><i class="fa fa-weixin"></i>Wechat</a>
+               <a href="tel:+8613602705148" title="Phone"><i class="fa fa-mobile-phone"></i>&nbsp;+86-13602705148</a>
+               <a href="mailto:2651159710@qq.com" title="email"><i
+                     class="fa fa-envelope-open-o"></i>&nbsp;contact@caijiechao.com</a>
+               <a href="" title="github"><i class="fa fa-github"></i>github</a>
+            </div>
+         </div>
+         <div class="row">
+            <div class="social-link">
+               <a href="admin.html" title="Admin login"><i class="fa fa-sign-in"></i>&nbsp;Admin Panel</a>
+            </div>
+         </div>
+      </div>
+   </footer>
+   <section class="copyright" id="copyright">
+      <div class="container">
+         <div class="social-link">
+            <p>Designed and Developed By Cai Jiechao.</p>
+         </div>
+      </div>
+   </section>
+   <section class="copyright" id="copyright">
+      <div class="container">
+         <div class="social-link">
+            <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2024277938号</a></div>
+      </div>
+   </section>
+
+   <div class="lightbox hide">
+      <span class="close-lightbox fa fa-close"></span>
+      <img src="" alt="portfolio" />
+   </div>
+   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+   <script>
+      AOS.init({
+         duration: 800,
+         once: true,
+      });
+
+      // Fetch dynamic articles
+      async function fetchArticles() {
+         const container = document.getElementById('dynamic-articles');
+         try {
+            const response = await fetch('http://localhost:8000/articles/');
+            if (!response.ok) throw new Error('Failed to fetch');
+            const articles = await response.json();
+            
+            if (articles.length === 0) {
+               container.innerHTML = '<div style="text-align:center; width:100%;"><p>No articles found. Go to Admin Panel to add some.</p></div>';
+               return;
+            }
+
+            container.innerHTML = '';
+            articles.forEach(article => {
+               const date = new Date(article.created_at).toLocaleDateString('en-US', {
+                  month: 'short', day: 'numeric', year: 'numeric'
+               });
+               container.innerHTML += `
+               <div class="blog-box">
+                  <div class="blog-img" style="display: flex; justify-content: center; align-items: center;">
+                     <img src='${article.cover_image}' onerror="this.src='index_page/img/blogs/1.jpg'" />
+                  </div>
+                  <div class="blog-text">
+                     <div class="blog-info">
+                        <span>${date}</span>
+                        <span>${article.category}</span>
+                     </div>
+                     <h3>${article.title}</h3>
+                     <p>${article.summary}</p>
+                     <a href="${article.read_url}">Read More</a>
+                  </div>
+               </div>
+               `;
+            });
+         } catch (error) {
+            console.error('Error fetching articles:', error);
+            container.innerHTML = '<div style="text-align:center; width:100%;"><p>Failed to load articles. Is the backend running?</p></div>';
+         }
+      }
+      
+      // Fetch dynamic projects
+      async function fetchProjects() {
+         const container = document.getElementById('dynamic-projects');
+         try {
+            const response = await fetch('http://localhost:8000/projects/');
+            if (!response.ok) throw new Error('Failed to fetch projects');
+            const projects = await response.json();
+            
+            if (projects.length === 0) {
+               container.innerHTML = '<div style="text-align:center; width:100%;"><p>No projects found.</p></div>';
+               return;
+            }
+
+            container.innerHTML = '';
+            projects.forEach(project => {
+               const date = new Date(project.created_at).toLocaleDateString('en-US', {
+                  month: 'short', year: 'numeric'
+               });
+               container.innerHTML += `
+               <div class="item" style="width: 100%; display: block; margin-bottom: 30px;">
+                  <div class="inner" style="padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'" onclick="window.location.href='project.html?id=${project.id}'">
+                     <h4 style="margin-bottom: 10px; color: #01143e;">${project.title} <span style="font-size: 14px; color: #666; font-weight: normal;">(${date})</span></h4>
+                     <p style="margin-bottom: 10px; font-size: 14px; color: #555;"><strong>Tech Stack:</strong> ${project.tech_stack}</p>
+                     <p style="font-size: 14px; line-height: 1.6; color: #333;">
+                        ${project.summary}
+                     </p>
+                  </div>
+               </div>
+               `;
+            });
+         } catch (error) {
+            console.error('Error fetching projects:', error);
+            container.innerHTML = '<div style="text-align:center; width:100%;"><p>Failed to load projects.</p></div>';
+         }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+         fetchArticles();
+         fetchProjects();
+      });
+   </script>
+   <script src="./index_page/js/app.js"></script>
+   <script>
+      function showLanguageSelection(event) {
+         event.preventDefault();
+         document.getElementById('languageModal').style.display = "block";
+      }
+
+      function closeModal() {
+         document.getElementById('languageModal').style.display = "none";
+      }
+
+      // 点击弹出框外部关闭弹出框
+      window.onclick = function (event) {
+         const modal = document.getElementById('languageModal');
+         if (event.target == modal) {
+            modal.style.display = "none";
+         }
+      }
+   </script>
+   <script>
+    //send email
+        $(document).ready(function() {
+            $('#contactForm').on('submit', function(event) {
+                event.preventDefault(); // 阻止表单默认提交行为
+
+                var formData = $(this).serialize(); // 序列化表单数据
+
+                $.ajax({
+                    url: 'send_email/send.php', // 处理表单的PHP文件
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json', // 指定数据类型为JSON
+                    success: function(response) {
+                        alert(response.message); // 显示成功或失败的信息
+                    },
+                    error: function() {
+                        alert('An error occurred while sending the message.');
+                    }
+                });
+            });
+
+            // 处理特定类名的链接点击事件
+            $('.submit-link').click(function(event) {
+                event.preventDefault(); // 阻止链接默认行为
+
+                // 手动触发表单验证
+                if ($('#contactForm')[0].checkValidity()) {
+                    $('#contactForm').submit(); // 提交表单
+                } else {
+                    $('#contactForm')[0].reportValidity(); // 显示验证错误信息
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

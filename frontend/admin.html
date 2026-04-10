@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CJC Blog Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .admin-container { max-width: 1000px; margin: auto; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
+        #editor-container { height: 300px; background: white; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h2 class="text-center mb-4">Admin Dashboard</h2>
+        
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="articles-tab" data-bs-toggle="tab" data-bs-target="#articles" type="button" role="tab">Articles</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab">Projects</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Articles Tab -->
+            <div class="tab-pane fade show active" id="articles" role="tabpanel">
+                <div class="card p-4 mb-4">
+                    <h4>Create / Edit Article</h4>
+                    <form id="articleForm">
+                        <input type="hidden" id="articleId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control" id="a_title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <input type="text" class="form-control" id="a_category" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Summary</label>
+                            <textarea class="form-control" id="a_summary" rows="2" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cover Image URL</label>
+                                <input type="text" class="form-control" id="a_cover" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Read URL (External Link)</label>
+                                <input type="text" class="form-control" id="a_url">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Article</button>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('articleForm').reset(); document.getElementById('articleId').value=''">Clear</button>
+                    </form>
+                </div>
+                <div class="card p-4">
+                    <h4>Articles List</h4>
+                    <table class="table">
+                        <thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Actions</th></tr></thead>
+                        <tbody id="articlesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Projects Tab -->
+            <div class="tab-pane fade" id="projects" role="tabpanel">
+                <div class="card p-4 mb-4">
+                    <h4>Create / Edit Project</h4>
+                    <form id="projectForm">
+                        <input type="hidden" id="projectId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control" id="p_title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <input type="text" class="form-control" id="p_category" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tech Stack</label>
+                            <input type="text" class="form-control" id="p_tech" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Summary</label>
+                            <textarea class="form-control" id="p_summary" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cover Image URL</label>
+                            <input type="text" class="form-control" id="p_cover" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rich Content (WYSIWYG)</label>
+                            <div id="editor-container"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Project</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearProjectForm()">Clear</button>
+                    </form>
+                </div>
+                <div class="card p-4">
+                    <h4>Projects List</h4>
+                    <table class="table">
+                        <thead><tr><th>ID</th><th>Title</th><th>Tech Stack</th><th>Actions</th></tr></thead>
+                        <tbody id="projectsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Initialize Quill Editor
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        const API_URL = "http://localhost:8000";
+
+        // --- Articles Logic ---
+        async function loadArticles() {
+            const res = await fetch(`${API_URL}/articles/`);
+            const data = await res.json();
+            const tbody = document.getElementById('articlesTable');
+            tbody.innerHTML = '';
+            data.forEach(a => {
+                tbody.innerHTML += `<tr>
+                    <td>${a.id}</td><td>${a.title}</td><td>${a.category}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="editA(${a.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="delA(${a.id})">Del</button>
+                    </td></tr>`;
+            });
+        }
+
+        async function editA(id) {
+            const res = await fetch(`${API_URL}/articles/${id}`);
+            const a = await res.json();
+            document.getElementById('articleId').value = a.id;
+            document.getElementById('a_title').value = a.title;
+            document.getElementById('a_category').value = a.category;
+            document.getElementById('a_summary').value = a.summary;
+            document.getElementById('a_cover').value = a.cover_image;
+            document.getElementById('a_url').value = a.read_url || '';
+            window.scrollTo(0, 0);
+        }
+
+        async function delA(id) {
+            if(confirm("Delete article?")) {
+                await fetch(`${API_URL}/articles/${id}`, { method: 'DELETE' });
+                loadArticles();
+            }
+        }
+
+        document.getElementById('articleForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('articleId').value;
+            const payload = {
+                title: document.getElementById('a_title').value,
+                category: document.getElementById('a_category').value,
+                summary: document.getElementById('a_summary').value,
+                cover_image: document.getElementById('a_cover').value,
+                read_url: document.getElementById('a_url').value,
+            };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_URL}/articles/${id}` : `${API_URL}/articles/`;
+            await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            document.getElementById('articleForm').reset();
+            document.getElementById('articleId').value = '';
+            loadArticles();
+        };
+
+        // --- Projects Logic ---
+        function clearProjectForm() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            quill.root.innerHTML = '';
+        }
+
+        async function loadProjects() {
+            const res = await fetch(`${API_URL}/projects/`);
+            const data = await res.json();
+            const tbody = document.getElementById('projectsTable');
+            tbody.innerHTML = '';
+            data.forEach(p => {
+                tbody.innerHTML += `<tr>
+                    <td>${p.id}</td><td>${p.title}</td><td>${p.tech_stack}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="editP(${p.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="delP(${p.id})">Del</button>
+                    </td></tr>`;
+            });
+        }
+
+        async function editP(id) {
+            const res = await fetch(`${API_URL}/projects/${id}`);
+            const p = await res.json();
+            document.getElementById('projectId').value = p.id;
+            document.getElementById('p_title').value = p.title;
+            document.getElementById('p_category').value = p.category;
+            document.getElementById('p_tech').value = p.tech_stack;
+            document.getElementById('p_summary').value = p.summary;
+            document.getElementById('p_cover').value = p.cover_image;
+            quill.root.innerHTML = p.content || '';
+            window.scrollTo(0, 0);
+        }
+
+        async function delP(id) {
+            if(confirm("Delete project?")) {
+                await fetch(`${API_URL}/projects/${id}`, { method: 'DELETE' });
+                loadProjects();
+            }
+        }
+
+        document.getElementById('projectForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('projectId').value;
+            const payload = {
+                title: document.getElementById('p_title').value,
+                category: document.getElementById('p_category').value,
+                tech_stack: document.getElementById('p_tech').value,
+                summary: document.getElementById('p_summary').value,
+                cover_image: document.getElementById('p_cover').value,
+                content: quill.root.innerHTML
+            };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_URL}/projects/${id}` : `${API_URL}/projects/`;
+            await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            clearProjectForm();
+            loadProjects();
+        };
+
+        // Init
+        loadArticles();
+        loadProjects();
+    </script>
+</body>
+</html>
