@@ -14,7 +14,7 @@
          color: #333;
          font-family: 'Poppins', sans-serif;
       }
-      /* Header Fixes */
+      /* Header background override to ensure it's dark like articles */
       header {
          background-color: #333;
          position: fixed;
@@ -22,41 +22,7 @@
          left: 0;
          width: 100%;
          z-index: 1000;
-         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       }
-      header .container {
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         padding: 15px 20px;
-         max-width: 1200px;
-         margin: 0 auto;
-      }
-      header .logo {
-         color: #fff;
-         font-size: 24px;
-         font-weight: 700;
-         text-decoration: none;
-      }
-      header .navbar ul {
-         list-style: none;
-         margin: 0;
-         padding: 0;
-         display: flex;
-      }
-      header .navbar ul li {
-         margin-left: 20px;
-      }
-      header .navbar ul li a {
-         color: #fff;
-         text-decoration: none;
-         font-size: 16px;
-         transition: color 0.3s;
-      }
-      header .navbar ul li a:hover {
-         color: #5f88e0;
-      }
-      /* End Header Fixes */
 
       .back-button-container {
          text-align: center;
@@ -140,12 +106,22 @@
 <body>
    <header>
       <div class="container">
-         <a href="/" class="logo">CaiJiechao</a>
-         <nav class="navbar">
-            <ul>
-               <li><a href="/#portfolio">Back to Home</a></li>
-            </ul>
-         </nav>
+         <div class="row">
+            <div class="brand-name">
+               <a href="/" class="logo">CaiJiechao</a>
+            </div>
+            <div class="navbar">
+               <ul>
+                  <li><a href="/#home">Home</a></li>
+                  <li><a href="/#about">About</a></li>
+                  <li><a href="/#services">Courses</a></li>
+                  <li><a href="/#internship">Internship</a></li>
+                  <li><a href="/#portfolio" class="active">Portfolio</a></li>
+                  <li><a href="/#blog">Article</a></li>
+                  <li><a href="/#contact">Contact</a></li>
+               </ul>
+            </div>
+         </div>
       </div>
    </header>
 
