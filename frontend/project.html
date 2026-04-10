@@ -15,27 +15,62 @@
          font-family: 'Poppins', sans-weight;
       }
       .project-detail-container {
-         max-width: 900px;
+         max-width: 1000px;
          margin: 120px auto 50px auto;
          background: #fff;
-         padding: 40px;
+         padding: 50px;
          border-radius: 12px;
          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       }
+      .project-header {
+         border-bottom: 2px solid #f0f0f0;
+         padding-bottom: 20px;
+         margin-bottom: 30px;
+      }
       .project-header h1 {
          color: #01143e;
-         margin-bottom: 10px;
+         font-weight: 700;
+         font-size: 36px;
       }
       .project-meta {
          color: #666;
-         font-size: 14px;
-         margin-bottom: 30px;
+         font-size: 15px;
+         margin-top: 15px;
+         display: flex;
+         justify-content: center;
+         gap: 20px;
+         flex-wrap: wrap;
+      }
+      .project-meta span {
+         background: #f8f9fa;
+         padding: 5px 12px;
+         border-radius: 20px;
+         border: 1px solid #eee;
+      }
+      .project-content {
+         font-size: 16px;
+         line-height: 1.8;
+         color: #444;
+      }
+      /* Ensure user-generated html looks good */
+      .project-content h2, .project-content h3 {
+         color: #01143e;
+         margin-top: 30px;
+         margin-bottom: 15px;
+      }
+      .project-content ul {
+         padding-left: 20px;
+      }
+      .project-content li {
+         margin-bottom: 10px;
       }
       .project-content img {
          max-width: 100%;
          height: auto;
          border-radius: 8px;
-         margin: 20px 0;
+         margin: 20px auto;
+         display: block;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       }
    </style>
 </head>
@@ -85,15 +120,14 @@
                <div class="project-header text-center">
                   <h1>${project.title}</h1>
                   <div class="project-meta">
-                     <span><strong>Category:</strong> ${project.category}</span> &nbsp;|&nbsp; 
-                     <span><strong>Tech Stack:</strong> ${project.tech_stack || 'N/A'}</span> &nbsp;|&nbsp; 
-                     <span><strong>Date:</strong> ${date}</span>
+                     <span><i class="fa fa-folder-open"></i> ${project.category}</span>
+                     <span><i class="fa fa-code"></i> ${project.tech_stack || 'N/A'}</span>
+                     <span><i class="fa fa-calendar"></i> ${date}</span>
                   </div>
                </div>
-               <div class="project-cover text-center">
-                  <img src="${project.cover_image}" alt="Cover Image" style="max-height:400px; width:100%; object-fit:cover; border-radius:10px;">
+               <div class="project-cover text-center" style="margin-bottom: 40px;">
+                  <img src="${project.cover_image}" alt="Cover Image" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);">
                </div>
-               <hr style="margin: 40px 0;">
                <div class="project-content">
                   ${project.content || project.summary}
                </div>

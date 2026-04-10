@@ -26,7 +26,47 @@
    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <style>
-      /* 弹出框的样式 */
+      /* Slider Custom Styles */
+      .position-relative { position: relative; }
+      .slider-nav {
+         position: absolute;
+         top: 50%;
+         transform: translateY(-50%);
+         background: #01143e;
+         color: white;
+         border: none;
+         border-radius: 50%;
+         width: 40px;
+         height: 40px;
+         z-index: 10;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+         transition: background 0.3s;
+      }
+      .slider-nav:hover { background: #5f88e0; }
+      .prev-btn { left: -20px; }
+      .next-btn { right: -20px; }
+      .gallery-slider {
+         display: flex;
+         flex-wrap: nowrap;
+         width: 100%;
+      }
+      .slider-item {
+         flex: 0 0 100%; /* Show 1 item per slide by default */
+         padding: 0 15px;
+         box-sizing: border-box;
+      }
+      @media (min-width: 768px) {
+         .slider-item { flex: 0 0 50%; } /* Show 2 items on tablet */
+      }
+      @media (min-width: 992px) {
+         .slider-item { flex: 0 0 33.333%; } /* Show 3 items on desktop */
+      }
+    </style>
+</head>
       .modal {
          display: none;
          position: fixed;
@@ -265,10 +305,16 @@
                <h1>Latest Projects</h1>
             </div>
          </div>
-         <div class="row">
-            <div class="gallery" id="dynamic-projects">
-               <!-- Projects will be loaded here dynamically from backend -->
-               <div style="text-align:center; width:100%;"><p>Loading projects...</p></div>
+         <div class="row position-relative">
+            <!-- Navigation buttons -->
+            <button class="slider-nav prev-btn" id="proj-prev" aria-label="Previous Project"><i class="fa fa-chevron-left"></i></button>
+            <button class="slider-nav next-btn" id="proj-next" aria-label="Next Project"><i class="fa fa-chevron-right"></i></button>
+            
+            <div class="slider-container-wrapper" style="overflow: hidden; width: 100%;">
+               <div class="gallery-slider" id="dynamic-projects" style="display: flex; transition: transform 0.5s ease-in-out;">
+                  <!-- Projects will be loaded here dynamically from backend -->
+                  <div style="text-align:center; width:100%;"><p>Loading projects...</p></div>
+               </div>
             </div>
          </div>
       </div>
@@ -551,13 +597,15 @@
                   month: 'short', year: 'numeric'
                });
                container.innerHTML += `
-               <div class="item" style="width: 100%; display: block; margin-bottom: 30px;">
-                  <div class="inner" style="padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'" onclick="window.location.href='project.html?id=${project.id}'">
-                     <h4 style="margin-bottom: 10px; color: #01143e;">${project.title} <span style="font-size: 14px; color: #666; font-weight: normal;">(${date})</span></h4>
-                     <p style="margin-bottom: 10px; font-size: 14px; color: #555;"><strong>Tech Stack:</strong> ${project.tech_stack}</p>
-                     <p style="font-size: 14px; line-height: 1.6; color: #333;">
-                        ${project.summary}
-                     </p>
+               <div class="slider-item">
+                  <div class="inner" style="height: 100%; padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.3s ease; display:flex; flex-direction:column;" onmouseover="this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'" onclick="window.location.href='project.html?id=${project.id}'">
+                     <div style="flex:1;">
+                        <h4 style="margin-bottom: 10px; color: #01143e;">${project.title} <span style="font-size: 14px; color: #666; font-weight: normal;">(${date})</span></h4>
+                        <p style="margin-bottom: 10px; font-size: 14px; color: #555;"><strong>Tech Stack:</strong> ${project.tech_stack}</p>
+                        <p style="font-size: 14px; line-height: 1.6; color: #333;">
+                           ${project.summary}
+                        </p>
+                     </div>
                   </div>
                </div>
                `;
@@ -568,9 +616,54 @@
          }
       }
 
+      function initSlider() {
+         const slider = document.getElementById('dynamic-projects');
+         const prevBtn = document.getElementById('proj-prev');
+         const nextBtn = document.getElementById('proj-next');
+         
+         let currentIndex = 0;
+         
+         function getItemsPerSlide() {
+            if (window.innerWidth >= 992) return 3;
+            if (window.innerWidth >= 768) return 2;
+            return 1;
+         }
+
+         function updateSlider() {
+            const itemsPerSlide = getItemsPerSlide();
+            const itemWidth = 100 / itemsPerSlide;
+            slider.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
+         }
+
+         prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+               currentIndex--;
+               updateSlider();
+            }
+         });
+
+         nextBtn.addEventListener('click', () => {
+            const items = slider.querySelectorAll('.slider-item');
+            const itemsPerSlide = getItemsPerSlide();
+            if (currentIndex < items.length - itemsPerSlide) {
+               currentIndex++;
+               updateSlider();
+            }
+         });
+
+         window.addEventListener('resize', () => {
+            const items = slider.querySelectorAll('.slider-item');
+            const itemsPerSlide = getItemsPerSlide();
+            if (currentIndex > items.length - itemsPerSlide) {
+               currentIndex = Math.max(0, items.length - itemsPerSlide);
+            }
+            updateSlider();
+         });
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
          fetchArticles();
-         fetchProjects();
+         fetchProjects().then(initSlider);
       });
    </script>
    <script src="./index_page/js/app.js"></script>
