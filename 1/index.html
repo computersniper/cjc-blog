@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="keywords" content="HTML, CSS, JavaScript">
+   <meta name="description"
+      content="A clean, beautiful and responsive portfolio template for Developers! using only Html, CSS, and JavaScript">
+   <meta name="author" content="Cai Jiechao">
+   <title>Cai Jiechao | Software Developer</title>
+   <link rel="icon" href="index_page/img/favicon.ico" type="image/x-icon">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link href="./index_page/css/header.css" rel="stylesheet" />
+   <link href="./index_page/css/main.css" rel="stylesheet" />
+   <link href="./index_page/css/home.css" rel="stylesheet" />
+   <link href="./index_page/css/about.css" rel="stylesheet" />
+   <link href="./index_page/css/service.css" rel="stylesheet" />
+   <link href="./index_page/css/portfolio.css" rel="stylesheet" />
+   <link href="./index_page/css/testimonials.css" rel="stylesheet" />
+   <link href="./index_page/css/certificate.css" rel="stylesheet" />
+   <link href="./index_page/css/blog.css" rel="stylesheet" />
+   <link href="./index_page/css/contact.css" rel="stylesheet" />
+   <link href="./index_page/css/footer.css" rel="stylesheet" />
+
+   <style>
+      /* 弹出框的样式 */
+      .modal {
+         display: none;
+         position: fixed;
+         z-index: 1;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         overflow: auto;
+         background-color: rgb(0, 0, 0);
+         background-color: rgba(0, 0, 0, 0.4);
+         padding-top: 60px;
+      }
+
+      .modal-content {
+         background-color: #fefefe;
+         margin: 5% auto;
+         padding: 20px;
+         border: 1px solid #888;
+         width: 80%;
+         max-width: 300px;
+         text-align: center;
+      }
+
+      .modal-content h2 {
+         color: #01143e;
+      }
+
+      .close {
+         color: #aaa;
+         float: right;
+         font-size: 28px;
+         font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+         color: black;
+         text-decoration: none;
+         cursor: pointer;
+      }
+
+      .btn {
+         display: inline-block;
+         padding: 10px 20px;
+         margin: 10px;
+         cursor: pointer;
+         background-color: #0056b3;
+         color: white;
+         border: none;
+         border-radius: 5px;
+         text-decoration: none;
+      }
+
+      .btn:hover {
+         background-color: #5f88e0;
+      }
+   </style>
+</head>
+
+<body>
+   <header>
+      <div class="container">
+         <div class="row">
+            <div class="brand-name">
+               <a href="/" class="logo">CaiJiechao</a>
+            </div>
+            <div class="hamburger">
+               <i class="fa fa-bars"></i>
+            </div>
+            <div class="navbar">
+               <ul>
+                  <li><a href="#home" class="active">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#services">Skills</a></li>
+                  <li><a href="#portfolio">Portfolio</a></li>
+                  <li><a href="#blog">Article</a></li>
+                  <li><a href="#contact">Contact</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </header>
+   <section class="home" id="home">
+      <div class="container">
+         <div class="row full-screen">
+            <div class="home-content">
+               <div class="block">
+                  <h6>Hi, my name is</h6>
+                  <h1>Cai Jiechao</h1>
+                  <h3>I build things for the world</h3>
+                  <div class="cv-btn">
+                     <a href="#" onclick="showLanguageSelection(event)">Download CV</a>
+                  </div>
+
+                  <!-- 弹出框 -->
+                  <div id="languageModal" class="modal">
+                     <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <h2>Choose language</h2>
+                        <a class="btn" href="contact/caijiechao-cv-chinese.pdf" target="_blank"
+                           onclick="closeModal()">中文</a>
+                        <a class="btn" href="contact/caijiechao-cv-english.pdf" target="_blank"
+                           onclick="closeModal()">English</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="about" id="about">
+      <div class="container">
+         <div class="row">
+            <div class="title">
+               <h1>About Me</h1>
+               <p>Know more about me</p>
+            </div>
+         </div>
+         <div class="row">
+            <div class="about-content">
+               <div class="row">
+                  <div class="img">
+                     <img src="index_page/img/me.jpg" alt='me' />
+                  </div>
+                  <div class="text">
+                     <h4>I'm Cai Jiechao</h4>
+                     <h6>A <span>Computer science student</span> and <span>undergraduate student</span> of BNU-HKBU-UIC,
+                        living and studying in
+                        Guangzhou, China
+                     </h6>
+                     <p>I'm passionate about creating and developing useful, unique, elegant products. I specialize in
+                        building Apps to achieve differnet goals. I keep my code clean, readable, modular and
+                        well refactored. I enjoy working with partner and making things beautiful. Moreover I am fluent
+                        in English, I have passed
+                        the CET4 and CET6 exams, so I can communicate and finish the tasks with other programmers from
+                        all over the world.
+                     </p>
+                     <div class="skills">
+                        <h6>Here are My few Tech Stack I've been working:</h6>
+                        <div class="skills-list">
+                           <ul class="fa-ul">
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>C/C++</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>HTML/CSS/JavaScript</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>php</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Python</li>
+                           </ul>
+                           <ul class="fa-ul">
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Java</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Linux</li>
+                              <li><span class="fa-li"><i class="fas fa-check-square"></i></span>MySQL</li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="social">
+                        <a href="index_page/qr_code.html" title="Wechat"><i class="fa fa-weixin"></i></a>
+                        <a href="index.html#copyright" title="Phone"><i class="fa fa-mobile-phone"></i></a>
+                        <a href="index.html#copyright" title="email"><i class="fa fa-envelope-open-o"></i></a>
+                        <a href="" title="github"><i class="fa fa-github"></i></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+   </section>
+   <section class="services" id="services">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Courses completed</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="service-content">
+               <div class="box">
+                  <div class="icon"><i class="fa fa-code"></i></div>
+                  <h5>Data Structure & Algorithm design & Algorithm analysis</h5>
+                  <p>Learn from simple data structure & algorithm to achieve complex data structure & algorithm,
+                     analyse the time & space complexity of the algorithm, and optimize the algorithm.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-laptop"></i></div>
+                  <h5>System Web Development</h5>
+                  <p>From single landing pages to a fully-blown fruit store, I can create a design of web with
+                     HTML/CSS/JavaScript, communicate with
+                     backend database using PHP.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-linux"></i></div>
+                  <h5>Operating System</h5>
+                  <p>I learn the basic principles of operating system, including process scheduling, memory management,
+                     and file system.
+                     Also we study Linux system programming and do some projects to gain a deeper understanding of how
+                     OS works.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fas fa-database"></i></div>
+                  <h5>Database Management System</h5>
+                  <p>I take an database management coures to study how to build a huge, systematic, and secure database,
+                     with a strong foundation in SQL and database design.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-wifi"></i></div>
+                  <h5>Data communications and networking</h5>
+                  <p>I learn the basic principles of data communication and networking,
+                     including OSI reference model, Transmission Media, TCP/IP, many data transfer protocols and etc.
+                     Furthermore, I study socket C++ programming to apply relevant theory and build a simple chat
+                     program.
+                  </p>
+               </div>
+               <div class="box">
+                  <div class="icon"><i class="fa fa-ellipsis-h"></i></div>
+                  <h5>Others</h5>
+                  <p>Other completed courese like: calculus, linear algebra, discrete mathematics, object oriented
+                     programming, computer organization, python programming, computer-aided data analysis
+                     and many other free elective courese.
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="portfolio" id="portfolio">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Latest Works</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="filter-btn">
+               <ul id="filterBtn">
+                  <li class="active" data-target="all">All</li>
+                  <li data-target="web">Web</li>
+                  <li data-target="sofrware">Software</li>
+                  <li data-target="hardware">Hardware</li>
+               </ul>
+            </div>
+         </div>
+         <div class="row">
+            <div class="gallery">
+               <!--<div class="item" data-id="web">
+                  <div class="inner">
+                     <img src="./blog/read_daa/1.png" alt="portfolio" />
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>Algorithm Analysis</h4>
+                     </div>
+                  </div>
+               </div>-->
+               <!--<div class="item" data-id="web">
+                  <div class="inner">
+                     <img src="./work/Work1/1.png" style="height: 273px;" alt="portfolio"/>
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>Web Design</h4>
+                     </div>
+                  </div>
+               </div>-->
+               <div class="item" data-id="web" data-count="3"
+                  data-images="work/work1/1.png,work/work1/2.png,work/work1/3.png,work/work1/4.png,work/work1/5.png,work/work1/6.png">
+                  <div class="inner">
+                     <img src="work/work1/cover.png" alt="Work Image">
+                     <div class="overlay">
+                        <i class="fa fa-plus"></i>
+                        <h4>Database</h4>
+                     </div>
+                  </div>
+               </div>
+               <div class="item" data-id="hardware" data-count="3" data-images="work/work2/1.png">
+                  <div class="inner">
+                     <img src="work/work2/1.png" alt="Work Image">
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>Intelligent robot</h4>
+                     </div>
+                  </div>
+               </div>
+               <!--<div class="item" data-id="app">
+                  <div class="inner">
+                     <img src="./index_page/img/portfolio/app.png" alt="portfolio" />
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>App Interface</h4>
+                     </div>
+                  </div>
+               </div>
+               <div class="item" data-id="app">
+                  <div class="inner">
+                     <img src="./index_page/img/portfolio/app2.png" alt="portfolio" />
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>App Interface</h4>
+                     </div>
+                  </div>
+               </div>
+               <div class="item" data-id="ui">
+                  <div class="inner">
+                     <img src="./index_page/img/portfolio/ui2.png" alt="portfolio" />
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>UI/UX Design</h4>
+                     </div>
+                  </div>
+               </div>
+               <div class="item" data-id="ui">
+                  <div class="inner">
+                     <img src="./index_page/img/portfolio/ui3.png" alt="portfolio" />
+                     <div class="overlay">
+                        <span class="fa fa-plus"></span>
+                        <h4>UI/UX Design</h4>
+                     </div>
+                  </div>
+               </div>-->
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="message">
+      <div class="container">
+         <div class="row align-items-center">
+            <div class="message-text">
+               <h2>My inbox is always open. Whether you have a question or just want to say hi or want to hire me, I'll
+                  try my best to get back to you!</h2>
+            </div>
+            <div class="button ">
+               <a href='index.html#contact'>Get In Touch</a>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!--certificate-->
+   <section class="certificate" id="certificate">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Certificates</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="certificate-content">
+               <div class="certificate-box">
+                  <div class="certificate-img">
+                     <img src='./certificate/2402369.jpg' />
+                  </div>
+                  <div class="certificate-text">
+                     <div class="certificate-info">
+                        <span>Jun 27, 2024</span>
+                        <span>Mathematical modeling</span>
+                     </div>
+                     <h3>Successful participation in 2024 MCM competition</h3>
+                     <p>Our topic is: An Analytical Framework for Assessing“ Momentum”
+                        in Sports: Leveraging Random Forest and Fourier
+                        Transform Analysis
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!--testimonials-->
+   <!--<section class="testimonials">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Testimonials</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="testimonials-content">
+               <div class="testimonials-box">
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/1.jpeg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Mosh Hamedani</h6>
+                        <p>Software Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/2.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Kyle Simpson</h6>
+                        <p>JavaScript Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/3.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Ryan Florence</h6>
+                        <p>ReactJS Engineer</p>
+                     </div>
+                  </div>
+                  <div class="testimonials-img">
+                     <div class="test-img">
+                        <img src="./index_page/img/testimonials/4.jpg" />
+                     </div>
+                     <div class="testimonials-text">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, aliquam. Corrupti
+                           molestias quae culpa accusamus magni accusantium itaque dolore soluta.</p>
+                        <h6>Amelia Madyson</h6>
+                        <p>Front-End Developer</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="slider"></div>
+            </div>
+         </div>
+      </div>
+   </section>-->
+   <section class="blog" id="blog">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Latest Articles</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="blog-content">
+               <div class="blog-box">
+                  <div class="blog-img">
+                     <img src='./blog/read_daa/1.png' />
+                  </div>
+                  <div class="blog-text">
+                     <div class="blog-info">
+                        <span>Jun 27, 2024</span>
+                        <span>Algorithm</span>
+                     </div>
+                     <h3>Design and analysis of a dynamic programming algorithm to solve the MCS problem</h3>
+                     <p>There are many ways to solve the minimum subarray problem, here we use the idea of dynamic
+                        programming to solve it.</p>
+                     <a href="blog/read_daa/read.html">Read More</a>
+                  </div>
+               </div>
+               <div class="blog-box">
+                  <div class="blog-img">
+                     <img src='./blog/kth-largest-element-in-an-array/img/cover.png' />
+                  </div>
+                  <div class="blog-text">
+                     <div class="blog-info">
+                        <span>Jul 3, 2024</span>
+                        <span>Algorithm</span>
+                     </div>
+                     <h3>The worst linear time algorithm?</h3>
+                     <p>Try to write a linear time algorithm to find the kth largest element in an array.
+                        But why our linear time algorithm only beats 5 percent of similar algorithms?</p>
+                     <a href="blog/kth-largest-element-in-an-array/read.html">Read More</a>
+                  </div>
+               </div>
+               <!--<div class="blog-box">
+                  <div class="blog-img">
+                     <img src='./index_page/img/blogs/2.png' />
+                  </div>
+                  <div class="blog-text">
+                     <div class="blog-info">
+                        <span>May 1, 2020</span>
+                        <span>Web Development</span>
+                     </div>
+                     <h3>JavaScript Promises</h3>
+                     <p>Before we use promises, our code was full of confusing callback tricks and asynchronous.
+                        Switching to promises made our code easier to read, understand, and test.</p>
+                     <a href="https://devpuskar.netlify.app/blogs/03jspromises">Read More</a>
+                  </div>
+               </div>
+               <div class="blog-box">
+                  <div class="blog-img">
+                     <img src='./index_page/img/blogs/3.jpg' />
+                  </div>
+                  <div class="blog-text">
+                     <div class="blog-info">
+                        <span>April 27, 2020</span>
+                        <span>Programming</span>
+                     </div>
+                     <h3>Why we don’t need a degree to be a Developer.</h3>
+                     <p>That's right. You don’t need a degree to be a developer. Whilst university is definitely the
+                        right path for some people, it is not right for everyone.</p>
+                     <a href="https://devpuskar.netlify.app/blogs/01developerdegree">Read More</a>
+                  </div>
+               </div>-->
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="contact" id="contact">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1>Get In Touch</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="contact-form">
+               <div class="row">
+                  <div class="contact-text">
+                     <h2>Drop Me message</h2>
+                     <p>My inbox is always open I'll try my best to get back to you!</p>
+                  </div>
+               </div>
+               <div class="row space-between">
+                  <div class="col-6">
+                     <input type="text" class="form-control" name="" placeholder="Name" />
+                  </div>
+                  <div class="col-6">
+                     <input type="text" class="form-control" name="" placeholder="Email" />
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <textarea class="form-control" placeholder="Your Message"></textarea>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="button btn" style="background-color: transparent;">
+                     <a href="#">Get In Touch</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <footer>
+      <div class="container">
+         <div class="row">
+            <div class="footer-logo">CaiJiechao</div>
+            <div class="social-link">
+               <a href="index_page/qr_code.html" title="Wechat"><i class="fa fa-weixin"></i>Wechat</a>
+               <a href="tel:+8613602705148" title="Phone"><i class="fa fa-mobile-phone"></i>&nbsp;+86-13602705148</a>
+               <a href="mailto:2651159710@qq.com" title="email"><i
+                     class="fa fa-envelope-open-o"></i>&nbsp;2651159710@qq.com</a>
+               <a href="" title="github"><i class="fa fa-github"></i>github</a>
+            </div>
+         </div>
+         <div class="row">
+            <div class="social-link">
+               <a href="login.html" title="Admin login"><i class="fa fa-sign-in"></i>&nbsp;Admin Login</a>
+            </div>
+         </div>
+      </div>
+   </footer>
+   <section class="copyright" id="copyright">
+      <div class="container">
+         <div class="social-link">
+            <p>Designed and Developed By Cai Jiechao.</p>
+         </div>
+      </div>
+   </section>
+   <div class="lightbox hide">
+      <span class="close-lightbox fa fa-close"></span>
+      <img src="" alt="portfolio" />
+   </div>
+   <script src="./index_page/js/app.js"></script>
+   <script>
+      function showLanguageSelection(event) {
+         event.preventDefault();
+         document.getElementById('languageModal').style.display = "block";
+      }
+
+      function closeModal() {
+         document.getElementById('languageModal').style.display = "none";
+      }
+
+      // 点击弹出框外部关闭弹出框
+      window.onclick = function (event) {
+         const modal = document.getElementById('languageModal');
+         if (event.target == modal) {
+            modal.style.display = "none";
+         }
+      }
+   </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description"
+        content="A clean, beautiful and responsive portfolio template for Developers! using only Html, CSS, and JavaScript">
+    <meta name="author" content="Cai Jiechao">
+    <title>Cai Jiechao | Software Developer</title>
+    <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../css/header.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet" />
+    <link href="../css/home.css" rel="stylesheet" />
+    <link href="../css/about.css" rel="stylesheet" />
+    <link href="../css/service.css" rel="stylesheet" />
+    <link href="../css/portfolio.css" rel="stylesheet" />
+    <link href="../css/testimonials.css" rel="stylesheet" />
+    <link href="../css/testimonials.css" rel="stylesheet" />
+    <link href="../css/blog.css" rel="stylesheet" />
+    <link href="../css/contact.css" rel="stylesheet" />
+    <link href="../css/footer.css" rel="stylesheet" />
+    <style>
+        header {
+            background-color: #333;
+            /* 固定背景颜色 */
+            position: fixed;
+            /* 固定在顶部 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            /* 确保在其他内容之上 */
+        }
+
+        .col-md-18 p {
+            font-size: 18px;
+            /* 修改段落字体大小 */
+        }
+
+        .back-button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #5f88e0;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(9, 50px);
+            /* 3列，每列50px */
+            grid-gap: 5px;
+            /* 方格之间的间距 */
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 80px;
+        }
+
+        .cell_box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+            font-size: 20px;
+        }
+
+        .cell_k_value {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .arrow::after {
+            content: '▲';
+            font-size: 24px;
+        }
+
+        .start-index {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="brand-name">
+                    <a href="/" class="logo">CaiJiechao</a>
+                </div>
+                <div class="navbar">
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#services">Skills</a></li>
+                        <li><a href="index.html#portfolio">Portfolio</a></li>
+                        <li><a href="index.html#blog">Blog</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="services" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="title text-center">
+                    <h1 style="text-transform: none;">Movie Collection App: Development & Debugging</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-18">
+                    <p>I developed a comprehensive movie collection application that enables users to search, favorite, display, and manage movie information with dynamic data loading. Built with modern Android technologies, the app delivers a responsive and seamless user experience.</p>
+                    
+                    <br>
+                    <div style="text-align: center;">
+                        <img src="img/app_overview.png" alt="Movie Collection App Main Interface"
+                            style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <p><em>Main interface showing movie grid and search functionality</em></p>
+                    </div>
+                    <br>
+
+                    <h3>Technical Architecture & Implementation</h3>
+                    <br>
+                    <p><strong>MVVM Architecture:</strong> The project follows the Model-View-ViewModel pattern, separating UI layer from business logic. MainActivity serves as the entry point with NavController for navigation, while ViewModel manages UI states and FilmData/FilmApi handle data operations.</p>
+
+                    <br>
+                    <div style="text-align: center;">
+                        <img src="img/architecture.png" alt="MVVM Architecture Diagram"
+                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <p><em>MVVM architecture structure and data flow</em></p>
+                    </div>
+                    <br>
+
+                    <p><strong>Performance Optimization:</strong> Implemented asynchronous data loading using OkHttp for TMDb API requests, ensuring UI fluidity by executing network operations on background threads. Utilized Coil library for efficient image loading and caching, with HorizontalPager for smooth image transitions in detail views.</p>
+                    <br>
+
+                    <p><strong>Responsive UI Design:</strong> Built with Jetpack Compose and Material3 components, featuring adaptive layouts for different screen sizes. Implemented LazyVerticalGrid for efficient list rendering and SwipeRefresh for pull-to-refresh functionality.</p>
+
+                    <br>
+
+                    <p><strong>Data Persistence:</strong> Integrated SharedPreferences with Gson for local movie data storage, ensuring data retention between app sessions. For manually added movies, cover images are stored using URI paths to maintain data security and independence.</p>
+                    <br>
+                    <p><strong>API Integration:</strong> Connected to TMDb's public API using OkHttp and Gson for data parsing. Implemented robust error handling with user-friendly messages for network failures, enhancing overall user experience.</p>
+
+                    <br>
+                    <div style="text-align: center;">
+                        <img src="img/movie_details.png" alt="Movie Detail Screen with HorizontalPager"
+                            style="width: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <p><em>Movie detail screen featuring image carousel and information display</em></p>
+                    </div>
+                    <br>
+
+                    <p><strong>UI/UX Enhancements:</strong> Implemented interactive components like Snackbar for user feedback and optimized image loading with Coil. Added dynamic theme switching supporting both light and dark modes using Material3 themes for consistent cross-platform experience.</p>
+
+                    <p>The application demonstrates modern Android development practices, combining robust architecture with excellent user experience, making movie collection management both efficient and enjoyable.</p>
+
+                    <br>
+                    <p><strong>Detail instructions:</strong></p>
+                    <div class="row">
+                        <iframe src="report.pdf" width="100%" height="600px"></iframe>
+                        <br><br>
+                        <!--<div class="col-md-18">
+                            <p>This is the article</p>
+                            <br>
+                            <br>
+                            <div style="text-align: center;">
+                                <img src="blog/article1/1.jpg" alt="chat program"
+                                    style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            </div>
+                            <br><br>
+                            <p>And here is a picture, and I will show the PDF</p>--
+                            <br><br>
+                            <iframe src="blog/article1/pa.pdf" width="100%" height="600px"></iframe>
+                            <br><br>
+                            <p>Fininsh the article</p>
+
+
+
+                        </div>-->
+                    </div>
+                    <br>
+                    <p><strong>Download Link:</strong> <a href="https://github.com/caijiechao/android-movie-app">https://github.com/caijiechao/android-movie-app</a></p>
+                    <br>
+                    <div class="back-button-container">
+                        <a href="../../index.html#blog" class="back-button">Back</a>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="copyright">
+        <div class="container">
+            <div class="social-link">
+                <p>Designed and Developed By Cai Jiechao.</p>
+            </div>
+        </div>
+    </section>
+    <div class="lightbox hide">
+        <span class="close-lightbox fa fa-close"></span>
+        <img src="" alt="portfolio" />
+    </div>
+
+</body>
+
+</html>
