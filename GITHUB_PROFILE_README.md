@@ -1,10 +1,21 @@
 <div align="center">
-  <h1>Cai Jiechao</h1>
-  <h3>Computer Science Student | AI & LLM Engineer</h3>
-  <p>Building useful, unique, and elegant products with a focus on Agent & LLM Engineering, RAG, and clean architecture.</p>
-  <br/>
-  <a href="mailto:your.email@example.com"><img src="https://img.shields.io/badge/Email-000000?style=flat-square&logo=mail.ru&logoColor=white" alt="Email"/></a>
-  <a href="https://yourwebsite.com"><img src="https://img.shields.io/badge/Website-01143E?style=flat-square&logo=googlechrome&logoColor=white" alt="Website"/></a>
+  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=40&pause=1000&color=01143E&center=true&vCenter=true&width=600&lines=Hi,+I'm+Cai+Jiechao;I+build+things+for+the+world;AI+%26+LLM+Engineer" alt="Typing SVG" />
+</div>
+
+<br/>
+
+<div align="center">
+  <p><b>Computer Science Student | Building useful, unique, and elegant products.</b><br/>Focusing on Agent & LLM Engineering, RAG, and clean architecture.</p>
+  
+  <a href="mailto:your.email@example.com"><img src="https://img.shields.io/badge/Email-000000?style=for-the-badge&logo=mail.ru&logoColor=white" alt="Email"/></a>
+  <a href="https://yourwebsite.com"><img src="https://img.shields.io/badge/Portfolio-01143E?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"/></a>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=yourgithubusername&show_icons=true&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0" alt="GitHub Stats" width="48%" />
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=yourgithubusername&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0&ring_color=5f88e0&fire_color=01143E" alt="GitHub Streak" width="48%" />
 </div>
 
 <br/>
@@ -19,15 +30,15 @@
 ## Core Technology Stack
 
 <div align="left">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white" />
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" />
-  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" />
 </div>
 
 <br/>
