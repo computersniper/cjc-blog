@@ -1,5 +1,9 @@
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=40&pause=1000&color=01143E&center=true&vCenter=true&width=600&lines=Hi,+I'm+Cai+Jiechao;I+build+things+for+the+world;AI+%26+LLM+Engineer" alt="Typing SVG" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=40&pause=500&duration=3000&color=58A6FF&center=true&vCenter=true&width=800&lines=%3E_SYSTEM.INIT()%3B;%5B%2B%5D+CONNECTION_ESTABLISHED;Hi%2C+I%27m+Cai+Jiechao;AI+%26+LLM+Engineer;Agentic+Architecture+Designer">
+    <source media="(prefers-color-scheme: light)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=40&pause=500&duration=3000&color=01143E&center=true&vCenter=true&width=800&lines=%3E_SYSTEM.INIT()%3B;%5B%2B%5D+CONNECTION_ESTABLISHED;Hi%2C+I%27m+Cai+Jiechao;AI+%26+LLM+Engineer;Agentic+Architecture+Designer">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=40&pause=500&duration=3000&color=01143E&center=true&vCenter=true&width=800&lines=%3E_SYSTEM.INIT()%3B;%5B%2B%5D+CONNECTION_ESTABLISHED;Hi%2C+I%27m+Cai+Jiechao;AI+%26+LLM+Engineer;Agentic+Architecture+Designer" alt="Typing SVG" />
+  </picture>
 </div>
 
 <br/>
@@ -7,81 +11,160 @@
 <div align="center">
   <p><b>Computer Science Student | Building useful, unique, and elegant products.</b><br/>Focusing on Agent & LLM Engineering, RAG, and clean architecture.</p>
   
-  <a href="mailto:your.email@example.com"><img src="https://img.shields.io/badge/Email-000000?style=for-the-badge&logo=mail.ru&logoColor=white" alt="Email"/></a>
-  <a href="https://yourwebsite.com"><img src="https://img.shields.io/badge/Portfolio-01143E?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"/></a>
+  <a href="mailto:jiechaocai@gmail.com"><img src="https://img.shields.io/badge/Email-000000?style=for-the-badge&logo=mail.ru&logoColor=white" alt="Email"/></a>
+  <a href="https://www.caijiechao.com"><img src="https://img.shields.io/badge/Portfolio-01143E?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"/></a>
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=yourgithubusername&show_icons=true&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0" alt="GitHub Stats" width="48%" />
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=yourgithubusername&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0&ring_color=5f88e0&fire_color=01143E" alt="GitHub Streak" width="48%" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-streak-stats.herokuapp.com/?user=computersniper&theme=transparent&hide_border=true&title_color=58A6FF&text_color=C9D1D9&icon_color=58A6FF&ring_color=58A6FF&fire_color=58A6FF">
+    <source media="(prefers-color-scheme: light)" srcset="https://github-readme-streak-stats.herokuapp.com/?user=computersniper&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0&ring_color=5f88e0&fire_color=01143E">
+    <img src="https://github-readme-streak-stats.herokuapp.com/?user=computersniper&theme=transparent&hide_border=true&title_color=01143E&text_color=333333&icon_color=5f88e0&ring_color=5f88e0&fire_color=01143E" alt="GitHub Streak" width="48%" />
+  </picture>
 </div>
 
 <br/>
 
-## Education Background
+## 🎓 Education Background
 
 - **The University of Hong Kong (HKU)** | *MSc in Computer Science* (2026.9 - 2027.8 Expected)
   - Focus: Large Models & NLP, Multi-Agent Systems
-- **BNU-HKBU UIC & University of Malaya (Exchange)** | *BSc in Computer Science* (2022.9 - 2026.6)
-  - Top 15%, Second-Class Scholarship
+- **BNBU & University of Malaya (Exchange)** | *BSc in Computer Science* (2022.9 - 2026.6)
+  - Top 15%, Second-Class Scholarship. Core: DSA, OS, Networks, ML, NLP, Deep Learning.
 
-## Core Technology Stack
+## 💡 Professional Skills & AI Traits
 
-<div align="left">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" />
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
-  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" />
-</div>
+```python
+class CaiJiechao:
+    def __init__(self):
+        self.username = 'computersniper'
+        self.name = 'Cai Jiechao'
+        self.position = 'AI & LLM Engineer / Agent Developer'
+        self.web = 'https://www.caijiechao.com'
+        
+        self.ai_native_developer = {
+            'tools': ['Cursor', 'Claude Code', 'Trae'],
+            'daily_tokens': 'Millions',
+            'expertise': ['Prompt Engineering', 'LLM Production Code Paradigms']
+        }
+        
+        self.agent_and_llm_engineering = {
+            'core': ['Context Engineering', 'RAG Architectures', 'MCP (Model Context Protocol)'],
+            'focus': ['LLM Capability Boundaries', 'Skill Development', 'Multi-Agent Systems']
+        }
+        
+        self.core_tech_stack = {
+            'languages': ['Python (Expert)', 'Java', 'TypeScript', 'Kotlin'],
+            'frameworks': ['FastAPI', 'Next.js', 'Hono', 'React'],
+            'databases': ['PostgreSQL', 'SQLite'],
+            'infrastructure': ['Docker', 'Asyncio', 'Playwright'],
+            'foundations': ['Data Structures', 'Networking']
+        }
 
+    def __str__(self):
+        return f"{self.name} | {self.position} | I build things for the world."
+
+if __name__ == '__main__':
+    me = CaiJiechao()
+    print(me)
+```
+
+## 🔨 Languages and Tools
+
+<table align="center">
+    <tr>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="Python" width="55" height="55" />
+            <br>Python
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/java-icon.svg" alt="Java" width="55" height="55" />
+            <br>Java
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=ts" alt="TypeScript" width="48" height="48" />
+            <br>TypeScript
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="JavaScript" width="55" height="55" />
+            <br>JavaScript
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" width="48" height="48" />
+            <br>Kotlin
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=androidstudio" alt="Android" width="48" height="48" />
+            <br>Android
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/react-icon.svg" alt="React" width="55" height="55" />
+            <br>React
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=nextjs" alt="Next.js" width="48" height="48" />
+            <br>Next.js
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=nodejs" alt="Node.js" width="48" height="48" />
+            <br>Node.js
+        </td>
+    </tr>
+    <tr>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=fastapi" alt="FastAPI" width="48" height="48" />
+            <br>FastAPI
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=postgres" alt="PostgreSQL" width="48" height="48" />
+            <br>PostgreSQL
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=sqlite" alt="SQLite" width="48" height="48" />
+            <br>SQLite
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/docker-icon.svg" alt="Docker" width="65" height="65" />
+            <br>Docker
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=pytorch" alt="PyTorch" width="48" height="48" />
+            <br>PyTorch
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=tensorflow" alt="TensorFlow" width="48" height="48" />
+            <br>TensorFlow
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=firebase" alt="Firebase" width="48" height="48" />
+            <br>Firebase
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=git" alt="Git" width="48" height="48" />
+            <br>Git
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="GitHub" width="55" height="55" />
+            <br>GitHub
+        </td>
+    </tr>
+</table>
+
+<br clear="both"/>
 <br/>
 
-* **Domains**: Agent Engineering, RAG, LLM Capability Boundaries, Asyncio, Data Structures & Networking
-* **Tools**: Vibe-Coding, Cursor, Trae, Claude Code
 
-## Internship Experience
+## 🚀 Open Source & Geek Projects
 
-**Xnew | AI Platform R&D Intern** (2026.01 – 2026.04)  
-*Full-Stack Development, Data Pipeline, LLM Integration, API Gateway*
-- Built data cleaning and intelligent annotation pipelines for Olympiad-level math question data.
-- Integrated LLMs for evaluating question quality (originality, difficulty, rigor).
-- Deployed LiteLLM gateway, optimized calling performance, and implemented automated daily usage reports.
+- **Baipiao: Browser-Automation Local LLM Proxy**: Hijacked local browsers via CDP protocol to bypass anti-scraping DOM selectors. Built a local HTTP service (Bun/Hono) providing standard `/v1/chat/completions` interfaces compatible with OpenAI/Anthropic.
+- **Roles-Skill: Character Distillation Architecture**: Designed a "Cyber Immortality" Skill architecture supporting native language replies and auto-translation pipelines. Developed an auto-tool generation engine to dispatch Python tools to Agents.
 
-## Latest Projects
+## 🔬 Academic Research
 
-### 1. MathTasks Intelligent Production Platform
-*Python, FastAPI, Next.js, PostgreSQL, Vector Search, Playwright, Agent*
-- Designed a 5-role full-link collaboration system based on FSM & RBAC.
-- Built async task queues for difficulty evaluation and vector deduplication (10k+ questions).
-- Designed an LLM-based "adversarial validation" mechanism to convert probabilistic outputs into deterministic metrics.
-
-### 2. Enterprise LLM Unified Gateway & API Management
-*Python, LiteLLM, Docker, PostgreSQL, Redis, Asyncio, Langfuse*
-- Unified access to 8+ vendors and 20+ models; configured multi-key load balancing and Failover.
-- Optimized long-running inference connections, supporting thousands of daily complex Agent tasks.
-- Processed over 100M+ Tokens requests with automated fine-grained cost reporting.
-
-### 3. Baipiao: Browser-Automation Local LLM Proxy
-*Bun, Hono, CDP (Chrome DevTools Protocol)*
-- Hijacked local browsers via CDP protocol to simulate actions and bypass anti-scraping DOM selectors.
-- Built a local HTTP service providing standard `/v1/chat/completions` interfaces compatible with OpenAI/Anthropic.
-
-### 4. Roles-Skill: Character Distillation Architecture
-*Claude Code, Python, Agent Architecture*
-- Designed a "Cyber Immortality" Skill architecture supporting native language replies and auto-translation pipelines.
-- Developed an auto-tool generation engine to dispatch Python tools to Agents based on character types.
-
-### 5. CJC-Company: Vibe-Coding Multi-Agent Org
-*Vibe-Coding, Multi-Agent System, Markdown Protocol*
-- Simulated a Multi-Agent organization with 11 virtual departments.
-- Achieved an automated "Solopreneur" workflow by handing over requirements, coding, and job prep to an AI "Cyber Company".
+- **IMU-Based In-Air Handwriting Recognition**: Developed an Android app (Kotlin) for IMU data collection and a 5-layer PyTorch MLP network achieving 98.67% accuracy for VR/AR interactions.
+- **Tang Dynasty Official Documents NLP Analysis**: Applied SIKU-BERT for high-dimensional semantic embeddings. Utilized t-SNE, UMAP, and clustering to visualize semantic drift pre/post An Lushan Rebellion.
 
 <br/>
 

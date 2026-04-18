@@ -565,6 +565,7 @@
                const date = new Date(article.created_at).toLocaleDateString('en-US', {
                   month: 'short', day: 'numeric', year: 'numeric'
                });
+               const articleLink = (article.read_url && article.read_url.trim() !== '#' && article.read_url.trim() !== '') ? article.read_url : `read.html?id=${article.id}`;
                container.innerHTML += `
                <div class="blog-box">
                   <div class="blog-img" style="display: flex; justify-content: center; align-items: center;">
@@ -577,7 +578,7 @@
                      </div>
                      <h3>${article.title}</h3>
                      <p>${article.summary}</p>
-                     <a href="${article.read_url}">Read More</a>
+                     <a href="${articleLink}">Read More</a>
                   </div>
                </div>
                `;

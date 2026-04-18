@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CJC Blog Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Quill CSS -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <style>
         body { padding: 20px; background-color: #f8f9fa; }
         .admin-container { max-width: 1000px; margin: auto; }
         .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
-        #editor-container { height: 300px; background: white; }
+        .toastui-editor-defaultUI { background: white; }
     </style>
 </head>
 <body>
@@ -54,12 +54,16 @@
                                 <input type="text" class="form-control" id="a_cover" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Read URL (External Link)</label>
+                                <label class="form-label">Read URL (Optional, overrides content)</label>
                                 <input type="text" class="form-control" id="a_url">
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Article Content</label>
+                            <div id="article-editor"></div>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save Article</button>
-                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('articleForm').reset(); document.getElementById('articleId').value=''">Clear</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearArticleForm()">Clear</button>
                     </form>
                 </div>
                 <div class="card p-4">
@@ -100,15 +104,8 @@
                             <input type="text" class="form-control" id="p_cover" required>
                         </div>
                         <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label mb-0">Rich Content</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="htmlToggle">
-                                    <label class="form-check-label" for="htmlToggle">Raw HTML Mode</label>
-                                </div>
-                            </div>
-                            <div id="editor-container"></div>
-                            <textarea id="raw-html-editor" class="form-control" rows="12" style="display:none; font-family: monospace;"></textarea>
+                            <label class="form-label">Project Content</label>
+                            <div id="project-editor"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Project</button>
                         <button type="button" class="btn btn-secondary" onclick="clearProjectForm()">Clear</button>
@@ -127,41 +124,23 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
-        // Initialize Quill Editor
-        var quill = new Quill('#editor-container', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    ['blockquote', 'code-block'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'color': [] }, { 'background': [] }],
-                    ['link', 'image', 'video'],
-                    ['clean']
-                ]
-            }
+        // Initialize Toast UI Editors
+        const Editor = toastui.Editor;
+        
+        const articleEditor = new Editor({
+            el: document.querySelector('#article-editor'),
+            height: '400px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical'
         });
 
-        // HTML Toggle Logic
-        const htmlToggle = document.getElementById('htmlToggle');
-        const rawEditor = document.getElementById('raw-html-editor');
-        const quillEditor = document.getElementById('editor-container');
-
-        htmlToggle.addEventListener('change', function() {
-            if (this.checked) {
-                rawEditor.value = quill.root.innerHTML;
-                quillEditor.style.display = 'none';
-                rawEditor.style.display = 'block';
-                document.querySelector('.ql-toolbar').style.display = 'none';
-            } else {
-                quill.root.innerHTML = rawEditor.value;
-                rawEditor.style.display = 'none';
-                quillEditor.style.display = 'block';
-                document.querySelector('.ql-toolbar').style.display = 'block';
-            }
+        const projectEditor = new Editor({
+            el: document.querySelector('#project-editor'),
+            height: '400px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical'
         });
 
         const API_URL = "http://127.0.0.1:8000";
@@ -191,6 +170,7 @@
             document.getElementById('a_summary').value = a.summary;
             document.getElementById('a_cover').value = a.cover_image;
             document.getElementById('a_url').value = a.read_url || '';
+            articleEditor.setHTML(a.content || '');
             window.scrollTo(0, 0);
         }
 
@@ -199,6 +179,12 @@
                 await fetch(`${API_URL}/articles/${id}`, { method: 'DELETE' });
                 loadArticles();
             }
+        }
+
+        function clearArticleForm() {
+            document.getElementById('articleForm').reset();
+            document.getElementById('articleId').value = '';
+            articleEditor.setHTML('');
         }
 
         document.getElementById('articleForm').onsubmit = async (e) => {
@@ -210,12 +196,12 @@
                 summary: document.getElementById('a_summary').value,
                 cover_image: document.getElementById('a_cover').value,
                 read_url: document.getElementById('a_url').value,
+                content: articleEditor.getHTML()
             };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/articles/${id}` : `${API_URL}/articles/`;
             await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-            document.getElementById('articleForm').reset();
-            document.getElementById('articleId').value = '';
+            clearArticleForm();
             loadArticles();
         };
 
@@ -223,9 +209,7 @@
         function clearProjectForm() {
             document.getElementById('projectForm').reset();
             document.getElementById('projectId').value = '';
-            quill.root.innerHTML = '';
-            rawEditor.value = '';
-            if(htmlToggle.checked) { htmlToggle.click(); }
+            projectEditor.setHTML('');
         }
 
         async function loadProjects() {
@@ -253,12 +237,7 @@
             document.getElementById('p_summary').value = p.summary;
             document.getElementById('p_cover').value = p.cover_image;
             
-            const content = p.content || '';
-            if (htmlToggle.checked) {
-                rawEditor.value = content;
-            } else {
-                quill.root.innerHTML = content;
-            }
+            projectEditor.setHTML(p.content || '');
             
             window.scrollTo(0, 0);
         }
@@ -274,16 +253,13 @@
             e.preventDefault();
             const id = document.getElementById('projectId').value;
             
-            // Get content based on mode
-            const finalContent = htmlToggle.checked ? rawEditor.value : quill.root.innerHTML;
-
             const payload = {
                 title: document.getElementById('p_title').value,
                 category: document.getElementById('p_category').value,
                 tech_stack: document.getElementById('p_tech').value,
                 summary: document.getElementById('p_summary').value,
                 cover_image: document.getElementById('p_cover').value,
-                content: finalContent
+                content: projectEditor.getHTML()
             };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/projects/${id}` : `${API_URL}/projects/`;

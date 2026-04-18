@@ -1,108 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="HTML, CSS, JavaScript">
-    <meta name="description"
-        content="A clean, beautiful and responsive portfolio template for Developers! using only Html, CSS, and JavaScript">
-    <meta name="author" content="Cai Jiechao">
-    <title>Cai Jiechao | Software Developer</title>
-    <link rel="icon" href="index_page/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="./index_page/css/header.css" rel="stylesheet" />
-    <link href="./index_page/css/main.css" rel="stylesheet" />
-    <link href="./index_page/css/home.css" rel="stylesheet" />
-    <link href="./index_page/css/about.css" rel="stylesheet" />
-    <link href="./index_page/css/service.css" rel="stylesheet" />
-    <link href="./index_page/css/portfolio.css" rel="stylesheet" />
-    <link href="./index_page/css/testimonials.css" rel="stylesheet" />
-    <link href="./index_page/css/testimonials.css" rel="stylesheet" />
-    <link href="./index_page/css/blog.css" rel="stylesheet" />
-    <link href="./index_page/css/contact.css" rel="stylesheet" />
-    <link href="./index_page/css/footer.css" rel="stylesheet" />
-    <style>
-        header {
-            background-color: #333;
-            /* 固定背景颜色 */
-            position: fixed;
-            /* 固定在顶部 */
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            /* 确保在其他内容之上 */
-        }
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Article Detail | Cai Jiechao</title>
+   <link rel="icon" href="index_page/img/favicon.ico" type="image/x-icon">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link href="./index_page/css/header.css" rel="stylesheet" />
+   <link href="./index_page/css/main.css" rel="stylesheet" />
+   <style>
+      body {
+         background-color: #f9f9f9;
+         color: #333;
+         font-family: 'Poppins', sans-serif;
+      }
+      /* Header background override to ensure it's dark like articles */
+      header {
+         background-color: #333;
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         z-index: 1000;
+      }
+      /* Fix layout explicitly since it lacks some global wrappers */
+      header .row {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         width: 100%;
+      }
+      header .navbar ul li {
+         display: inline-block;
+      }
 
-        .col-md-18 p {
-            font-size: 18px;
-            /* 修改段落字体大小 */
-        }
-    </style>
+      .back-button-container {
+         text-align: center;
+         margin-top: 20px;
+         margin-bottom: 50px;
+      }
+      .back-button {
+         display: inline-block;
+         padding: 10px 30px;
+         background-color: #5f88e0;
+         color: #fff;
+         text-decoration: none;
+         border-radius: 5px;
+         transition: background-color 0.3s ease;
+         font-size: 16px;
+      }
+      .back-button:hover {
+         background-color: #0056b3;
+      }
+
+      .article-detail-container {
+         max-width: 1000px;
+         margin: 120px auto 50px auto;
+         background: #fff;
+         padding: 50px;
+         border-radius: 12px;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+      .article-header {
+         border-bottom: 2px solid #f0f0f0;
+         padding-bottom: 20px;
+         margin-bottom: 30px;
+      }
+      .article-header h1 {
+         color: #01143e;
+         font-weight: 700;
+         font-size: 36px;
+      }
+      .article-meta {
+         color: #666;
+         font-size: 15px;
+         margin-top: 15px;
+         display: flex;
+         justify-content: center;
+         gap: 20px;
+         flex-wrap: wrap;
+      }
+      .article-meta span {
+         background: #f8f9fa;
+         padding: 5px 12px;
+         border-radius: 20px;
+         border: 1px solid #eee;
+      }
+      .article-content {
+         font-size: 16px;
+         line-height: 1.8;
+         color: #444;
+      }
+      /* Ensure user-generated html looks good */
+      .article-content h2, .article-content h3 {
+         color: #01143e;
+         margin-top: 30px;
+         margin-bottom: 15px;
+      }
+      .article-content ul {
+         padding-left: 20px;
+      }
+      .article-content li {
+         margin-bottom: 10px;
+      }
+      .article-content img {
+         max-width: 100%;
+         height: auto;
+         border-radius: 8px;
+         margin: 20px auto;
+         display: block;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+   </style>
 </head>
-
 <body>
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="brand-name">
-                    <a href="/" class="logo">CaiJiechao</a>
-                </div>
-                <div class="navbar">
-                    <ul>
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#services">Skills</a></li>
-                        <li><a href="index.html#portfolio">Portfolio</a></li>
-                        <li><a href="index.html#blog">Blog</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                    </ul>
-                </div>
+   <header>
+      <div class="container">
+         <div class="row">
+            <div class="brand-name">
+               <a href="/" class="logo">CaiJiechao</a>
             </div>
-        </div>
-    </header>
-    <section class="services" id="services">
-        <div class="container">
-            <div class="row">
-                <div class="title text-center">
-                    <h1 style="text-transform: none;">Using cpp to generate a chat program</h1>
-                </div>
+            <div class="navbar">
+               <ul>
+                  <li><a href="/#home">Home</a></li>
+                  <li><a href="/#about">About</a></li>
+                  <li><a href="/#services">Courses</a></li>
+                  <li><a href="/#internship">Internship</a></li>
+                  <li><a href="/#portfolio">Portfolio</a></li>
+                  <li><a href="/#blog" class="active">Article</a></li>
+                  <li><a href="/#contact">Contact</a></li>
+               </ul>
             </div>
-            <div class="row">
-                <div class="col-md-18">
-                    <p>In this project, I used C++ to create a chat program that allows users to communicate with each
-                        other In this project, I used C++ to create a chat program that allows users to communicate with
-                        each
-                        other
-                        <br>
-                        <br>
-                    <div style="text-align: center;">
-                        <img src="blog_img/article1/1.jpg" alt="chat program"
-                            style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    </div>
-                    <br>
-                    <br>
-                    And here is a picture
-                    <p>
+         </div>
+      </div>
+   </header>
 
-                </div>
-            </div>
-        </div>
-    </section>
+   <div class="article-detail-container">
+      <div id="article-wrapper">
+         <div style="text-align: center;">Loading article details...</div>
+      </div>
+   </div>
 
-    <section class="copyright">
-        <div class="container">
-            <div class="social-link">
-                <p>Designed and Developed By Cai Jiechao.</p>
-            </div>
-        </div>
-    </section>
-    <div class="lightbox hide">
-        <span class="close-lightbox fa fa-close"></span>
-        <img src="" alt="portfolio" />
-    </div>
+   <div class="back-button-container">
+      <a href="/#blog" class="back-button">Back</a>
+   </div>
 
+   <script>
+      async function loadArticle() {
+         const urlParams = new URLSearchParams(window.location.search);
+         const articleId = urlParams.get('id');
+         const wrapper = document.getElementById('article-wrapper');
+         
+         if (!articleId) {
+            wrapper.innerHTML = '<h3 class="text-danger text-center">Article ID not provided</h3>';
+            return;
+         }
+
+         try {
+            const response = await fetch('http://127.0.0.1:8000/articles/' + articleId);
+            if (!response.ok) throw new Error("Article not found");
+            const article = await response.json();
+            
+            const date = new Date(article.created_at).toLocaleDateString('en-US', {
+               month: 'short', day: 'numeric', year: 'numeric'
+            });
+
+            wrapper.innerHTML = `
+               <div class="article-header text-center">
+                  <h1>${article.title}</h1>
+                  <div class="article-meta">
+                     <span><i class="fa fa-folder-open"></i> ${article.category}</span>
+                     <span><i class="fa fa-calendar"></i> ${date}</span>
+                  </div>
+               </div>
+               <div class="article-cover text-center" style="margin-bottom: 40px;">
+                  <img src="${article.cover_image}" alt="Cover Image" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);" onerror="this.style.display='none'">
+               </div>
+               <div class="article-content">
+                  ${article.content || article.summary}
+               </div>
+            `;
+         } catch (error) {
+            console.error('Error fetching article:', error);
+            wrapper.innerHTML = '<h3 class="text-danger text-center">Failed to load article details</h3>';
+         }
+      }
+
+      document.addEventListener('DOMContentLoaded', loadArticle);
+   </script>
 </body>
-
 </html>
