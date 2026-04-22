@@ -283,25 +283,173 @@ projects = [
         "MathTasks Intelligent Production Platform",
         "MathTasks 智能生产平台",
         "Web & AI",
-        "5-role full-link collaboration based on FSM & RBAC, solving concurrent routing conflicts. Built a 30+ field question bank model.",
-        "基于 FSM & RBAC 的 5 角色全链路协作，解决并发路由冲突。构建了 30+ 字段的题库模型。",
+        "5-role full-link collaboration based on FSM & RBAC, solving concurrent routing conflicts. Built a 30+ field question bank model. Async task queues for difficulty evaluation.",
+        "基于 FSM & RBAC 的 5 角色全链路协作，解决并发路由冲突。构建了 30+ 字段的题库模型。为难度评估构建了异步任务队列。",
         "work/work1/cover.png",
-        "Python, FastAPI, Next.js, PostgreSQL, Playwright",
+        "Python, FastAPI, Next.js, PostgreSQL, Vector Search, Playwright, Agent",
         "2026-01-10 10:00:00",
-        """<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"><h2>Project Overview</h2></div>""",
-        """<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"><h2>项目概述</h2></div>"""
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">Project Overview</h2> 
+            <p><strong>MathTasks</strong> is a comprehensive intelligent production platform designed to streamline the creation and management of math question banks.</p> 
+            <h3 style="color: #333; margin-top: 20px;">Key Features & Architecture:</h3> 
+            <ul> 
+                <li><strong>Core Architecture & Workflow:</strong> Implemented a 5-role full-link collaboration system based on Finite State Machine (FSM) and RBAC, resolving concurrent routing conflicts.</li> 
+                <li><strong>Async Queues & Real-time Push:</strong> Built asynchronous task queues for difficulty evaluation and vector deduplication, supporting efficient deduplication of 10,000+ questions. Used SSE streams combined with Redis caching for real-time frontend progress pushing and disconnection recovery.</li> 
+                <li><strong>AI Quality Evaluation:</strong> Designed an "adversarial validation" mechanism based on Large Language Models (LLMs), converting probabilistic outputs into deterministic difficulty evaluation metrics.</li> 
+                <li><strong>Automated Testing:</strong> Utilized Playwright for multi-role end-to-end testing; integrated multimodal LLMs to solve CAPTCHA recognition, with a Tesseract/manual intervention fallback strategy to ensure process robustness.</li> 
+            </ul> 
+        </div>
+        """,
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">项目概述</h2> 
+            <p><strong>MathTasks</strong> 是一个综合性的智能生产平台，旨在简化数学题库的创建和管理。</p> 
+            <h3 style="color: #333; margin-top: 20px;">核心功能与架构：</h3> 
+            <ul> 
+                <li><strong>核心架构与工作流：</strong> 实现了基于有限状态机 (FSM) 和 RBAC 的 5 角色全链路协作系统，解决了并发路由冲突。</li> 
+                <li><strong>异步队列与实时推送：</strong> 为难度评估和向量去重构建了异步任务队列，支持上万道题目的高效去重。结合 Redis 缓存使用 SSE 流，实现了前端进度的实时推送和断线重连。</li> 
+                <li><strong>AI 质量评估：</strong> 设计了基于大语言模型 (LLM) 的“对抗验证”机制，将概率输出转化为确定性的难度评估指标。</li> 
+                <li><strong>自动化测试：</strong> 利用 Playwright 进行多角色端到端测试；集成了多模态大模型解决验证码识别问题，并辅以 Tesseract/人工干预的回退策略，确保流程的鲁棒性。</li> 
+            </ul> 
+        </div>
+        """
     ),
     (
         "Enterprise LLM Unified Gateway & API Management",
         "企业级 LLM 统一网关与 API 管理",
         "Backend & Infrastructure",
-        "Unified access to 8+ vendors and 20+ models. Configured multi-key load balancing and Failover.",
-        "统一接入 8+ 厂商和 20+ 模型。配置多 Key 负载均衡和 Failover。",
+        "Unified access to 8+ vendors and 20+ models. Configured multi-key load balancing and Failover. Optimized long-running inference connections.",
+        "统一接入 8+ 厂商和 20+ 模型。配置了多 Key 负载均衡和 Failover。优化了长连接推理的稳定性。",
         "work/work2/1.png",
-        "Python, LiteLLM, Docker, PostgreSQL, Redis",
+        "Python, LiteLLM, Docker, PostgreSQL, Redis, Asyncio, Langfuse",
         "2026-02-10 10:00:00",
-        """<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"><h2>System Architecture</h2></div>""",
-        """<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"><h2>系统架构</h2></div>"""
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">System Architecture</h2> 
+            <p>An enterprise-grade unified gateway designed to manage, route, and monitor Large Language Model API calls across the organization.</p> 
+            <h3 style="color: #333; margin-top: 20px;">Core Contributions:</h3> 
+            <ul> 
+                <li><strong>Gateway Routing & High Availability:</strong> Unified access to 8+ vendors and 20+ models (OpenAI/Anthropic/Doubao). Configured multi-Key load balancing and automatic Failover to smoothly handle upstream rate limits and network anomalies.</li> 
+                <li><strong>Performance Testing & Optimization:</strong> Wrote concurrent load testing scripts to evaluate and tune the gateway's time-to-first-token and throughput under 50+ concurrency; optimized long-running inference connection settings to stably support thousands of complex Agent tasks daily.</li> 
+                <li><strong>Cost Governance & Observability:</strong> Integrated Langfuse for Token-level tracking; developed automated scheduled scripts to deeply parse aggregated gateway logs and automatically push fine-grained multi-team/multi-project cost reports via Feishu Webhooks.</li> 
+                <li><strong>Scale & Traffic:</strong> Cumulatively processed over 100 million+ Tokens requests.</li> 
+            </ul> 
+        </div>
+        """,
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">系统架构</h2> 
+            <p>一个企业级统一网关，旨在管理、路由和监控组织内的大语言模型 API 调用。</p> 
+            <h3 style="color: #333; margin-top: 20px;">核心贡献：</h3> 
+            <ul> 
+                <li><strong>网关路由与高可用：</strong> 统一接入了 8+ 厂商和 20+ 模型 (OpenAI/Anthropic/Doubao)。配置了多 Key 负载均衡和自动 Failover，以平滑处理上游速率限制和网络异常。</li> 
+                <li><strong>性能测试与优化：</strong> 编写了并发压测脚本，评估并调优了网关在 50+ 并发下的首字响应时间和吞吐量；优化了长推理连接设置，每天稳定支撑数千个复杂的 Agent 任务。</li> 
+                <li><strong>成本治理与可观测性：</strong> 集成了 Langfuse 进行 Token 级别的追踪；开发了自动化定时脚本，深度解析网关聚合日志，并通过飞书 Webhook 自动推送细粒度的多团队/多项目成本报告。</li> 
+                <li><strong>规模与流量：</strong> 累计处理了超过 1 亿+ Tokens 的请求。</li> 
+            </ul> 
+        </div>
+        """
+    ),
+    (
+        "Baipiao: Browser-Automation Local LLM Proxy",
+        "Baipiao：基于浏览器自动化的本地 LLM 代理",
+        "Web & Automation",
+        "Hijacked local browsers via CDP protocol to simulate actions and bypass anti-scraping. Provided standard /v1/chat/completions interfaces.",
+        "通过 CDP 协议劫持本地浏览器，模拟人类操作绕过反爬虫。对外提供标准的 /v1/chat/completions 接口。",
+        "index_page/img/portfolio/app.png",
+        "Bun, Hono, CDP (Chrome DevTools Protocol)",
+        "2026-04-01 10:00:00",
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">Project Background</h2> 
+            <p>I was always curious why LLM API services charge fees when their web interfaces are often free. Why not fetch web chat conversations directly to act as an API provider? Thus, this project was born.</p> 
+            <h3 style="color: #333; margin-top: 20px;">Implementation Details:</h3> 
+            <ul> 
+                <li><strong>Mechanism:</strong> Took control of the local browser via the underlying CDP (Chrome DevTools Protocol), simulating real keyboard strokes and mouse clicks, successfully bypassing conventional anti-scraping mechanisms based on DOM selectors and clipboards.</li> 
+                <li><strong>API Encapsulation:</strong> Built a local HTTP service using Bun and Hono, parsing the web DOM to separate the model's "deep thinking" content from the official reply.</li> 
+                <li><strong>Format Compatibility:</strong> Provides standard <code>/v1/chat/completions</code> interfaces, dynamically adapting to OpenAI and Anthropic Messages API formats based on client requests.</li> 
+            </ul> 
+        </div>
+        """,
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">项目背景</h2> 
+            <p>我一直很好奇，为什么 LLM API 服务需要收费，而它们的 Web 界面通常是免费的。为什么不直接抓取网页聊天的对话来作为 API 提供者呢？因此，这个项目诞生了。</p> 
+            <h3 style="color: #333; margin-top: 20px;">实现细节：</h3> 
+            <ul> 
+                <li><strong>底层机制：</strong> 通过底层 CDP (Chrome DevTools Protocol) 协议接管本地浏览器，模拟真实的键盘敲击和鼠标点击，成功绕过了基于 DOM 选择器和剪贴板的常规反爬虫机制。</li> 
+                <li><strong>API 封装：</strong> 使用 Bun 和 Hono 构建了本地 HTTP 服务，解析网页 DOM，将模型的“深度思考”内容与正式回复分离开来。</li> 
+                <li><strong>格式兼容：</strong> 对外提供标准的 <code>/v1/chat/completions</code> 接口，根据客户端请求动态适配 OpenAI 和 Anthropic Messages 的 API 格式。</li> 
+            </ul> 
+        </div>
+        """
+    ),
+    (
+        "Roles-Skill: Character Distillation Architecture",
+        "Roles-Skill：角色知识蒸馏架构",
+        "AI Agent & Prompt Engineering",
+        "A Cyber Immortality Skill architecture based on Claude Code. Supports native language replies and automatic tool generation.",
+        "基于 Claude Code 的“赛博永生” Skill 架构。支持母语回复和自动化工具生成。",
+        "index_page/img/portfolio/web.jpg",
+        "Claude Code, Python, Agent Architecture",
+        "2026-03-15 10:00:00",
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">Concept & Design</h2> 
+            <p>Based on Anthropic's latest Claude Code CLI tool, I designed and open-sourced a "Cyber Immortality" Skill architecture encompassing dozens of historical figures and modern professions.</p> 
+            <h3 style="color: #333; margin-top: 20px;">Core Technologies:</h3> 
+            <ul> 
+                <li><strong>Distillation Architecture:</strong> Implemented a dual-layer distillation architecture supporting a "native language reply + auto-translation" pipeline.</li> 
+                <li><strong>Auto-Tool Generation:</strong> Developed an automatic tool generation engine that dispatches Python tool code to Agents based on their character types, granting them computational and execution capabilities.</li> 
+                <li><strong>Multi-role Protocol:</strong> Designed a multi-role group chat protocol enabling cross-dimensional Agents to interact and debate.</li> 
+            </ul> 
+        </div>
+        """,
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">理念与设计</h2> 
+            <p>基于 Anthropic 最新推出的 Claude Code CLI 工具，我设计并开源了一个包含数十位历史人物和现代职业的“赛博永生” Skill 架构。</p> 
+            <h3 style="color: #333; margin-top: 20px;">核心技术：</h3> 
+            <ul> 
+                <li><strong>蒸馏架构：</strong> 实现了一个双层蒸馏架构，支持“母语回复 + 自动翻译”的流水线。</li> 
+                <li><strong>自动工具生成：</strong> 开发了一个自动工具生成引擎，根据 Agent 的角色类型向其分发 Python 工具代码，赋予它们计算和执行能力。</li> 
+                <li><strong>多角色协议：</strong> 设计了一个多角色群聊协议，使跨次元的 Agent 能够进行互动和辩论。</li> 
+            </ul> 
+        </div>
+        """
+    ),
+    (
+        "CJC-Company: Vibe-Coding Multi-Agent Org",
+        "CJC-Company：Vibe-Coding 多智能体组织",
+        "Multi-Agent System",
+        "Simulated Multi-Agent organization with 11 virtual departments. Handed over requirements, coding, and prep to an AI Cyber Company.",
+        "由 11 个虚拟部门组成的模拟多智能体组织。将需求、编码和筹备工作完全移交给 AI 赛博公司。",
+        "index_page/img/portfolio/ui1.jpg",
+        "Vibe-Coding, Multi-Agent Framework, Markdown Protocol",
+        "2026-03-20 10:00:00",
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">Organization Simulation</h2> 
+            <p>Independently built a simulated Multi-Agent organization consisting of 11 virtual departments (Product, R&D, QA, HR, Finance, etc.).</p> 
+            <h3 style="color: #333; margin-top: 20px;">Engineering Value:</h3> 
+            <ul> 
+                <li><strong>Architecture:</strong> Each department is equipped with independent Supervisor, Assistant, and Member roles, communicating across departments via a standardized Markdown protocol.</li> 
+                <li><strong>Solopreneur Automation:</strong> Achieved an extreme "Solopreneur" automated workflow. By establishing strict PRD writing standards and Token cost mechanisms, personal requirements planning, code development, and job preparation are fully delegated to the AI Agent "Cyber Company", vastly boosting individual productivity.</li> 
+            </ul> 
+        </div>
+        """,
+        """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333;"> 
+            <h2 style="color: #0056b3; border-bottom: 2px solid #eee; padding-bottom: 10px;">组织模拟</h2> 
+            <p>独立构建了一个由 11 个虚拟部门（产品、研发、QA、HR、财务等）组成的模拟多智能体（Multi-Agent）组织。</p> 
+            <h3 style="color: #333; margin-top: 20px;">工程价值：</h3> 
+            <ul> 
+                <li><strong>架构：</strong> 每个部门配备了独立的 Supervisor、Assistant 和 Member 角色，通过标准化的 Markdown 协议进行跨部门沟通。</li> 
+                <li><strong>超级个体自动化：</strong> 实现了极致的“超级个体 (Solopreneur)”自动化工作流。通过建立严格的 PRD 编写标准和 Token 成本机制，将个人的需求规划、代码开发和求职准备完全委托给 AI Agent“赛博公司”，极大地提升了个人生产力。</li> 
+            </ul> 
+        </div>
+        """
     )
 ]
 
