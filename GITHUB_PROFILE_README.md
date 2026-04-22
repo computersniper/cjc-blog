@@ -92,12 +92,34 @@ if __name__ == '__main__':
             <br>JavaScript
         </td>
         <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=c" alt="C" width="48" height="48" />
+            <br>C
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=cpp" alt="C++" width="48" height="48" />
+            <br>C++
+        </td>
+        <td align="center" width="90">
             <img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" width="48" height="48" />
             <br>Kotlin
         </td>
         <td align="center" width="90">
-            <img src="https://skillicons.dev/icons?i=androidstudio" alt="Android" width="48" height="48" />
-            <br>Android
+            <img src="https://skillicons.dev/icons?i=php" alt="PHP" width="48" height="48" />
+            <br>PHP
+        </td>
+    </tr>
+    <tr>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=fastapi" alt="FastAPI" width="48" height="48" />
+            <br>FastAPI
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=flask" alt="Flask" width="48" height="48" />
+            <br>Flask
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=spring" alt="Spring" width="48" height="48" />
+            <br>Spring
         </td>
         <td align="center" width="90">
             <img src="https://techstack-generator.vercel.app/react-icon.svg" alt="React" width="55" height="55" />
@@ -108,27 +130,53 @@ if __name__ == '__main__':
             <br>Next.js
         </td>
         <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=vue" alt="Vue" width="48" height="48" />
+            <br>Vue 3
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=tailwind" alt="Tailwind CSS" width="48" height="48" />
+            <br>Tailwind
+        </td>
+        <td align="center" width="90">
             <img src="https://skillicons.dev/icons?i=nodejs" alt="Node.js" width="48" height="48" />
             <br>Node.js
         </td>
     </tr>
     <tr>
         <td align="center" width="90">
-            <img src="https://skillicons.dev/icons?i=fastapi" alt="FastAPI" width="48" height="48" />
-            <br>FastAPI
-        </td>
-        <td align="center" width="90">
             <img src="https://skillicons.dev/icons?i=postgres" alt="PostgreSQL" width="48" height="48" />
             <br>PostgreSQL
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=mysql" alt="MySQL" width="48" height="48" />
+            <br>MySQL
         </td>
         <td align="center" width="90">
             <img src="https://skillicons.dev/icons?i=sqlite" alt="SQLite" width="48" height="48" />
             <br>SQLite
         </td>
         <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=redis" alt="Redis" width="48" height="48" />
+            <br>Redis
+        </td>
+        <td align="center" width="90">
             <img src="https://techstack-generator.vercel.app/docker-icon.svg" alt="Docker" width="65" height="65" />
             <br>Docker
         </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=docker" alt="Docker Compose" width="48" height="48" />
+            <br>Compose
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=linux" alt="Linux" width="48" height="48" />
+            <br>Linux
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=git" alt="Git" width="48" height="48" />
+            <br>Git
+        </td>
+    </tr>
+    <tr>
         <td align="center" width="90">
             <img src="https://skillicons.dev/icons?i=pytorch" alt="PyTorch" width="48" height="48" />
             <br>PyTorch
@@ -138,16 +186,20 @@ if __name__ == '__main__':
             <br>TensorFlow
         </td>
         <td align="center" width="90">
-            <img src="https://skillicons.dev/icons?i=firebase" alt="Firebase" width="48" height="48" />
-            <br>Firebase
-        </td>
-        <td align="center" width="90">
-            <img src="https://skillicons.dev/icons?i=git" alt="Git" width="48" height="48" />
-            <br>Git
+            <img src="https://skillicons.dev/icons?i=sklearn" alt="Scikit-learn" width="48" height="48" />
+            <br>Scikit-learn
         </td>
         <td align="center" width="90">
             <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="GitHub" width="55" height="55" />
             <br>GitHub
+        </td>
+        <td align="center" width="90">
+            <img src="https://techstack-generator.vercel.app/playwright-icon.svg" alt="Playwright" width="55" height="55" onerror="this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/playwright/playwright-original.svg'" />
+            <br>Playwright
+        </td>
+        <td align="center" width="90">
+            <img src="https://skillicons.dev/icons?i=androidstudio" alt="Android" width="48" height="48" />
+            <br>Android
         </td>
     </tr>
 </table>

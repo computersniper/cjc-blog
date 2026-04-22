@@ -122,13 +122,14 @@
             </div>
             <div class="navbar">
                <ul>
-                  <li><a href="/#home">Home</a></li>
-                  <li><a href="/#about">About</a></li>
-                  <li><a href="/#services">Courses</a></li>
-                  <li><a href="/#internship">Internship</a></li>
-                  <li><a href="/#portfolio">Portfolio</a></li>
-                  <li><a href="/#blog" class="active">Article</a></li>
-                  <li><a href="/#contact">Contact</a></li>
+                  <li><a href="/#home" data-i18n="nav_home">Home</a></li>
+                  <li><a href="/#about" data-i18n="nav_about">About</a></li>
+                  <li><a href="/#services" data-i18n="nav_courses">Courses</a></li>
+                  <li><a href="/#internship" data-i18n="nav_internship">Internship</a></li>
+                  <li><a href="/#portfolio" data-i18n="nav_portfolio">Portfolio</a></li>
+                  <li><a href="/#blog" class="active" data-i18n="nav_article">Article</a></li>
+                  <li><a href="/#contact" data-i18n="nav_contact">Contact</a></li>
+                  <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                </ul>
             </div>
          </div>
@@ -145,11 +146,28 @@
       <a href="/#blog" class="back-button">Back</a>
    </div>
 
+   <script src="./index_page/js/i18n.js"></script>
    <script>
       async function loadArticle() {
          const urlParams = new URLSearchParams(window.location.search);
          const articleId = urlParams.get('id');
          const wrapper = document.getElementById('article-wrapper');
+         const paramLang = urlParams.get('lang');
+         
+         if (paramLang) {
+            localStorage.setItem('lang', paramLang);
+         }
+         const lang = localStorage.getItem('lang') || 'en';
+         
+         // update initial UI based on lang
+         const backBtn = document.querySelector('.back-button');
+         if (backBtn) {
+            backBtn.textContent = lang === 'zh' ? '返回' : 'Back';
+         }
+         const langBtn = document.getElementById('lang-toggle-btn');
+         if (langBtn) {
+            langBtn.textContent = lang === 'zh' ? '🇺🇸 EN' : '🇨🇳 中文';
+         }
          
          if (!articleId) {
             wrapper.innerHTML = '<h3 class="text-danger text-center">Article ID not provided</h3>';
@@ -165,11 +183,15 @@
                month: 'short', day: 'numeric', year: 'numeric'
             });
 
+            const title = lang === 'zh' && article.title_zh ? article.title_zh : article.title;
+            const content = lang === 'zh' && article.content_zh ? article.content_zh : (article.content || article.summary);
+            const category = lang === 'zh' && article.category_zh ? article.category_zh : article.category;
+
             wrapper.innerHTML = `
                <div class="article-header text-center">
-                  <h1>${article.title}</h1>
+                  <h1>${title}</h1>
                   <div class="article-meta">
-                     <span><i class="fa fa-folder-open"></i> ${article.category}</span>
+                     <span><i class="fa fa-folder-open"></i> ${category}</span>
                      <span><i class="fa fa-calendar"></i> ${date}</span>
                   </div>
                </div>
@@ -177,7 +199,7 @@
                   <img src="${article.cover_image}" alt="Cover Image" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);" onerror="this.style.display='none'">
                </div>
                <div class="article-content">
-                  ${article.content || article.summary}
+                  ${content}
                </div>
             `;
          } catch (error) {

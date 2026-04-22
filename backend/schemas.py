@@ -4,9 +4,12 @@ import datetime
 
 class ArticleBase(BaseModel):
     title: str
+    title_zh: Optional[str] = ""
     category: str
     summary: str
+    summary_zh: Optional[str] = ""
     content: Optional[str] = None
+    content_zh: Optional[str] = ""
     cover_image: str
     read_url: Optional[str] = "#"
 
@@ -25,9 +28,12 @@ class Article(ArticleBase):
 
 class ProjectBase(BaseModel):
     title: str
+    title_zh: Optional[str] = ""
     category: str
     summary: str
+    summary_zh: Optional[str] = ""
     content: Optional[str] = None
+    content_zh: Optional[str] = ""
     cover_image: str
     tech_stack: Optional[str] = None
 
