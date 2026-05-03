@@ -95,3 +95,26 @@ cd backend
 python seed.py
 ```
 *(Warning: This will overwrite any changes you made in the Admin panel!)*
+
+## Contact Form Email
+
+The old PHP `send_email/send.php` endpoint has been migrated to FastAPI:
+
+```text
+POST /contact/send
+```
+
+Configure SMTP with environment variables before starting the backend:
+
+```bash
+export SMTP_HOST="smtphz.qiye.163.com"
+export SMTP_PORT="465"
+export SMTP_USERNAME="contact@caijiechao.com"
+export SMTP_PASSWORD="your-email-authorization-code"
+export SMTP_FROM="contact@caijiechao.com"
+export SMTP_FROM_NAME="CJC Blog"
+export CONTACT_TO="2651159710@qq.com"
+export SMTP_USE_SSL="true"
+```
+
+For a reverse-proxy deployment, route frontend `/api/*` requests to the FastAPI backend, or set `window.CJC_BLOG_API_URL` before the frontend scripts load.

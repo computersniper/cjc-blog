@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -182,6 +182,35 @@
          flex: 1 1 auto !important;
          margin: 0;
       }
+
+      .services {
+         background-color: rgb(236, 241, 250);
+      }
+
+      .blog {
+         background-color: #fff;
+      }
+
+      .portfolio {
+         background-color: #f6f8fb;
+      }
+
+      .certificate {
+         background-color: #fff;
+      }
+
+      .certificate .certificate-box {
+         background-color: #f6f8fb;
+      }
+
+      .internship {
+         background-color: #eef3ff !important;
+      }
+
+      .contact {
+         background-color: #f8fafc;
+      }
+
       @keyframes fadeIn {
          from { opacity: 0; transform: translateY(20px); }
          to { opacity: 1; transform: translateY(0); }
@@ -204,11 +233,12 @@
                   <li><a href="#home" class="active" data-i18n="nav_home">Home</a></li>
                   <li><a href="#about" data-i18n="nav_about">About</a></li>
                   <li><a href="#services" data-i18n="nav_courses">Courses</a></li>
-                  <li><a href="#internship" data-i18n="nav_internship">Internship</a></li>
-                  <li><a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a></li>
                   <li><a href="#blog" data-i18n="nav_article">Article</a></li>
+                  <li><a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a></li>
+                  <li><a href="#certificate" data-i18n="nav_certificate">Certificates</a></li>
+                  <li><a href="#internship" data-i18n="nav_internship">Internship</a></li>
                   <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-                  <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
+                  <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">中文</a></li>
                </ul>
             </div>
          </div>
@@ -234,9 +264,9 @@
          <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 data-i18n="choose_lang">Choose language</h2>
-            <a class="modal-btn" href="contact/caijiechao-cv-chinese.pdf" target="_blank"
+            <a class="modal-btn" href="./contact/caijiechao-cv-chinese.pdf" download="caijiechao-cv-chinese.pdf"
                onclick="closeModal()">中文</a>
-            <a class="modal-btn" href="contact/caijiechao-cv-english.pdf" target="_blank"
+            <a class="modal-btn" href="./contact/caijiechao-cv-english.pdf" download="caijiechao-cv-english.pdf"
                onclick="closeModal()">English</a>
          </div>
       </div>
@@ -292,7 +322,7 @@
                         <a href="index_page/qr_code.html" title="Wechat"><i class="fa fa-weixin"></i></a>
                         <a href="index.html#copyright" title="Phone"><i class="fa fa-mobile-phone"></i></a>
                         <a href="index.html#copyright" title="email"><i class="fa fa-envelope-open-o"></i></a>
-                        <a href="" title="github"><i class="fa fa-github"></i></a>
+                        <a href="https://github.com/computersniper" title="github" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a>
                      </div>
                   </div>
                </div>
@@ -310,7 +340,7 @@
          <div class="row">
             <div class="service-content">
                <div class="box">
-                  <div class="icon"><i class="fa fa-brain"></i></div>
+                  <div class="icon"><i class="fa fa-sitemap"></i></div>
                   <h5 data-i18n="dl_title">Deep Learning & Neural Networks</h5>
                   <p data-i18n="dl_desc">Studied advanced AI techniques including Deep Learning and Neural Networks architectures, building strong foundations for LLM engineering.</p>
                </div>
@@ -320,7 +350,7 @@
                   <p data-i18n="nlp_desc">Learned text processing, language modeling, and advanced NLP techniques, essential for understanding and developing modern AI Agent systems.</p>
                </div>
                <div class="box">
-                  <div class="icon"><i class="fa fa-robot"></i></div>
+                  <div class="icon"><i class="fa fa-cogs"></i></div>
                   <h5 data-i18n="ml_title">Machine Learning</h5>
                   <p data-i18n="ml_desc">Mastered core ML algorithms, data preprocessing, and model evaluation metrics, applying them to solve complex predictive and classification problems.</p>
                </div>
@@ -344,35 +374,30 @@
       </div>
    </section>
 
-   <section class="internship" id="internship" data-aos="fade-up" data-aos-delay="250" style="padding: 80px 0; background-color: #f9f9f9;">
+   <section class="blog" id="blog" data-aos="fade-up" data-aos-delay="250">
       <div class="container">
          <div class="row">
             <div class="title text-center">
-               <h1 data-i18n="internship_exp">Internship Experience</h1>
+               <h1 data-i18n="latest_articles">Latest Articles</h1>
             </div>
          </div>
          <div class="row">
-            <div class="service-content" style="display: block; width: 100%;">
-               <!-- Internship -->
-               <div class="box" style="width: 100%; max-width: 1000px; margin: 0 auto; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; padding: 40px; display: flex; flex-direction: column; md-flex-direction: row; gap: 30px;">
-                  <div style="flex: 1;">
-                     <div class="d-flex align-items-center" style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <div class="icon" style="margin-bottom: 0; margin-right: 15px; width: 50px; height: 50px; line-height: 50px; font-size: 24px;"><i class="fa fa-briefcase"></i></div>
-                        <div>
-                           <h5 style="color: #01143e; margin-bottom: 5px; font-size: 22px;" data-i18n="intern_title">Xnew | AI Platform R&D Intern</h5>
-                           <h6 style="color: #666; font-size: 15px; margin: 0;" data-i18n="intern_date">2026.01 – 2026.04</h6>
-                        </div>
-                     </div>
-                     <p style="font-size: 14px; color: #777; margin-bottom: 15px; font-style: italic;" data-i18n="intern_desc">
-                        Company Description: An educational content service provider that has long supplied Olympiad-level high-quality math question data to AI vendors such as Tencent, Alibaba, and Xiaohongshu.
-                     </p>
-                     <p style="font-size: 16px; line-height: 1.8; color: #444; margin-top: 10px;">
-                        • <span data-i18n="intern_bullet1"><strong>Full-Stack Development:</strong> Responsible for frontend and backend architecture, core feature development, and testing.</span><br/>
-                        • <span data-i18n="intern_bullet2"><strong>Data Pipeline:</strong> Built data cleaning and intelligent annotation pipelines.</span><br/>
-                        • <span data-i18n="intern_bullet3"><strong>LLM Integration:</strong> Integrated Large Language Models (LLMs) for evaluating math question quality (originality, difficulty, rigor, etc.).</span><br/>
-                        • <span data-i18n="intern_bullet4"><strong>Gateway & Metrics:</strong> Deployed LiteLLM gateway, optimized calling performance, and implemented usage statistics with automated daily reports.</span>
-                     </p>
-                  </div>
+            <div class="category-filter text-center" style="margin-bottom: 30px; width: 100%;">
+               <button class="filter-btn active" data-filter="all" data-i18n="filter_all">All</button>
+               <button class="filter-btn" data-filter="Algorithm" data-i18n="filter_algo">Algorithm</button>
+               <button class="filter-btn" data-filter="Software Engineering" data-i18n="filter_se">Software Engineering</button>
+               <button class="filter-btn" data-filter="Reinforcement Learning" data-i18n="filter_rl">Reinforcement Learning</button>
+            </div>
+         </div>
+         <div class="row position-relative">
+            <!-- Navigation buttons for scrolling mode -->
+            <button class="slider-nav prev-btn" id="blog-prev" aria-label="Previous Article"><i class="fa fa-chevron-left"></i></button>
+            <button class="slider-nav next-btn" id="blog-next" aria-label="Next Article"><i class="fa fa-chevron-right"></i></button>
+            
+            <div class="slider-container-wrapper" id="blog-wrapper" style="overflow: hidden; width: 100%;">
+               <div class="blog-content" id="dynamic-articles">
+                  <!-- Articles will be loaded here dynamically from backend -->
+                  <div style="text-align:center; width:100%;"><p data-i18n="loading_articles">Loading articles...</p></div>
                </div>
             </div>
          </div>
@@ -399,22 +424,8 @@
          </div>
       </div>
    </section>
-   <section class="message">
-      <div class="container">
-         <div class="row align-items-center">
-            <div class="message-text">
-               <h2 data-i18n="msg_box_title">My inbox is always open. Whether you have a question or just want to say hi or want to hire me, I'll
-                  try my best to get back to you!</h2>
-            </div>
-            <div class="button ">
-               <a href='index.html#contact' data-i18n="get_in_touch">Get In Touch</a>
-            </div>
-         </div>
-      </div>
-   </section>
-
-   <!--certificate-->
-   <section class="certificate" id="certificate">
+<!--certificate-->
+   <section class="certificate" id="certificate" data-aos="fade-up" data-aos-delay="350">
       <div class="container">
          <div class="row">
             <div class="title text-center">
@@ -433,10 +444,9 @@
                         <span data-i18n="cert1_tag">Mathematical modeling</span>
                      </div>
                      <h3 data-i18n="cert1_title">Successful participation in 2024 MCM competition</h3>
-                     <p data-i18n="cert1_desc">Our topic is: An Analytical Framework for Assessing“ Momentum”
-                        in Sports: Leveraging Random Forest and Fourier
-                        Transform Analysis
-                     </p>
+                      <p data-i18n="cert1_desc">Our topic is: An Analytical Framework for Assessing "Momentum" in Sports: Leveraging Random Forest and Fourier
+                         Transform Analysis
+                      </p>
                   </div>
                </div>
                <div class="certificate-box">
@@ -457,7 +467,54 @@
          </div>
       </div>
    </section>
-   <!--testimonials-->
+   <section class="internship" id="internship" data-aos="fade-up" data-aos-delay="400" style="padding: 80px 0; background-color: #f9f9f9;">
+      <div class="container">
+         <div class="row">
+            <div class="title text-center">
+               <h1 data-i18n="internship_exp">Internship Experience</h1>
+            </div>
+         </div>
+         <div class="row">
+            <div class="service-content" style="display: block; width: 100%;">
+               <!-- Internship -->
+               <div class="box" style="width: 100%; max-width: 1000px; margin: 0 auto; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; padding: 40px; display: flex; flex-direction: column; md-flex-direction: row; gap: 30px;">
+                  <div style="flex: 1;">
+                     <div class="d-flex align-items-center" style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div class="icon" style="margin-bottom: 0; margin-right: 15px; width: 50px; height: 50px; line-height: 50px; font-size: 24px;"><i class="fa fa-briefcase"></i></div>
+                        <div>
+                           <h5 style="color: #01143e; margin-bottom: 5px; font-size: 22px;" data-i18n="intern_title">Xnew | AI Platform R&D Intern</h5>
+                           <h6 style="color: #666; font-size: 15px; margin: 0;" data-i18n="intern_date">2026.01 - 2026.04</h6>
+                        </div>
+                     </div>
+                     <p style="font-size: 14px; color: #777; margin-bottom: 15px; font-style: italic;" data-i18n="intern_desc">
+                        Company Description: An educational content service provider that has long supplied Olympiad-level high-quality math question data to AI vendors such as Tencent, Alibaba, and Xiaohongshu.
+                     </p>
+                     <p style="font-size: 16px; line-height: 1.8; color: #444; margin-top: 10px;">
+                         - <span data-i18n="intern_bullet1"><strong>Full-Stack Development:</strong> Responsible for frontend and backend architecture, core feature development, and testing.</span><br/>
+                         - <span data-i18n="intern_bullet2"><strong>Data Pipeline:</strong> Built data cleaning and intelligent annotation pipelines.</span><br/>
+                         - <span data-i18n="intern_bullet3"><strong>LLM Integration:</strong> Integrated Large Language Models (LLMs) for evaluating math question quality (originality, difficulty, rigor, etc.).</span><br/>
+                         - <span data-i18n="intern_bullet4"><strong>Gateway & Metrics:</strong> Deployed LiteLLM gateway, optimized calling performance, and implemented usage statistics with automated daily reports.</span>
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="message">
+      <div class="container">
+         <div class="row align-items-center">
+            <div class="message-text">
+               <h2 data-i18n="msg_box_title">My inbox is always open. Whether you have a question or just want to say hi or want to hire me, I'll
+                  try my best to get back to you!</h2>
+            </div>
+            <div class="button ">
+               <a href='index.html#contact' data-i18n="get_in_touch">Get In Touch</a>
+            </div>
+         </div>
+      </div>
+   </section>
+<!--testimonials-->
    <!--<section class="testimonials">
       <div class="container">
          <div class="row">
@@ -518,35 +575,6 @@
          </div>
       </div>
    </section>-->
-   <section class="blog" id="blog" data-aos="fade-up" data-aos-delay="400">
-      <div class="container">
-         <div class="row">
-            <div class="title text-center">
-               <h1 data-i18n="latest_articles">Latest Articles</h1>
-            </div>
-         </div>
-         <div class="row">
-            <div class="category-filter text-center" style="margin-bottom: 30px; width: 100%;">
-               <button class="filter-btn active" data-filter="all" data-i18n="filter_all">All</button>
-               <button class="filter-btn" data-filter="Algorithm" data-i18n="filter_algo">Algorithm</button>
-               <button class="filter-btn" data-filter="Software Engineering" data-i18n="filter_se">Software Engineering</button>
-               <button class="filter-btn" data-filter="Reinforcement Learning" data-i18n="filter_rl">Reinforcement Learning</button>
-            </div>
-         </div>
-         <div class="row position-relative">
-            <!-- Navigation buttons for scrolling mode -->
-            <button class="slider-nav prev-btn" id="blog-prev" aria-label="Previous Article"><i class="fa fa-chevron-left"></i></button>
-            <button class="slider-nav next-btn" id="blog-next" aria-label="Next Article"><i class="fa fa-chevron-right"></i></button>
-            
-            <div class="slider-container-wrapper" id="blog-wrapper" style="overflow: hidden; width: 100%;">
-               <div class="blog-content" id="dynamic-articles">
-                  <!-- Articles will be loaded here dynamically from backend -->
-                  <div style="text-align:center; width:100%;"><p data-i18n="loading_articles">Loading articles...</p></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </section>
    <section class="contact" id="contact">
       <div class="container">
          <div class="row">
@@ -557,6 +585,7 @@
          <div class="row">
             <div class="contact-form">
                <form id="contactForm" method="post">
+                  <input type="text" name="website" autocomplete="off" tabindex="-1" style="display:none">
                   <div class="row">
                      <div class="contact-text">
                         <h2 data-i18n="drop_msg">Drop Me message</h2>
@@ -581,6 +610,7 @@
                         <a href="#" class="submit-link" data-i18n="get_in_touch">Get In Touch</a>
                      </div>
                   </div>
+                  <p id="contactStatus" style="margin-top: 12px; min-height: 24px;"></p>
                </form> 
             </div>
          </div>
@@ -595,7 +625,7 @@
                <a href="tel:+8613602705148" title="Phone"><i class="fa fa-mobile-phone"></i>&nbsp;+86-13602705148</a>
                <a href="mailto:2651159710@qq.com" title="email"><i
                      class="fa fa-envelope-open-o"></i>&nbsp;contact@caijiechao.com</a>
-               <a href="" title="github"><i class="fa fa-github"></i>github</a>
+               <a href="https://github.com/computersniper" title="github" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i>github</a>
             </div>
          </div>
          <div class="row">
@@ -629,6 +659,12 @@
          duration: 800,
          once: true,
       });
+
+      const CJC_BLOG_API_URL = window.CJC_BLOG_API_URL || (
+         ['localhost', '127.0.0.1'].includes(window.location.hostname)
+            ? 'http://127.0.0.1:8000'
+            : `${window.location.origin}/api`
+      );
 
       // Fetch dynamic articles
       async function fetchArticles() {
@@ -795,7 +831,7 @@
          });
 
          try {
-            const response = await fetch('http://127.0.0.1:8000/articles/');
+            const response = await fetch(`${CJC_BLOG_API_URL}/articles/`);
             if (!response.ok) throw new Error('Failed to fetch');
             allArticles = await response.json();
             
@@ -810,7 +846,7 @@
       async function fetchProjects() {
          const container = document.getElementById('dynamic-projects');
          try {
-            const response = await fetch('http://127.0.0.1:8000/projects/');
+            const response = await fetch(`${CJC_BLOG_API_URL}/projects/`);
             if (!response.ok) throw new Error('Failed to fetch projects');
             const projects = await response.json();
             
@@ -856,9 +892,11 @@
          const slider = document.getElementById('dynamic-projects');
          const prevBtn = document.getElementById('proj-prev');
          const nextBtn = document.getElementById('proj-next');
-         
+         const sliderWrapper = slider ? slider.closest('.slider-container-wrapper') : null;
+          
          let currentIndex = 0;
-         
+         let autoScrollInterval = null;
+          
          function getItemsPerSlide() {
             if (window.innerWidth >= 992) return 3;
             if (window.innerWidth >= 768) return 2;
@@ -871,11 +909,39 @@
             slider.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
          }
 
+         function startAutoScroll() {
+            stopAutoScroll();
+            autoScrollInterval = setInterval(() => {
+               const items = slider.querySelectorAll('.slider-item');
+               const itemsPerSlide = getItemsPerSlide();
+               if (items.length <= itemsPerSlide) return;
+
+               if (currentIndex < items.length - itemsPerSlide) {
+                  currentIndex++;
+               } else {
+                  currentIndex = 0;
+               }
+               updateSlider();
+            }, 3000);
+         }
+
+         function stopAutoScroll() {
+            if (autoScrollInterval) {
+               clearInterval(autoScrollInterval);
+               autoScrollInterval = null;
+            }
+         }
+
          prevBtn.addEventListener('click', () => {
             if (currentIndex > 0) {
                currentIndex--;
-               updateSlider();
+            } else {
+               const items = slider.querySelectorAll('.slider-item');
+               const itemsPerSlide = getItemsPerSlide();
+               currentIndex = Math.max(0, items.length - itemsPerSlide);
             }
+            updateSlider();
+            startAutoScroll();
          });
 
          nextBtn.addEventListener('click', () => {
@@ -883,9 +949,17 @@
             const itemsPerSlide = getItemsPerSlide();
             if (currentIndex < items.length - itemsPerSlide) {
                currentIndex++;
-               updateSlider();
+            } else {
+               currentIndex = 0;
             }
+            updateSlider();
+            startAutoScroll();
          });
+
+         if (sliderWrapper) {
+            sliderWrapper.addEventListener('mouseenter', stopAutoScroll);
+            sliderWrapper.addEventListener('mouseleave', startAutoScroll);
+         }
 
          window.addEventListener('resize', () => {
             const items = slider.querySelectorAll('.slider-item');
@@ -895,6 +969,8 @@
             }
             updateSlider();
          });
+
+         startAutoScroll();
       }
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -914,7 +990,7 @@
          document.getElementById('languageModal').style.display = "none";
       }
 
-      // 点击弹出框外部关闭弹出框
+      // Close the modal when clicking outside it.
       window.onclick = function (event) {
          const modal = document.getElementById('languageModal');
          if (event.target == modal) {
@@ -923,40 +999,69 @@
       }
    </script>
    <script>
-    //send email
-        $(document).ready(function() {
-            $('#contactForm').on('submit', function(event) {
-                event.preventDefault(); // 阻止表单默认提交行为
+      const CONTACT_API_URL = window.CJC_BLOG_API_URL || (
+         ['localhost', '127.0.0.1'].includes(window.location.hostname)
+            ? 'http://127.0.0.1:8000'
+            : `${window.location.origin}/api`
+      );
 
-                var formData = $(this).serialize(); // 序列化表单数据
+      const contactForm = document.getElementById('contactForm');
+      const contactStatus = document.getElementById('contactStatus');
+      const submitLink = document.querySelector('.submit-link');
 
-                $.ajax({
-                    url: 'send_email/send.php', // 处理表单的PHP文件
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json', // 指定数据类型为JSON
-                    success: function(response) {
-                        alert(response.message); // 显示成功或失败的信息
-                    },
-                    error: function() {
-                        alert('An error occurred while sending the message.');
-                    }
-                });
+      function setContactStatus(message, isError = false) {
+         contactStatus.textContent = message;
+         contactStatus.style.color = isError ? '#c0392b' : '#148f77';
+      }
+
+      function setContactBusy(isBusy) {
+         if (!submitLink) return;
+         submitLink.dataset.originalText = submitLink.dataset.originalText || submitLink.textContent;
+         submitLink.textContent = isBusy ? 'Sending...' : submitLink.dataset.originalText;
+         submitLink.style.pointerEvents = isBusy ? 'none' : '';
+         submitLink.style.opacity = isBusy ? '0.7' : '';
+      }
+
+      async function sendContactMessage(event) {
+         event.preventDefault();
+         event.stopImmediatePropagation();
+         if (!contactForm.checkValidity()) {
+            contactForm.reportValidity();
+            return;
+         }
+
+         const formData = new FormData(contactForm);
+         const payload = Object.fromEntries(formData.entries());
+         setContactBusy(true);
+         setContactStatus('');
+
+         try {
+            const response = await fetch(`${CONTACT_API_URL}/contact/send`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify(payload)
             });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+               throw new Error(data.detail || 'An error occurred while sending the message.');
+            }
+            setContactStatus(data.message || 'Message has been sent.');
+            contactForm.reset();
+         } catch (error) {
+            setContactStatus(error.message, true);
+         } finally {
+            setContactBusy(false);
+         }
+      }
 
-            // 处理特定类名的链接点击事件
-            $('.submit-link').click(function(event) {
-                event.preventDefault(); // 阻止链接默认行为
-
-                // 手动触发表单验证
-                if ($('#contactForm')[0].checkValidity()) {
-                    $('#contactForm').submit(); // 提交表单
-                } else {
-                    $('#contactForm')[0].reportValidity(); // 显示验证错误信息
-                }
-            });
-        });
-    </script>
+      contactForm.addEventListener('submit', sendContactMessage, true);
+      submitLink.addEventListener('click', (event) => {
+         event.preventDefault();
+         event.stopImmediatePropagation();
+         contactForm.requestSubmit();
+      }, true);
+   </script>
 </body>
 
 </html>
+
