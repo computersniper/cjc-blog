@@ -72,6 +72,10 @@
                     <h2>四、容灾与降级</h2>
                     <p>基于 tenacity 库，捕获 HTTP 429/500 后：标记节点 Redis cooldown → 从 fallbacks 列表取备用模型 → 递归调用 completion()，对客户端透明。</p>
                     <h2>五、请求生命周期</h2>
+                    <div style="text-align:center;margin:30px 0;">
+                        <img src="img/request-lifecycle.png" alt="Request Lifecycle"
+                             style="width:90%;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.2);border-radius:8px;">
+                    </div>
                     <p>Middleware → Auth → RateLimit → Router → Adapter → LLM Call → StreamHandler → Callback → Response。</p>
                 </div>
             </div>

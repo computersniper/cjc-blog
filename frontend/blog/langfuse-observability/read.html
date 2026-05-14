@@ -65,6 +65,10 @@
                     <h2>第一层：为什么网关必须接入可观测性？</h2>
                     <p>一个只做请求转发的网关是"黑盒"。Langfuse 作为开源可观测性平台，解决了三大痛点：全链路追踪（Tracing，记录 Prompt/响应/TTFT）、精准计费（自动解析 Token 消耗并换算成本）、降级与错误分析（Trace 树清晰展示 Fallback 链路）。</p>
                     <h2>第二层：Callback 钩子架构</h2>
+                    <div style="text-align:center;margin:30px 0;">
+                        <img src="img/callback-architecture.png" alt="Callback Architecture"
+                             style="width:90%;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.2);border-radius:8px;">
+                    </div>
                     <p>LiteLLM 集成 Langfuse 靠的是观察者模式（Observer Pattern）。在 config.yaml 中声明 success_callback: ["langfuse"] 和 failure_callback: ["langfuse"]。每次 completion() 结束后，遍历所有 Callback 钩子。litellm/integrations/langfuse.py 中的 LangfuseLogger 类接收 kwargs（原始 messages）和 response（usage 字段），创建 Trace 和 Generation 数据模型，通过 langfuse-python SDK 发送。</p>
                     <h2>第三层：性能保障——旁路监控不阻塞主链路</h2>
                     <p>三个层面保证：1) 主请求剥离——Callback 挂载到 asyncio.create_task，主函数立刻 return；2) 批量队列发送——SDK 维护后台线程和内存队列，攒批后统一 POST；3) 容灾断开——Langfuse 不可用时自动丢弃监控数据，绝不抛异常影响用户请求。</p>
