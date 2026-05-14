@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="LiteLLM, LLM Gateway, API Gateway, 大模型网关, 源码分析">
+    <meta name="description" content="深入 LiteLLM 源码，剖析 LLM API 网关的核心架构：协议适配器、路由负载均衡、容灾降级">
+    <meta name="author" content="Cai Jiechao">
+    <title>深入 LiteLLM 源码：LLM API 网关的核心架构 | Cai Jiechao</title>
+    <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../css/header.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet" />
+    <link href="../css/home.css" rel="stylesheet" />
+    <link href="../css/about.css" rel="stylesheet" />
+    <link href="../css/service.css" rel="stylesheet" />
+    <link href="../css/portfolio.css" rel="stylesheet" />
+    <link href="../css/testimonials.css" rel="stylesheet" />
+    <link href="../css/blog.css" rel="stylesheet" />
+    <link href="../css/contact.css" rel="stylesheet" />
+    <link href="../css/footer.css" rel="stylesheet" />
+    <link href="../css/code.css" rel="stylesheet" />
+    <style>
+        header { background-color: #333; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
+        .col-md-18 p { font-size: 18px; line-height: 1.9; }
+        .col-md-18 h2 { color: #0056b3; margin-top: 40px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .col-md-18 h3 { color: #333; margin-top: 30px; }
+        .col-md-18 pre { background: #282c34; color: #abb2bf; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; }
+        .col-md-18 code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 90%; }
+        .col-md-18 pre code { background: transparent; padding: 0; }
+        .col-md-18 ul, .col-md-18 ol { font-size: 18px; line-height: 1.9; padding-left: 24px; }
+        .col-md-18 blockquote { border-left: 4px solid #5f88e0; padding: 12px 20px; margin: 20px 0; background: #f8f9fa; font-style: italic; }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="brand-name"><a href="/" class="logo">CaiJiechao</a></div>
+                <div class="navbar">
+                    <ul>
+                        <li><a href="../../index.html#home">Home</a></li>
+                        <li><a href="../../index.html#about">About</a></li>
+                        <li><a href="../../index.html#services">Skills</a></li>
+                        <li><a href="../../index.html#portfolio">Portfolio</a></li>
+                        <li><a href="../../index.html#blog">Blog</a></li>
+                        <li><a href="../../index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="services" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="title text-center">
+                    <h1 style="text-transform: none;">深入 LiteLLM 源码：LLM API 网关的核心架构</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-18">
+                    <p>2024 年底到 2025 年初，我在一家 AI 教育公司实习，负责搭建团队的大模型 API 网关。面对 OpenAI、Anthropic、Google Gemini、DeepSeek、豆包等 8+ 厂商的 20+ 模型，没有统一网关的结果就是：每个业务模块各自对接不同 SDK，API Key 散落各处，调用成本不可追踪，某个模型挂了需要改代码才能切换。</p>
+                    <p>我们选择了基于 <strong>LiteLLM</strong> 深度定制网关方案。这篇文章从源码级别讲清楚 LiteLLM 作为企业级 API 网关的核心机制。</p>
+                    <h2>一、整体架构：从 Docker Compose 看全貌</h2>
+                    <p>LiteLLM 网关的生产部署由多个微服务协作：PostgreSQL 管持久化，Redis 管实时状态，Langfuse 管可观测性，LiteLLM Proxy 管请求转发和协议适配。</p>
+                    <h2>二、协议适配器模式</h2>
+                    <p>入口在 litellm/main.py 的 completion() 函数，内部实现了完整适配器模式。所有请求先统一为 OpenAI 格式，再按 model 前缀动态分发到厂商 Handler（litellm/llms/ 目录下）。以 Claude 为例，system prompt 必须从 messages 数组剥离为顶级参数，LiteLLM 自动完成这个转换。</p>
+                    <h2>三、路由与负载均衡</h2>
+                    <p>Router 类在 router.py 中，支持三种策略：Round Robin（轮询）、Least Busy（最少并发，通过 Redis 维护 in_flight_requests）、Latency Based（延迟路由）。</p>
+                    <h2>四、容灾与降级</h2>
+                    <p>基于 tenacity 库，捕获 HTTP 429/500 后：标记节点 Redis cooldown → 从 fallbacks 列表取备用模型 → 递归调用 completion()，对客户端透明。</p>
+                    <h2>五、请求生命周期</h2>
+                    <p>Middleware → Auth → RateLimit → Router → Adapter → LLM Call → StreamHandler → Callback → Response。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="copyright">
+        <div class="container"><div class="social-link"><p>Designed and Developed By Cai Jiechao.</p></div></div>
+    </section>
+</body>
+</html>

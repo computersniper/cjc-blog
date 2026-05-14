@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="LLM, 流式计费, Stream Billing, Token 计算, tiktoken, AsyncGenerator">
+    <meta name="description" content="大模型网关中流式计费的挑战与实现：AsyncGenerator 包装、tiktoken 离线计算、异步落库">
+    <meta name="author" content="Cai Jiechao">
+    <title>流式计费实战：Stream 模式下不阻塞主链路计算 Token | Cai Jiechao</title>
+    <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../css/header.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet" />
+    <link href="../css/home.css" rel="stylesheet" />
+    <link href="../css/about.css" rel="stylesheet" />
+    <link href="../css/service.css" rel="stylesheet" />
+    <link href="../css/portfolio.css" rel="stylesheet" />
+    <link href="../css/testimonials.css" rel="stylesheet" />
+    <link href="../css/blog.css" rel="stylesheet" />
+    <link href="../css/contact.css" rel="stylesheet" />
+    <link href="../css/footer.css" rel="stylesheet" />
+    <link href="../css/code.css" rel="stylesheet" />
+    <style>
+        header { background-color: #333; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
+        .col-md-18 p { font-size: 18px; line-height: 1.9; }
+        .col-md-18 h2 { color: #0056b3; margin-top: 40px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .col-md-18 h3 { color: #333; margin-top: 30px; }
+        .col-md-18 pre { background: #282c34; color: #abb2bf; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; }
+        .col-md-18 code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 90%; }
+        .col-md-18 pre code { background: transparent; padding: 0; }
+        .col-md-18 ul, .col-md-18 ol { font-size: 18px; line-height: 1.9; padding-left: 24px; }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="brand-name"><a href="/" class="logo">CaiJiechao</a></div>
+                <div class="navbar">
+                    <ul>
+                        <li><a href="../../index.html#home">Home</a></li>
+                        <li><a href="../../index.html#about">About</a></li>
+                        <li><a href="../../index.html#services">Skills</a></li>
+                        <li><a href="../../index.html#portfolio">Portfolio</a></li>
+                        <li><a href="../../index.html#blog">Blog</a></li>
+                        <li><a href="../../index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="services" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="title text-center">
+                    <h1 style="text-transform: none;">流式计费实战：Stream 模式下如何不阻塞主链路计算 Token</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-18">
+
+                    <p>面试官必问的一道题："开启了 <code>stream=True</code>，你的网关怎么知道消耗了多少 Token？流断了怎么办？"</p>
+
+                    <p>这个问题之所以高频，是因为它击中了网关开发的高阶难点：你在转发流式数据的同时，必须在后台完成计费——而且绝对不能阻塞用户的打字机体验。</p>
+
+                    <h2>一、流式计费为什么难</h2>
+
+                    <p>非流式（stream=False）计费很简单——大模型返回完整 JSON，里面直接带了 <code>usage.total_tokens</code>，你拿这个数字入库就行。</p>
+
+                    <p>但流式（stream=True）完全是另一回事：</p>
+
+                    <ul>
+                        <li>大模型是逐 chunk 返回数据的，每个 chunk 只有 <code>delta.content</code></li>
+                        <li><strong>最后一个 chunk 才带 usage 信息</strong>（finish_reason + token 统计）</li>
+                        <li>中间的 chunk 只是文本片段，不包含任何 Token 计数</li>
+                        <li>你不能等最后一个 chunk 到了再一次性处理——那会让计费逻辑卡住最后一段文本的传输</li>
+                    </ul>
+
+                    <h2>二、核心解法：AsyncGenerator 包装器</h2>
+
+                    <p>LiteLLM 的源码解法非常优雅。它不直接把厂商的 HTTP Chunk 流透传给客户端，而是用一个 Python <strong>异步生成器（AsyncGenerator）</strong> 把整个流包起来：</p>
+
+<pre><code>async def chunk_processor(response_stream):
+    complete_text = ""               # 在网关内存中拼接完整文本
+
+    async for chunk in response_stream:
+        # 1. 解析厂商的 chunk，转换为 OpenAI 格式
+        openai_chunk = format_to_openai(chunk)
+
+        # 2. 提取文本片段，拼接到完整文本
+        complete_text += extract_text(openai_chunk)
+
+        # 3. 立即 yield 给客户端（用户看到打字机效果）
+        yield openai_chunk
+
+    # 4. 流完全结束后，触发计费计算
+    #    （这时 complete_text 已经是完整回复了）
+    trigger_cost_calculation(complete_text)</code></pre>
+
+                    <p>这个设计的关键在于：<strong>yield 不阻塞流水线</strong>。网关在每收到一个 chunk 时，做三件事——格式转换、文本拼接、yield 给客户端——全部是同步的、低延迟的。真正的计费计算被推迟到了流结束之后。</p>
+
+                    <h2>三、Token 计算：tiktoken 离线计算</h2>
+
+                    <p>流结束后，网关内存里已经有了完整的 <code>complete_text</code> 和原始 prompt。源码调用 <code>litellm.token_counter()</code>，底层使用 OpenAI 开源的 <code>tiktoken</code> 库：</p>
+
+<pre><code># tiktoken 离线计算（未发生额外网络请求）
+import tiktoken
+
+encoding = tiktoken.encoding_for_model("gpt-4o")
+prompt_tokens = len(encoding.encode(prompt_text))
+completion_tokens = len(encoding.encode(complete_text))
+total_tokens = prompt_tokens + completion_tokens</code></pre>
+
+                    <p>为什么用 tiktoken 离线计算而不是依赖 API 返回的 usage？两个原因：</p>
+
+                    <ol>
+                        <li><strong>不同厂商的 usage 格式不一致</strong>：OpenAI 返回 <code>usage.total_tokens</code>，但某些厂商的返回结构完全不同，甚至不返回 usage</li>
+                        <li><strong>Reasoning Tokens（推理 Token）</strong>：DeepSeek-R1、o1 等模型有隐蔽的 reasoning_tokens，它们是收费的但不一定出现在 completion_tokens 里</li>
+                    </ol>
+
+                    <h2>四、异步落库：BackgroundTasks 不阻塞主链路</h2>
+
+                    <p>Token 算完了，但写数据库肯定是 I/O 操作。如果直接在请求线程里写 PostgreSQL，会增加用户的响应延迟。</p>
+
+                    <p>LiteLLM 的做法：把数据库写入操作挂载到 FastAPI 的 <strong>BackgroundTasks</strong> 上。这是 FastAPI/Starlette 提供的一个机制——后台任务会在响应已返回给客户端之后才执行。</p>
+
+<pre><code># 伪代码示意
+from fastapi import BackgroundTasks
+
+async def completion_handler(request, background_tasks: BackgroundTasks):
+    # ... 处理请求，拿到 token_count ...
+
+    # 将计费写入挂载为后台任务——不阻塞响应
+    background_tasks.add_task(
+        write_cost_to_db,
+        user_id=user_id,
+        model=model,
+        total_tokens=token_count,
+    )
+
+    return response  # 客户端立即收到响应，后台任务稍后执行</code></pre>
+
+                    <h2>五、我实习中的实战：日报系统</h2>
+
+                    <p>在实习期间，我基于 LiteLLM Gateway 的日志数据，开发了一套自动化日报系统（<code>daily_usage_report.py</code>）。核心逻辑：</p>
+
+<pre><code># 1. 从 Gateway 拉取原始日志
+def fetch_spend_logs(start_date, end_date):
+    url = f"{BASE_URL}/spend/logs"
+    params = {"limit": 50000, "startTime": st, "endTime": et}
+    r = httpx.get(url, params=params, headers=headers)
+    return r.json()["logs"]
+
+# 2. 从日志中提取 Token——兼容多种 usage 格式
+def _extract_tokens_from_log(log):
+    # 从顶层 total_tokens 取
+    # 从 usage.total_tokens 取
+    # 从 metadata.usage_object.total_tokens 取
+    # 加上 reasoning_tokens（DeepSeek R1 等）
+    ...
+
+# 3. 按用户/团队/模型维度聚合，生成 Markdown 日报
+# 4. 通过飞书 Webhook 自动推送到团队群</code></pre>
+
+                    <p>这套系统让我能精确回答"这个月每个团队花了多少钱""哪个模型用量最大"等问题。实习结束时，网关累计处理了 <strong>1 亿+ Token</strong>。</p>
+
+                    <h2>六、面试话术模板</h2>
+
+                    <p>如果你在面试中被问到流式计费，可以这样回答：</p>
+
+                    <blockquote>
+                        "在流式场景下，我会在网关层用 AsyncGenerator 包装厂商的 Chunk 流。每收到一个 chunk，我先提取文本片段在内存中拼接，然后立刻 yield 给客户端。流结束后，用 tiktoken 离线计算 Token 数，然后通过 FastAPI 的 BackgroundTasks 异步写入数据库。整个过程对主链路完全非阻塞，用户的首字延迟（TTFT）不受影响。"
+                    </blockquote>
+
+                    <h2>七、流断开的处理</h2>
+
+                    <p>面试官可能会追问："如果流输出到一半，客户端断开连接了怎么办？"</p>
+
+                    <p>这时网关内存中已经拼接了部分文本。源码中会通过 <code>try/except</code> 捕获连接断开异常，仍然触发计费计算——基于已拼接的部分文本计算 Token，保证即使异常断开也能记录部分消耗。</p>
+
+                    <h2>总结</h2>
+
+                    <p>流式计费的三个关键点：</p>
+
+                    <ul>
+                        <li><strong>AsyncGenerator 包装</strong>：在 yield 的同时内存拼接，不阻塞数据流</li>
+                        <li><strong>tiktoken 离线计算</strong>：不依赖厂商的 usage 格式，保证跨模型一致性</li>
+                        <li><strong>BackgroundTasks 异步落库</strong>：计费写入不增加用户延迟</li>
+                    </ul>
+
+                    <p>这三板斧下来，你就拥有了一个既快又准的流式计费系统。</p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="copyright">
+        <div class="container">
+            <div class="social-link">
+                <p>Designed and Developed By Cai Jiechao.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
