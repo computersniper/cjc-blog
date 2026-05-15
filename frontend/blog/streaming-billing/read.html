@@ -30,6 +30,9 @@
         .col-md-18 code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 90%; }
         .col-md-18 pre code { background: transparent; padding: 0; }
         .col-md-18 ul, .col-md-18 ol { font-size: 18px; line-height: 1.9; padding-left: 24px; }
+        .back-button-container { text-align: center; margin-top: 20px; }
+        .back-button { display: inline-block; padding: 10px 20px; background-color: #5f88e0; color: #fff; text-decoration: none; border-radius: 5px; transition: background-color 0.3s ease; }
+        .back-button:hover { background-color: #0056b3; }
     </style>
 </head>
 
@@ -171,15 +174,7 @@ def _extract_tokens_from_log(log):
 
                     <p>这套系统让我能精确回答"这个月每个团队花了多少钱""哪个模型用量最大"等问题。实习结束时，网关累计处理了 <strong>1 亿+ Token</strong>。</p>
 
-                    <h2>六、面试话术模板</h2>
-
-                    <p>如果你在面试中被问到流式计费，可以这样回答：</p>
-
-                    <blockquote>
-                        "在流式场景下，我会在网关层用 AsyncGenerator 包装厂商的 Chunk 流。每收到一个 chunk，我先提取文本片段在内存中拼接，然后立刻 yield 给客户端。流结束后，用 tiktoken 离线计算 Token 数，然后通过 FastAPI 的 BackgroundTasks 异步写入数据库。整个过程对主链路完全非阻塞，用户的首字延迟（TTFT）不受影响。"
-                    </blockquote>
-
-                    <h2>七、流断开的处理</h2>
+                    <h2>六、流断开的处理</h2>
 
                     <p>面试官可能会追问："如果流输出到一半，客户端断开连接了怎么办？"</p>
 
@@ -201,6 +196,11 @@ def _extract_tokens_from_log(log):
             </div>
         </div>
     </section>
+
+    <div class="back-button-container">
+        <a href="../../.." class="back-button">Back</a>
+        <br>
+    </div>
 
     <section class="copyright">
         <div class="container">
