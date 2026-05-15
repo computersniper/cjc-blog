@@ -64,7 +64,7 @@
             </div>
             <div class="row">
                 <div class="col-md-18">
-                    <p>2024 年底到 2025 年初，我在一家 AI 教育公司实习，负责搭建团队的大模型 API 网关。面对 OpenAI、Anthropic、Google Gemini、DeepSeek、豆包等 8+ 厂商的 20+ 模型，没有统一网关的结果就是：每个业务模块各自对接不同 SDK，API Key 散落各处，调用成本不可追踪，某个模型挂了需要改代码才能切换。</p>
+                    <p>2025 年底到 2026 年初，我在一家 AI 教育公司实习，负责搭建团队的大模型 API 网关。面对 OpenAI、Anthropic、Google Gemini、DeepSeek、豆包等 8+ 厂商的 20+ 模型，没有统一网关的结果就是：每个业务模块各自对接不同 SDK，API Key 散落各处，调用成本不可追踪，某个模型挂了需要改代码才能切换。</p>
                     <p>我们选择了基于 <strong>LiteLLM</strong> 深度定制网关方案。这篇文章从源码级别讲清楚 LiteLLM 作为企业级 API 网关的核心机制。</p>
                     <h2>一、整体架构：从 Docker Compose 看全貌</h2>
                     <p>LiteLLM 网关的生产部署由多个微服务协作：PostgreSQL 管持久化，Redis 管实时状态，Langfuse 管可观测性，LiteLLM Proxy 管请求转发和协议适配。</p>
