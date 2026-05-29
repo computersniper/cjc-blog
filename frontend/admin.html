@@ -12,53 +12,11 @@
         .admin-container { max-width: 1000px; margin: auto; }
         .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
         .toastui-editor-defaultUI { background: white; }
-        .table td { vertical-align: middle; }
-        .is-hidden { display: none !important; }
-        .login-shell {
-            min-height: calc(100vh - 40px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card { width: 100%; max-width: 380px; }
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-        .actions { white-space: nowrap; }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .content-grid { grid-template-columns: 1fr; }
-            .table-responsive { font-size: 14px; }
-        }
     </style>
 </head>
 <body>
-    <div id="loginView" class="login-shell">
-        <div class="card login-card p-4">
-            <h2 class="h4 text-center mb-4">Admin Login</h2>
-            <form id="loginForm">
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" class="form-control" id="loginUsername" autocomplete="username" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" required>
-                </div>
-                <div class="alert alert-danger py-2 is-hidden" id="loginError"></div>
-                <button type="submit" class="btn btn-primary w-100" id="loginButton">Login</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="adminView" class="admin-container is-hidden">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Admin Dashboard</h2>
-            <button type="button" class="btn btn-outline-secondary btn-sm" id="logoutButton">Logout</button>
-        </div>
-        <div class="alert is-hidden" id="statusMessage" role="alert"></div>
+    <div class="admin-container">
+        <h2 class="text-center mb-4">Admin Dashboard</h2>
         
         <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -78,7 +36,7 @@
                         <input type="hidden" id="articleId">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Title EN</label>
+                                <label class="form-label">Title</label>
                                 <input type="text" class="form-control" id="a_title" required>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -87,16 +45,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Title ZH</label>
-                            <input type="text" class="form-control" id="a_title_zh">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Summary EN</label>
+                            <label class="form-label">Summary</label>
                             <textarea class="form-control" id="a_summary" rows="2" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Summary ZH</label>
-                            <textarea class="form-control" id="a_summary_zh" rows="2"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -109,29 +59,19 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <div class="content-grid">
-                                <div>
-                                    <label class="form-label">Article Content EN</label>
-                                    <div id="article-editor"></div>
-                                </div>
-                                <div>
-                                    <label class="form-label">Article Content ZH</label>
-                                    <div id="article-editor-zh"></div>
-                                </div>
-                            </div>
+                            <label class="form-label">Article Content</label>
+                            <div id="article-editor"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="articleSubmitButton">Save Article</button>
+                        <button type="submit" class="btn btn-primary">Save Article</button>
                         <button type="button" class="btn btn-secondary" onclick="clearArticleForm()">Clear</button>
                     </form>
                 </div>
                 <div class="card p-4">
                     <h4>Articles List</h4>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Actions</th></tr></thead>
-                            <tbody id="articlesTable"></tbody>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Actions</th></tr></thead>
+                        <tbody id="articlesTable"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -143,7 +83,7 @@
                         <input type="hidden" id="projectId">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Title EN</label>
+                                <label class="form-label">Title</label>
                                 <input type="text" class="form-control" id="p_title" required>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -152,49 +92,31 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Title ZH</label>
-                            <input type="text" class="form-control" id="p_title_zh">
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Tech Stack</label>
                             <input type="text" class="form-control" id="p_tech" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Summary EN</label>
+                            <label class="form-label">Summary</label>
                             <textarea class="form-control" id="p_summary" rows="2" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Summary ZH</label>
-                            <textarea class="form-control" id="p_summary_zh" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Cover Image URL</label>
                             <input type="text" class="form-control" id="p_cover" required>
                         </div>
                         <div class="mb-3">
-                            <div class="content-grid">
-                                <div>
-                                    <label class="form-label">Project Content EN</label>
-                                    <div id="project-editor"></div>
-                                </div>
-                                <div>
-                                    <label class="form-label">Project Content ZH</label>
-                                    <div id="project-editor-zh"></div>
-                                </div>
-                            </div>
+                            <label class="form-label">Project Content</label>
+                            <div id="project-editor"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="projectSubmitButton">Save Project</button>
+                        <button type="submit" class="btn btn-primary">Save Project</button>
                         <button type="button" class="btn btn-secondary" onclick="clearProjectForm()">Clear</button>
                     </form>
                 </div>
                 <div class="card p-4">
                     <h4>Projects List</h4>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead><tr><th>ID</th><th>Title</th><th>Tech Stack</th><th>Actions</th></tr></thead>
-                            <tbody id="projectsTable"></tbody>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <thead><tr><th>ID</th><th>Title</th><th>Tech Stack</th><th>Actions</th></tr></thead>
+                        <tbody id="projectsTable"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -214,13 +136,6 @@
             previewStyle: 'vertical'
         });
 
-        const articleZhEditor = new Editor({
-            el: document.querySelector('#article-editor-zh'),
-            height: '400px',
-            initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
-        });
-
         const projectEditor = new Editor({
             el: document.querySelector('#project-editor'),
             height: '400px',
@@ -228,203 +143,41 @@
             previewStyle: 'vertical'
         });
 
-        const projectZhEditor = new Editor({
-            el: document.querySelector('#project-editor-zh'),
-            height: '400px',
-            initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
-        });
-
-        const API_URL = window.CJC_BLOG_API_URL || (
-            ['localhost', '127.0.0.1'].includes(window.location.hostname)
-                ? 'http://127.0.0.1:8000'
-                : `${window.location.origin}/api`
-        );
-        const TOKEN_KEY = "cjc_blog_admin_token";
-
-        function getToken() {
-            return localStorage.getItem(TOKEN_KEY);
-        }
-
-        function authHeaders(extraHeaders = {}) {
-            return {
-                ...extraHeaders,
-                Authorization: `Bearer ${getToken()}`
-            };
-        }
-
-        function escapeHtml(value) {
-            return String(value || '').replace(/[&<>"']/g, (char) => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            }[char]));
-        }
-
-        function showStatus(message, type = "success") {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.textContent = message;
-            statusMessage.className = `alert alert-${type}`;
-            window.clearTimeout(showStatus.timer);
-            showStatus.timer = window.setTimeout(() => {
-                statusMessage.classList.add('is-hidden');
-            }, 4000);
-        }
-
-        function setButtonBusy(buttonId, isBusy, busyText) {
-            const button = document.getElementById(buttonId);
-            if (!button) return;
-            if (isBusy) {
-                button.dataset.originalText = button.textContent;
-                button.textContent = busyText;
-                button.disabled = true;
-            } else {
-                button.textContent = button.dataset.originalText || button.textContent;
-                button.disabled = false;
-            }
-        }
-
-        function showLogin(message = "") {
-            document.getElementById('adminView').classList.add('is-hidden');
-            document.getElementById('loginView').classList.remove('is-hidden');
-            const loginError = document.getElementById('loginError');
-            if (message) {
-                loginError.textContent = message;
-                loginError.classList.remove('is-hidden');
-            } else {
-                loginError.textContent = '';
-                loginError.classList.add('is-hidden');
-            }
-        }
-
-        async function showAdmin() {
-            document.getElementById('loginView').classList.add('is-hidden');
-            document.getElementById('adminView').classList.remove('is-hidden');
-            await Promise.all([loadArticles(), loadProjects()]);
-        }
-
-        function logout(message = "") {
-            localStorage.removeItem(TOKEN_KEY);
-            showLogin(message);
-        }
-
-        async function handleApiResponse(response) {
-            if (response.status === 401 || response.status === 403) {
-                logout("Login expired. Please sign in again.");
-                throw new Error("Unauthorized");
-            }
-            if (!response.ok) {
-                throw new Error(`Request failed: ${response.status}`);
-            }
-            return response;
-        }
-
-        async function requestJson(url, options = {}) {
-            const response = await handleApiResponse(await fetch(url, options));
-            return response.json();
-        }
-
-        async function verifySavedToken() {
-            if (!getToken()) {
-                showLogin();
-                return;
-            }
-
-            try {
-                await handleApiResponse(await fetch(`${API_URL}/auth/verify`, {
-                    headers: authHeaders()
-                }));
-                await showAdmin();
-            } catch (error) {
-                showLogin("Login expired. Please sign in again.");
-            }
-        }
-
-        document.getElementById('loginForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const loginError = document.getElementById('loginError');
-            loginError.classList.add('is-hidden');
-            setButtonBusy('loginButton', true, 'Logging in...');
-            try {
-                const res = await fetch(`${API_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: document.getElementById('loginUsername').value,
-                        password: document.getElementById('loginPassword').value
-                    })
-                });
-                if (!res.ok) throw new Error("Invalid username or password");
-                const data = await res.json();
-                localStorage.setItem(TOKEN_KEY, data.access_token);
-                document.getElementById('loginForm').reset();
-                await showAdmin();
-                showStatus("Logged in.");
-            } catch (error) {
-                loginError.textContent = error.message;
-                loginError.classList.remove('is-hidden');
-            } finally {
-                setButtonBusy('loginButton', false);
-            }
-        };
-
-        document.getElementById('logoutButton').onclick = () => logout();
+        const API_URL = "http://127.0.0.1:8000";
 
         // --- Articles Logic ---
         async function loadArticles() {
+            const res = await fetch(`${API_URL}/articles/`);
+            const data = await res.json();
             const tbody = document.getElementById('articlesTable');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-muted">Loading articles...</td></tr>';
-            try {
-                const data = await requestJson(`${API_URL}/articles/`);
-                tbody.innerHTML = data.length ? '' : '<tr><td colspan="4" class="text-muted">No articles yet.</td></tr>';
-                data.forEach(a => {
-                    tbody.innerHTML += `<tr>
-                        <td>${a.id}</td><td>${escapeHtml(a.title)}</td><td>${escapeHtml(a.category)}</td>
-                        <td class="actions">
-                            <button class="btn btn-sm btn-info" onclick="editA(${a.id})">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="delA(${a.id})">Del</button>
-                        </td></tr>`;
-                });
-            } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-danger">Failed to load articles.</td></tr>';
-                showStatus(error.message, 'danger');
-            }
+            tbody.innerHTML = '';
+            data.forEach(a => {
+                tbody.innerHTML += `<tr>
+                    <td>${a.id}</td><td>${a.title}</td><td>${a.category}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="editA(${a.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="delA(${a.id})">Del</button>
+                    </td></tr>`;
+            });
         }
 
         async function editA(id) {
-            try {
-                const a = await requestJson(`${API_URL}/articles/${id}`);
-                document.getElementById('articleId').value = a.id;
-                document.getElementById('a_title').value = a.title || '';
-                document.getElementById('a_title_zh').value = a.title_zh || '';
-                document.getElementById('a_category').value = a.category || '';
-                document.getElementById('a_summary').value = a.summary || '';
-                document.getElementById('a_summary_zh').value = a.summary_zh || '';
-                document.getElementById('a_cover').value = a.cover_image || '';
-                document.getElementById('a_url').value = a.read_url || '';
-                articleEditor.setHTML(a.content || '');
-                articleZhEditor.setHTML(a.content_zh || '');
-                showStatus(`Editing article #${a.id}.`, 'info');
-                window.scrollTo(0, 0);
-            } catch (error) {
-                showStatus(error.message, 'danger');
-            }
+            const res = await fetch(`${API_URL}/articles/${id}`);
+            const a = await res.json();
+            document.getElementById('articleId').value = a.id;
+            document.getElementById('a_title').value = a.title;
+            document.getElementById('a_category').value = a.category;
+            document.getElementById('a_summary').value = a.summary;
+            document.getElementById('a_cover').value = a.cover_image;
+            document.getElementById('a_url').value = a.read_url || '';
+            articleEditor.setHTML(a.content || '');
+            window.scrollTo(0, 0);
         }
 
         async function delA(id) {
             if(confirm("Delete article?")) {
-                try {
-                    await handleApiResponse(await fetch(`${API_URL}/articles/${id}`, {
-                        method: 'DELETE',
-                        headers: authHeaders()
-                    }));
-                    showStatus("Article deleted.");
-                    loadArticles();
-                } catch (error) {
-                    showStatus(error.message, 'danger');
-                }
+                await fetch(`${API_URL}/articles/${id}`, { method: 'DELETE' });
+                loadArticles();
             }
         }
 
@@ -432,7 +185,6 @@
             document.getElementById('articleForm').reset();
             document.getElementById('articleId').value = '';
             articleEditor.setHTML('');
-            articleZhEditor.setHTML('');
         }
 
         document.getElementById('articleForm').onsubmit = async (e) => {
@@ -440,32 +192,17 @@
             const id = document.getElementById('articleId').value;
             const payload = {
                 title: document.getElementById('a_title').value,
-                title_zh: document.getElementById('a_title_zh').value,
                 category: document.getElementById('a_category').value,
                 summary: document.getElementById('a_summary').value,
-                summary_zh: document.getElementById('a_summary_zh').value,
                 cover_image: document.getElementById('a_cover').value,
                 read_url: document.getElementById('a_url').value,
-                content: articleEditor.getHTML(),
-                content_zh: articleZhEditor.getHTML()
+                content: articleEditor.getHTML()
             };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/articles/${id}` : `${API_URL}/articles/`;
-            setButtonBusy('articleSubmitButton', true, 'Saving...');
-            try {
-                await handleApiResponse(await fetch(url, {
-                    method,
-                    headers: authHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify(payload)
-                }));
-                clearArticleForm();
-                await loadArticles();
-                showStatus("Article saved.");
-            } catch (error) {
-                showStatus(error.message, 'danger');
-            } finally {
-                setButtonBusy('articleSubmitButton', false);
-            }
+            await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            clearArticleForm();
+            loadArticles();
         };
 
         // --- Projects Logic ---
@@ -473,63 +210,42 @@
             document.getElementById('projectForm').reset();
             document.getElementById('projectId').value = '';
             projectEditor.setHTML('');
-            projectZhEditor.setHTML('');
         }
 
         async function loadProjects() {
+            const res = await fetch(`${API_URL}/projects/`);
+            const data = await res.json();
             const tbody = document.getElementById('projectsTable');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-muted">Loading projects...</td></tr>';
-            try {
-                const data = await requestJson(`${API_URL}/projects/`);
-                tbody.innerHTML = data.length ? '' : '<tr><td colspan="4" class="text-muted">No projects yet.</td></tr>';
-                data.forEach(p => {
-                    tbody.innerHTML += `<tr>
-                        <td>${p.id}</td><td>${escapeHtml(p.title)}</td><td>${escapeHtml(p.tech_stack)}</td>
-                        <td class="actions">
-                            <button class="btn btn-sm btn-info" onclick="editP(${p.id})">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="delP(${p.id})">Del</button>
-                        </td></tr>`;
-                });
-            } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-danger">Failed to load projects.</td></tr>';
-                showStatus(error.message, 'danger');
-            }
+            tbody.innerHTML = '';
+            data.forEach(p => {
+                tbody.innerHTML += `<tr>
+                    <td>${p.id}</td><td>${p.title}</td><td>${p.tech_stack}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="editP(${p.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="delP(${p.id})">Del</button>
+                    </td></tr>`;
+            });
         }
 
         async function editP(id) {
-            try {
-                const p = await requestJson(`${API_URL}/projects/${id}`);
-                document.getElementById('projectId').value = p.id;
-                document.getElementById('p_title').value = p.title || '';
-                document.getElementById('p_title_zh').value = p.title_zh || '';
-                document.getElementById('p_category').value = p.category || '';
-                document.getElementById('p_tech').value = p.tech_stack || '';
-                document.getElementById('p_summary').value = p.summary || '';
-                document.getElementById('p_summary_zh').value = p.summary_zh || '';
-                document.getElementById('p_cover').value = p.cover_image || '';
-
-                projectEditor.setHTML(p.content || '');
-                projectZhEditor.setHTML(p.content_zh || '');
-
-                showStatus(`Editing project #${p.id}.`, 'info');
-                window.scrollTo(0, 0);
-            } catch (error) {
-                showStatus(error.message, 'danger');
-            }
+            const res = await fetch(`${API_URL}/projects/${id}`);
+            const p = await res.json();
+            document.getElementById('projectId').value = p.id;
+            document.getElementById('p_title').value = p.title;
+            document.getElementById('p_category').value = p.category;
+            document.getElementById('p_tech').value = p.tech_stack;
+            document.getElementById('p_summary').value = p.summary;
+            document.getElementById('p_cover').value = p.cover_image;
+            
+            projectEditor.setHTML(p.content || '');
+            
+            window.scrollTo(0, 0);
         }
 
         async function delP(id) {
             if(confirm("Delete project?")) {
-                try {
-                    await handleApiResponse(await fetch(`${API_URL}/projects/${id}`, {
-                        method: 'DELETE',
-                        headers: authHeaders()
-                    }));
-                    showStatus("Project deleted.");
-                    loadProjects();
-                } catch (error) {
-                    showStatus(error.message, 'danger');
-                }
+                await fetch(`${API_URL}/projects/${id}`, { method: 'DELETE' });
+                loadProjects();
             }
         }
 
@@ -539,36 +255,22 @@
             
             const payload = {
                 title: document.getElementById('p_title').value,
-                title_zh: document.getElementById('p_title_zh').value,
                 category: document.getElementById('p_category').value,
                 tech_stack: document.getElementById('p_tech').value,
                 summary: document.getElementById('p_summary').value,
-                summary_zh: document.getElementById('p_summary_zh').value,
                 cover_image: document.getElementById('p_cover').value,
-                content: projectEditor.getHTML(),
-                content_zh: projectZhEditor.getHTML()
+                content: projectEditor.getHTML()
             };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/projects/${id}` : `${API_URL}/projects/`;
-            setButtonBusy('projectSubmitButton', true, 'Saving...');
-            try {
-                await handleApiResponse(await fetch(url, {
-                    method,
-                    headers: authHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify(payload)
-                }));
-                clearProjectForm();
-                await loadProjects();
-                showStatus("Project saved.");
-            } catch (error) {
-                showStatus(error.message, 'danger');
-            } finally {
-                setButtonBusy('projectSubmitButton', false);
-            }
+            await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            clearProjectForm();
+            loadProjects();
         };
 
         // Init
-        verifySavedToken();
+        loadArticles();
+        loadProjects();
     </script>
 </body>
 </html>
