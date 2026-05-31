@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description"
+        content="A clean, beautiful and responsive portfolio template for Developers! using only Html, CSS, and JavaScript">
+    <meta name="author" content="Cai Jiechao">
+    <title>Cai Jiechao | Software Developer</title>
+    <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../css/header.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet" />
+    <link href="../css/home.css" rel="stylesheet" />
+    <link href="../css/about.css" rel="stylesheet" />
+    <link href="../css/service.css" rel="stylesheet" />
+    <link href="../css/portfolio.css" rel="stylesheet" />
+    <link href="../css/testimonials.css" rel="stylesheet" />
+    <link href="../css/blog.css" rel="stylesheet" />
+    <link href="../css/contact.css" rel="stylesheet" />
+    <link href="../css/footer.css" rel="stylesheet" />
+    <style>
+        header {
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .col-md-18 p {
+            font-size: 18px;
+        }
+
+        .col-md-18 h3 {
+            margin-top: 30px;
+            color: #333;
+            font-size: 24px;
+            border-bottom: 2px solid #5f88e0;
+            padding-bottom: 8px;
+        }
+
+        .back-button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #5f88e0;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .role-card {
+            background: #f8f9fa;
+            border-left: 4px solid #5f88e0;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+
+        .role-card h4 {
+            margin: 0 0 8px 0;
+            color: #5f88e0;
+            font-size: 18px;
+        }
+
+        .role-card p {
+            margin: 0;
+            font-size: 15px !important;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .arch-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .arch-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .arch-box {
+            background: #5f88e0;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .arch-box.light {
+            background: #e8edf7;
+            color: #333;
+        }
+
+        .arch-arrow {
+            font-size: 20px;
+            color: #999;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 24px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #5f88e0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .tech-tag {
+            background: #e8edf7;
+            color: #5f88e0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="brand-name">
+                    <a href="/" class="logo">CaiJiechao</a>
+                </div>
+                <div class="navbar">
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#services">Skills</a></li>
+                        <li><a href="index.html#portfolio">Portfolio</a></li>
+                        <li><a href="index.html#blog">Blog</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="services" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="title text-center">
+                    <h1 style="text-transform: none;">Mentor Caring System: A Full-Stack Software Engineering Project</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-18">
+
+                    <!-- Hero Image -->
+                    <div style="text-align: center;">
+                        <img src="img/hero.png" alt="Mentor Caring System Dashboard"
+                            style="width: 100%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>Mentor Caring System — Main Dashboard</em></p>
+                    </div>
+                    <br>
+
+                    <!-- Project Overview -->
+                    <h3>1. Project Overview</h3>
+                    <p>
+                        As part of the <strong>Advanced Software Development Workshop (ASDW)</strong> and <strong>Software Engineering</strong> courses at BNBU (Beijing Normal University-Hong Kong Baptist University United International College), our team of six built a production-ready <strong>Mentor Caring System (MCS)</strong> — a role-based web application that digitizes the university's Mentor Caring Programme.
+                    </p>
+                    <p>
+                        The Mentor Caring Programme pairs every student with an academic mentor for regular interviews, academic tracking, and personal guidance. Before MCS, this was managed through scattered spreadsheets and ad-hoc communication. Our system brings structure to this process with <strong>6 user roles</strong>, <strong>appointment scheduling</strong>, <strong>interview records</strong>, <strong>internal messaging</strong>, <strong>case escalation workflows</strong>, and <strong>organizational structure management</strong>.
+                    </p>
+
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-number">16</div>
+                            <div class="stat-label">Database Tables</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">User Roles</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">183</div>
+                            <div class="stat-label">Pytest Tests</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">43</div>
+                            <div class="stat-label">Jinja2 Templates</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">200M+</div>
+                            <div class="stat-label">AI Tokens Used</div>
+                        </div>
+                    </div>
+
+                    <!-- Tech Stack -->
+                    <h3>2. Technology Stack</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python 3.12</span>
+                        <span class="tech-tag">Flask 3.0</span>
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Jinja2</span>
+                        <span class="tech-tag">HTML5/CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">openpyxl</span>
+                        <span class="tech-tag">python-docx</span>
+                        <span class="tech-tag">pytest</span>
+                        <span class="tech-tag">Claude Code</span>
+                        <span class="tech-tag">DeepSeek V4</span>
+                    </div>
+                    <p>
+                        The backend is built on <strong>Flask</strong> with a custom 4-layer architecture inspired by MVC. We chose <strong>SQLite</strong> for zero-configuration deployment — the entire system runs from a single directory with no external database server. The frontend uses server-rendered <strong>Jinja2 templates</strong> with a custom CSS design system, deliberately avoiding heavy JavaScript frameworks to keep the project maintainable for future student teams.
+                    </p>
+
+                    <!-- Architecture -->
+                    <h3>3. Architecture Design</h3>
+                    <p>
+                        We adopted a <strong>4-layer architecture</strong> that cleanly separates concerns while remaining pragmatic for a team of six:
+                    </p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <div class="arch-layer">
+                            <div class="arch-row" style="justify-content: center;">
+                                <div class="arch-box">Blueprint<br><small>Route & Request</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box">Controller<br><small>Business Logic</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box light">DAO<br><small>Data Access</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box light">SQLite<br><small>Database</small></div>
+                            </div>
+                        </div>
+                        <p><em>Request flows: Blueprint → Controller → DAO → SQLite</em></p>
+                    </div>
+                    <p>
+                        <strong>Blueprints (9 modules)</strong> handle HTTP routing for each user role plus REST APIs for appointments and messaging. <strong>Controllers (14 modules)</strong> encapsulate all business logic — from student-mentor group chaining to case escalation workflows. <strong>DAOs (15 modules)</strong> provide a clean data access layer with parameterized queries, preventing SQL injection. <strong>Models (20+ classes)</strong> define domain entities as plain Python objects.
+                    </p>
+                    <p>
+                        A key design decision was keeping <strong>role-specific blueprints</strong> rather than a unified REST API — this maps naturally to how different users think about the system and made it easy to parallelize development across team members.
+                    </p>
+
+                    <!-- Role-Based Access Control -->
+                    <h3>4. Role-Based Access Control: 6 Roles, 6 Perspectives</h3>
+                    <p>
+                        The system's core complexity lies in its permission model. Each of the 6 roles sees a fundamentally different interface:
+                    </p>
+                    <div class="role-grid">
+                        <div class="role-card">
+                            <h4>Administrator</h4>
+                            <p>Manages the organizational hierarchy — 4 faculties, 13 departments, 32 majors. Assigns faculty consultants and imports organizational data via Excel.</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>Faculty Consultant</h4>
+                            <p>Oversees MCP groups within their faculty. Bulk-imports student lists, assigns mentors to groups, and exports interview records as Word documents.</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>Mentor</h4>
+                            <p>Manages interview records for assigned students. Marks 30-minute availability slots, confirms/cancels appointments, and can forward problematic cases to coordinators.</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>Student</h4>
+                            <p>Views mentor details, books appointments from mentor's available slots, and communicates with their assigned mentor through internal messaging.</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>Coordinator</h4>
+                            <p>Cross-department oversight. Searches students and mentors, receives forwarded cases, and escalates to faculty consultants when needed.</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>Support Staff</h4>
+                            <p>Read-only system audit. Views activity logs filtered by student, user, or date range. Manages user feedback with status tracking.</p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 24px 0;">
+                        <img src="img/2.png" alt="Role-Based Access Control Overview"
+                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>6-Role RBAC Model — Each role has a distinct scope and permission set</em></p>
+                    </div>
+
+                    <p>
+                        The permission model goes beyond simple role checks. For example, the <strong>student-group-mentor chain</strong> enforces cascading data integrity: adding a student to a group automatically syncs the group's mentor to the student; changing a group's mentor cascades to all members; removing a student from a group clears both group and mentor references. A student can only message their assigned mentor — not any other mentor in the system.
+                    </p>
+
+                    <!-- Core Features Deep Dive -->
+                    <h3>5. Core Features Deep Dive</h3>
+
+                    <h4>Appointment System</h4>
+                    <p>
+                        Mentors mark 30-minute slots within business hours (08:00–17:30). Students see available slots and book with one click. Mentors confirm and provide location details. The appointment state machine flows: <strong>Pending → Confirmed / Cancelled</strong>. This is implemented as a REST API with JSON responses, consumed by vanilla JavaScript on the frontend.
+                    </p>
+
+                    <h4>Interview Records</h4>
+                    <p>
+                        Each mentor-student interview generates a record with problem statement, discussion summary, and follow-up actions. Records are student-specific and build a complete history over the semester. Mentors have full CRUD access to their own records.
+                    </p>
+
+                    <h4>Case Escalation (3-Tier)</h4>
+                    <p>
+                        When a mentor identifies a student needing additional support beyond their capacity, they forward the case to the department coordinator. If the coordinator cannot resolve it, they escalate to the faculty consultant. This <strong>3-tier escalation workflow</strong> mirrors the university's actual organizational hierarchy and ensures student issues reach the right level of attention.
+                    </p>
+
+                    <h4>Excel Import/Export</h4>
+                    <p>
+                        A critical feature for real-world adoption: administrators and consultants can bulk-manage data through Excel files rather than manual entry. The import process is <strong>two-step: Upload → Preview (with conflict detection) → Confirm</strong>. The system detects conflicts (duplicate student IDs, mismatched departments) and offers skip/overwrite options before finalizing.
+                    </p>
+
+                    <h4>Activity Logging & Audit</h4>
+                    <p>
+                        Every login, logout, and page visit is logged to <code>log_activity</code>. Support staff can search by student, user, and date range. Combined with the feedback management module (with status tracking: Open → In Progress → Resolved → Closed), the system provides full operational transparency.
+                    </p>
+
+                    <!-- AI-Assisted Development -->
+                    <h3>6. AI-Assisted Team Development: Over 200 Million Tokens</h3>
+                    <p>
+                        What made this project unique was our development methodology. We structured our team as a <strong>human-AI hybrid software engineering team</strong>, using Claude Code, Codex, and DeepSeek V4 Pro as development agents. The AI agents were assigned specific roles mirroring a real software team:
+                    </p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <img src="img/1.png" alt="AI Agent Team Workflow"
+                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>AI Agent Team Workflow — Architecture, Frontend, Testing, and Documentation agents working in parallel</em></p>
+                    </div>
+                    <p>
+                        <strong>Architecture Agent</strong> designed database schemas and API contracts. <strong>Frontend Agent</strong> generated Jinja2 templates and CSS. <strong>Testing Agent</strong> wrote pytest cases for edge conditions. <strong>Documentation Agent</strong> maintained the complete SE documentation suite (SRS, AD, DDD, TP, TR). Each agent worked within the <code>CLAUDE.md</code> and <code>AGENTS.md</code> instruction files we crafted to maintain consistency.
+                    </p>
+                    <p>
+                        The key insight: <strong>AI agents functioned as force multipliers, not replacements</strong>. We spent our time on code review, integration testing, and domain logic — the parts that require human judgment. The AI handled boilerplate, test case generation, and documentation formatting. Total token consumption exceeded <strong>200 million tokens</strong> across all models, equivalent to processing roughly 150 million words of context.
+                    </p>
+
+                    <!-- Testing -->
+                    <h3>7. Testing Strategy: 183 Tests, Zero Surprises in Demo</h3>
+                    <p>
+                        Testing was not an afterthought. We wrote <strong>183 pytest tests</strong> covering:
+                    </p>
+                    <ul style="font-size: 18px; line-height: 2; margin-left: 20px;">
+                        <li><strong>160 unit tests</strong> — one per controller function, with isolated test databases and mocked authentication</li>
+                        <li><strong>23 end-to-end tests</strong> — a demo checklist that walks through every role's key workflows in sequence</li>
+                        <li><strong>Boundary tests</strong> — empty databases, invalid inputs, concurrent appointment booking, cascading deletes</li>
+                    </ul>
+                    <p>
+                        The test suite uses pytest fixtures to create <strong>isolated SQLite databases</strong> pre-seeded with test data, ensuring tests never interfere with each other. We used <code>pytest-flask</code> for request context and session simulation. Every test runs in under 2 seconds — the full suite completes in under a minute.
+                    </p>
+
+                    <!-- SE Documents -->
+                    <h3>8. Complete Software Engineering Lifecycle</h3>
+                    <p>
+                        Beyond the code, we produced a full suite of software engineering documents following IEEE standards:
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>SRS</strong> — Software Requirements Specification<br>
+                            <small>Use cases, functional/non-functional requirements, user categories</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>AD</strong> — Architecture Design<br>
+                            <small>3-tier subsystem decomposition, class diagrams, sequence diagrams</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>DDD</strong> — Detailed Design Description<br>
+                            <small>Module-level design, interface specifications, data flow</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>UI Design</strong> — User Interface Mockups<br>
+                            <small>Wireframes and screen layouts for all 6 roles</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>TP</strong> — Test Plan<br>
+                            <small>Testing strategy, test environment, test case design</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>TR</strong> — Test Report<br>
+                            <small>Test execution results, defect summary, coverage analysis</small>
+                        </div>
+                    </div>
+
+                    <!-- Lessons Learned -->
+                    <h3>9. Lessons Learned</h3>
+                    <p>
+                        <strong>Domain-driven design pays off.</strong> Aligning our code structure with the university's actual organizational hierarchy (faculties → departments → majors → groups) made the system intuitive for stakeholders and simplified permission logic.
+                    </p>
+                    <p>
+                        <strong>AI agents need clear contracts.</strong> The most effective AI contributions came when we provided precise interface specifications (function signatures, database schemas, template layouts). Vague prompts produced inconsistent results that required significant rework.
+                    </p>
+                    <p>
+                        <strong>Test early, test often.</strong> The 183-test suite caught multiple regression bugs during the final integration week. The demo checklist tests served double duty as documentation for how each feature should work.
+                    </p>
+                    <p>
+                        <strong>Excel import is harder than it looks.</strong> Handling malformed spreadsheets, duplicate entries, and partial imports with rollback semantics turned out to be one of the most complex features — and the one stakeholders valued most for real-world usability.
+                    </p>
+
+                    <!-- Team -->
+                    <h3>10. Team & Acknowledgments</h3>
+                    <p>
+                        Team C03 "bobr" — BNBU, Spring 2026:
+                    </p>
+                    <ul style="font-size: 18px; line-height: 2; margin-left: 20px;">
+                        <li><strong>Iaroslav OBUKHOV</strong> — Team Lead, Architecture</li>
+                        <li><strong>CAI Jiechao</strong> — Secretary, Backend & Integration</li>
+                        <li><strong>ZHANG Chang</strong> — Frontend & UI</li>
+                        <li><strong>BAI Yang</strong> — Testing & QA</li>
+                        <li><strong>Alexey KRIVOROTOV</strong> — Documentation</li>
+                        <li><strong>KANG Siyue</strong> — Requirements & Design</li>
+                    </ul>
+                    <p>
+                        Special thanks to our course instructors for guidance throughout the semester, and to the BNBU Mentor Caring Programme office for providing real requirements and feedback during development.
+                    </p>
+
+                    <br>
+
+                    <div class="back-button-container">
+                        <a href="../../index.html#blog" class="back-button">Back</a>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="copyright">
+        <div class="container">
+            <div class="social-link">
+                <p>Designed and Developed By Cai Jiechao.</p>
+            </div>
+        </div>
+    </section>
+    <div class="lightbox hide">
+        <span class="close-lightbox fa fa-close"></span>
+        <img src="" alt="portfolio" />
+    </div>
+
+</body>
+
+</html>
