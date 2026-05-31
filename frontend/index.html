@@ -668,14 +668,15 @@
             : `${window.location.origin}/api`
       );
 
+      let allArticles = [];
+      var currentCategory = 'all';
+
       // Fetch dynamic articles
       async function fetchArticles() {
          const container = document.getElementById('dynamic-articles');
          const prevBtn = document.getElementById('blog-prev');
          const nextBtn = document.getElementById('blog-next');
-         
-         let allArticles = [];
-         var currentCategory = 'all';
+
          let currentIndex = 0;
          let autoScrollInterval = null;
 
@@ -783,6 +784,8 @@
                `;
             });
          }
+
+         window.renderArticles = renderArticles;
 
          // Bind filter buttons
          const filterBtns = document.querySelectorAll('.category-filter .filter-btn');
