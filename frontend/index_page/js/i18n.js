@@ -219,10 +219,13 @@ function setLanguage(lang) {
 }
 
 function toggleLanguage() {
+  console.log('[i18n debug] toggleLanguage called');
   const currentLang = localStorage.getItem('lang') || 'en';
   const newLang = currentLang === 'en' ? 'zh' : 'en';
+  console.log('[i18n debug] switching from', currentLang, 'to', newLang);
   setLanguage(newLang);
 }
+console.log('[i18n debug] i18n.js loaded, toggleLanguage defined');
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('lang') || 'en';
