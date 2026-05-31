@@ -5,3 +5,6 @@ __pycache__/
 backend/.env
 frontend/dist/
 frontend/node_modules/
+
+# Deploy notes (local only, contains credentials)
+DEPLOY.md
