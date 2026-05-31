@@ -202,8 +202,12 @@ function setLanguage(lang) {
   }
   
   // Re-render dynamic articles/projects if their functions exist
+  console.log('[i18n debug] renderArticles type:', typeof renderArticles, 'currentCategory type:', typeof currentCategory, 'currentCategory value:', currentCategory);
   if (typeof renderArticles === 'function' && typeof currentCategory !== 'undefined') {
+    console.log('[i18n debug] calling renderArticles with:', currentCategory);
     renderArticles(currentCategory);
+  } else {
+    console.log('[i18n debug] NOT calling renderArticles');
   }
   if (typeof fetchProjects === 'function' && document.getElementById('dynamic-projects')) {
     // A bit hacky but re-fetching to re-render with new language
