@@ -226,6 +226,7 @@ function toggleLanguage() {
   setLanguage(newLang);
 }
 console.log('[i18n debug] i18n.js loaded, toggleLanguage defined');
+window._i18n_loaded = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('lang') || 'en';
