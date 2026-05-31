@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="Redis, LLM, 限流, 缓存, 进度追踪, 大模型网关, RPM/TPM">
-    <meta name="description" content="Redis 在 LLM 应用中的实战：限流（RPM/TPM）、负载均衡、缓存策略、进度追踪">
+    <meta name="keywords" content="Redis, LLM, 限流, 缓存, 进度追踪, 大模型网关, RPM/TPM, Rate Limiting, Caching, Progress Tracking">
+    <meta name="description" content="Redis 在 LLM 应用中的实战：限流（RPM/TPM）、负载均衡、缓存策略、进度追踪 | Redis in LLM Applications: Rate Limiting, Caching, and Progress Tracking">
     <meta name="author" content="Cai Jiechao">
-    <title>Redis 在 LLM 应用中的实战：限流、缓存与进度追踪 | Cai Jiechao</title>
+    <title>Redis 在 LLM 应用中的实战：限流、缓存与进度追踪 | Redis in LLM Apps | Cai Jiechao</title>
     <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="../css/header.css" rel="stylesheet" />
@@ -50,6 +50,7 @@
                         <li><a href="../../index.html#portfolio">Portfolio</a></li>
                         <li><a href="../../index.html#blog">Blog</a></li>
                         <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">&#x1F1E8;&#x1F1F3; &#x4E2D;&#x6587;</a></li>
                     </ul>
                 </div>
             </div>
@@ -60,21 +61,34 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">Redis 在 LLM 应用中的实战：限流、缓存与进度追踪</h1>
+                    <h1 class="article-title-zh" style="text-transform: none;">Redis 在 LLM 应用中的实战：限流、缓存与进度追踪</h1>
+                    <h1 class="article-title-en" style="text-transform: none; display:none;">Redis in LLM Applications: Rate Limiting, Caching, and Progress Tracking</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
 
-                    <p>面试中只要提到"大模型网关"或"高并发后端"，Redis 是绕不开的话题。这篇文章结合我实习中真实使用 Redis 的三个场景——<strong>分布式限流、负载均衡状态管理、异步任务进度追踪</strong>——从应用场景到底层原理讲透。</p>
+                    <div class="article-lang-zh">
+                        <p>面试中只要提到"大模型网关"或"高并发后端"，Redis 是绕不开的话题。这篇文章结合我实习中真实使用 Redis 的三个场景——<strong>分布式限流、负载均衡状态管理、异步任务进度追踪</strong>——从应用场景到底层原理讲透。</p>
+                    </div>
 
-                    <h2>一、为什么 LLM 网关必须用 Redis 而不是单机内存？</h2>
+                    <div class="article-lang-en" style="display:none;">
+                        <p>Whenever "LLM Gateway" or "high-concurrency backend" comes up in an interview, Redis is an unavoidable topic. This article covers three real-world Redis scenarios from my internship — <strong>distributed rate limiting, load balancing state management, and async task progress tracking</strong> — from practical use cases down to the underlying principles.</p>
+                    </div>
 
-                    <p>一句话：<strong>网关是多节点分布式部署的</strong>。</p>
+                    <div class="article-lang-zh">
+                        <h2>一、为什么 LLM 网关必须用 Redis 而不是单机内存？</h2>
+                        <p>一句话：<strong>网关是多节点分布式部署的</strong>。</p>
+                        <p>我们的 LiteLLM 网关通过 Docker Compose 部署，支持水平扩容。假设你起了 3 个网关实例，如果限流计数器只存在 Node A 的内存里，Node B 的请求根本感知不到，限流就形同虚设。</p>
+                        <p>Redis 作为独立的外部存储，天然适合做分布式状态共享：</p>
+                    </div>
 
-                    <p>我们的 LiteLLM 网关通过 Docker Compose 部署，支持水平扩容。假设你起了 3 个网关实例，如果限流计数器只存在 Node A 的内存里，Node B 的请求根本感知不到，限流就形同虚设。</p>
-
-                    <p>Redis 作为独立的外部存储，天然适合做分布式状态共享：</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>1. Why Redis Instead of In-Memory Storage for LLM Gateways?</h2>
+                        <p>In one sentence: <strong>the gateway is deployed as a distributed multi-node system</strong>.</p>
+                        <p>Our LiteLLM gateway is deployed via Docker Compose with horizontal scaling. If you spin up 3 gateway instances and the rate limiter counter only exists in Node A's memory, Node B's requests won't be aware of it at all — making rate limiting effectively useless.</p>
+                        <p>Redis, as an independent external store, is a natural fit for distributed state sharing:</p>
+                    </div>
 
 <pre><code># docker-compose.yml
 redis:
@@ -85,19 +99,35 @@ redis:
   volumes:
     - redis_data:/data</code></pre>
 
-                    <h2>二、场景一：分布式全局限流（Rate Limiting）</h2>
+                    <div class="article-lang-zh">
+                        <h2>二、场景一：分布式全局限流（Rate Limiting）</h2>
+                        <p>LLM API 调用有两种限流维度：</p>
+                        <ul>
+                            <li><strong>RPM</strong>（Requests Per Minute）：每分钟请求次数</li>
+                            <li><strong>TPM</strong>（Tokens Per Minute）：每分钟 Token 消耗量</li>
+                        </ul>
+                        <p>比如控制某个租户 TPM 不超过 10 万，必须用 Redis 来保证多节点数据一致性。</p>
+                    </div>
 
-                    <p>LLM API 调用有两种限流维度：</p>
-                    <ul>
-                        <li><strong>RPM</strong>（Requests Per Minute）：每分钟请求次数</li>
-                        <li><strong>TPM</strong>（Tokens Per Minute）：每分钟 Token 消耗量</li>
-                    </ul>
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>2. Scenario 1: Distributed Global Rate Limiting</h2>
+                        <p>LLM API calls have two rate limiting dimensions:</p>
+                        <ul>
+                            <li><strong>RPM</strong> (Requests Per Minute): number of requests per minute</li>
+                            <li><strong>TPM</strong> (Tokens Per Minute): token consumption per minute</li>
+                        </ul>
+                        <p>For example, to cap a tenant's TPM at 100K, Redis is essential to ensure data consistency across nodes.</p>
+                    </div>
 
-                    <p>比如控制某个租户 TPM 不超过 10 万，必须用 Redis 来保证多节点数据一致性。</p>
+                    <div class="article-lang-zh">
+                        <h3>2.1 滑动窗口算法（Sliding Window）</h3>
+                        <p>最常用的是滑动窗口。Redis 实现非常自然——利用 Sorted Set（ZSET）：</p>
+                    </div>
 
-                    <h3>2.1 滑动窗口算法（Sliding Window）</h3>
-
-                    <p>最常用的是滑动窗口。Redis 实现非常自然——利用 Sorted Set（ZSET）：</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h3>2.1 Sliding Window Algorithm</h3>
+                        <p>The most commonly used approach is the sliding window. Redis implements it very naturally — using Sorted Sets (ZSET):</p>
+                    </div>
 
 <pre><code># Redis 滑动窗口伪代码
 import time
@@ -133,16 +163,27 @@ def check_rate_limit(user_id: str, max_rpm: int, max_tpm: int,
 
     return True</code></pre>
 
-                    <h3>2.2 令牌桶算法（Token Bucket）</h3>
+                    <div class="article-lang-zh">
+                        <h3>2.2 令牌桶算法（Token Bucket）</h3>
+                        <p>另一种常见算法。核心思想：</p>
+                        <ul>
+                            <li>桶以固定速率产生 Token（比如每秒 1667 Token）</li>
+                            <li>每次请求消耗对应 Token 数</li>
+                            <li>桶空了就触发限流</li>
+                        </ul>
+                        <p>Redis 实现可以用 Lua 脚本保证原子性：</p>
+                    </div>
 
-                    <p>另一种常见算法。核心思想：</p>
-                    <ul>
-                        <li>桶以固定速率产生 Token（比如每秒 1667 Token）</li>
-                        <li>每次请求消耗对应 Token 数</li>
-                        <li>桶空了就触发限流</li>
-                    </ul>
-
-                    <p>Redis 实现可以用 Lua 脚本保证原子性：</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h3>2.2 Token Bucket Algorithm</h3>
+                        <p>Another common algorithm. The core idea:</p>
+                        <ul>
+                            <li>The bucket generates tokens at a fixed rate (e.g., 1667 tokens/sec)</li>
+                            <li>Each request consumes the corresponding number of tokens</li>
+                            <li>When the bucket is empty, rate limiting is triggered</li>
+                        </ul>
+                        <p>Redis implementation can use Lua scripts to guarantee atomicity:</p>
+                    </div>
 
 <pre><code>-- Redis Lua 脚本：令牌桶
 local key = KEYS[1]
@@ -167,11 +208,23 @@ else
     return 0  -- 限流
 end</code></pre>
 
-                    <p>为什么用 Lua？因为 Redis 的 Lua 脚本是<strong>原子执行</strong>的，不会有竞态条件。如果用客户端多次调用 GET + SET，在高并发下会出现"超卖"。</p>
+                    <div class="article-lang-zh">
+                        <p>为什么用 Lua？因为 Redis 的 Lua 脚本是<strong>原子执行</strong>的，不会有竞态条件。如果用客户端多次调用 GET + SET，在高并发下会出现"超卖"。</p>
+                    </div>
 
-                    <h2>三、场景二：负载均衡的 in-flight 请求追踪</h2>
+                    <div class="article-lang-en" style="display:none;">
+                        <p>Why Lua? Because Redis Lua scripts execute <strong>atomically</strong>, eliminating race conditions. If you use multiple client-side GET + SET calls, you'll encounter "overselling" under high concurrency.</p>
+                    </div>
 
-                    <p>LiteLLM 的 Least Busy 路由策略需要在 Redis 中维护每个节点的当前活跃请求数：</p>
+                    <div class="article-lang-zh">
+                        <h2>三、场景二：负载均衡的 in-flight 请求追踪</h2>
+                        <p>LiteLLM 的 Least Busy 路由策略需要在 Redis 中维护每个节点的当前活跃请求数：</p>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>3. Scenario 2: In-Flight Request Tracking for Load Balancing</h2>
+                        <p>LiteLLM's Least Busy routing strategy requires tracking each node's current active request count in Redis:</p>
+                    </div>
 
 <pre><code># 请求分发前
 r.hincrby("deployment:in_flight", deployment_id, 1)
@@ -183,7 +236,13 @@ r.hincrby("deployment:in_flight", deployment_id, -1)
 inflight = r.hgetall("deployment:in_flight")
 best_deployment = min(inflight, key=lambda k: int(inflight[k]))</code></pre>
 
-                    <p>另一个关键用途是<strong>节点冷却标记</strong>。当一个节点返回 429 或 500 时，在 Redis 中标记冷却期：</p>
+                    <div class="article-lang-zh">
+                        <p>另一个关键用途是<strong>节点冷却标记</strong>。当一个节点返回 429 或 500 时，在 Redis 中标记冷却期：</p>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <p>Another key use case is <strong>node cooldown marking</strong>. When a node returns a 429 or 500, a cooldown period is set in Redis:</p>
+                    </div>
 
 <pre><code># 节点故障，标记 60 秒冷却
 r.setex(f"cooldown:{deployment_id}", 60, "1")
@@ -192,9 +251,15 @@ r.setex(f"cooldown:{deployment_id}", 60, "1")
 if r.exists(f"cooldown:{deployment_id}"):
     continue  # 跳过这个节点</code></pre>
 
-                    <h2>四、场景三：异步任务进度追踪</h2>
+                    <div class="article-lang-zh">
+                        <h2>四、场景三：异步任务进度追踪</h2>
+                        <p>在 MathTasks 项目中，AI 难度验证是异步任务——提交后 Worker 慢慢跑，前端需要实时看到进度。我们用 Redis 做进度缓存：</p>
+                    </div>
 
-                    <p>在 MathTasks 项目中，AI 难度验证是异步任务——提交后 Worker 慢慢跑，前端需要实时看到进度。我们用 Redis 做进度缓存：</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>4. Scenario 3: Async Task Progress Tracking</h2>
+                        <p>In the MathTasks project, AI difficulty verification is an async task — after submission, the Worker runs in the background while the frontend needs real-time progress updates. We use Redis as a progress cache:</p>
+                    </div>
 
 <pre><code># Worker 更新进度到 Redis
 def update_progress(task_id: str, progress: int, status: str):
@@ -213,25 +278,67 @@ def get_progress(task_id: str):
         "status": data.get("status", "unknown")
     }</code></pre>
 
-                    <p>这个设计的演进过程也值得一提：最初版本是纯内存轮询 → 后来引入 Redis → 最终升级为 SSE 实时推送（Redis 作为 SSE 断线重连时的状态恢复源）。</p>
+                    <div class="article-lang-zh">
+                        <p>这个设计的演进过程也值得一提：最初版本是纯内存轮询 → 后来引入 Redis → 最终升级为 SSE 实时推送（Redis 作为 SSE 断线重连时的状态恢复源）。</p>
+                    </div>
 
-                    <h2>五、面试必考：缓存三连</h2>
+                    <div class="article-lang-en" style="display:none;">
+                        <p>The evolution of this design is also worth noting: the initial version used pure in-memory polling → then Redis was introduced → finally upgraded to SSE real-time push (with Redis serving as the state recovery source during SSE reconnection).</p>
+                    </div>
 
-                    <p>面试官问你 Redis，几乎一定会追问缓存雪崩、缓存击穿、缓存穿透。结合 LLM 网关场景来回答：</p>
+                    <div class="article-lang-zh">
+                        <h2>五、面试必考：缓存三连</h2>
+                        <p>面试官问你 Redis，几乎一定会追问缓存雪崩、缓存击穿、缓存穿透。结合 LLM 网关场景来回答：</p>
+                    </div>
 
-                    <h3>5.1 缓存穿透（Cache Penetration）</h3>
-                    <p><strong>现象</strong>：查一个不存在的 API Key，缓存里没有，每次都穿透到 PostgreSQL 查询。<br>
-                    <strong>解法</strong>：布隆过滤器（Bloom Filter）预先过滤不存在的 Key，或者把"不存在"也缓存一个空值（设短 TTL）。</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>5. Interview Must-Know: The Three Cache Problems</h2>
+                        <p>When an interviewer asks about Redis, they will almost certainly follow up on cache avalanche, cache breakdown, and cache penetration. Here's how to answer with LLM gateway context:</p>
+                    </div>
 
-                    <h3>5.2 缓存击穿（Cache Breakdown）</h3>
-                    <p><strong>现象</strong>：热点数据（比如某个高频租户的限流计数器）的 Key 刚好过期，瞬间大量请求同时打到数据库。<br>
-                    <strong>解法</strong>：互斥锁（Mutex Lock）——第一个请求去查 DB 并重建缓存，其他请求等待；或者"永不过期" + 异步刷新。</p>
+                    <div class="article-lang-zh">
+                        <h3>5.1 缓存穿透（Cache Penetration）</h3>
+                        <p><strong>现象</strong>：查一个不存在的 API Key，缓存里没有，每次都穿透到 PostgreSQL 查询。<br>
+                        <strong>解法</strong>：布隆过滤器（Bloom Filter）预先过滤不存在的 Key，或者把"不存在"也缓存一个空值（设短 TTL）。</p>
+                    </div>
 
-                    <h3>5.3 缓存雪崩（Cache Avalanche）</h3>
-                    <p><strong>现象</strong>：大量 Key 在同一时间集体过期（或 Redis 宕机），所有请求直接打到数据库。<br>
-                    <strong>解法</strong>：Key 的过期时间加随机偏移（<code>TTL = 3600 + random(0, 600)</code>）；Redis 集群/哨兵模式保证高可用。</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h3>5.1 Cache Penetration</h3>
+                        <p><strong>Problem</strong>: Querying a non-existent API Key — cache has no entry, so every request hits PostgreSQL directly.<br>
+                        <strong>Solution</strong>: Use a Bloom Filter to pre-filter non-existent keys, or cache a null/empty value for "not found" results (with a short TTL).</p>
+                    </div>
 
-                    <h2>六、Redis 在项目中的实际位置</h2>
+                    <div class="article-lang-zh">
+                        <h3>5.2 缓存击穿（Cache Breakdown）</h3>
+                        <p><strong>现象</strong>：热点数据（比如某个高频租户的限流计数器）的 Key 刚好过期，瞬间大量请求同时打到数据库。<br>
+                        <strong>解法</strong>：互斥锁（Mutex Lock）——第一个请求去查 DB 并重建缓存，其他请求等待；或者"永不过期" + 异步刷新。</p>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <h3>5.2 Cache Breakdown</h3>
+                        <p><strong>Problem</strong>: A hot data key (e.g., a high-frequency tenant's rate limit counter) expires, causing a flood of concurrent requests to hit the database simultaneously.<br>
+                        <strong>Solution</strong>: Mutex Lock — the first request queries the DB and rebuilds the cache while others wait; or use "never expire" keys + async refresh.</p>
+                    </div>
+
+                    <div class="article-lang-zh">
+                        <h3>5.3 缓存雪崩（Cache Avalanche）</h3>
+                        <p><strong>现象</strong>：大量 Key 在同一时间集体过期（或 Redis 宕机），所有请求直接打到数据库。<br>
+                        <strong>解法</strong>：Key 的过期时间加随机偏移（<code>TTL = 3600 + random(0, 600)</code>）；Redis 集群/哨兵模式保证高可用。</p>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <h3>5.3 Cache Avalanche</h3>
+                        <p><strong>Problem</strong>: A large number of keys expire at the same time (or Redis goes down), causing all requests to hit the database directly.<br>
+                        <strong>Solution</strong>: Add random jitter to key expiration times (<code>TTL = 3600 + random(0, 600)</code>); use Redis Cluster/Sentinel for high availability.</p>
+                    </div>
+
+                    <div class="article-lang-zh">
+                        <h2>六、Redis 在项目中的实际位置</h2>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>6. Redis's Role in Production Architecture</h2>
+                    </div>
 
 <pre><code># 生产部署架构
                   ┌─────────────┐
@@ -253,17 +360,27 @@ def get_progress(task_id: str):
     │ 限流/状态   │              │ 租户/计费/日志   │
     └────────────┘              └─────────────────┘</code></pre>
 
-                    <h2>总结</h2>
+                    <div class="article-lang-zh">
+                        <h2>总结</h2>
+                        <p>Redis 在 LLM 应用中扮演"高性能状态共享层"的角色，核心用途：</p>
+                        <ul>
+                            <li><strong>分布式限流</strong>：滑动窗口 / 令牌桶，Lua 原子操作</li>
+                            <li><strong>负载均衡状态</strong>：in-flight 计数 + 节点冷却标记</li>
+                            <li><strong>进度追踪</strong>：异步任务的状态缓存，SSE 断线重连的数据源</li>
+                        </ul>
+                        <p>面试官问到 Redis，如果能把这三种场景和三种缓存问题都讲清楚，基本就通关了。</p>
+                    </div>
 
-                    <p>Redis 在 LLM 应用中扮演"高性能状态共享层"的角色，核心用途：</p>
-
-                    <ul>
-                        <li><strong>分布式限流</strong>：滑动窗口 / 令牌桶，Lua 原子操作</li>
-                        <li><strong>负载均衡状态</strong>：in-flight 计数 + 节点冷却标记</li>
-                        <li><strong>进度追踪</strong>：异步任务的状态缓存，SSE 断线重连的数据源</li>
-                    </ul>
-
-                    <p>面试官问到 Redis，如果能把这三种场景和三种缓存问题都讲清楚，基本就通关了。</p>
+                    <div class="article-lang-en" style="display:none;">
+                        <h2>Summary</h2>
+                        <p>Redis plays the role of a "high-performance state sharing layer" in LLM applications, with three core use cases:</p>
+                        <ul>
+                            <li><strong>Distributed Rate Limiting</strong>: Sliding window / token bucket, Lua atomic operations</li>
+                            <li><strong>Load Balancing State</strong>: In-flight counting + node cooldown marking</li>
+                            <li><strong>Progress Tracking</strong>: Async task state caching, SSE reconnection data source</li>
+                        </ul>
+                        <p>If you can clearly explain these three scenarios and three cache problems when asked about Redis in an interview, you've basically aced it.</p>
+                    </div>
 
                 </div>
             </div>
@@ -271,7 +388,7 @@ def get_progress(task_id: str):
     </section>
 
     <div class="back-button-container">
-        <a href="../../.." class="back-button">Back</a>
+        <a href="../../index.html#blog" class="back-button">Back</a>
         <br>
     </div>
 
@@ -282,5 +399,7 @@ def get_progress(task_id: str):
             </div>
         </div>
     </section>
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 </body>
 </html>

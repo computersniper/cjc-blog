@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="keywords" content="LiteLLM, LLM Gateway, API Gateway, 大模型网关, 源码分析">
-    <meta name="description" content="深入 LiteLLM 源码，剖析 LLM API 网关的核心架构：协议适配器、路由负载均衡、容灾降级">
+    <meta name="description" content="深入 LiteLLM 源码，剖析 LLM API 网关的核心架构：协议适配器、路由负载均衡、容灾降级 | Deep Dive into LiteLLM Source Code: Core Architecture of an LLM API Gateway — Protocol Adapter, Routing & Load Balancing, Fault Tolerance">
     <meta name="author" content="Cai Jiechao">
     <title>深入 LiteLLM 源码：LLM API 网关的核心架构 | Cai Jiechao</title>
     <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
@@ -50,6 +50,7 @@
                         <li><a href="../../index.html#portfolio">Portfolio</a></li>
                         <li><a href="../../index.html#blog">Blog</a></li>
                         <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -59,37 +60,66 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">深入 LiteLLM 源码：LLM API 网关的核心架构</h1>
+                    <h1 class="article-title-zh" style="text-transform: none;">深入 LiteLLM 源码：LLM API 网关的核心架构</h1>
+                    <h1 class="article-title-en" style="text-transform: none; display:none;">Deep Dive into LiteLLM Source Code: Core Architecture of an LLM API Gateway</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
-                    <p>2025 年底到 2026 年初，我在一家 AI 教育公司实习，负责搭建团队的大模型 API 网关。面对 OpenAI、Anthropic、Google Gemini、DeepSeek、豆包等 8+ 厂商的 20+ 模型，没有统一网关的结果就是：每个业务模块各自对接不同 SDK，API Key 散落各处，调用成本不可追踪，某个模型挂了需要改代码才能切换。</p>
-                    <p>我们选择了基于 <strong>LiteLLM</strong> 深度定制网关方案。这篇文章从源码级别讲清楚 LiteLLM 作为企业级 API 网关的核心机制。</p>
-                    <h2>一、整体架构：从 Docker Compose 看全貌</h2>
-                    <p>LiteLLM 网关的生产部署由多个微服务协作：PostgreSQL 管持久化，Redis 管实时状态，Langfuse 管可观测性，LiteLLM Proxy 管请求转发和协议适配。</p>
-                    <h2>二、协议适配器模式</h2>
-                    <p>入口在 litellm/main.py 的 completion() 函数，内部实现了完整适配器模式。所有请求先统一为 OpenAI 格式，再按 model 前缀动态分发到厂商 Handler（litellm/llms/ 目录下）。以 Claude 为例，system prompt 必须从 messages 数组剥离为顶级参数，LiteLLM 自动完成这个转换。</p>
-                    <h2>三、路由与负载均衡</h2>
-                    <p>Router 类在 router.py 中，支持三种策略：Round Robin（轮询）、Least Busy（最少并发，通过 Redis 维护 in_flight_requests）、Latency Based（延迟路由）。</p>
-                    <h2>四、容灾与降级</h2>
-                    <p>基于 tenacity 库，捕获 HTTP 429/500 后：标记节点 Redis cooldown → 从 fallbacks 列表取备用模型 → 递归调用 completion()，对客户端透明。</p>
-                    <h2>五、请求生命周期</h2>
+
+                    <div class="article-lang-zh">
+                        <p>2025 年底到 2026 年初，我在一家 AI 教育公司实习，负责搭建团队的大模型 API 网关。面对 OpenAI、Anthropic、Google Gemini、DeepSeek、豆包等 8+ 厂商的 20+ 模型，没有统一网关的结果就是：每个业务模块各自对接不同 SDK，API Key 散落各处，调用成本不可追踪，某个模型挂了需要改代码才能切换。</p>
+                        <p>我们选择了基于 <strong>LiteLLM</strong> 深度定制网关方案。这篇文章从源码级别讲清楚 LiteLLM 作为企业级 API 网关的核心机制。</p>
+                        <h2>一、整体架构：从 Docker Compose 看全貌</h2>
+                        <p>LiteLLM 网关的生产部署由多个微服务协作：PostgreSQL 管持久化，Redis 管实时状态，Langfuse 管可观测性，LiteLLM Proxy 管请求转发和协议适配。</p>
+                        <h2>二、协议适配器模式</h2>
+                        <p>入口在 litellm/main.py 的 completion() 函数，内部实现了完整适配器模式。所有请求先统一为 OpenAI 格式，再按 model 前缀动态分发到厂商 Handler（litellm/llms/ 目录下）。以 Claude 为例，system prompt 必须从 messages 数组剥离为顶级参数，LiteLLM 自动完成这个转换。</p>
+                        <h2>三、路由与负载均衡</h2>
+                        <p>Router 类在 router.py 中，支持三种策略：Round Robin（轮询）、Least Busy（最少并发，通过 Redis 维护 in_flight_requests）、Latency Based（延迟路由）。</p>
+                        <h2>四、容灾与降级</h2>
+                        <p>基于 tenacity 库，捕获 HTTP 429/500 后：标记节点 Redis cooldown → 从 fallbacks 列表取备用模型 → 递归调用 completion()，对客户端透明。</p>
+                        <h2>五、请求生命周期</h2>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <p>From late 2025 to early 2026, I interned at an AI education company, responsible for building the team's LLM API gateway. Facing 20+ models from 8+ providers — OpenAI, Anthropic, Google Gemini, DeepSeek, Doubao, and more — the consequence of not having a unified gateway was clear: each business module integrated different SDKs independently, API keys were scattered everywhere, call costs were untraceable, and switching models after a failure required code changes.</p>
+                        <p>We chose a deep customization approach based on <strong>LiteLLM</strong>. This article explains, at the source code level, the core mechanisms of LiteLLM as an enterprise-grade API gateway.</p>
+                        <h2>1. Overall Architecture: A Full Picture from Docker Compose</h2>
+                        <p>The production deployment of the LiteLLM gateway is composed of multiple microservices working together: PostgreSQL handles persistence, Redis manages real-time state, Langfuse handles observability, and LiteLLM Proxy manages request forwarding and protocol adaptation.</p>
+                        <h2>2. Protocol Adapter Pattern</h2>
+                        <p>The entry point is the completion() function in litellm/main.py, which implements a full adapter pattern internally. All requests are first normalized to OpenAI format, then dynamically dispatched to provider handlers (under the litellm/llms/ directory) based on the model prefix. Taking Claude as an example, the system prompt must be extracted from the messages array into a top-level parameter — LiteLLM handles this conversion automatically.</p>
+                        <h2>3. Routing and Load Balancing</h2>
+                        <p>The Router class in router.py supports three strategies: Round Robin, Least Busy (minimal concurrency, tracking in_flight_requests via Redis), and Latency Based (latency-aware routing).</p>
+                        <h2>4. Fault Tolerance and Graceful Degradation</h2>
+                        <p>Built on the tenacity library, after catching HTTP 429/500 errors: the node is marked for Redis cooldown → a fallback model is selected from the fallbacks list → completion() is called recursively, all transparent to the client.</p>
+                        <h2>5. Request Lifecycle</h2>
+                    </div>
+
                     <div style="text-align:center;margin:30px 0;">
                         <img src="img/request-lifecycle.png" alt="Request Lifecycle"
                              style="width:90%;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.2);border-radius:8px;">
                     </div>
-                    <p>Middleware → Auth → RateLimit → Router → Adapter → LLM Call → StreamHandler → Callback → Response。</p>
+
+                    <div class="article-lang-zh">
+                        <p>Middleware → Auth → RateLimit → Router → Adapter → LLM Call → StreamHandler → Callback → Response。</p>
+                    </div>
+
+                    <div class="article-lang-en" style="display:none;">
+                        <p>Middleware → Auth → RateLimit → Router → Adapter → LLM Call → StreamHandler → Callback → Response.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
     </section>
     <div class="back-button-container">
-        <a href="../../.." class="back-button">Back</a>
+        <a href="../../index.html#blog" class="back-button">Back</a>
         <br>
     </div>
     <section class="copyright">
         <div class="container"><div class="social-link"><p>Designed and Developed By Cai Jiechao.</p></div></div>
     </section>
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 </body>
 </html>

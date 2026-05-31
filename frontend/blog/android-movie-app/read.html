@@ -122,12 +122,13 @@
                 </div>
                 <div class="navbar">
                     <ul>
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#services">Skills</a></li>
-                        <li><a href="index.html#portfolio">Portfolio</a></li>
-                        <li><a href="index.html#blog">Blog</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="../../index.html#home">Home</a></li>
+                        <li><a href="../../index.html#about">About</a></li>
+                        <li><a href="../../index.html#services">Skills</a></li>
+                        <li><a href="../../index.html#portfolio">Portfolio</a></li>
+                        <li><a href="../../index.html#blog">Blog</a></li>
+                        <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -137,82 +138,127 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">Movie Collection App: Development & Debugging</h1>
+                    <h1 class="article-title-en" style="text-transform: none;">Movie Collection App: Development & Debugging</h1>
+                    <h1 class="article-title-zh" style="text-transform: none; display:none;">Android 电影收藏应用：开发与调试</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
-                    <p>I developed a comprehensive movie collection application that enables users to search, favorite, display, and manage movie information with dynamic data loading. Built with modern Android technologies, the app delivers a responsive and seamless user experience.</p>
-                    
-                    <br>
-                    <div style="text-align: center;">
-                        <img src="img/app_overview.png" alt="Movie Collection App Main Interface"
-                            style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <p><em>Main interface showing movie grid and search functionality</em></p>
-                    </div>
-                    <br>
 
-                    <h3>Technical Architecture & Implementation</h3>
-                    <br>
-                    <p><strong>MVVM Architecture:</strong> The project follows the Model-View-ViewModel pattern, separating UI layer from business logic. MainActivity serves as the entry point with NavController for navigation, while ViewModel manages UI states and FilmData/FilmApi handle data operations.</p>
+                    <!-- ==================== English Content ==================== -->
+                    <div class="article-lang-en">
+                        <p>I developed a comprehensive movie collection application that enables users to search, favorite, display, and manage movie information with dynamic data loading. Built with modern Android technologies, the app delivers a responsive and seamless user experience.</p>
 
-                    <br>
-                    <div style="text-align: center;">
-                        <img src="img/architecture.png" alt="MVVM Architecture Diagram"
-                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <p><em>MVVM architecture structure and data flow</em></p>
-                    </div>
-                    <br>
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/app_overview.png" alt="Movie Collection App Main Interface"
+                                style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>Main interface showing movie grid and search functionality</em></p>
+                        </div>
+                        <br>
 
-                    <p><strong>Performance Optimization:</strong> Implemented asynchronous data loading using OkHttp for TMDb API requests, ensuring UI fluidity by executing network operations on background threads. Utilized Coil library for efficient image loading and caching, with HorizontalPager for smooth image transitions in detail views.</p>
-                    <br>
+                        <h3>Technical Architecture & Implementation</h3>
+                        <br>
+                        <p><strong>MVVM Architecture:</strong> The project follows the Model-View-ViewModel pattern, separating UI layer from business logic. MainActivity serves as the entry point with NavController for navigation, while ViewModel manages UI states and FilmData/FilmApi handle data operations.</p>
 
-                    <p><strong>Responsive UI Design:</strong> Built with Jetpack Compose and Material3 components, featuring adaptive layouts for different screen sizes. Implemented LazyVerticalGrid for efficient list rendering and SwipeRefresh for pull-to-refresh functionality.</p>
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/architecture.png" alt="MVVM Architecture Diagram"
+                                style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>MVVM architecture structure and data flow</em></p>
+                        </div>
+                        <br>
 
-                    <br>
+                        <p><strong>Performance Optimization:</strong> Implemented asynchronous data loading using OkHttp for TMDb API requests, ensuring UI fluidity by executing network operations on background threads. Utilized Coil library for efficient image loading and caching, with HorizontalPager for smooth image transitions in detail views.</p>
+                        <br>
 
-                    <p><strong>Data Persistence:</strong> Integrated SharedPreferences with Gson for local movie data storage, ensuring data retention between app sessions. For manually added movies, cover images are stored using URI paths to maintain data security and independence.</p>
-                    <br>
-                    <p><strong>API Integration:</strong> Connected to TMDb's public API using OkHttp and Gson for data parsing. Implemented robust error handling with user-friendly messages for network failures, enhancing overall user experience.</p>
+                        <p><strong>Responsive UI Design:</strong> Built with Jetpack Compose and Material3 components, featuring adaptive layouts for different screen sizes. Implemented LazyVerticalGrid for efficient list rendering and SwipeRefresh for pull-to-refresh functionality.</p>
 
-                    <br>
-                    <div style="text-align: center;">
-                        <img src="img/movie_details.png" alt="Movie Detail Screen with HorizontalPager"
-                            style="width: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <p><em>Movie detail screen featuring image carousel and information display</em></p>
-                    </div>
-                    <br>
+                        <br>
 
-                    <p><strong>UI/UX Enhancements:</strong> Implemented interactive components like Snackbar for user feedback and optimized image loading with Coil. Added dynamic theme switching supporting both light and dark modes using Material3 themes for consistent cross-platform experience.</p>
+                        <p><strong>Data Persistence:</strong> Integrated SharedPreferences with Gson for local movie data storage, ensuring data retention between app sessions. For manually added movies, cover images are stored using URI paths to maintain data security and independence.</p>
+                        <br>
+                        <p><strong>API Integration:</strong> Connected to TMDb's public API using OkHttp and Gson for data parsing. Implemented robust error handling with user-friendly messages for network failures, enhancing overall user experience.</p>
 
-                    <p>The application demonstrates modern Android development practices, combining robust architecture with excellent user experience, making movie collection management both efficient and enjoyable.</p>
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/movie_details.png" alt="Movie Detail Screen with HorizontalPager"
+                                style="width: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>Movie detail screen featuring image carousel and information display</em></p>
+                        </div>
+                        <br>
 
-                    <br>
-                    <p><strong>Detail instructions:</strong></p>
-                    <div class="row">
-                        <iframe src="report.pdf" width="100%" height="600px"></iframe>
-                        <br><br>
-                        <!--<div class="col-md-18">
-                            <p>This is the article</p>
-                            <br>
-                            <br>
-                            <div style="text-align: center;">
-                                <img src="blog/article1/1.jpg" alt="chat program"
-                                    style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                            </div>
+                        <p><strong>UI/UX Enhancements:</strong> Implemented interactive components like Snackbar for user feedback and optimized image loading with Coil. Added dynamic theme switching supporting both light and dark modes using Material3 themes for consistent cross-platform experience.</p>
+
+                        <p>The application demonstrates modern Android development practices, combining robust architecture with excellent user experience, making movie collection management both efficient and enjoyable.</p>
+
+                        <br>
+                        <p><strong>Detail instructions:</strong></p>
+                        <div class="row">
+                            <iframe src="report.pdf" width="100%" height="600px"></iframe>
                             <br><br>
-                            <p>And here is a picture, and I will show the PDF</p>--
-                            <br><br>
-                            <iframe src="blog/article1/pa.pdf" width="100%" height="600px"></iframe>
-                            <br><br>
-                            <p>Fininsh the article</p>
-
-
-
-                        </div>-->
+                        </div>
+                        <br>
+                        <p><strong>Download Link:</strong> <a href="https://github.com/caijiechao/android-movie-app">https://github.com/caijiechao/android-movie-app</a></p>
                     </div>
-                    <br>
-                    <p><strong>Download Link:</strong> <a href="https://github.com/caijiechao/android-movie-app">https://github.com/caijiechao/android-movie-app</a></p>
+
+                    <!-- ==================== Chinese Content ==================== -->
+                    <div class="article-lang-zh" style="display:none;">
+                        <p>我开发了一款功能全面的电影收藏应用，用户可以通过动态数据加载来搜索、收藏、展示和管理电影信息。该应用采用现代 Android 技术构建，提供了响应迅速且流畅的用户体验。</p>
+
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/app_overview.png" alt="电影收藏应用主界面"
+                                style="width: 60%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>主界面展示电影网格和搜索功能</em></p>
+                        </div>
+                        <br>
+
+                        <h3>技术架构与实现</h3>
+                        <br>
+                        <p><strong>MVVM 架构：</strong>项目遵循 Model-View-ViewModel 设计模式，将 UI 层与业务逻辑分离。MainActivity 作为入口点，通过 NavController 进行导航，ViewModel 管理 UI 状态，FilmData 和 FilmApi 负责数据处理。</p>
+
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/architecture.png" alt="MVVM 架构图"
+                                style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>MVVM 架构结构与数据流</em></p>
+                        </div>
+                        <br>
+
+                        <p><strong>性能优化：</strong>使用 OkHttp 对 TMDb API 请求实现异步数据加载，通过在后台线程执行网络操作确保 UI 流畅性。利用 Coil 库实现高效的图片加载和缓存，并在详情视图中使用 HorizontalPager 实现平滑的图片切换。</p>
+                        <br>
+
+                        <p><strong>响应式 UI 设计：</strong>使用 Jetpack Compose 和 Material3 组件构建，提供适应不同屏幕尺寸的自适应布局。采用 LazyVerticalGrid 实现高效的列表渲染，并使用 SwipeRefresh 实现下拉刷新功能。</p>
+
+                        <br>
+
+                        <p><strong>数据持久化：</strong>集成 SharedPreferences 与 Gson 进行本地电影数据存储，确保应用会话之间的数据保留。对于手动添加的电影，封面图片通过 URI 路径存储，以保持数据安全性和独立性。</p>
+                        <br>
+                        <p><strong>API 集成：</strong>使用 OkHttp 和 Gson 连接 TMDb 公开 API 进行数据解析。实现了健壮的错误处理机制，为网络故障提供用户友好的提示信息，提升了整体用户体验。</p>
+
+                        <br>
+                        <div style="text-align: center;">
+                            <img src="img/movie_details.png" alt="电影详情页含图片轮播"
+                                style="width: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <p><em>电影详情页展示图片轮播和信息展示</em></p>
+                        </div>
+                        <br>
+
+                        <p><strong>UI/UX 增强：</strong>实现了交互式组件，如 Snackbar 用户反馈提示，并通过 Coil 优化了图片加载。新增了动态主题切换功能，使用 Material3 主题同时支持浅色和深色模式，提供跨平台一致体验。</p>
+
+                        <p>该应用展示了现代 Android 开发的最佳实践，将稳健的架构与出色的用户体验相结合，使电影收藏管理既高效又愉悦。</p>
+
+                        <br>
+                        <p><strong>详细说明：</strong></p>
+                        <div class="row">
+                            <iframe src="report.pdf" width="100%" height="600px"></iframe>
+                            <br><br>
+                        </div>
+                        <br>
+                        <p><strong>下载链接：</strong> <a href="https://github.com/caijiechao/android-movie-app">https://github.com/caijiechao/android-movie-app</a></p>
+                    </div>
+
                     <br>
                     <div class="back-button-container">
                         <a href="../../index.html#blog" class="back-button">Back</a>
@@ -236,6 +282,8 @@
         <img src="" alt="portfolio" />
     </div>
 
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 </body>
 
 </html>

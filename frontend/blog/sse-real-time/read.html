@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="SSE, Server-Sent Events, 实时推送, 心跳保活, 断线重连, FastAPI, Redis">
-    <meta name="description" content="SSE 实时推送实战：从心跳保活到断线重连，完整解析大模型应用中 SSE 的架构设计">
+    <meta name="keywords" content="SSE, Server-Sent Events, real-time push, heartbeat keep-alive, reconnection, FastAPI, Redis, 实时推送, 心跳保活, 断线重连">
+    <meta name="description" content="SSE Real-time Push: From Heartbeat Keep-alive to Reconnection Recovery — a complete breakdown of SSE architecture design in LLM applications | SSE 实时推送实战：从心跳保活到断线重连，完整解析大模型应用中 SSE 的架构设计">
     <meta name="author" content="Cai Jiechao">
-    <title>SSE 实时推送实战：从心跳保活到断线重连 | Cai Jiechao</title>
+    <title>SSE Real-time Push: From Heartbeat Keep-alive to Reconnection | Cai Jiechao</title>
     <link rel="icon" href="../../index_page/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="../css/header.css" rel="stylesheet" />
@@ -33,6 +33,7 @@
         .back-button-container { text-align: center; margin-top: 20px; }
         .back-button { display: inline-block; padding: 10px 20px; background-color: #5f88e0; color: #fff; text-decoration: none; border-radius: 5px; transition: background-color 0.3s ease; }
         .back-button:hover { background-color: #0056b3; }
+        .article-lang-zh, .article-lang-en { transition: opacity 0.2s ease; }
     </style>
 </head>
 
@@ -49,6 +50,7 @@
                         <li><a href="../../index.html#portfolio">Portfolio</a></li>
                         <li><a href="../../index.html#blog">Blog</a></li>
                         <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -59,11 +61,15 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">SSE 实时推送实战：从心跳保活到断线重连</h1>
+                    <h1 class="article-title-zh" style="text-transform: none;">SSE 实时推送实战：从心跳保活到断线重连</h1>
+                    <h1 class="article-title-en" style="text-transform: none; display:none;">SSE Real-time Push: From Heartbeat Keep-alive to Reconnection Recovery</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
+
+                    <!-- ==================== Chinese Content ==================== -->
+                    <div class="article-lang-zh">
 
                     <p>在 MathTasks 项目中，AI 处理一道数学题需要数分钟——难度评估、向量查重、质量检测三个异步队列并行跑。用户不能盯着空白页面干等。我们选择 <strong>SSE（Server-Sent Events）</strong> 而非 WebSocket，这篇文章从架构设计、核心源码、到踩坑经验全部分享。</p>
 
@@ -322,13 +328,279 @@ location /api/sse/stream {
 
                     <p>这 5 点齐了，你的 SSE 方案就敢说"生产可用"。</p>
 
+                    </div>
+                    <!-- ==================== End Chinese Content ==================== -->
+
+                    <!-- ==================== English Content ==================== -->
+                    <div class="article-lang-en" style="display:none;">
+
+                    <p>In the MathTasks project, AI processing of a single math problem takes several minutes — difficulty assessment, vector-based deduplication, and quality inspection run in three parallel async queues. Users can't just stare at a blank page waiting. We chose <strong>SSE (Server-Sent Events)</strong> over WebSocket. This article shares everything from architecture design and core source code to hard-won lessons learned.</p>
+
+                    <h2>1. Why SSE Over WebSocket?</h2>
+
+                    <p>Both support server-side push, but they suit different scenarios:</p>
+
+                    <table style="width:100%; border-collapse: collapse; font-size: 16px; margin: 20px 0;">
+                        <tr style="background: #f0f0f0;">
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Dimension</th>
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">SSE</th>
+                            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">WebSocket</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Communication Direction</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Unidirectional (Server → Client)</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Bidirectional</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Protocol</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">HTTP (standard HTTP long connection)</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">WS (separate protocol, requires upgrade handshake)</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Reconnection</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Native browser support (EventSource API)</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Manual implementation required</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Nginx Proxy</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Works out of the box (standard HTTP proxy)</td>
+                            <td style="border: 1px solid #ddd; padding: 10px;">Requires extra Upgrade header config</td>
+                        </tr>
+                    </table>
+
+                    <p>MathTasks' requirement is "server pushes progress to the frontend, the frontend doesn't actively send messages." SSE is a perfect match — lighter weight, easier to deploy, with browser-native reconnection.</p>
+
+                    <h2>2. SSE Connection Manager: Global Singleton Design</h2>
+
+                    <p>The core code lives in <code>services/sse_manager.py</code>, designed as a global singleton:</p>
+
+<pre><code>class SSEConnectionManager:
+    """SSE 连接管理器（全局单例）"""
+
+    def __init__(self) -> None:
+        self.clients: Dict[str, asyncio.Queue] = {}        # client_id → 消息队列
+        self.user_clients: Dict[int, Set[str]] = defaultdict(set)  # user_id → client_id 集合
+        self._last_activity: Dict[str, float] = {}          # 最后活跃时间戳
+        self._cleanup_task: asyncio.Task | None = None
+        self._is_shutting_down = False</code></pre>
+
+                    <p>Key design decisions:</p>
+                    <ul>
+                        <li><strong>One independent asyncio.Queue per client_id</strong>: Multiple tabs for the same user don't interfere with each other</li>
+                        <li><strong>user_clients mapping</strong>: Supports broadcasting messages by user dimension (e.g., "your problem has been processed")</li>
+                        <li><strong>Queue backlog limit of 200</strong>: Prevents slow-consuming clients from exhausting server memory</li>
+                    </ul>
+
+                    <h2>3. Client Registration and Message Push</h2>
+
+                    <h3>3.1 Registration Flow</h3>
+
+<pre><code>async def register_client(self, client_id: str, user_id: int) -> asyncio.Queue:
+    queue: asyncio.Queue = asyncio.Queue(maxsize=200)
+    self.clients[client_id] = queue
+    self.user_clients[user_id].add(client_id)
+    self._last_activity[client_id] = time.time()
+
+    # 确保清理协程已启动
+    if self._cleanup_task is None or self._cleanup_task.done():
+        self._cleanup_task = asyncio.create_task(self._cleanup_stale_connections())
+
+    return queue</code></pre>
+
+                    <h3>3.2 Push to All Clients of a Specific User</h3>
+
+<pre><code>def push_to_user(self, user_id: int, message: SSEMessage) -> None:
+    client_ids = self.user_clients.get(user_id, set())
+    if not client_ids:
+        return  # 无活跃连接，消息丢弃
+
+    data = message.model_dump()
+    for cid in list(client_ids):
+        self._enqueue(cid, data)</code></pre>
+
+                    <h3>3.3 Enqueue Protection</h3>
+
+<pre><code>def _enqueue(self, client_id: str, data: dict) -> None:
+    queue = self.clients.get(client_id)
+    if not queue:
+        return
+    try:
+        queue.put_nowait(data)
+        self._last_activity[client_id] = time.time()
+    except asyncio.QueueFull:
+        logger.warning("客户端 %s 队列已满，丢弃消息", client_id)</code></pre>
+
+                    <p><code>put_nowait</code> is non-blocking — if the queue is full, it simply drops the message and logs a Warning, without blocking the producer thread.</p>
+
+                    <h2>4. Heartbeat Keep-Alive Mechanism</h2>
+
+                    <p>HTTP long connections can be silently dropped by intermediate proxies (Nginx, load balancers). Heartbeats are the key to staying alive:</p>
+
+<pre><code># SSE 路由中的心跳逻辑
+_HEARTBEAT_INTERVAL = 15  # 每 15 秒发一次心跳
+
+async def event_generator():
+    last_heartbeat = time.time()
+
+    while True:
+        try:
+            # 等待消息，1 秒超时用于检查心跳
+            message = await asyncio.wait_for(queue.get(), timeout=1.0)
+            yield "data: " + json.dumps(message) + "\n\n"
+        except asyncio.TimeoutError:
+            pass  # 超时不是错误，只是没消息
+
+        # 定期发送心跳
+        now = time.time()
+        if now - last_heartbeat >= _HEARTBEAT_INTERVAL:
+            yield "data: " + json.dumps({
+                "type": "heartbeat",
+                "payload": {"server_time": int(now * 1000)},
+                "timestamp": int(now * 1000)
+            }) + "\n\n"
+            sse_manager.touch(client_id)  # 更新活跃时间
+            last_heartbeat = now</code></pre>
+
+                    <p>Heartbeats accomplish two things:</p>
+                    <ol>
+                        <li><strong>Keep the TCP connection from being dropped by proxies</strong></li>
+                        <li><strong>Let the client know the server is alive</strong> — the frontend can use this to determine connection health</li>
+                    </ol>
+
+                    <h2>5. Zombie Connection Cleanup</h2>
+
+                    <p>Clients may disconnect abnormally (closing the browser, network switching). If the server doesn't clean up these "zombie connections," memory will slowly leak:</p>
+
+<pre><code>async def _cleanup_stale_connections(self) -> None:
+    """每 30 秒检查一次，120 秒无活动的连接视为僵尸"""
+    stale_timeout = 120
+    check_interval = 30
+
+    while True:
+        await asyncio.sleep(check_interval)
+        now = time.time()
+        stale = [
+            cid for cid, ts in self._last_activity.items()
+            if now - ts > stale_timeout
+        ]
+        for cid in stale:
+            logger.info("清理僵尸连接 client_id=%s", cid)
+            await self.unregister_client(cid)</code></pre>
+
+                    <p>Design considerations:</p>
+                    <ul>
+                        <li>Clean up only after 120 seconds of inactivity — leaving enough fault tolerance (heartbeat is every 15 seconds, so missing a few won't trigger a false kill)</li>
+                        <li>Cleanup interval of 30 seconds — infrequent scanning to avoid CPU overhead</li>
+                        <li>Cleanup task auto-starts as a background coroutine — no external trigger needed</li>
+                    </ul>
+
+                    <h2>6. Graceful Shutdown</h2>
+
+                    <p>When the service restarts, all connected clients should be notified:</p>
+
+<pre><code># 设置停机标志
+sse_manager.set_shutdown(True)
+
+# SSE 路由检查停机状态
+async def event_generator():
+    ...
+    while True:
+        ...
+        if sse_manager.is_shutting_down():
+            yield "data: " + json.dumps({
+                "type": "server_shutdown",
+                "payload": {"reason": "shutdown"}
+            }) + "\n\n"
+            break  # 退出事件循环
+
+# 新连接在停机期间被拒绝
+@router.get("/stream")
+async def sse_stream(request: Request):
+    if sse_manager.is_shutting_down():
+        raise HTTPException(status_code=503, detail="服务正在关闭")</code></pre>
+
+                    <h2>7. Reconnection: Redis as the State Recovery Source</h2>
+
+                    <p>After an SSE connection drops, the frontend leverages EventSource's auto-reconnect feature to re-establish the connection. But how do you recover the previous progress after reconnecting?</p>
+
+                    <p>The solution: When the Worker processes progress, it doesn't just send SSE — it also writes to Redis simultaneously. After the frontend reconnects, it first requests a current progress snapshot (from Redis), then subscribes to SSE:</p>
+
+<pre><code># 前端重连流程
+1. EventSource 检测到连接断开
+2. 浏览器自动重连（EventSource 原生行为）
+3. 收到 "connected" 事件后，请求 GET /api/progress/{task_id}
+4. 后端从 Redis 读取当前进度，一次性返回快照
+5. 前端渲染快照，同时继续监听 SSE 增量更新</code></pre>
+
+                    <p>This dual-channel design of "Redis as the state safety net + SSE for real-time push" is a proven solution we iterated on in MathTasks.</p>
+
+                    <h2>8. Nginx Compatibility Configuration</h2>
+
+                    <p>When SSE passes through an Nginx reverse proxy, buffering must be disabled:</p>
+
+<pre><code># Nginx 配置 SSE 端点
+location /api/sse/stream {
+    proxy_pass http://backend;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_buffering off;           # ← 关键：关闭代理缓冲
+    proxy_cache off;
+    proxy_read_timeout 86400s;     # 长连接超时设为 24 小时
+}</code></pre>
+
+                    <p>The server side also needs to set the proper response headers:</p>
+
+<pre><code>return StreamingResponse(
+    event_generator(),
+    media_type="text/event-stream",
+    headers={
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",   # 显式禁用 Nginx 缓冲
+    },
+)</code></pre>
+
+                    <h2>9. Architecture Evolution</h2>
+
+                    <div style="text-align:center;margin:30px 0;">
+                        <img src="img/architecture-evolution.png" alt="Architecture Evolution"
+                             style="width:90%;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.2);border-radius:8px;">
+                    </div>
+
+                    <p>This wasn't designed upfront. It actually went through three iterations:</p>
+
+                    <ol>
+                        <li><strong>V1: Frontend Polling</strong> — GET the progress endpoint every 2 seconds. Simple but wasteful on bandwidth, with delayed progress updates</li>
+                        <li><strong>V2: Redis + Polling</strong> — Worker writes to Redis, frontend polls Redis. Better than V1, but still has polling latency</li>
+                        <li><strong>V3: SSE + Redis Safety Net</strong> — SSE for real-time push, Redis as the state recovery source for reconnection. Current production solution</li>
+                    </ol>
+
+                    <p>Each evolution was driven by "perceived user latency." After V3, problem processing progress went from "2-second lag" to "real-time."</p>
+
+                    <h2>Summary</h2>
+
+                    <p>A production-grade SSE implementation needs to address at least these five aspects:</p>
+
+                    <ul>
+                        <li><strong>Connection Management</strong>: Global singleton + user-dimension routing + queue backlog protection</li>
+                        <li><strong>Heartbeat Keep-Alive</strong>: 15-second interval + touch activity timestamp</li>
+                        <li><strong>Zombie Cleanup</strong>: Background coroutine + 120-second timeout</li>
+                        <li><strong>Graceful Shutdown</strong>: Notify clients + reject new connections</li>
+                        <li><strong>Reconnection Recovery</strong>: Redis state safety net + EventSource auto-reconnect</li>
+                    </ul>
+
+                    <p>Get these five right, and your SSE solution can confidently be called "production-ready."</p>
+
+                    </div>
+                    <!-- ==================== End English Content ==================== -->
+
                 </div>
             </div>
         </div>
     </section>
 
     <div class="back-button-container">
-        <a href="../../.." class="back-button">Back</a>
+        <a href="../../index.html#blog" class="back-button">Back</a>
         <br>
     </div>
 
@@ -339,5 +611,8 @@ location /api/sse/stream {
             </div>
         </div>
     </section>
+
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 </body>
 </html>

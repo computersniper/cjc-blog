@@ -50,6 +50,7 @@
                         <li><a href="../../index.html#portfolio">Portfolio</a></li>
                         <li><a href="../../index.html#blog">Blog</a></li>
                         <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -59,11 +60,13 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">大模型网关的可观测性：Langfuse 集成与 Callback 机制解析</h1>
+                    <h1 class="article-title-zh" style="text-transform: none;">大模型网关的可观测性：Langfuse 集成与 Callback 机制解析</h1>
+                    <h1 class="article-title-en" style="text-transform: none; display:none;">LLM Gateway Observability: Langfuse Integration and Callback Mechanism</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
+                    <div class="article-lang-zh">
                     <p>面试官问你"Langfuse 是什么"以及"它的源码是怎么工作的"，本质上是在考查你是否懂大模型系统的可观测性（Observability），以及你对网关性能（非阻塞）的理解。这篇文章分三个层次：业务价值 → 源码集成机制 → 性能与高可用保障。</p>
                     <h2>第一层：为什么网关必须接入可观测性？</h2>
                     <p>一个只做请求转发的网关是"黑盒"。Langfuse 作为开源可观测性平台，解决了三大痛点：全链路追踪（Tracing，记录 Prompt/响应/TTFT）、精准计费（自动解析 Token 消耗并换算成本）、降级与错误分析（Trace 树清晰展示 Fallback 链路）。</p>
@@ -78,16 +81,35 @@
                     <blockquote>面试话术："Langfuse 上报完全异步非阻塞——asyncio.create_task 剥离 + SDK 内存队列批量发送 + 故障自动丢弃，不增加用户 TTFT。"</blockquote>
                     <h2>Trace 与 Generation 层级</h2>
                     <p>Trace 代表一次完整会话，Generation 是 Trace 下的单次 LLM 调用。如果触发 Fallback（GPT-4o 失败 → Claude），同一个 Trace 下会有两个 Generation，方便定位性能瓶颈。</p>
+                    </div>
+                    <div class="article-lang-en" style="display:none;">
+                    <p>When an interviewer asks "What is Langfuse" and "How does its source code work", they are essentially testing whether you understand LLM system observability and your grasp of gateway performance (non-blocking). This article covers three layers: business value → source code integration mechanism → performance and high availability guarantees.</p>
+                    <h2>Layer 1: Why Must a Gateway Integrate Observability?</h2>
+                    <p>A gateway that only does request forwarding is a "black box". Langfuse, as an open-source observability platform, solves three major pain points: full-chain tracing (Tracing, recording Prompt/response/TTFT), precise billing (automatically parsing Token consumption and converting to cost), and degradation & error analysis (Trace tree clearly shows Fallback chains).</p>
+                    <h2>Layer 2: Callback Hook Architecture</h2>
+                    <div style="text-align:center;margin:30px 0;">
+                        <img src="img/callback-architecture.png" alt="Callback Architecture"
+                             style="width:90%;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.2);border-radius:8px;">
+                    </div>
+                    <p>LiteLLM integrates Langfuse using the Observer Pattern. In config.yaml, declare success_callback: ["langfuse"] and failure_callback: ["langfuse"]. After each completion() call, all Callback hooks are iterated. The LangfuseLogger class in litellm/integrations/langfuse.py receives kwargs (original messages) and response (usage field), creates Trace and Generation data models, and sends them via the langfuse-python SDK.</p>
+                    <h2>Layer 3: Performance Guarantees — Out-of-Band Monitoring Without Blocking the Main Path</h2>
+                    <p>Three levels of guarantee: 1) Main request decoupling — Callback is mounted to asyncio.create_task, the main function returns immediately; 2) Batch queue sending — SDK maintains background threads and an in-memory queue, batching before a unified POST; 3) Fault tolerance — When Langfuse is unavailable, monitoring data is automatically discarded, never throwing exceptions that affect user requests.</p>
+                    <blockquote>Interview talking point: "Langfuse reporting is fully asynchronous and non-blocking — asyncio.create_task decoupling + SDK in-memory queue batch sending + automatic fault discarding, adding zero TTFT overhead."</blockquote>
+                    <h2>Trace and Generation Hierarchy</h2>
+                    <p>A Trace represents a complete session, and a Generation is a single LLM call under a Trace. If a Fallback is triggered (GPT-4o fails → Claude), there will be two Generations under the same Trace, making it easy to pinpoint performance bottlenecks.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <div class="back-button-container">
-        <a href="../../.." class="back-button">Back</a>
+        <a href="../../index.html#blog" class="back-button">Back</a>
         <br>
     </div>
     <section class="copyright">
         <div class="container"><div class="social-link"><p>Designed and Developed By Cai Jiechao.</p></div></div>
     </section>
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 </body>
 </html>

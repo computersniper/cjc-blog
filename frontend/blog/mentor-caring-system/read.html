@@ -180,6 +180,7 @@
                         <li><a href="index.html#portfolio">Portfolio</a></li>
                         <li><a href="index.html#blog">Blog</a></li>
                         <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -190,11 +191,14 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">Mentor Caring System: A Full-Stack Software Engineering Project</h1>
+                    <h1 class="article-title-en" style="text-transform: none;">Mentor Caring System: A Full-Stack Software Engineering Project</h1>
+                    <h1 class="article-title-zh" style="text-transform: none; display:none;">导师关怀系统：一个全栈软件工程实践项目</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
+
+                    <div class="article-lang-en">
 
                     <!-- Hero Image -->
                     <div style="text-align: center;">
@@ -449,6 +453,265 @@
 
                     <br>
 
+                    </div>
+
+                    <div class="article-lang-zh" style="display:none;">
+
+                    <!-- Hero Image -->
+                    <div style="text-align: center;">
+                        <img src="img/hero.png" alt="Mentor Caring System Dashboard"
+                            style="width: 100%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>导师关怀系统 — 主控制台</em></p>
+                    </div>
+                    <br>
+
+                    <!-- Project Overview -->
+                    <h3>1. 项目概述</h3>
+                    <p>
+                        作为北师港浸大（北京师范大学-香港浸会大学联合国际学院）<strong>高级软件开发工作坊（ASDW）</strong>和<strong>软件工程</strong>课程的实践项目，我们六人团队构建了一个生产就绪的<strong>导师关怀系统（MCS）</strong>——一个基于角色的Web应用，将大学的导师关怀计划全面数字化。
+                    </p>
+                    <p>
+                        导师关怀计划为每位学生配对一位学术导师，进行定期访谈、学业跟踪和个人指导。在MCS系统之前，这些工作通过分散的电子表格和临时沟通来管理。我们的系统通过<strong>6种用户角色</strong>、<strong>预约排期</strong>、<strong>访谈记录</strong>、<strong>内部消息</strong>、<strong>个案上报流程</strong>和<strong>组织架构管理</strong>，为这一流程带来了结构化的管理方式。
+                    </p>
+
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-number">16</div>
+                            <div class="stat-label">数据库表</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">用户角色</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">183</div>
+                            <div class="stat-label">Pytest 测试</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">43</div>
+                            <div class="stat-label">Jinja2 模板</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">200M+</div>
+                            <div class="stat-label">AI Token 消耗</div>
+                        </div>
+                    </div>
+
+                    <!-- Tech Stack -->
+                    <h3>2. 技术栈</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python 3.12</span>
+                        <span class="tech-tag">Flask 3.0</span>
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Jinja2</span>
+                        <span class="tech-tag">HTML5/CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">openpyxl</span>
+                        <span class="tech-tag">python-docx</span>
+                        <span class="tech-tag">pytest</span>
+                        <span class="tech-tag">Claude Code</span>
+                        <span class="tech-tag">DeepSeek V4</span>
+                    </div>
+                    <p>
+                        后端基于<strong>Flask</strong>构建，采用受MVC启发的自定义四层架构。我们选择<strong>SQLite</strong>实现零配置部署——整个系统在单个目录中运行，无需外部数据库服务器。前端使用服务器端渲染的<strong>Jinja2模板</strong>和自定义CSS设计系统，有意避开重型JavaScript框架，以保持项目的可维护性，方便未来的学生团队接手。
+                    </p>
+
+                    <!-- Architecture -->
+                    <h3>3. 架构设计</h3>
+                    <p>
+                        我们采用了<strong>四层架构</strong>，清晰分离关注点，同时对六人团队保持务实可操作：
+                    </p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <div class="arch-layer">
+                            <div class="arch-row" style="justify-content: center;">
+                                <div class="arch-box">Blueprint<br><small>路由与请求</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box">Controller<br><small>业务逻辑</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box light">DAO<br><small>数据访问</small></div>
+                                <div class="arch-arrow">→</div>
+                                <div class="arch-box light">SQLite<br><small>数据库</small></div>
+                            </div>
+                        </div>
+                        <p><em>请求流程：Blueprint → Controller → DAO → SQLite</em></p>
+                    </div>
+                    <p>
+                        <strong>Blueprint（9个模块）</strong>处理每个用户角色的HTTP路由以及预约和消息的REST API。<strong>Controller（14个模块）</strong>封装所有业务逻辑——从学生-导师小组链式关系到个案上报流程。<strong>DAO（15个模块）</strong>提供干净的数据访问层，使用参数化查询，防止SQL注入。<strong>Model（20+个类）</strong>将领域实体定义为纯Python对象。
+                    </p>
+                    <p>
+                        一个关键设计决策是保留<strong>按角色划分的Blueprint</strong>而非统一的REST API——这自然地映射了不同用户对系统的思考方式，并使团队成员能够轻松并行开发。
+                    </p>
+
+                    <!-- Role-Based Access Control -->
+                    <h3>4. 基于角色的访问控制：6种角色，6种视角</h3>
+                    <p>
+                        系统的核心复杂性在于其权限模型。6种角色各自看到截然不同的界面：
+                    </p>
+                    <div class="role-grid">
+                        <div class="role-card">
+                            <h4>管理员</h4>
+                            <p>管理组织层级结构——4个学院、13个系、32个专业。分配学院顾问并通过Excel导入组织数据。</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>学院顾问</h4>
+                            <p>监督本学院内的MCP小组。批量导入学生名单，为小组分配导师，并将访谈记录导出为Word文档。</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>导师</h4>
+                            <p>管理所分配学生的访谈记录。标记30分钟可用时段，确认/取消预约，并可将问题个案转交给协调员。</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>学生</h4>
+                            <p>查看导师详情，从导师的可用时段中预约面谈，并通过内部消息系统与分配的导师沟通。</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>协调员</h4>
+                            <p>跨部门监督。搜索学生和导师，接收转交的个案，并在需要时上报给学院顾问。</p>
+                        </div>
+                        <div class="role-card">
+                            <h4>支持人员</h4>
+                            <p>只读系统审计。按学生、用户或日期范围筛选查看活动日志。管理用户反馈并进行状态跟踪。</p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 24px 0;">
+                        <img src="img/2.png" alt="Role-Based Access Control Overview"
+                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>6角色RBAC模型 — 每个角色拥有不同的权限范围和权限集</em></p>
+                    </div>
+
+                    <p>
+                        权限模型不仅限于简单的角色检查。例如，<strong>学生-小组-导师链式关系</strong>强制执行级联数据完整性：将学生添加到小组时自动将小组的导师同步给学生；更改小组的导师会级联到所有成员；从小组中移除学生会清除小组和导师的关联引用。学生只能向其分配的导师发送消息——不能联系系统中的其他导师。
+                    </p>
+
+                    <!-- Core Features Deep Dive -->
+                    <h3>5. 核心功能详解</h3>
+
+                    <h4>预约系统</h4>
+                    <p>
+                        导师在办公时间（08:00–17:30）内标记30分钟时段。学生可查看可用时段并一键预约。导师确认预约并提供地点详情。预约状态机流转：<strong>待确认 → 已确认 / 已取消</strong>。该系统以REST API实现，返回JSON响应，前端由原生JavaScript消费。
+                    </p>
+
+                    <h4>访谈记录</h4>
+                    <p>
+                        每次导师-学生访谈生成一条记录，包含问题陈述、讨论摘要和后续行动。记录按学生归类，在整个学期中建立完整的历史档案。导师对其自己的记录拥有完整的CRUD访问权限。
+                    </p>
+
+                    <h4>个案上报（三级）</h4>
+                    <p>
+                        当导师发现有学生需要超出其能力范围的额外支持时，将个案转交给系协调员。如果协调员无法解决，则上报给学院顾问。这种<strong>三级上报流程</strong>反映了大学的实际组织层级，确保学生问题得到适当级别的关注。
+                    </p>
+
+                    <h4>Excel 导入/导出</h4>
+                    <p>
+                        这是对实际应用至关重要的功能：管理员和顾问可以通过Excel文件批量管理数据，而无需手动录入。导入流程为<strong>两步式：上传 → 预览（含冲突检测）→ 确认</strong>。系统检测冲突（重复学号、系别不匹配）并在最终确认前提供跳过/覆盖选项。
+                    </p>
+
+                    <h4>活动日志与审计</h4>
+                    <p>
+                        每次登录、注销和页面访问都会记录到<code>log_activity</code>。支持人员可以按学生、用户和日期范围进行搜索。结合反馈管理模块（状态跟踪：待处理 → 处理中 → 已解决 → 已关闭），系统提供了完整的运营透明度。
+                    </p>
+
+                    <!-- AI-Assisted Development -->
+                    <h3>6. AI辅助团队开发：超过2亿Token</h3>
+                    <p>
+                        这个项目的独特之处在于我们的开发方法论。我们将团队构建为一个<strong>人机混合的软件工程团队</strong>，使用Claude Code、Codex和DeepSeek V4 Pro作为开发代理。AI代理被分配了对应真实软件团队的具体角色：
+                    </p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <img src="img/1.png" alt="AI Agent Team Workflow"
+                            style="width: 80%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>AI代理团队工作流 — 架构、前端、测试和文档代理并行工作</em></p>
+                    </div>
+                    <p>
+                        <strong>架构代理</strong>设计数据库模式和API契约。<strong>前端代理</strong>生成Jinja2模板和CSS。<strong>测试代理</strong>为边界条件编写pytest用例。<strong>文档代理</strong>维护完整的软件工程文档套件（SRS、AD、DDD、TP、TR）。每个代理都在我们精心编写的<code>CLAUDE.md</code>和<code>AGENTS.md</code>指令文件框架内工作，以保持一致性。
+                    </p>
+                    <p>
+                        关键洞察：<strong>AI代理是力量倍增器，而非替代品</strong>。我们将时间花在代码审查、集成测试和领域逻辑上——这些是需要人类判断力的部分。AI处理样板代码、测试用例生成和文档格式化。所有模型的总Token消耗超过<strong>2亿Token</strong>，相当于处理约1.5亿字的上下文。
+                    </p>
+
+                    <!-- Testing -->
+                    <h3>7. 测试策略：183个测试，演示零意外</h3>
+                    <p>
+                        测试并非事后才考虑的。我们编写了<strong>183个pytest测试</strong>，覆盖：
+                    </p>
+                    <ul style="font-size: 18px; line-height: 2; margin-left: 20px;">
+                        <li><strong>160个单元测试</strong>——每个控制器函数一个测试，使用隔离的测试数据库和模拟认证</li>
+                        <li><strong>23个端到端测试</strong>——一个按顺序遍历每个角色关键工作流程的演示检查清单</li>
+                        <li><strong>边界测试</strong>——空数据库、无效输入、并发预约、级联删除</li>
+                    </ul>
+                    <p>
+                        测试套件使用pytest fixture创建<strong>隔离的SQLite数据库</strong>，预填充测试数据，确保测试之间互不干扰。我们使用<code>pytest-flask</code>进行请求上下文和会话模拟。每个测试在2秒内运行——完整套件在一分钟内完成。
+                    </p>
+
+                    <!-- SE Documents -->
+                    <h3>8. 完整的软件工程生命周期</h3>
+                    <p>
+                        除了代码之外，我们还按IEEE标准制作了完整的软件工程文档套件：
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>SRS</strong> — 软件需求规格说明<br>
+                            <small>用例、功能/非功能需求、用户类别</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>AD</strong> — 架构设计<br>
+                            <small>三层子系统分解、类图、顺序图</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>DDD</strong> — 详细设计描述<br>
+                            <small>模块级设计、接口规范、数据流</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>UI Design</strong> — 用户界面原型<br>
+                            <small>全部6种角色的线框图和屏幕布局</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>TP</strong> — 测试计划<br>
+                            <small>测试策略、测试环境、测试用例设计</small>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                            <strong>TR</strong> — 测试报告<br>
+                            <small>测试执行结果、缺陷总结、覆盖率分析</small>
+                        </div>
+                    </div>
+
+                    <!-- Lessons Learned -->
+                    <h3>9. 经验总结</h3>
+                    <p>
+                        <strong>领域驱动设计是值得的。</strong>将代码结构与大学的实际组织层级（学院 → 系 → 专业 → 小组）对齐，使系统对利益相关者直观易用，并简化了权限逻辑。
+                    </p>
+                    <p>
+                        <strong>AI代理需要清晰的契约。</strong>当我们提供精确的接口规范（函数签名、数据库模式、模板布局）时，AI的贡献最为有效。模糊的提示会产生不一致的结果，需要大量返工。
+                    </p>
+                    <p>
+                        <strong>尽早测试，频繁测试。</strong>183个测试组成的套件在最终集成周捕获了多个回归缺陷。演示检查清单测试起到了双重作用，同时也是每个功能应如何工作的文档。
+                    </p>
+                    <p>
+                        <strong>Excel导入比看起来更难。</strong>处理格式不规范的电子表格、重复条目以及带回滚语义的部分导入，最终成为最复杂的功能之一——也是利益相关者对实际可用性评价最高的功能。
+                    </p>
+
+                    <!-- Screenshot -->
+                    <h3>10. 系统运行展示</h3>
+                    <div style="text-align: center;">
+                        <img src="img/screenshot.png" alt="Mentor Caring System Running Screenshot"
+                            style="width: 100%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <p><em>系统在服务器上实时运行</em></p>
+                    </div>
+                    <br>
+
+                    <!-- Team -->
+                    <h3>11. 团队与致谢</h3>
+                    <p>
+                        C03 "bobr" 团队 — 北师港浸大，2026年春季：Iaroslav OBUKHOV、CAI Jiechao、ZHANG Chang、BAI Yang、Alexey KRIVOROTOV、KANG Siyue。
+                    </p>
+                    <p>
+                        特别感谢课程导师在整个学期的指导，以及北师港浸大导师关怀计划办公室在开发过程中提供的真实需求和反馈。
+                    </p>
+
+                    <br>
+
+                    </div>
+
                     <div class="back-button-container">
                         <a href="../../index.html#blog" class="back-button">Back</a>
                         <br><br>
@@ -469,6 +732,9 @@
         <span class="close-lightbox fa fa-close"></span>
         <img src="" alt="portfolio" />
     </div>
+
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 
 </body>
 

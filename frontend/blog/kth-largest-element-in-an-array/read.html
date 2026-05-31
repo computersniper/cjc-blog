@@ -127,12 +127,13 @@
                 </div>
                 <div class="navbar">
                     <ul>
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#services">Skills</a></li>
-                        <li><a href="index.html#portfolio">Portfolio</a></li>
-                        <li><a href="index.html#blog">Blog</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="../../index.html#home">Home</a></li>
+                        <li><a href="../../index.html#about">About</a></li>
+                        <li><a href="../../index.html#services">Skills</a></li>
+                        <li><a href="../../index.html#portfolio">Portfolio</a></li>
+                        <li><a href="../../index.html#blog">Blog</a></li>
+                        <li><a href="../../index.html#contact">Contact</a></li>
+                        <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">🇨🇳 中文</a></li>
                     </ul>
                 </div>
             </div>
@@ -142,313 +143,317 @@
         <div class="container">
             <div class="row">
                 <div class="title text-center">
-                    <h1 style="text-transform: none;">The worst linear time algorithm?</h1>
+                    <h1 class="article-title-en" style="text-transform: none;">The worst linear time algorithm?</h1>
+                    <h1 class="article-title-zh" style="text-transform: none; display:none;">最差的线性时间算法？</h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-18">
-                    <p>Today we have a common problem, finding the kth largest element in an array.
-                        We need to find the kth largest element after sorting the array. And we need to solve the time
-                        in linear time.
+
+                    <!-- English Content -->
+                    <div class="article-lang-en">
+                        <p>Today we have a common problem, finding the kth largest element in an array.
+                            We need to find the kth largest element after sorting the array. And we need to solve the time
+                            in linear time.
+                            <br>
+                            <br>
+                        <h2>Problem definition</h2>
+                        <h3>Input:</h3>A array of n integers and an integer k (1 ≤ k ≤ n).
+                        <h3>Output:</h3>The kth largest element in the array.
+                        <h3>Example:</h3>
+                        Input: [3, 2, 1, 5, 6, 4], k = 2 &nbsp;&nbsp;
+                        Output: 5
                         <br>
                         <br>
-                    <h2>Problem definition</h2>
-                    <h3>Input:</h3>A array of n integers and an integer k (1 ≤ k ≤ n).
-                    <h3>Output:</h3>The kth largest element in the array.
-                    <h3>Example:</h3>
-                    Input: [3, 2, 1, 5, 6, 4], k = 2 &nbsp;&nbsp;
-                    Output: 5
-                    <br>
-                    <br>
-                    <h2>Approach</h2>
+                        <h2>Approach</h2>
 
-                    The most common algorithm to solve this problem is quicksort. However,
-                    the time complexity is O(nlogn). That is because quicksort do partition of whole array, and then
-                    recurisively
-                    do partition on the left and right subarray, but size of subarray is decrease in logn times, so
-                    total time complexity
-                    is O(logn). But if we only need to find the kth largest element, we don't need to do the
-                    participating for each subarray. We only
-                    need to do partition on the array we think it contains the kth largest element. Therefore, the time
-                    complexity is O(n), O(n/a),O(n/b)...
-                    (a,b is a constant), so the time complexity for whole array is O(n).
-                    <br>
-                    <br>
-                    <h2>Visualization</h2>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box">3</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">startIndex</div>
+                        The most common algorithm to solve this problem is quicksort. However,
+                        the time complexity is O(nlogn). That is because quicksort do partition of whole array, and then
+                        recurisively
+                        do partition on the left and right subarray, but size of subarray is decrease in logn times, so
+                        total time complexity
+                        is O(logn). But if we only need to find the kth largest element, we don't need to do the
+                        participating for each subarray. We only
+                        need to do partition on the array we think it contains the kth largest element. Therefore, the time
+                        complexity is O(n), O(n/a),O(n/b)...
+                        (a,b is a constant), so the time complexity for whole array is O(n).
+                        <br>
+                        <br>
+                        <h2>Visualization</h2>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">startIndex</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">endIndex</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">4</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
-                        <div class="cell">
-                            <div class="cell_box">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">1</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">6</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">endIndex</div>
+                        <br>
+                        <br>
+                        <br>
+                        <p>So divide the array into two subarray, left subarray contains elements smaller than pivot, right
+                            subarray contains elements greater than pivot. And after division, put pivot back to the middle.
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">3</div>
                             </div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">4</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">2</div>
                             </div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <p>So divide the array into two subarray, left subarray contains elements smaller than pivot, right
-                        subarray contains elements greater than pivot. And after division, put pivot back to the middle.
-                    </p>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">1</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #FFFFFF;;">4</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">3</div>
                             </div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;">6</div>
-                        </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #FFFFFF;;">4</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">6</div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <p>We can see that 4 is the 3rd largest element in the array, and we need to find 2nd largest, it is
-                        in the right
-                        subarray. So we only need to repeat the process, keep finding the 2nd largest element on the
-                        right
-                        subarray.
-                    </p>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">1</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">4</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">5</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">start<br>Index</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
-                        <div class="cell">
-                            <div class="cell_box">6</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">end<br>Index</div>
+                        <br>
+                        <br>
+                        <br>
+                        <p>We can see that 4 is the 3rd largest element in the array, and we need to find 2nd largest, it is
+                            in the right
+                            subarray. So we only need to repeat the process, keep finding the 2nd largest element on the
+                            right
+                            subarray.
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
                             </div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">2</div>
                             </div>
-                        </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">5</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">start<br>Index</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">end<br>Index</div>
+                                </div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br><br><br>
-                    <br><br><br>
-                    <p>Processing:</p>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">1</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">4</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #ffffff;">6</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
+                        <br><br><br>
+                        <br><br><br>
+                        <p>Processing:</p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br><br><br>
-                    <p>And at this time 5 is the 2nd largest element in the right subarray, which is also the 2nd
-                        largest elements of whole array,
-                        so we can return 5 as the result.
-                    </p>
-                    <br>
-                    <h3>Two situations:</h3>
-                    <p>If the problem is as the example, kth elements is in the right subarray, we find the kth element
-                        in right subarray, but if the kth elements is in the left subarray,
-                        assume pivot is the ath largest elements, we need to find the k-a th largest element in left
-                        subarray.<br>
-                        For the previous example, if k=5, process should be as follows:<br>
-                    </p>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box">1</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;;">4</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">6</div>
-                        </div>
+                        <br><br><br>
+                        <p>And at this time 5 is the 2nd largest element in the right subarray, which is also the 2nd
+                            largest elements of whole array,
+                            so we can return 5 as the result.
+                        </p>
+                        <br>
+                        <h3>Two situations:</h3>
+                        <p>If the problem is as the example, kth elements is in the right subarray, we find the kth element
+                            in right subarray, but if the kth elements is in the left subarray,
+                            assume pivot is the ath largest elements, we need to find the k-a th largest element in left
+                            subarray.<br>
+                            For the previous example, if k=5, process should be as follows:<br>
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">1</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br><br>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #ffffff;">1</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;" #99ccff>3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;" #333399>3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;;">4</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">6</div>
-                        </div>
+                        <br><br>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">1</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;" #99ccff>3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;" #333399>3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
-                        </div>
-                    </div>
-                    <br><br>
-                    <div class="grid">
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">1</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #99ccff;">2</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #ffffff;">3</div>
-                            <div class="arrow-container">
-                                <div class="arrow"></div>
-                                <div class="start-index">p</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
                             </div>
                         </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #333399;">3</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;;">4</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">5</div>
-                        </div>
-                        <div class="cell">
-                            <div class="cell_box" style="background-color: #666666;">6</div>
-                        </div>
+                        <br><br>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">3</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
 
-                        <div class="cell">
-                            <div class="cell_k_value">k=2</div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
-                    <p>At this time k is the 1st largest element, so find 2-1=1st largest element in left subarray,
-                        easily get final result 2.</p>
-                    <br>
-                    <h2>Algorithm implementation:</h2>
+                        <br><br>
+                        <p>At this time k is the 1st largest element, so find 2-1=1st largest element in left subarray,
+                            easily get final result 2.</p>
+                        <br>
+                        <h2>Algorithm implementation:</h2>
 
-                    <div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
-                        <pre>
-                            <code class="language-java">
+                        <div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+                            <pre>
+                                <code class="language-java">
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         int length = nums.length;
@@ -494,8 +499,350 @@ class Solution {
         return -1;
     }
 }
-                            </code>
-                        </pre>
+                                </code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <!-- Chinese Content -->
+                    <div class="article-lang-zh" style="display:none;">
+                        <p>今天我们来讨论一个常见的问题：在数组中找到第k个最大的元素。
+                            我们需要在排序后的数组中找到第k个最大的元素，并且要求在<strong>线性时间</strong>内完成。
+                            <br>
+                            <br>
+                        <h2>问题定义</h2>
+                        <h3>输入：</h3>一个包含 n 个整数的数组和一个整数 k（1 ≤ k ≤ n）。
+                        <h3>输出：</h3>数组中第 k 个最大的元素。
+                        <h3>示例：</h3>
+                        输入: [3, 2, 1, 5, 6, 4], k = 2 &nbsp;&nbsp;
+                        输出: 5
+                        <br>
+                        <br>
+                        <h2>算法思路</h2>
+
+                        解决这个问题最常见的算法是快速排序（quicksort）。然而，
+                        其时间复杂度为 O(nlogn)。这是因为快速排序需要对整个数组进行划分（partition），然后
+                        递归地对左右子数组进行划分，而子数组的大小以 logn 倍递减，因此
+                        总时间复杂度为 O(logn)。但如果我们只需要找到第 k 个最大的元素，就不需要对每个子数组进行划分。我们只需要
+                        对<strong>我们认为包含第 k 个最大元素的子数组</strong>进行划分即可。因此，时间复杂度
+                        为 O(n) + O(n/a) + O(n/b) + ...（其中 a、b 为常数），所以整个算法的时间复杂度为 O(n)。
+                        <br>
+                        <br>
+                        <h2>可视化</h2>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">startIndex</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">endIndex</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">4</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <p>将数组划分为两个子数组：左子数组包含小于基准值（pivot）的元素，右子数组包含大于基准值的元素。划分完成后，将基准值放回中间位置。
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #FFFFFF;;">4</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">6</div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <p>我们可以看到，4 是数组中第 3 大的元素，而我们需要找的是第 2 大的元素，它在右子数组中。
+                            所以我们只需要在右子数组中重复这个过程，继续查找第 2 大的元素即可。
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">5</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">start<br>Index</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">end<br>Index</div>
+                                </div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <br><br><br>
+                        <p>处理过程：</p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">6</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <p>此时 5 是右子数组中第 2 大的元素，也是整个数组的第 2 大元素，
+                            因此我们可以返回 5 作为结果。
+                        </p>
+                        <br>
+                        <h3>两种情况：</h3>
+                        <p>如果问题如示例所示，第 k 个元素在右子数组中，我们就在右子数组中查找第 k 个元素；但如果第 k 个元素在左子数组中，
+                            假设基准值是第 a 大的元素，那么我们需要在左子数组中查找第 k-a 大的元素。<br>
+                            对于之前的例子，如果 k=5，过程如下：<br>
+                        </p>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box">1</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">1</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;" #99ccff>3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;" #333399>3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="grid">
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">1</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #99ccff;">2</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #ffffff;">3</div>
+                                <div class="arrow-container">
+                                    <div class="arrow"></div>
+                                    <div class="start-index">p</div>
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #333399;">3</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;;">4</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">5</div>
+                            </div>
+                            <div class="cell">
+                                <div class="cell_box" style="background-color: #666666;">6</div>
+                            </div>
+
+                            <div class="cell">
+                                <div class="cell_k_value">k=2</div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <p>此时基准值是第 1 大的元素，所以需要在左子数组中找第 2-1=1 大的元素，最终得到结果 2。</p>
+                        <br>
+                        <h2>算法实现：</h2>
+
+                        <div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+                            <pre>
+                                <code class="language-java">
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int length = nums.length;
+        int result = divide(nums,0,length-1,k);
+        return result;
+    }
+    public int divide(int[]nums, int startIndex, int endIndex,int k){
+        int random = (int) (Math.random() * (endIndex - startIndex + 1)) + startIndex;
+        if(startIndex==endIndex){
+            return nums[startIndex];
+        }
+        int arrLength=endIndex-startIndex+1;
+        int x=nums[random];
+        int temp=nums[random];
+        nums[random]=nums[endIndex];
+        nums[endIndex]=temp;
+
+        int j=startIndex;
+        int i=j-1;
+        for(;j<endIndex;j++){
+            if(nums[j]<x){
+                i=i+1;
+                temp=nums[i];
+                nums[i]=nums[j];
+                nums[j]=temp;
+            }
+        }
+        temp=nums[endIndex];
+        nums[endIndex]=nums[i+1];
+        nums[i+1]=temp;
+
+        int kThLargest=endIndex-i;
+        if(kThLargest==k){
+            return nums[i+1];
+        }
+        else if(kThLargest<k){
+            int findKth=k-kThLargest;
+            return divide(nums,startIndex,i,findKth);
+        }
+        else if(kThLargest>k){
+            return divide(nums,i+2,endIndex,k);
+        }
+        return -1;
+    }
+}
+                                </code>
+                            </pre>
+                        </div>
                     </div>
 
                 </div>
@@ -503,7 +850,7 @@ class Solution {
         </div>
     </section>
     <div class="back-button-container">
-        <a href="../../.." class="back-button">Back</a>
+        <a href="../../index.html#blog" class="back-button">Back</a>
         <br>
         <br>
     </div>
@@ -523,6 +870,8 @@ class Solution {
     <script
         src="https://cdn.bootcdn.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script src="../css/code.js"></script>
+    <script src="../../index_page/js/i18n.js"></script>
+    <script src="../js/article-lang.js"></script>
 
 </body>
 
