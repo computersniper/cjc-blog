@@ -202,12 +202,8 @@ function setLanguage(lang) {
   }
   
   // Re-render dynamic articles/projects if their functions exist
-  console.log('[i18n debug] renderArticles type:', typeof renderArticles, 'currentCategory type:', typeof currentCategory);
   if (typeof renderArticles === 'function' && typeof currentCategory !== 'undefined') {
-    console.log('[i18n debug] calling renderArticles with:', currentCategory);
     renderArticles(currentCategory);
-  } else {
-    console.log('[i18n debug] NOT calling renderArticles - renderArticles:', typeof renderArticles, 'currentCategory:', typeof currentCategory);
   }
   if (typeof fetchProjects === 'function' && document.getElementById('dynamic-projects')) {
     // A bit hacky but re-fetching to re-render with new language
@@ -219,14 +215,10 @@ function setLanguage(lang) {
 }
 
 function toggleLanguage() {
-  console.log('[i18n debug] toggleLanguage called');
   const currentLang = localStorage.getItem('lang') || 'en';
   const newLang = currentLang === 'en' ? 'zh' : 'en';
-  console.log('[i18n debug] switching from', currentLang, 'to', newLang);
   setLanguage(newLang);
 }
-console.log('[i18n debug] i18n.js loaded, toggleLanguage defined');
-window._i18n_loaded = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('lang') || 'en';
