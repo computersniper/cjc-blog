@@ -191,6 +191,7 @@
         function showAdmin() {
             loginContainer.style.display = 'none';
             adminContainer.style.display = '';
+            initEditors();
             loadArticles();
             loadProjects();
         }
@@ -225,20 +226,25 @@
         document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
         document.getElementById('logoutBtn').addEventListener('click', logout);
 
-        // Initialize Toast UI Editors
-        const Editor = toastui.Editor;
-        const articleEditor = new Editor({
-            el: document.querySelector('#article-editor'),
-            height: '400px',
-            initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
-        });
-        const projectEditor = new Editor({
-            el: document.querySelector('#project-editor'),
-            height: '400px',
-            initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
-        });
+        let articleEditor = null;
+        let projectEditor = null;
+
+        function initEditors() {
+            if (articleEditor) return; // already initialized
+            const Editor = toastui.Editor;
+            articleEditor = new Editor({
+                el: document.querySelector('#article-editor'),
+                height: '400px',
+                initialEditType: 'wysiwyg',
+                previewStyle: 'vertical'
+            });
+            projectEditor = new Editor({
+                el: document.querySelector('#project-editor'),
+                height: '400px',
+                initialEditType: 'wysiwyg',
+                previewStyle: 'vertical'
+            });
+        }
 
         // --- Articles Logic ---
         async function loadArticles() {
