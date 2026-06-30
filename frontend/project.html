@@ -146,6 +146,12 @@
    </div>
 
    <script>
+      const CJC_BLOG_API_URL = window.CJC_BLOG_API_URL || (
+         ['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:'
+            ? 'http://127.0.0.1:8000'
+            : `${window.location.origin}/api`
+      );
+
       async function loadProject() {
          const urlParams = new URLSearchParams(window.location.search);
          const projectId = urlParams.get('id');
@@ -157,7 +163,7 @@
          }
 
          try {
-            const response = await fetch('http://127.0.0.1:8000/projects/' + projectId);
+            const response = await fetch(`${CJC_BLOG_API_URL}/projects/${encodeURIComponent(projectId)}`);
             if (!response.ok) throw new Error("Project not found");
             const project = await response.json();
             

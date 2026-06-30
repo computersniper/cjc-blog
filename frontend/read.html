@@ -148,6 +148,12 @@
 
    <script src="./index_page/js/i18n.js"></script>
    <script>
+      const CJC_BLOG_API_URL = window.CJC_BLOG_API_URL || (
+         ['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:'
+            ? 'http://127.0.0.1:8000'
+            : `${window.location.origin}/api`
+      );
+
       async function loadArticle() {
          const urlParams = new URLSearchParams(window.location.search);
          const articleId = urlParams.get('id');
@@ -175,7 +181,7 @@
          }
 
          try {
-            const response = await fetch('http://127.0.0.1:8000/articles/' + articleId);
+            const response = await fetch(`${CJC_BLOG_API_URL}/articles/${encodeURIComponent(articleId)}`);
             if (!response.ok) throw new Error("Article not found");
             const article = await response.json();
             

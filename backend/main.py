@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -17,6 +17,8 @@ from pathlib import Path
 
 import models
 import schemas
+from cookie_security import harden_set_cookie_headers
+from security_headers import SECURITY_HEADERS
 from database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -60,6 +62,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    for name, value in SECURITY_HEADERS.items():
+        response.headers.setdefault(name, value)
+    harden_set_cookie_headers(response)
+    return response
 
 def _b64encode(data: bytes) -> str:
     return base64.urlsafe_b64encode(data).decode().rstrip("=")
