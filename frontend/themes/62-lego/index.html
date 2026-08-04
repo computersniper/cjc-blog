@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Brick World</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{ --red:#e3000b; --yellow:#f5c518; --blue:#0a6fdc; --green:#2aa63c; --ink:#20242b; --mut:#5c6570;
+      --plate:#d9dde2; --plate2:#c7ccd3; --line:rgba(0,0,0,.12); --white:#fff; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);font-family:'Fredoka',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;
+      /* baseplate stud grid */
+      background-color:var(--plate);
+      background-image:
+        radial-gradient(circle at 15px 15px, rgba(255,255,255,.55) 0 6px, transparent 7px),
+        radial-gradient(circle at 15px 15px, rgba(0,0,0,.06) 6px 9px, transparent 10px);
+      background-size:42px 42px,42px 42px;background-attachment:fixed}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    h1,h2,h3,.disp{font-family:'Poppins',sans-serif;font-weight:800}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+
+    /* generic brick */
+    .brick{position:relative;border-radius:7px;--c:var(--red);
+      box-shadow:inset 0 -7px 0 rgba(0,0,0,.2),inset 0 4px 0 rgba(255,255,255,.35),0 7px 0 rgba(0,0,0,.22),0 12px 22px rgba(0,0,0,.16)}
+    .brick::before{content:"";position:absolute;left:14px;top:-13px;height:15px;width:calc(100% - 28px);pointer-events:none;
+      background:
+        radial-gradient(ellipse 9px 5px at 16px 3px,rgba(255,255,255,.5),transparent 70%),
+        radial-gradient(circle at 16px 9px,var(--c) 0 8px,transparent 9px);
+      background-size:32px 15px,32px 15px;background-repeat:repeat-x}
+
+    .topbar{position:sticky;top:0;z-index:30;background:var(--red);color:#fff;--c:var(--red);
+      box-shadow:inset 0 -6px 0 rgba(0,0,0,.22),0 4px 0 rgba(0,0,0,.2)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:58px}
+    .brand{font-family:'Poppins';font-weight:800;font-size:21px;color:#fff}
+    .brand b{color:var(--yellow)}
+    .nav{display:flex;gap:16px}
+    .nav a{font-weight:600;font-size:14px;color:rgba(255,255,255,.85)}
+    .nav a:hover{color:var(--yellow)}
+    @media(max-width:880px){.nav{display:none}}
+
+    section{padding:54px 0}
+    .panel{background:var(--white);border-radius:12px;padding:28px;--c:var(--white);
+      box-shadow:inset 0 -8px 0 rgba(0,0,0,.06),0 8px 0 rgba(0,0,0,.12),0 16px 28px rgba(0,0,0,.14);position:relative}
+    .panel::before{content:"";position:absolute;left:18px;top:-13px;height:15px;width:calc(100% - 36px);pointer-events:none;
+      background:radial-gradient(ellipse 9px 5px at 16px 3px,rgba(255,255,255,.9),transparent 70%),radial-gradient(circle at 16px 9px,#fff 0 8px,transparent 9px);
+      background-size:32px 15px,32px 15px;background-repeat:repeat-x}
+    .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+    .chip{color:#fff;font-family:'Poppins';font-weight:800;font-size:13px;padding:6px 12px;border-radius:6px;--c:var(--blue);
+      background:var(--blue);box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+    .sec-head h2{font-size:clamp(24px,4.2vw,40px);margin:0}
+
+    /* hero */
+    .hero{padding:44px 0 26px}
+    .hero .grid{display:grid;grid-template-columns:1fr 280px;gap:30px;align-items:center}
+    @media(max-width:820px){.hero .grid{grid-template-columns:1fr}}
+    .greet{display:inline-block;background:var(--yellow);color:#5b4a00;font-weight:700;padding:6px 14px;border-radius:6px;
+      box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)}
+    .hero h1{font-family:'Poppins';font-weight:800;font-size:clamp(44px,10vw,104px);line-height:1;margin:14px 0 8px;
+      color:var(--red);text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(0,0,0,.18)}
+    .hero .role{font-weight:700;font-size:clamp(18px,2.6vw,26px);color:var(--blue)}
+    .hero .tag{color:var(--mut);max-width:44ch;margin:12px 0 22px;font-size:17px}
+    .btns{display:flex;flex-wrap:wrap;gap:14px}
+    .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins';font-weight:700;font-size:15px;
+      padding:12px 22px;border-radius:8px;cursor:pointer;transition:transform .12s;color:#fff;border:none}
+    .btn.pri{background:var(--green);box-shadow:inset 0 -6px 0 rgba(0,0,0,.24),0 4px 0 rgba(0,0,0,.2)}
+    .btn.gho{background:var(--blue);box-shadow:inset 0 -6px 0 rgba(0,0,0,.24),0 4px 0 rgba(0,0,0,.2)}
+    .btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(3px)}
+    .minifig{width:100%;max-width:230px;margin:0 auto;animation:hop 2.6s ease-in-out infinite}
+    @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+    /* about */
+    .about{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:start}
+    @media(max-width:740px){.about{grid-template-columns:1fr}}
+    .about .pic{border-radius:10px;overflow:hidden;box-shadow:0 8px 0 rgba(0,0,0,.14),0 14px 24px rgba(0,0,0,.16);border:6px solid var(--yellow)}
+    .about .pic img{width:100%;aspect-ratio:1;object-fit:cover}
+    .about p{margin:0 0 12px;font-size:16.5px;max-width:60ch}
+    .loc{display:inline-flex;gap:8px;align-items:center;background:var(--green);color:#fff;border-radius:6px;padding:7px 14px;
+      font-weight:700;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+
+    /* rows */
+    .rows{display:flex;flex-direction:column;gap:20px}
+    .rowi{padding:18px 20px;border-radius:8px;color:#fff}
+    .rowi:nth-child(odd){background:var(--blue);--c:var(--blue)}
+    .rowi:nth-child(even){background:var(--green);--c:var(--green)}
+    .rowi{box-shadow:inset 0 -7px 0 rgba(0,0,0,.2),0 6px 0 rgba(0,0,0,.16)}
+    .rowi .p{font-weight:700;color:var(--yellow)}
+    .rowi h3{font-family:'Poppins';margin:2px 0 4px;font-size:19px}
+    .rowi .s{color:rgba(255,255,255,.9)}
+    .rowi ul{margin:8px 0 0;padding-left:18px;color:rgba(255,255,255,.92);line-height:1.7}
+
+    /* skills bricks */
+    .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:760px){.skills{grid-template-columns:1fr 1fr}}
+    @media(max-width:460px){.skills{grid-template-columns:1fr}}
+    .sk{padding:16px 16px;border-radius:8px;color:#fff;font-weight:600;transition:transform .14s}
+    .sk:hover{transform:translateY(-4px)}
+    .sk .n{font-family:'Poppins';font-weight:800;font-size:12px;opacity:.85;letter-spacing:.04em}
+    .sk .v{margin-top:4px;font-size:15px}
+    .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+    .tags span{font-weight:600;font-size:13px;padding:7px 14px;border-radius:6px;background:#fff;color:var(--ink);
+      box-shadow:inset 0 -4px 0 rgba(0,0,0,.1),0 3px 0 rgba(0,0,0,.1)}
+
+    /* courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:500px){.courses{grid-template-columns:1fr}}
+    .course{padding:20px;border-radius:10px;background:#fff;transition:transform .14s}
+    .course{box-shadow:inset 0 -8px 0 rgba(0,0,0,.06),0 8px 0 rgba(0,0,0,.1),0 14px 22px rgba(0,0,0,.12)}
+    .course:hover{transform:translateY(-4px)}
+    .course .ic{width:50px;height:50px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:22px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.22)}
+    .course:nth-child(4n+1) .ic{background:var(--red)}.course:nth-child(4n+2) .ic{background:var(--blue)}
+    .course:nth-child(4n+3) .ic{background:var(--yellow);color:#5b4a00}.course:nth-child(4n) .ic{background:var(--green)}
+    .course h4{font-family:'Poppins';margin:12px 0 8px;font-size:16px}
+    .course p{margin:0;color:var(--mut);font-size:14.5px}
+
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#fff;transition:transform .14s;
+      box-shadow:inset 0 -8px 0 rgba(0,0,0,.06),0 8px 0 rgba(0,0,0,.12),0 14px 24px rgba(0,0,0,.14)}
+    .card:hover{transform:translateY(-6px)}
+    .card .cbar{height:8px}
+    .card:nth-child(4n+1) .cbar{background:var(--red)}.card:nth-child(4n+2) .cbar{background:var(--blue)}
+    .card:nth-child(4n+3) .cbar{background:var(--yellow)}.card:nth-child(4n) .cbar{background:var(--green)}
+    .card .cover{height:150px;overflow:hidden;background:#e6e9ee}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:.4s}
+    .card:hover .cover img{transform:scale(1.06)}
+    .cbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .ctag{display:flex;justify-content:space-between;font-size:11px;color:var(--blue);letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .card h4{font-family:'Poppins';margin:0;font-size:16px;line-height:1.3;color:var(--ink)}
+    .card p{margin:0;color:var(--mut);font-size:14px;flex:1}
+    .tech{color:var(--green);font-weight:700;font-size:12.5px}
+    .more{color:var(--red);font-weight:700;font-size:13px}
+
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px}
+    .filters button{font-family:'Fredoka';font-weight:600;font-size:13px;background:#fff;border:none;color:var(--mut);
+      padding:8px 15px;border-radius:6px;cursor:pointer;transition:.14s;box-shadow:inset 0 -4px 0 rgba(0,0,0,.1),0 3px 0 rgba(0,0,0,.1)}
+    .filters button.active,.filters button:hover{background:var(--red);color:#fff}
+
+    /* certs */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:120px 1fr;border-radius:10px;overflow:hidden;background:#fff;
+      box-shadow:inset 0 -8px 0 rgba(0,0,0,.06),0 8px 0 rgba(0,0,0,.1)}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:140px}
+    .cert .ct{padding:16px}
+    .cert .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+    .cert h4{font-family:'Poppins';margin:8px 0 6px;font-size:16px}
+    .cert p{margin:0;color:var(--mut);font-size:13.5px}
+    @media(max-width:400px){.cert{grid-template-columns:88px 1fr}}
+
+    /* contact */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:26px}
+    @media(max-width:800px){.contact{grid-template-columns:1fr}}
+    .cinfo a{display:flex;justify-content:space-between;padding:13px 0;border-bottom:2px solid var(--line);font-weight:600}
+    .cinfo a span:last-child{color:var(--red)}
+    form input,form textarea{width:100%;background:#f1f3f6;border:2px solid transparent;border-radius:8px;color:var(--ink);
+      font-family:inherit;font-size:15px;padding:14px;margin-bottom:13px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.06)}
+    form input:focus,form textarea:focus{outline:none;border-color:var(--blue)}
+    form textarea{min-height:120px;resize:vertical}
+    #cf-status{font-weight:700;margin-top:4px;font-size:14px}
+
+    footer{padding:40px 0 60px;text-align:center}
+    .fsoc{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .fsoc a{color:var(--mut);font-weight:600;font-size:13px}
+    .fsoc a:hover{color:var(--red)}
+    .muted{color:#7c8590;font-size:13px;margin-top:12px}
+    .load-note{grid-column:1/-1;color:var(--mut);text-align:center;padding:18px;border:2px dashed var(--line);border-radius:10px}
+
+    @media(prefers-reduced-motion:reduce){ .minifig{animation:none} *{scroll-behavior:auto} }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="wrap row">
+    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+    <nav class="nav" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap"><div class="grid">
+    <div>
+      <span class="greet" id="greet"></span>
+      <h1 id="name"></h1>
+      <div class="role" id="role"></div>
+      <p class="tag" id="tag"></p>
+      <div class="btns">
+        <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
+        <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+      </div>
+    </div>
+    <div>
+      <svg class="minifig" viewBox="0 0 200 260" role="img" aria-label="LEGO minifigure mascot">
+        <ellipse cx="100" cy="250" rx="52" ry="8" fill="rgba(0,0,0,.14)"/>
+        <!-- legs -->
+        <rect x="66" y="196" width="30" height="52" rx="4" fill="#0a6fdc"/>
+        <rect x="104" y="196" width="30" height="52" rx="4" fill="#0a6fdc"/>
+        <rect x="66" y="238" width="30" height="12" rx="3" fill="#083f7d"/>
+        <rect x="104" y="238" width="30" height="12" rx="3" fill="#083f7d"/>
+        <!-- torso -->
+        <path d="M62 128 h76 a10 10 0 0 1 10 10 v54 a6 6 0 0 1 -6 6 H58 a6 6 0 0 1 -6 -6 v-54 a10 10 0 0 1 10 -10 Z" fill="#e3000b"/>
+        <!-- arms -->
+        <path d="M52 140 q-16 6 -18 40 l16 4 q4 -26 12 -34 Z" fill="#e3000b"/>
+        <path d="M148 140 q16 6 18 40 l-16 4 q-4 -26 -12 -34 Z" fill="#e3000b"/>
+        <circle cx="40" cy="188" r="9" fill="#f5c518"/><circle cx="160" cy="188" r="9" fill="#f5c518"/>
+        <!-- neck -->
+        <rect x="86" y="118" width="28" height="16" fill="#c8000a"/>
+        <!-- head -->
+        <circle cx="100" cy="86" r="34" fill="#f5c518"/>
+        <!-- stud on head -->
+        <ellipse cx="100" cy="50" rx="13" ry="6" fill="#f5c518" stroke="#d9ad10" stroke-width="2"/>
+        <!-- face -->
+        <circle cx="88" cy="84" r="4.5" fill="#20242b"/><circle cx="112" cy="84" r="4.5" fill="#20242b"/>
+        <path d="M84 98 q16 14 32 0" fill="none" stroke="#20242b" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div></div></header>
+
+  <section id="about"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">01</span><h2 id="l-about"></h2></div>
+    <div class="about"><div class="pic"><img id="portrait" alt="Cai Jiechao portrait" /></div>
+      <div><div id="bio"></div><span class="loc" id="loc"></span></div></div>
+  </div></div></section>
+
+  <section id="education"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">02</span><h2 id="l-edu"></h2></div>
+    <div class="rows" id="edu"></div>
+  </div></div></section>
+
+  <section id="skills"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">03</span><h2 id="l-skills"></h2></div>
+    <div class="skills" id="skills-box"></div>
+    <div class="tags" id="tags"></div>
+  </div></div></section>
+
+  <section id="courses"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">04</span><h2 id="l-courses"></h2></div>
+    <div class="courses" id="courses-box"></div>
+  </div></div></section>
+
+  <section id="experience"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">05</span><h2 id="l-exp"></h2></div>
+    <div class="rows" id="exp"></div>
+  </div></div></section>
+
+  <section id="projects"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">06</span><h2 id="l-projects"></h2></div>
+    <div class="cards" id="projects-box"><div class="load-note" id="proj-load"></div></div>
+  </div></div></section>
+
+  <section id="articles"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">07</span><h2 id="l-articles"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-box"><div class="load-note" id="art-load"></div></div>
+  </div></div></section>
+
+  <section id="certificates"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">08</span><h2 id="l-certs"></h2></div>
+    <div class="certs" id="certs"></div>
+  </div></div></section>
+
+  <section id="contact"><div class="wrap"><div class="panel">
+    <div class="sec-head"><span class="chip">09</span><h2 id="l-contact"></h2></div>
+    <div class="contact">
+      <div class="cinfo" id="cinfo"></div>
+      <form id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="btn pri" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form>
+    </div>
+  </div></div></section>
+
+  <footer><div class="wrap">
+    <div class="fsoc" id="fsoc"></div>
+    <div class="muted" id="foot-desc"></div>
+    <a class="muted" id="foot-icp" target="_blank" rel="noopener" style="display:inline-block"></a>
+  </div></footer>
+
+  <script>window.THEME_ID = "62-lego";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P=CJCData.profile,t=CJCData.t.bind(CJCData),esc=CJCData.escapeHtml;
+    let articles=[],projects=[],filterKey="all";
+    const brickColors=['var(--red)','var(--blue)','var(--yellow)','var(--green)'];
+    const brickText=['#fff','#fff','#5b4a00','#fff'];
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML=[
+        ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      document.getElementById('greet').textContent=t(P.greeting);
+      document.getElementById('name').textContent=t(P.name);
+      document.getElementById('role').textContent=t(P.role);
+      document.getElementById('tag').textContent=t(P.title);
+      const cv=document.getElementById('cvBtn'); cv.href=t(P.cv); cv.querySelector('span').textContent=t(P.ui.download_cv);
+      document.getElementById('ghBtn').href=P.contact.github;
+      document.getElementById('portrait').src=P.avatar;
+
+      document.getElementById('l-about').textContent=t(P.ui.about_me);
+      document.getElementById('l-edu').textContent=t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent=t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent=t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent=t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent=t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent=t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent=t(P.ui.certificates);
+      document.getElementById('l-contact').textContent=t(P.ui.get_in_touch);
+
+      document.getElementById('bio').innerHTML=P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      document.getElementById('loc').innerHTML=`<i class="fa fa-map-marker"></i> ${esc(t(P.location))}`;
+
+      document.getElementById('edu').innerHTML=P.education.map(e=>`
+        <div class="rowi"><div class="p">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3><div class="s">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>`).join('');
+
+      document.getElementById('skills-box').innerHTML=P.skills.map((s,i)=>{
+        const c=brickColors[i%4], tc=brickText[i%4];
+        return `<div class="sk brick" style="background:${c};color:${tc};--c:${c}">
+          <div class="n">BRICK ${String(i+1).padStart(2,'0')}</div><div class="v">${esc(s)}</div></div>`;
+      }).join('');
+      document.getElementById('tags').innerHTML=P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      document.getElementById('courses-box').innerHTML=P.courses.map(c=>`
+        <div class="course"><div class="ic"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp').innerHTML=P.experience.map(x=>`
+        <div class="rowi"><div class="p">${esc(x.period)}</div>
+        <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="s">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+
+      document.getElementById('certs').innerHTML=P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('cinfo').innerHTML=[
+        ['Email',P.contact.email,'mailto:'+P.contact.email],
+        ['Phone',P.contact.phone,P.contact.phoneHref],
+        ['GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['WeChat','QR ↗',P.contact.wechatQrPage]
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder=t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder=t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder=t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent=t(P.ui.send);
+
+      document.getElementById('fsoc').innerHTML=`
+        <a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:${P.contact.email}">Email</a>
+        <a href="${P.contact.wechatQrPage}">WeChat</a>
+        <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent=t(P.ui.footer_desc);
+      const icp=document.getElementById('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
+
+      document.getElementById('filters').innerHTML=P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box=document.getElementById('projects-box');
+      if(!projects.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML=projects.map(p=>`
+        <a class="card" href="${esc(p.href)}"><div class="cbar"></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+    function renderArticles(){
+      const box=document.getElementById('articles-box');
+      const list=CJCData.filterArticles(articles,filterKey);
+      if(!list.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML=list.map(a=>`
+        <a class="card" href="${esc(a.href)}"><div class="cbar"></div>
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+    async function loadDynamic(){
+      try{ projects=await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-box').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles=await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const f=e.target,s=document.getElementById('cf-status');
+      s.style.color='var(--mut)'; s.textContent=t(P.ui.sending);
+      try{ const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='var(--green)'; s.textContent=r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='var(--red)'; s.textContent=err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({accent:'#e3000b'});
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

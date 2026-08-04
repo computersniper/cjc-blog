@@ -341,6 +341,78 @@ window.CJC_THEMES = [
     blurb: { en: "Web-slinger hero — red & blue, spider-web overlay, comic energy, NYC swing.", zh: "网络英雄 —— 红蓝配色、蛛网纹理、漫画活力、纽约飞荡。" },
     accent: "#e21b2c", bg: "linear-gradient(160deg,#12224e,#3a0e16)", fg: "#f4f6ff", font: "Bangers / Poppins",
   },
+  {
+    id: "54-f1",
+    name: { en: "Formula 1", zh: "F1 赛车" },
+    blurb: { en: "Race-day telemetry — carbon fibre, speed lines, lap timing, DRS red.", zh: "比赛日遥测 —— 碳纤维、速度线、圈速计时、DRS 红。" },
+    accent: "#e10600", bg: "linear-gradient(160deg,#0a0c0f,#171b22)", fg: "#f2f4f8", font: "Titillium Web / Oswald",
+  },
+  {
+    id: "55-3d",
+    name: { en: "3D Depth", zh: "3D 立体" },
+    blurb: { en: "Isometric extruded blocks, parallax layers, bold dimensional type.", zh: "等距挤出方块、视差分层、粗体立体字。" },
+    accent: "#6c5ce7", bg: "linear-gradient(160deg,#12131f,#20243a)", fg: "#eef0ff", font: "Space Grotesk",
+  },
+  {
+    id: "56-potter",
+    name: { en: "Wizardry", zh: "魔法学院" },
+    blurb: { en: "Wizarding school — candlelit parchment, house crests, spells, golden magic.", zh: "魔法学院 —— 烛光羊皮纸、学院纹章、咒语、金色魔法。" },
+    accent: "#c9a227", bg: "linear-gradient(160deg,#160f0a,#241a12)", fg: "#ecdcb8", font: "Cinzel / Cormorant",
+  },
+  {
+    id: "57-cardrive",
+    name: { en: "Road Trip", zh: "驾驶座舱" },
+    blurb: { en: "First-person driving — steering wheel & dash, scenery rushing past.", zh: "第一人称驾驶 —— 方向盘与仪表台，窗外风景飞驰。" },
+    accent: "#ff7a00", bg: "linear-gradient(180deg,#6db3e8,#101418)", fg: "#eef2f6", font: "Rajdhani / Inter",
+  },
+  {
+    id: "58-realistic",
+    name: { en: "Scenic", zh: "写实美景" },
+    blurb: { en: "Cinematic landscapes — layered vistas cycling dawn to dusk to night.", zh: "电影级风景 —— 层叠远景在晨昏夜之间流转。" },
+    accent: "#4aa3df", bg: "linear-gradient(180deg,#f7b26a,#3a6ea5)", fg: "#0e1a24", font: "Inter / Fraunces",
+  },
+  {
+    id: "59-seasons",
+    name: { en: "Four Seasons", zh: "四季" },
+    blurb: { en: "Scroll spring→summer→autumn→winter — palette & scenery morph as you go.", zh: "滑动经历 春→夏→秋→冬 —— 配色与景致随之流转。" },
+    accent: "#e88a3c", bg: "linear-gradient(180deg,#a8d672,#f2c14e,#d9642a,#cfe3ee)", fg: "#2a2418", font: "Fraunces / Nunito",
+  },
+  {
+    id: "60-radio",
+    name: { en: "Radio Waves", zh: "无线电台" },
+    blurb: { en: "Walkie-talkie comms — tuning dial, waveform, static, over-and-out.", zh: "对讲机通讯 —— 调频转盘、波形、电流杂讯、通话完毕。" },
+    accent: "#ffb43a", bg: "linear-gradient(160deg,#0c0f0c,#181d17)", fg: "#d7e2c9", font: "Share Tech Mono / Oswald",
+  },
+  {
+    id: "61-chibi",
+    name: { en: "Chibi", zh: "Q 版卡通" },
+    blurb: { en: "Kawaii chibi — rounded pastel mascots, sparkles, sticker cuteness.", zh: "萌系 Q 版 —— 圆润粉彩吉祥物、闪光、贴纸可爱风。" },
+    accent: "#ff86b3", bg: "linear-gradient(160deg,#fff2f7,#eaf4ff)", fg: "#4a3a44", font: "Baloo 2 / Fredoka",
+  },
+  {
+    id: "62-lego",
+    name: { en: "Bricks", zh: "乐高世界" },
+    blurb: { en: "Plastic brick world — studs, primary colors, blocky minifig fun.", zh: "塑料积木世界 —— 凸点、三原色、方块小人乐趣。" },
+    accent: "#e3000b", bg: "linear-gradient(160deg,#ffd200,#ff8a00)", fg: "#141414", font: "Fredoka / Poppins",
+  },
+  {
+    id: "63-romantic",
+    name: { en: "Romance", zh: "浪漫" },
+    blurb: { en: "Love-letter romance — blush & rose gold, petals, elegant script.", zh: "情书般浪漫 —— 粉与玫瑰金、花瓣、优雅手写体。" },
+    accent: "#e5698e", bg: "linear-gradient(160deg,#fbeef0,#f6e3ec)", fg: "#4a2b34", font: "Parisienne / Cormorant",
+  },
+  {
+    id: "64-monet",
+    name: { en: "Monet Garden", zh: "莫奈花园" },
+    blurb: { en: "Impressionist Giverny — water lilies, soft brush-dab textures, pastel light.", zh: "印象派吉维尼 —— 睡莲、柔和笔触肌理、粉彩光影。" },
+    accent: "#7aa6c2", bg: "linear-gradient(160deg,#dfeadb,#cfe0e8)", fg: "#33423f", font: "Cormorant / Fraunces",
+  },
+  {
+    id: "65-castle",
+    name: { en: "Castle", zh: "西式城堡" },
+    blurb: { en: "Medieval stronghold — stone walls, heraldic banners, torchlight, royal gold.", zh: "中世纪城堡 —— 石墙、纹章旗帜、火炬、皇家金色。" },
+    accent: "#c9a24a", bg: "linear-gradient(160deg,#20242b,#2c3138)", fg: "#e8e2d2", font: "Cinzel / MedievalSharp",
+  },
 ];
 
 if (typeof module !== "undefined" && module.exports) {

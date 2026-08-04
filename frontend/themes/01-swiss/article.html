@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article · Cai Jiechao</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{ --paper:#f4f4f2; --ink:#111; --red:#e2231a; --grey:#6b6b6b; --hair:rgba(17,17,17,.16); }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.5}
+    a{color:inherit}
+    .container{max-width:1000px;margin:0 auto;padding:0 28px}
+    .topbar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:2px solid var(--ink)}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .brand{font-weight:900;letter-spacing:-.02em;font-size:18px;text-decoration:none}
+    .brand b{color:var(--red)}
+    .topbar .to-gallery{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);text-decoration:none}
+
+    main{padding:48px 0 80px}
+    /* ---- shared detail structure (.cjc-d-*) styled Swiss ---- */
+    .cjc-d-loading,.cjc-d-error{padding:80px 0;color:var(--grey);font-weight:600}
+    .cjc-d-error .cjc-d-back{color:var(--red);margin-left:8px}
+    .cjc-d-meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:14px}
+    .cjc-d-meta .cjc-d-date{color:var(--grey)}
+    .cjc-d-title{font-weight:900;font-size:clamp(30px,6vw,60px);line-height:1.02;letter-spacing:-.03em;margin:0 0 26px;max-width:20ch}
+    .cjc-d-cover{border:2px solid var(--ink);margin:0 0 34px;overflow:hidden}
+    .cjc-d-cover img{width:100%;max-height:460px;object-fit:cover;display:block}
+    /* readable document surface for injected raw HTML */
+    .cjc-d-body{background:#fff;color:#1a1a1a;border:1px solid var(--hair);padding:34px 38px;font-size:16px;line-height:1.75;overflow-wrap:break-word}
+    .cjc-d-body img{max-width:100%;height:auto}
+    .cjc-d-body h1,.cjc-d-body h2,.cjc-d-body h3{line-height:1.25}
+    .cjc-d-body a{color:var(--red)}
+    .cjc-d-body pre{overflow-x:auto}
+    .cjc-d-summary{font-size:19px;line-height:1.7;color:#222;max-width:66ch;margin:0 0 24px}
+    .cjc-d-readfull{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;text-decoration:none;
+      font-weight:700;padding:14px 24px;font-size:14px;text-transform:uppercase;letter-spacing:.08em;border:2px solid var(--red);transition:.15s}
+    .cjc-d-readfull:hover{background:transparent;color:var(--red)}
+    .cjc-d-nav{margin-top:44px;padding-top:20px;border-top:2px solid var(--ink)}
+    .cjc-d-back{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none}
+    .cjc-d-back:hover{color:var(--red)}
+    @media(max-width:600px){ .cjc-d-body{padding:22px 20px} }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="container inner">
+    <a class="brand" href="./">Cai<b>Jiechao</b></a>
+    <a class="to-gallery" href="/themes.html">Themes ↗</a>
+  </div></div>
+  <main><div class="container"><div id="detail"></div></div></main>
+
+  <script>window.THEME_ID = "01-swiss";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script src="/shared/detail.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      CJCData.setTheme(window.THEME_ID);
+      CJCData.mountDetail({ kind: "article", mount: "#detail", accent: "#e2231a", backHref: "./" });
+    });
+  </script>
+</body>
+</html>

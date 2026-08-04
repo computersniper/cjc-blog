@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — 3D Depth</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --bg:#0e0d1a; --bg2:#151329; --pur:#6c5ce7; --pur2:#8b7bff; --cy:#37e0d4; --pk:#ff6ac1;
+      --ink:#eceafb; --mut:#9d9ac0; --line:rgba(255,255,255,.08);
+      --face:#1b1936; --top:#262148; --side:#120f24;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;
+      line-height:1.55;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+
+    /* isometric grid floor */
+    .iso-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+      background:radial-gradient(1200px 700px at 70% -10%,rgba(108,92,231,.28),transparent 60%),var(--bg)}
+    .iso-bg .floor{position:absolute;left:-30%;right:-30%;bottom:-40%;height:120%;
+      transform:rotateX(66deg) rotateZ(0deg);transform-origin:center bottom;
+      background-image:
+        linear-gradient(rgba(108,92,231,.16) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(108,92,231,.16) 1px,transparent 1px);
+      background-size:56px 56px;
+      mask-image:linear-gradient(to top,#000 0%,transparent 72%);
+      -webkit-mask-image:linear-gradient(to top,#000 0%,transparent 72%)}
+    .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+    .blob.a{width:340px;height:340px;background:var(--pk);top:20%;left:-6%}
+    .blob.b{width:300px;height:300px;background:var(--cy);top:60%;right:-6%}
+
+    .wrapz{position:relative;z-index:2}
+    /* topbar */
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(14,13,26,.7);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .brand{font-weight:700;font-size:20px;letter-spacing:-.02em}
+    .brand b{color:var(--pur2)}
+    .nav{display:flex;gap:18px}
+    .nav a{font-size:13px;color:var(--mut);font-weight:500}
+    .nav a:hover{color:var(--ink)}
+    @media(max-width:880px){.nav{display:none}}
+
+    section{padding:70px 0;position:relative}
+    .sec-head{margin-bottom:32px}
+    .sec-head .k{color:var(--pur2);font-weight:600;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+    /* extruded dimensional title */
+    .d-title{font-size:clamp(30px,6vw,58px);font-weight:700;line-height:1;margin:8px 0 0;letter-spacing:-.02em;
+      color:#fff;text-shadow:
+        1px 1px 0 #4b3fb0,2px 2px 0 #443aa2,3px 3px 0 #3d3494,
+        4px 4px 0 #362e86,5px 5px 0 #2f2878,6px 6px 0 #282270,7px 7px 14px rgba(0,0,0,.5)}
+
+    /* HERO */
+    .hero{padding:60px 0 40px;perspective:1400px}
+    .hero .stage{transform-style:preserve-3d}
+    .greet{color:var(--pur2);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:13px}
+    .hero h1{font-size:clamp(52px,13vw,150px);font-weight:700;line-height:.85;margin:10px 0 8px;letter-spacing:-.04em;
+      color:#fff;text-shadow:
+        2px 2px 0 #5a4dc4,4px 4px 0 #4f43b3,6px 6px 0 #453aa1,8px 8px 0 #3b3190,
+        10px 10px 0 #312880,12px 12px 24px rgba(0,0,0,.6)}
+    .hero .role{font-size:clamp(18px,2.6vw,26px);color:var(--cy);font-weight:600}
+    .hero .tag{color:var(--mut);max-width:44ch;margin:14px 0 22px;font-size:17px}
+    .btns{display:flex;flex-wrap:wrap;gap:14px}
+    .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:13px 22px;border-radius:12px;
+      cursor:pointer;transition:transform .16s,box-shadow .16s;border:none}
+    .btn.pri{background:var(--pur);color:#fff;box-shadow:0 6px 0 #4a3db3,0 10px 22px rgba(108,92,231,.4)}
+    .btn.pri:hover{transform:translateY(-2px);box-shadow:0 8px 0 #4a3db3,0 14px 28px rgba(108,92,231,.5)}
+    .btn.pri:active{transform:translateY(4px);box-shadow:0 2px 0 #4a3db3}
+    .btn.gho{background:var(--face);color:var(--ink);box-shadow:0 6px 0 #0d0b1c}
+    .btn.gho:hover{transform:translateY(-2px)}
+    .btn.gho:active{transform:translateY(4px);box-shadow:0 2px 0 #0d0b1c}
+
+    /* extruded block card generic */
+    .block{background:linear-gradient(180deg,var(--top),var(--face));border-radius:16px;
+      box-shadow:0 8px 0 var(--side),0 14px 0 #0a0817,0 26px 40px rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.06);transition:transform .18s,box-shadow .18s}
+
+    /* hero float cube */
+    .cube{width:100%;max-width:360px;margin:0 auto;aspect-ratio:1;position:relative;transform-style:preserve-3d}
+    .avatar-block{position:relative;border-radius:20px;overflow:hidden;
+      box-shadow:0 12px 0 #4a3db3,0 22px 0 #0a0817,0 40px 60px rgba(0,0,0,.6);
+      border:2px solid rgba(255,255,255,.1)}
+    .avatar-block img{width:100%;aspect-ratio:1;object-fit:cover}
+
+    .hero .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:36px;align-items:center}
+    @media(max-width:880px){.hero .grid{grid-template-columns:1fr}}
+
+    /* About */
+    .about{display:grid;grid-template-columns:1fr 320px;gap:30px;align-items:start}
+    @media(max-width:820px){.about{grid-template-columns:1fr}}
+    .about p{color:#c9c6e6;font-size:16.5px;margin:0 0 14px;max-width:62ch}
+    .loc{display:inline-flex;gap:8px;align-items:center;background:var(--face);padding:9px 15px;border-radius:12px;
+      color:var(--cy);font-weight:600;box-shadow:0 5px 0 #0d0b1c}
+
+    /* tilt cards wrapper */
+    .tiltwrap{perspective:900px}
+    .tilt{transition:transform .12s ease-out}
+
+    /* rows (edu/exp) */
+    .rows{display:flex;flex-direction:column;gap:16px}
+    .rowi{padding:20px 22px}
+    .rowi .p{color:var(--pur2);font-weight:600;font-size:14px;letter-spacing:.03em}
+    .rowi h3{margin:4px 0 4px;font-size:20px}
+    .rowi .s{color:var(--mut);font-size:14.5px}
+    .rowi ul{margin:10px 0 0;padding-left:18px;color:#c9c6e6;font-size:14.5px;line-height:1.7}
+
+    /* skills */
+    .skills{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    @media(max-width:640px){.skills{grid-template-columns:1fr}}
+    .skill{padding:16px 18px;font-weight:500}
+    .skill .n{color:var(--pur2);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+    .skill .v{font-size:16px;margin-top:4px}
+    .tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+    .tags span{padding:8px 14px;border-radius:11px;font-weight:600;font-size:13px;background:var(--face);
+      box-shadow:0 5px 0 #0d0b1c;transition:transform .14s}
+    .tags span:hover{transform:translateY(-3px)}
+
+    /* courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.courses{grid-template-columns:1fr}}
+    .course{padding:22px}
+    .course .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:20px;
+      background:var(--pur);box-shadow:0 5px 0 #4a3db3;margin-bottom:14px}
+    .course h4{margin:0 0 8px;font-size:17px}
+    .course p{margin:0;color:var(--mut);font-size:14px}
+
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media(max-width:880px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{overflow:hidden;display:flex;flex-direction:column}
+    .card .cover{height:160px;overflow:hidden;background:#100e22}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:.4s}
+    .card:hover .cover img{transform:scale(1.07)}
+    .cbody{padding:16px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .ctag{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pur2);font-weight:600}
+    .card h4{margin:0;font-size:16.5px;line-height:1.3}
+    .card p{margin:0;color:var(--mut);font-size:13.5px;flex:1}
+    .tech{color:var(--cy);font-weight:600;font-size:12.5px}
+    .more{color:var(--pk);font-weight:600;font-size:13px}
+
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px}
+    .filters button{font-family:inherit;font-weight:600;font-size:13px;background:var(--face);color:var(--mut);
+      border:none;padding:9px 16px;border-radius:11px;cursor:pointer;box-shadow:0 4px 0 #0d0b1c;transition:.14s}
+    .filters button.active,.filters button:hover{background:var(--pur);color:#fff;box-shadow:0 4px 0 #4a3db3}
+
+    /* certs */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:120px 1fr;overflow:hidden}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:140px}
+    .cert .ct{padding:16px}
+    .cert .meta{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.08em;color:var(--pur2);font-weight:600;text-transform:uppercase}
+    .cert h4{margin:8px 0 6px;font-size:16px}
+    .cert p{margin:0;color:var(--mut);font-size:13px}
+    @media(max-width:400px){.cert{grid-template-columns:88px 1fr}}
+
+    /* contact */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:26px}
+    @media(max-width:800px){.contact{grid-template-columns:1fr}}
+    .cinfo a{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line);font-weight:600}
+    .cinfo a span:last-child{color:var(--pur2)}
+    form{padding:22px}
+    form input,form textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;
+      color:var(--ink);font-family:inherit;font-size:15px;padding:14px;margin-bottom:14px}
+    form input:focus,form textarea:focus{outline:none;border-color:var(--pur)}
+    form textarea{min-height:120px;resize:vertical}
+    #cf-status{font-weight:600;font-size:14px;margin-top:4px}
+
+    footer{border-top:1px solid var(--line);padding:36px 0 60px}
+    .frow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center}
+    .fsoc{display:flex;gap:18px}
+    .fsoc a{color:var(--mut);font-weight:600;font-size:13px}
+    .fsoc a:hover{color:var(--pur2)}
+    .muted{color:#6a6790;font-size:12.5px}
+    .load-note{grid-column:1/-1;color:var(--mut);text-align:center;padding:20px;border:1px dashed var(--line);border-radius:12px}
+
+    @media(prefers-reduced-motion:reduce){
+      .tilt{transform:none!important}
+      *{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="iso-bg" aria-hidden="true">
+    <div class="blob a"></div><div class="blob b"></div>
+    <div class="floor" id="floor"></div>
+  </div>
+
+  <div class="wrapz">
+  <div class="topbar"><div class="wrap row">
+    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+    <nav class="nav" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap"><div class="stage">
+    <div class="grid">
+      <div data-par="0.02">
+        <div class="greet" id="greet"></div>
+        <h1 id="name"></h1>
+        <div class="role" id="role"></div>
+        <p class="tag" id="tag"></p>
+        <div class="btns">
+          <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
+          <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+        </div>
+      </div>
+      <div class="cube tiltwrap" data-par="-0.04">
+        <div class="avatar-block tilt"><img id="hero-av" alt="Cai Jiechao portrait" /></div>
+      </div>
+    </div>
+  </div></div></header>
+
+  <section id="about"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-about"></div><h2 class="d-title" id="l-about"></h2></div>
+    <div class="about">
+      <div id="bio"></div>
+      <div class="tiltwrap"><div class="block tilt" style="padding:20px"><span class="loc" id="loc"></span>
+        <p style="color:var(--mut);margin:16px 0 0;font-size:14px" id="loc-note"></p></div></div>
+    </div>
+  </div></section>
+
+  <section id="education"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-edu"></div><h2 class="d-title" id="l-edu"></h2></div>
+    <div class="rows tiltwrap" id="edu"></div>
+  </div></section>
+
+  <section id="skills"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-skills"></div><h2 class="d-title" id="l-skills"></h2></div>
+    <div class="skills" id="skills-box"></div>
+    <div class="tags" id="tags"></div>
+  </div></section>
+
+  <section id="courses"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-courses"></div><h2 class="d-title" id="l-courses"></h2></div>
+    <div class="courses tiltwrap" id="courses-box"></div>
+  </div></section>
+
+  <section id="experience"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-exp"></div><h2 class="d-title" id="l-exp"></h2></div>
+    <div class="rows tiltwrap" id="exp"></div>
+  </div></section>
+
+  <section id="projects"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-proj"></div><h2 class="d-title" id="l-projects"></h2></div>
+    <div class="cards tiltwrap" id="projects-box"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-art"></div><h2 class="d-title" id="l-articles"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards tiltwrap" id="articles-box"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-cert"></div><h2 class="d-title" id="l-certs"></h2></div>
+    <div class="certs tiltwrap" id="certs"></div>
+  </div></section>
+
+  <section id="contact"><div class="wrap">
+    <div class="sec-head"><div class="k" id="k-con"></div><h2 class="d-title" id="l-contact"></h2></div>
+    <div class="contact">
+      <div class="cinfo" id="cinfo"></div>
+      <div class="tiltwrap"><form class="block tilt" id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="btn pri" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form></div>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="frow">
+      <a class="brand" href="#top" style="font-size:17px">Cai<b>Jiechao</b></a>
+      <div class="fsoc" id="fsoc"></div>
+    </div>
+    <div class="frow" style="margin-top:16px">
+      <span class="muted" id="foot-desc"></span>
+      <a class="muted" id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+  </div>
+
+  <script>window.THEME_ID = "55-3d";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P=CJCData.profile,t=CJCData.t.bind(CJCData),esc=CJCData.escapeHtml;
+    let articles=[],projects=[],filterKey="all";
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML=[
+        ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      document.getElementById('greet').textContent=t(P.greeting);
+      document.getElementById('name').textContent=t(P.name);
+      document.getElementById('role').textContent=t(P.role);
+      document.getElementById('tag').textContent=t(P.title);
+      const cv=document.getElementById('cvBtn'); cv.href=t(P.cv); cv.querySelector('span').textContent=t(P.ui.download_cv);
+      document.getElementById('ghBtn').href=P.contact.github;
+      document.getElementById('hero-av').src=P.avatar;
+
+      const heads=[['k-about','about_desc','l-about','about_me'],['k-edu','education_bg','l-edu','education_bg'],
+        ['k-skills','tech_stack','l-skills','core_tech'],['k-courses','core_courses','l-courses','core_courses'],
+        ['k-exp','internship_exp','l-exp','internship_exp'],['k-proj','latest_projects','l-projects','latest_projects'],
+        ['k-art','latest_articles','l-articles','latest_articles'],['k-cert','certificates','l-certs','certificates'],
+        ['k-con','drop_msg','l-contact','get_in_touch']];
+      heads.forEach(([kid,kk,lid,lk])=>{ document.getElementById(kid).textContent=t(P.ui[kk]);
+        document.getElementById(lid).textContent=t(P.ui[lk]); });
+
+      document.getElementById('bio').innerHTML=P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      document.getElementById('loc').innerHTML=`<i class="fa fa-map-marker"></i> ${esc(t(P.location))}`;
+      document.getElementById('loc-note').textContent=t(P.role);
+
+      document.getElementById('edu').innerHTML=P.education.map(e=>`
+        <div class="block rowi tilt"><div class="p">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3><div class="s">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>`).join('');
+
+      document.getElementById('skills-box').innerHTML=P.skills.map((s,i)=>`
+        <div class="block skill"><div class="n">Layer ${String(i+1).padStart(2,'0')}</div><div class="v">${esc(s)}</div></div>`).join('');
+      document.getElementById('tags').innerHTML=P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      document.getElementById('courses-box').innerHTML=P.courses.map(c=>`
+        <div class="block course tilt"><div class="ic"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp').innerHTML=P.experience.map(x=>`
+        <div class="block rowi tilt"><div class="p">${esc(x.period)}</div>
+        <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="s">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+
+      document.getElementById('certs').innerHTML=P.certificates.map(c=>`
+        <div class="block cert tilt"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('cinfo').innerHTML=[
+        ['Email',P.contact.email,'mailto:'+P.contact.email],
+        ['Phone',P.contact.phone,P.contact.phoneHref],
+        ['GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['WeChat','QR ↗',P.contact.wechatQrPage]
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder=t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder=t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder=t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent=t(P.ui.send);
+
+      document.getElementById('fsoc').innerHTML=`
+        <a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:${P.contact.email}">Email</a>
+        <a href="${P.contact.wechatQrPage}">WeChat</a>
+        <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent=t(P.ui.footer_desc);
+      const icp=document.getElementById('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
+
+      document.getElementById('filters').innerHTML=P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles(); bindTilt();
+      }));
+      bindTilt();
+    }
+
+    function renderProjects(){
+      const box=document.getElementById('projects-box');
+      if(!projects.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML=projects.map(p=>`
+        <a class="block card tilt" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+      bindTilt();
+    }
+    function renderArticles(){
+      const box=document.getElementById('articles-box');
+      const list=CJCData.filterArticles(articles,filterKey);
+      if(!list.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML=list.map(a=>`
+        <a class="block card tilt" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+      bindTilt();
+    }
+    async function loadDynamic(){
+      try{ projects=await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-box').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles=await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const f=e.target,s=document.getElementById('cf-status');
+      s.style.color='var(--mut)'; s.textContent=t(P.ui.sending);
+      try{ const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='var(--cy)'; s.textContent=r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#ff6ac1'; s.textContent=err.message; }
+    });
+
+    // 3D tilt toward cursor
+    const RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    function bindTilt(){
+      if(RM) return;
+      document.querySelectorAll('.tiltwrap .tilt').forEach(el=>{
+        if(el.dataset.tb) return; el.dataset.tb='1';
+        const p=el.parentElement;
+        p.addEventListener('mousemove',ev=>{
+          const r=p.getBoundingClientRect();
+          const x=(ev.clientX-r.left)/r.width-.5, y=(ev.clientY-r.top)/r.height-.5;
+          el.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) translateZ(6px)`;
+        });
+        p.addEventListener('mouseleave',()=>{ el.style.transform=''; });
+      });
+    }
+    // parallax on mouse move + scroll
+    function parallax(){
+      if(RM) return;
+      window.addEventListener('mousemove',ev=>{
+        const cx=(ev.clientX/window.innerWidth-.5), cy=(ev.clientY/window.innerHeight-.5);
+        document.querySelectorAll('[data-par]').forEach(el=>{
+          const f=parseFloat(el.dataset.par)*60;
+          el.style.transform=`translate(${cx*f}px,${cy*f}px)`;
+        });
+      });
+      window.addEventListener('scroll',()=>{
+        const fl=document.getElementById('floor');
+        fl.style.backgroundPositionY=(window.scrollY*0.3)+'px';
+      },{passive:true});
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({accent:'#6c5ce7'});
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+      parallax();
+    });
+  })();
+  </script>
+</body>
+</html>

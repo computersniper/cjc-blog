@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Four Seasons</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{ --acc:#e88a3c; --ink:#2c2418; --mut:#5f5747; --card:rgba(255,255,255,.72);
+      --line:rgba(70,55,35,.16); }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;background:#dff0e6}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    h1,h2,h3,.disp{font-family:'Fraunces',Georgia,serif}
+    .wrap{max-width:1060px;margin:0 auto;padding:0 22px;position:relative;z-index:3}
+
+    #bg{position:fixed;inset:0;z-index:0;transition:background .35s linear}
+    #flakes{position:fixed;inset:0;z-index:1;pointer-events:none}
+    .sun-moon{position:fixed;top:12%;right:12%;width:120px;height:120px;border-radius:50%;z-index:1;pointer-events:none;
+      background:radial-gradient(circle,#fff6d8,#ffd98a 60%,transparent 74%);opacity:.85;transition:background .5s}
+
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:58px}
+    .brand{font-family:'Fraunces';font-weight:700;font-size:21px}
+    .brand b{color:var(--acc)}
+    .nav{display:flex;gap:18px}
+    .nav a{font-size:14px;color:var(--mut);font-weight:700}
+    .nav a:hover{color:var(--acc)}
+    @media(max-width:880px){.nav{display:none}}
+    .seasonchip{display:flex;gap:8px;align-items:center;font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+    .seasonchip .emoji{font-size:18px}
+
+    section{padding:64px 0}
+    .glass{background:var(--card);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:24px;padding:30px;
+      box-shadow:0 18px 40px rgba(60,45,25,.14)}
+    .sec-head{margin-bottom:22px;display:flex;align-items:center;gap:12px}
+    .sec-head .em{font-size:26px}
+    .sec-head .k{color:var(--acc);letter-spacing:.16em;text-transform:uppercase;font-size:12px;font-weight:800}
+    .sec-head h2{font-size:clamp(26px,4.4vw,44px);margin:2px 0 0;font-weight:600}
+
+    .hero{padding:82px 0 44px;text-align:center}
+    .greet{color:var(--acc);letter-spacing:.2em;text-transform:uppercase;font-size:13px;font-weight:800}
+    .hero h1{font-size:clamp(52px,12vw,132px);line-height:.94;margin:12px 0 8px;font-weight:600;color:#2c2418}
+    .hero .role{font-size:clamp(20px,3vw,30px);font-style:italic;font-family:'Fraunces';color:#4a3f2c}
+    .hero .tag{color:var(--mut);max-width:46ch;margin:14px auto 24px;font-size:17px;font-weight:600}
+    .btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+    .btn{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:15px;padding:13px 24px;border-radius:999px;
+      cursor:pointer;transition:.16s;border:2px solid transparent}
+    .btn.pri{background:var(--acc);color:#fff}
+    .btn.pri:hover{filter:brightness(1.06);transform:translateY(-2px)}
+    .btn.gho{border-color:var(--acc);color:var(--acc);background:rgba(255,255,255,.5)}
+    .btn.gho:hover{background:rgba(255,255,255,.8)}
+
+    .about{display:grid;grid-template-columns:250px 1fr;gap:28px;align-items:start}
+    @media(max-width:760px){.about{grid-template-columns:1fr}}
+    .about img{width:100%;border-radius:20px;border:3px solid #fff;box-shadow:0 12px 30px rgba(60,45,25,.2);aspect-ratio:1;object-fit:cover}
+    .about p{color:#3d3527;margin:0 0 13px;font-size:16.5px;max-width:60ch;font-weight:600}
+    .loc{display:inline-flex;gap:8px;align-items:center;color:#fff;background:var(--acc);border-radius:999px;padding:8px 15px;font-weight:800}
+
+    .rows{display:flex;flex-direction:column;gap:16px}
+    .rowi{border-left:4px solid var(--acc);padding:6px 0 6px 16px}
+    .rowi .p{color:var(--acc);font-weight:800}
+    .rowi h3{font-size:21px;margin:2px 0 4px;font-weight:600}
+    .rowi .s{color:var(--mut);font-weight:600}
+    .rowi ul{margin:9px 0 0;padding-left:18px;color:#3d3527;line-height:1.7;font-weight:600}
+
+    .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media(max-width:760px){.skills{grid-template-columns:1fr 1fr}}
+    @media(max-width:460px){.skills{grid-template-columns:1fr}}
+    .sk{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.6)}
+    .sk .n{color:var(--acc);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+    .sk .v{margin-top:5px;font-size:15px;font-weight:700}
+    .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+    .tags span{font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;background:rgba(232,138,60,.14);border:1px solid rgba(232,138,60,.4);color:#a55a17}
+
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:500px){.courses{grid-template-columns:1fr}}
+    .course{border:1px solid var(--line);border-radius:20px;padding:20px;background:rgba(255,255,255,.6);transition:.16s}
+    .course:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(60,45,25,.18)}
+    .course i.fa{color:var(--acc);font-size:24px}
+    .course h4{font-family:'Fraunces';margin:12px 0 8px;font-size:18px;font-weight:600}
+    .course p{margin:0;color:var(--mut);font-size:14.5px;font-weight:600}
+
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+      background:rgba(255,255,255,.7);transition:.16s;box-shadow:0 8px 22px rgba(60,45,25,.12)}
+    .card:hover{transform:translateY(-5px);box-shadow:0 18px 36px rgba(60,45,25,.2)}
+    .card .cover{height:158px;overflow:hidden;background:#eadfce}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:.4s}
+    .card:hover .cover img{transform:scale(1.06)}
+    .cbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .ctag{display:flex;justify-content:space-between;font-size:11px;color:var(--acc);letter-spacing:.06em;text-transform:uppercase;font-weight:800}
+    .card h4{font-family:'Fraunces';margin:0;font-size:17px;line-height:1.3;font-weight:600}
+    .card p{margin:0;color:var(--mut);font-size:14px;flex:1;font-weight:600}
+    .tech{color:#a55a17;font-size:13px;font-weight:800}
+    .more{color:var(--acc);font-weight:800;font-size:13px}
+
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px}
+    .filters button{font-family:inherit;font-weight:800;font-size:13px;background:rgba(255,255,255,.6);border:1px solid var(--line);
+      color:var(--mut);padding:8px 15px;border-radius:999px;cursor:pointer;transition:.15s}
+    .filters button.active,.filters button:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:120px 1fr;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.7)}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:140px}
+    .cert .ct{padding:16px}
+    .cert .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+    .cert h4{font-family:'Fraunces';margin:8px 0 6px;font-size:17px;font-weight:600}
+    .cert p{margin:0;color:var(--mut);font-size:13.5px;font-weight:600}
+    @media(max-width:400px){.cert{grid-template-columns:88px 1fr}}
+
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:26px}
+    @media(max-width:800px){.contact{grid-template-columns:1fr}}
+    .cinfo a{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-weight:700}
+    .cinfo a span:last-child{color:var(--acc)}
+    form input,form textarea{width:100%;background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:14px;
+      color:var(--ink);font-family:inherit;font-size:15px;padding:14px;margin-bottom:13px;font-weight:600}
+    form input:focus,form textarea:focus{outline:none;border-color:var(--acc)}
+    form textarea{min-height:120px;resize:vertical}
+    #cf-status{font-weight:700;margin-top:4px;font-size:14px}
+
+    footer{padding:44px 0 70px;text-align:center}
+    .fsoc{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+    .fsoc a{color:var(--mut);font-weight:700;font-size:13px}
+    .fsoc a:hover{color:var(--acc)}
+    .muted{color:#7a715e;font-size:13px;margin-top:12px;font-weight:600}
+    .load-note{grid-column:1/-1;color:var(--mut);text-align:center;padding:18px;border:1px dashed var(--line);border-radius:14px;font-weight:600}
+
+    @media(prefers-reduced-motion:reduce){ #bg{transition:none} *{scroll-behavior:auto} }
+  </style>
+</head>
+<body>
+  <div id="bg" aria-hidden="true"></div>
+  <div class="sun-moon" id="sunmoon" aria-hidden="true"></div>
+  <canvas id="flakes" aria-hidden="true"></canvas>
+
+  <div class="topbar"><div class="wrap row">
+    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+    <nav class="nav" id="nav"></nav>
+    <div class="seasonchip"><span class="emoji" id="s-emoji">🌸</span><span id="s-name">SPRING</span></div>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap">
+    <div class="greet" id="greet"></div>
+    <h1 id="name"></h1>
+    <div class="role" id="role"></div>
+    <p class="tag" id="tag"></p>
+    <div class="btns">
+      <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
+      <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+    </div>
+  </div></header>
+
+  <section id="about"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">🌱</span><div><div class="k">Spring · Beginnings</div><h2 id="l-about"></h2></div></div>
+    <div class="about"><img id="portrait" alt="Cai Jiechao portrait" />
+      <div><div id="bio"></div><span class="loc" id="loc"></span></div></div>
+  </div></div></section>
+
+  <section id="education"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">🌿</span><div><div class="k">Spring · Roots</div><h2 id="l-edu"></h2></div></div>
+    <div class="rows" id="edu"></div>
+  </div></div></section>
+
+  <section id="skills"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">☀️</span><div><div class="k">Summer · Growth</div><h2 id="l-skills"></h2></div></div>
+    <div class="skills" id="skills-box"></div>
+    <div class="tags" id="tags"></div>
+  </div></div></section>
+
+  <section id="courses"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">🌻</span><div><div class="k">Summer · Bloom</div><h2 id="l-courses"></h2></div></div>
+    <div class="courses" id="courses-box"></div>
+  </div></div></section>
+
+  <section id="experience"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">🍂</span><div><div class="k">Autumn · Harvest</div><h2 id="l-exp"></h2></div></div>
+    <div class="rows" id="exp"></div>
+  </div></div></section>
+
+  <section id="projects"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">🍁</span><div><div class="k">Autumn · Yield</div><h2 id="l-projects"></h2></div></div>
+    <div class="cards" id="projects-box"><div class="load-note" id="proj-load"></div></div>
+  </div></div></section>
+
+  <section id="articles"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">❄️</span><div><div class="k">Winter · Reflection</div><h2 id="l-articles"></h2></div></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-box"><div class="load-note" id="art-load"></div></div>
+  </div></div></section>
+
+  <section id="certificates"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">⛄</span><div><div class="k">Winter · Milestones</div><h2 id="l-certs"></h2></div></div>
+    <div class="certs" id="certs"></div>
+  </div></div></section>
+
+  <section id="contact"><div class="wrap"><div class="glass">
+    <div class="sec-head"><span class="em">✉️</span><div><div class="k">All Seasons · Reach</div><h2 id="l-contact"></h2></div></div>
+    <div class="contact">
+      <div class="cinfo" id="cinfo"></div>
+      <form id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="btn pri" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form>
+    </div>
+  </div></div></section>
+
+  <footer><div class="wrap">
+    <div class="fsoc" id="fsoc"></div>
+    <div class="muted" id="foot-desc"></div>
+    <a class="muted" id="foot-icp" target="_blank" rel="noopener" style="display:inline-block"></a>
+  </div></footer>
+
+  <script>window.THEME_ID = "59-seasons";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P=CJCData.profile,t=CJCData.t.bind(CJCData),esc=CJCData.escapeHtml;
+    let articles=[],projects=[],filterKey="all";
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML=[
+        ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      document.getElementById('greet').textContent=t(P.greeting);
+      document.getElementById('name').textContent=t(P.name);
+      document.getElementById('role').textContent=t(P.role);
+      document.getElementById('tag').textContent=t(P.title);
+      const cv=document.getElementById('cvBtn'); cv.href=t(P.cv); cv.querySelector('span').textContent=t(P.ui.download_cv);
+      document.getElementById('ghBtn').href=P.contact.github;
+      document.getElementById('portrait').src=P.avatar;
+
+      document.getElementById('l-about').textContent=t(P.ui.about_me);
+      document.getElementById('l-edu').textContent=t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent=t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent=t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent=t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent=t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent=t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent=t(P.ui.certificates);
+      document.getElementById('l-contact').textContent=t(P.ui.get_in_touch);
+
+      document.getElementById('bio').innerHTML=P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      document.getElementById('loc').innerHTML=`<i class="fa fa-map-marker"></i> ${esc(t(P.location))}`;
+
+      document.getElementById('edu').innerHTML=P.education.map(e=>`
+        <div class="rowi"><div class="p">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3><div class="s">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>`).join('');
+
+      document.getElementById('skills-box').innerHTML=P.skills.map((s,i)=>`
+        <div class="sk"><div class="n">Branch ${String(i+1).padStart(2,'0')}</div><div class="v">${esc(s)}</div></div>`).join('');
+      document.getElementById('tags').innerHTML=P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      document.getElementById('courses-box').innerHTML=P.courses.map(c=>`
+        <div class="course"><i class="fa ${esc(c.icon)}"></i><h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp').innerHTML=P.experience.map(x=>`
+        <div class="rowi"><div class="p">${esc(x.period)}</div>
+        <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="s">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+
+      document.getElementById('certs').innerHTML=P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('cinfo').innerHTML=[
+        ['Email',P.contact.email,'mailto:'+P.contact.email],
+        ['Phone',P.contact.phone,P.contact.phoneHref],
+        ['GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['WeChat','QR ↗',P.contact.wechatQrPage]
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder=t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder=t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder=t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent=t(P.ui.send);
+
+      document.getElementById('fsoc').innerHTML=`
+        <a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:${P.contact.email}">Email</a>
+        <a href="${P.contact.wechatQrPage}">WeChat</a>
+        <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent=t(P.ui.footer_desc);
+      const icp=document.getElementById('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
+
+      document.getElementById('filters').innerHTML=P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box=document.getElementById('projects-box');
+      if(!projects.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML=projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+    function renderArticles(){
+      const box=document.getElementById('articles-box');
+      const list=CJCData.filterArticles(articles,filterKey);
+      if(!list.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML=list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+    async function loadDynamic(){
+      try{ projects=await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-box').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles=await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const f=e.target,s=document.getElementById('cf-status');
+      s.style.color='var(--mut)'; s.textContent=t(P.ui.sending);
+      try{ const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='var(--acc)'; s.textContent=r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#c0392b'; s.textContent=err.message; }
+    });
+
+    // ===== seasonal morph + particles =====
+    const RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const SEASONS=[
+      {name:'SPRING',emoji:'🌸',top:[191,227,245],bot:[247,226,238],acc:'#7fb069',orb:'radial-gradient(circle,#fff6d8,#ffd98a 60%,transparent 74%)'},
+      {name:'SUMMER',emoji:'☀️',top:[126,200,240],bot:[214,240,184],acc:'#3aa55d',orb:'radial-gradient(circle,#fffbe0,#ffe27a 58%,transparent 74%)'},
+      {name:'AUTUMN',emoji:'🍁',top:[245,214,160],bot:[233,168,106],acc:'#e8823c',orb:'radial-gradient(circle,#ffe9c0,#ff9a4a 60%,transparent 74%)'},
+      {name:'WINTER',emoji:'❄️',top:[207,224,238],bot:[238,244,248],acc:'#5f8fb0',orb:'radial-gradient(circle,#f4f8ff,#cdddef 58%,transparent 74%)'}
+    ];
+    function lerp(a,b,f){return Math.round(a+(b-a)*f);}
+    function mix(c1,c2,f){return `rgb(${lerp(c1[0],c2[0],f)},${lerp(c1[1],c2[1],f)},${lerp(c1[2],c2[2],f)})`;}
+    const bg=document.getElementById('bg'), chipN=document.getElementById('s-name'), chipE=document.getElementById('s-emoji'), sm=document.getElementById('sunmoon');
+    let curSeason=0;
+    function updateSeason(){
+      const max=Math.max(document.body.scrollHeight-window.innerHeight,1);
+      const p=Math.min(Math.max(window.scrollY/max,0),0.9999);
+      const seg=p*(SEASONS.length-1); // 0..3
+      const i=Math.floor(seg), f=seg-i, a=SEASONS[i], b=SEASONS[Math.min(i+1,SEASONS.length-1)];
+      const top=mix(a.top,b.top,f), bot=mix(a.bot,b.bot,f);
+      bg.style.background=`linear-gradient(180deg,${top} 0%,${bot} 100%)`;
+      const near=f<.5?a:b;
+      document.documentElement.style.setProperty('--acc',near.acc);
+      chipN.textContent=near.name; chipE.textContent=near.emoji; sm.style.background=near.orb;
+      curSeason=SEASONS.indexOf(near);
+    }
+    updateSeason();
+    window.addEventListener('scroll',updateSeason,{passive:true});
+    window.addEventListener('resize',updateSeason);
+
+    // particles
+    if(!RM){
+      const cv=document.getElementById('flakes'), ctx=cv.getContext('2d');
+      let W,H,parts=[];
+      function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+      resize(); window.addEventListener('resize',resize);
+      function spawn(){ return {x:Math.random()*W,y:Math.random()*-H,vy:.5+Math.random()*1.4,vx:(Math.random()-.5)*.8,
+        r:5+Math.random()*8,rot:Math.random()*6,vr:(Math.random()-.5)*.06,sw:Math.random()*2}; }
+      for(let i=0;i<70;i++){ const p=spawn(); p.y=Math.random()*H; parts.push(p); }
+      const palette={0:['#ff9ec7','#ffc2dc','#ffd6e6'],1:['#7fd08a','#a8e6a0','#fff2a8'],2:['#e8823c','#d9531e','#c0392b'],3:['#ffffff','#e8f1fb','#cfe0ee']};
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        const cols=palette[curSeason]||palette[0];
+        parts.forEach(p=>{
+          p.y+=p.vy; p.x+=p.vx+Math.sin(p.y*.02+p.sw); p.rot+=p.vr;
+          if(p.y>H+20){ Object.assign(p,spawn()); p.y=-10; }
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+          ctx.fillStyle=cols[Math.floor(p.x)%cols.length]; ctx.globalAlpha=.85;
+          if(curSeason===3){ ctx.beginPath(); ctx.arc(0,0,p.r*.4,0,7); ctx.fill(); }
+          else if(curSeason===2){ ctx.beginPath(); ctx.ellipse(0,0,p.r*.7,p.r*.35,0,0,7); ctx.fill(); }
+          else { ctx.beginPath(); for(let k=0;k<5;k++){ const a=k/5*6.283; ctx.ellipse(Math.cos(a)*p.r*.4,Math.sin(a)*p.r*.4,p.r*.32,p.r*.18,a,0,7);} ctx.fill(); }
+          ctx.restore();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({accent:'#e88a3c'});
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); updateSeason(); });
+      loadDynamic();
+      setTimeout(updateSeason,200);
+    });
+  })();
+  </script>
+</body>
+</html>

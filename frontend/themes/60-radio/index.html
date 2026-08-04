@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — CB Radio Comms</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{ --bg:#0c0f0c; --bg2:#121712; --panel:#141a14; --amber:#ffb43a; --amber2:#ffd27a; --grn:#39ff88;
+      --ink:#e7e4d6; --mut:#8a927e; --line:rgba(255,180,58,.22); --red:#ff5a4a; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);font-family:'Share Tech Mono',monospace;line-height:1.6;overflow-x:hidden;
+      background:radial-gradient(1000px 600px at 50% -10%,#17201a,transparent 60%),var(--bg)}
+    /* scanlines / static */
+    body::before{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.5;
+      background:repeating-linear-gradient(180deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
+    body::after{content:"";position:fixed;inset:0;z-index:59;pointer-events:none;opacity:.05;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      animation:stat .3s steps(3) infinite}
+    @keyframes stat{to{transform:translate(3px,2px)}}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    h1,h2,h3,.disp{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+    .led{color:var(--amber);text-shadow:0 0 8px rgba(255,180,58,.6)}
+
+    .topbar{position:sticky;top:0;z-index:40;background:rgba(12,15,12,.9);border-bottom:1px solid var(--line)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:54px}
+    .brand{font-family:'Oswald';font-weight:700;font-size:19px;letter-spacing:.06em}
+    .brand b{color:var(--amber)}
+    .nav{display:flex;gap:16px}
+    .nav a{font-size:13px;color:var(--mut);letter-spacing:.06em}
+    .nav a:hover{color:var(--amber)}
+    @media(max-width:880px){.nav{display:none}}
+    .sig{display:flex;gap:3px;align-items:flex-end;height:20px}
+    .sig i{width:4px;background:var(--amber);box-shadow:0 0 6px rgba(255,180,58,.5)}
+
+    section{padding:52px 0}
+    .device{background:linear-gradient(180deg,#161c16,#101410);border:1px solid var(--line);border-radius:14px;
+      padding:26px;box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02)}
+    .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    .sec-head .ch{color:var(--amber);font-family:'Oswald';font-weight:700;font-size:13px;letter-spacing:.12em;
+      border:1px solid var(--line);padding:3px 9px;border-radius:4px}
+    .sec-head h2{font-size:clamp(22px,4vw,36px);margin:0;color:var(--ink)}
+    .sec-head .st{margin-left:auto;color:var(--grn);font-size:12px;letter-spacing:.1em;text-shadow:0 0 6px rgba(57,255,136,.5)}
+
+    /* HERO device */
+    .hero{padding:44px 0 28px}
+    .radiotop{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:stretch}
+    @media(max-width:820px){.radiotop{grid-template-columns:1fr}}
+    .callplate{background:linear-gradient(180deg,#161c16,#0e120e);border:1px solid var(--line);border-radius:14px;padding:26px;
+      box-shadow:inset 0 0 40px rgba(255,180,58,.05)}
+    .greet{color:var(--grn);letter-spacing:.24em;text-transform:uppercase;font-size:12px}
+    .hero h1{font-family:'Oswald';font-weight:700;font-size:clamp(42px,10vw,96px);line-height:.95;margin:8px 0 6px;
+      color:var(--amber);text-shadow:0 0 22px rgba(255,180,58,.45)}
+    .hero .role{color:var(--ink);font-size:clamp(16px,2.4vw,24px);font-family:'Oswald';letter-spacing:.04em}
+    .hero .tag{color:var(--mut);max-width:44ch;margin:10px 0 20px}
+    .btns{display:flex;flex-wrap:wrap;gap:12px}
+    .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Oswald';text-transform:uppercase;letter-spacing:.06em;
+      font-size:13px;padding:11px 20px;border-radius:6px;cursor:pointer;transition:.16s;border:2px solid var(--amber)}
+    .btn.pri{background:var(--amber);color:#191400}
+    .btn.pri:hover{background:var(--amber2)}
+    .btn.gho{background:transparent;color:var(--amber)}
+    .btn.gho:hover{background:rgba(255,180,58,.12)}
+
+    /* tuner + scope */
+    .tuner{display:flex;flex-direction:column;gap:14px}
+    .freq{background:#0a0d0a;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+    .freq .mhz{font-size:34px;color:var(--amber);text-shadow:0 0 12px rgba(255,180,58,.6);letter-spacing:.04em}
+    .freq .lbl{font-size:11px;color:var(--mut);letter-spacing:.2em}
+    .dial{height:26px;border:1px solid var(--line);border-radius:6px;background:#0a0d0a;position:relative;overflow:hidden}
+    .dial .ticks{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,var(--mut) 0 1px,transparent 1px 14px);opacity:.4}
+    .dial .needle{position:absolute;top:0;bottom:0;width:2px;background:var(--red);box-shadow:0 0 8px var(--red);
+      animation:sweep 7s linear infinite}
+    @keyframes sweep{0%{left:8%}50%{left:88%}100%{left:8%}}
+    .scope{background:#060806;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:100px}
+    .scope canvas{width:100%;height:100%;display:block}
+
+    /* about */
+    .about{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}
+    @media(max-width:740px){.about{grid-template-columns:1fr}}
+    .about img{width:100%;border-radius:10px;border:1px solid var(--line);aspect-ratio:1;object-fit:cover;filter:contrast(1.05) sepia(.1)}
+    .about p{color:#cfcbb8;margin:0 0 12px;max-width:60ch}
+    .loc{display:inline-flex;gap:8px;align-items:center;color:var(--amber);border:1px solid var(--amber);border-radius:6px;padding:6px 12px;letter-spacing:.06em;font-size:13px}
+
+    /* comms log rows */
+    .logrows{display:flex;flex-direction:column;gap:0}
+    .logrow{padding:16px 0;border-bottom:1px dashed var(--line);display:grid;grid-template-columns:130px 1fr;gap:16px}
+    .logrow:last-child{border-bottom:none}
+    .logrow .ts{color:var(--grn);font-size:13px}
+    .logrow h3{margin:0 0 4px;font-size:18px;color:var(--amber)}
+    .logrow .s{color:var(--mut);font-size:14px}
+    .logrow ul{margin:8px 0 0;padding-left:18px;color:#cfcbb8;font-size:14px;line-height:1.7}
+    @media(max-width:600px){.logrow{grid-template-columns:1fr;gap:4px}}
+
+    /* frequencies (skills) */
+    .freqs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media(max-width:600px){.freqs{grid-template-columns:minmax(0,1fr)}}
+    .frow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#0d110d;min-width:0}
+    .frow .fq{color:var(--amber);font-size:14px;width:66px;flex-shrink:0}
+    .frow .v{font-size:14px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .tags span{font-size:12px;letter-spacing:.04em;padding:6px 12px;border-radius:4px;border:1px solid var(--line);
+      color:var(--amber2);background:rgba(255,180,58,.06)}
+
+    /* courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:500px){.courses{grid-template-columns:1fr}}
+    .course{border:1px solid var(--line);border-radius:10px;padding:18px;background:#0d110d;transition:.16s}
+    .course:hover{border-color:var(--amber);transform:translateY(-3px)}
+    .course i.fa{color:var(--amber);font-size:22px}
+    .course h4{margin:12px 0 8px;font-size:15px;color:var(--ink)}
+    .course p{margin:0;color:var(--mut);font-size:13.5px;font-family:'Share Tech Mono'}
+
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#0d110d;transition:.16s}
+    .card:hover{transform:translateY(-4px);border-color:var(--amber);box-shadow:0 0 20px rgba(255,180,58,.18)}
+    .card .cover{height:148px;overflow:hidden;background:#060806;position:relative}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:sepia(.2) contrast(1.05)}
+    .card .inc{position:absolute;top:8px;left:8px;font-family:'Oswald';font-size:10px;letter-spacing:.1em;color:#191400;background:var(--amber);padding:2px 8px;border-radius:3px}
+    .cbody{padding:15px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .ctag{display:flex;justify-content:space-between;font-size:11px;color:var(--grn);letter-spacing:.06em}
+    .card h4{margin:0;font-family:'Oswald';font-size:16px;line-height:1.3;color:var(--amber);text-transform:none}
+    .card p{margin:0;color:var(--mut);font-size:13.5px;flex:1}
+    .tech{color:var(--amber2);font-size:12.5px}
+    .more{color:var(--amber);font-family:'Oswald';font-size:12px;letter-spacing:.08em}
+
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+    .filters button{font-family:'Oswald';text-transform:uppercase;letter-spacing:.06em;font-size:12px;background:#0d110d;
+      border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:5px;cursor:pointer;transition:.15s}
+    .filters button.active,.filters button:hover{background:var(--amber);border-color:var(--amber);color:#191400}
+
+    /* certs */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:116px 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0d110d}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:130px;filter:sepia(.2)}
+    .cert .ct{padding:14px}
+    .cert .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--grn);letter-spacing:.06em}
+    .cert h4{margin:8px 0 6px;font-family:'Oswald';font-size:15px;color:var(--amber);text-transform:none}
+    .cert p{margin:0;color:var(--mut);font-size:13px}
+    @media(max-width:400px){.cert{grid-template-columns:84px 1fr}}
+
+    /* contact + PTT */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:24px}
+    @media(max-width:800px){.contact{grid-template-columns:1fr}}
+    .cinfo a{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px dashed var(--line)}
+    .cinfo a span:first-child{color:var(--mut);letter-spacing:.04em}
+    .cinfo a span:last-child{color:var(--amber)}
+    form input,form textarea{width:100%;background:#060806;border:1px solid var(--line);border-radius:8px;color:var(--ink);
+      font-family:inherit;font-size:15px;padding:13px;margin-bottom:12px}
+    form input:focus,form textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 10px rgba(255,180,58,.2)}
+    form textarea{min-height:120px;resize:vertical}
+    .ptt{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:'Oswald';font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;font-size:16px;padding:16px;cursor:pointer;box-shadow:0 6px 0 #a3372b;transition:.1s}
+    .ptt:active{transform:translateY(4px);box-shadow:0 2px 0 #a3372b}
+    #cf-status{font-family:'Oswald';margin-top:10px;font-size:14px;letter-spacing:.04em}
+
+    footer{border-top:1px solid var(--line);padding:30px 0 60px;text-align:center}
+    .fsoc{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+    .fsoc a{color:var(--mut);font-family:'Oswald';font-size:12px;letter-spacing:.06em}
+    .fsoc a:hover{color:var(--amber)}
+    .muted{color:#6f7566;font-size:12px;margin-top:10px}
+    .load-note{grid-column:1/-1;color:var(--mut);text-align:center;padding:18px;border:1px dashed var(--line);border-radius:8px}
+
+    @media(prefers-reduced-motion:reduce){
+      body::after{animation:none}.dial .needle{animation:none;left:48%}
+      *{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="wrap row">
+    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+    <nav class="nav" id="nav"></nav>
+    <div class="sig" aria-label="signal" title="signal"><i style="height:6px"></i><i style="height:10px"></i><i style="height:14px"></i><i style="height:18px"></i><i style="height:20px"></i></div>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap"><div class="radiotop">
+    <div class="callplate">
+      <div class="greet" id="greet"></div>
+      <h1 id="name"></h1>
+      <div class="role" id="role"></div>
+      <p class="tag" id="tag"></p>
+      <div class="btns">
+        <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
+        <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+      </div>
+    </div>
+    <div class="tuner">
+      <div class="freq"><div class="mhz">27.185</div><div class="lbl">MHz · CHANNEL 19 · 10-4</div></div>
+      <div class="dial"><div class="ticks"></div><div class="needle"></div></div>
+      <div class="scope"><canvas id="scope"></canvas></div>
+    </div>
+  </div></div></header>
+
+  <section id="about"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 01</span><h2 id="l-about"></h2><span class="st">● ON AIR</span></div>
+    <div class="about"><img id="portrait" alt="Cai Jiechao portrait" />
+      <div><div id="bio"></div><span class="loc" id="loc"></span></div></div>
+  </div></div></section>
+
+  <section id="education"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 02</span><h2 id="l-edu"></h2><span class="st">● COPY</span></div>
+    <div class="logrows" id="edu"></div>
+  </div></div></section>
+
+  <section id="skills"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 03</span><h2 id="l-skills"></h2><span class="st">FREQUENCIES</span></div>
+    <div class="freqs" id="freqs"></div>
+    <div class="tags" id="tags"></div>
+  </div></div></section>
+
+  <section id="courses"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 04</span><h2 id="l-courses"></h2><span class="st">● COPY</span></div>
+    <div class="courses" id="courses-box"></div>
+  </div></div></section>
+
+  <section id="experience"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 05</span><h2 id="l-exp"></h2><span class="st">COMMS LOG</span></div>
+    <div class="logrows" id="exp"></div>
+  </div></div></section>
+
+  <section id="projects"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 06</span><h2 id="l-projects"></h2><span class="st">● SENT</span></div>
+    <div class="cards" id="projects-box"><div class="load-note" id="proj-load"></div></div>
+  </div></div></section>
+
+  <section id="articles"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 07</span><h2 id="l-articles"></h2><span class="st">INCOMING</span></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-box"><div class="load-note" id="art-load"></div></div>
+  </div></div></section>
+
+  <section id="certificates"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 08</span><h2 id="l-certs"></h2><span class="st">● COPY THAT</span></div>
+    <div class="certs" id="certs"></div>
+  </div></div></section>
+
+  <section id="contact"><div class="wrap"><div class="device">
+    <div class="sec-head"><span class="ch">CH 09</span><h2 id="l-contact"></h2><span class="st">OVER</span></div>
+    <div class="contact">
+      <div class="cinfo" id="cinfo"></div>
+      <form id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="ptt" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form>
+    </div>
+  </div></div></section>
+
+  <footer><div class="wrap">
+    <div class="fsoc" id="fsoc"></div>
+    <div class="muted" id="foot-desc"></div>
+    <a class="muted" id="foot-icp" target="_blank" rel="noopener" style="display:inline-block"></a>
+  </div></footer>
+
+  <script>window.THEME_ID = "60-radio";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P=CJCData.profile,t=CJCData.t.bind(CJCData),esc=CJCData.escapeHtml;
+    let articles=[],projects=[],filterKey="all";
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML=[
+        ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      document.getElementById('greet').textContent=t(P.greeting)+" · BREAKER 1-9";
+      document.getElementById('name').textContent=t(P.name);
+      document.getElementById('role').textContent=t(P.role);
+      document.getElementById('tag').textContent=t(P.title);
+      const cv=document.getElementById('cvBtn'); cv.href=t(P.cv); cv.querySelector('span').textContent=t(P.ui.download_cv);
+      document.getElementById('ghBtn').href=P.contact.github;
+      document.getElementById('portrait').src=P.avatar;
+
+      document.getElementById('l-about').textContent=t(P.ui.about_me);
+      document.getElementById('l-edu').textContent=t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent=t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent=t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent=t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent=t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent=t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent=t(P.ui.certificates);
+      document.getElementById('l-contact').textContent=t(P.ui.get_in_touch);
+
+      document.getElementById('bio').innerHTML=P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      document.getElementById('loc').innerHTML=`<i class="fa fa-map-marker"></i> ${esc(t(P.location))}`;
+
+      document.getElementById('edu').innerHTML=P.education.map(e=>`
+        <div class="logrow"><div class="ts">[${esc(e.period)}]</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="s">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      const freqBase=26.965;
+      document.getElementById('freqs').innerHTML=P.skills.map((s,i)=>`
+        <div class="frow"><div class="fq">${(freqBase+i*0.045).toFixed(3)}</div><div class="v">${esc(s)}</div></div>`).join('');
+      document.getElementById('tags').innerHTML=P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      document.getElementById('courses-box').innerHTML=P.courses.map(c=>`
+        <div class="course"><i class="fa ${esc(c.icon)}"></i><h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp').innerHTML=P.experience.map(x=>`
+        <div class="logrow"><div class="ts">[${esc(x.period)}]</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="s">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      document.getElementById('certs').innerHTML=P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('cinfo').innerHTML=[
+        ['EMAIL',P.contact.email,'mailto:'+P.contact.email],
+        ['PHONE',P.contact.phone,P.contact.phoneHref],
+        ['GITHUB','@'+P.contact.githubUser,P.contact.github],
+        ['WECHAT','QR ↗',P.contact.wechatQrPage]
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder=t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder=t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder=t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent='◉ PTT · '+t(P.ui.send);
+
+      document.getElementById('fsoc').innerHTML=`
+        <a href="${P.contact.github}" target="_blank" rel="noopener">GITHUB</a>
+        <a href="mailto:${P.contact.email}">EMAIL</a>
+        <a href="${P.contact.wechatQrPage}">WECHAT</a>
+        <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent=t(P.ui.footer_desc)+' · 10-4, OVER & OUT';
+      const icp=document.getElementById('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
+
+      document.getElementById('filters').innerHTML=P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box=document.getElementById('projects-box');
+      if(!projects.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML=projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+    function renderArticles(){
+      const box=document.getElementById('articles-box');
+      const list=CJCData.filterArticles(articles,filterKey);
+      if(!list.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML=list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><span class="inc">INCOMING</span><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+    async function loadDynamic(){
+      try{ projects=await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-box').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles=await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const f=e.target,s=document.getElementById('cf-status');
+      s.style.color='var(--mut)'; s.textContent='TRANSMITTING... '+t(P.ui.sending);
+      try{ const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='var(--grn)'; s.textContent='10-4! '+(r.message||'MESSAGE RECEIVED.'); f.reset(); }
+      catch(err){ s.style.color='var(--red)'; s.textContent='BREAKER: '+err.message; }
+    });
+
+    // oscilloscope
+    const RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    (function(){
+      const cv=document.getElementById('scope'); if(!cv) return;
+      const ctx=cv.getContext('2d');
+      function size(){ cv.width=cv.clientWidth*devicePixelRatio; cv.height=cv.clientHeight*devicePixelRatio; }
+      size(); window.addEventListener('resize',size);
+      let ph=0;
+      function draw(){
+        const w=cv.width,h=cv.height; ctx.clearRect(0,0,w,h);
+        ctx.strokeStyle='rgba(255,180,58,.9)'; ctx.lineWidth=2*devicePixelRatio; ctx.beginPath();
+        for(let x=0;x<w;x++){ const tt=x/w*12+ph;
+          const y=h/2 + Math.sin(tt)*h*0.18*Math.sin(tt*.3) + Math.sin(tt*3.1)*h*0.08 + (Math.random()-.5)*h*0.03;
+          x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+        ctx.strokeStyle='rgba(255,180,58,.15)'; ctx.lineWidth=1; ctx.beginPath();
+        ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
+        ph+=0.15;
+        if(!RM) requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({accent:'#ffb43a'});
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

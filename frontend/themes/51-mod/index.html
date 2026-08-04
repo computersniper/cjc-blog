@@ -104,7 +104,7 @@
 
     /* ---- about ---- */
     .about{display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:center}
-    .photo-frame{position:relative;width:300px;height:300px;margin:0 auto;flex:none}
+    .photo-frame{position:relative;width:min(300px,68vw);height:auto;aspect-ratio:1;margin:0 auto;flex:none}
     .photo-frame .ring{position:absolute;inset:-18px;border-radius:50%;
       background:conic-gradient(var(--pop) 0 25%,var(--ink) 0 50%,var(--teal) 0 75%,var(--pink) 0 100%);
       animation:spin 30s linear infinite}
