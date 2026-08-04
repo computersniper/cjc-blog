@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Motion</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --accent:#ff3d81;
+      --accent2:#7c5cff;
+      --accent3:#00d4ff;
+      --bg:#0b0713;
+      --panel:#140d21;
+      --panel2:#1b1230;
+      --ink:#f4eefb;
+      --ink-soft:rgba(244,238,251,.68);
+      --ink-faint:rgba(244,238,251,.42);
+      --line:rgba(255,255,255,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);background:var(--bg);
+      font-family:'Sora',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{font-family:inherit}
+    .mono{font-family:'Space Grotesk',monospace}
+
+    /* Living gradient background */
+    .bg-anim{position:fixed;inset:0;z-index:-2;
+      background:
+        radial-gradient(60% 60% at 15% 10%,rgba(255,61,129,.22),transparent 60%),
+        radial-gradient(55% 55% at 85% 20%,rgba(124,92,255,.24),transparent 62%),
+        radial-gradient(65% 65% at 75% 90%,rgba(0,212,255,.16),transparent 60%),
+        radial-gradient(60% 60% at 10% 85%,rgba(255,61,129,.14),transparent 60%);
+      background-size:200% 200%;animation:bgdrift 24s ease-in-out infinite;}
+    @keyframes bgdrift{0%,100%{background-position:0% 0%,100% 0%,100% 100%,0% 100%}50%{background-position:100% 50%,0% 50%,0% 0%,100% 100%}}
+    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+      background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+      background-size:56px 56px;mask-image:radial-gradient(circle at 50% 30%,black,transparent 80%);}
+
+    .container{max-width:1140px;margin:0 auto;padding:0 22px}
+
+    /* Nav */
+    .nav{position:sticky;top:0;z-index:800;background:rgba(11,7,19,.72);
+      -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .nav-inner{display:flex;align-items:center;height:62px;gap:18px}
+    .brand{font-weight:800;font-size:18px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+    .brand .spark{width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+      animation:spin 6s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .navlinks{display:flex;gap:4px;margin-left:auto;margin-right:210px}
+    .navlinks a{font-size:14px;color:var(--ink-soft);padding:8px 12px;position:relative;font-weight:500}
+    .navlinks a::after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;border-radius:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+    .navlinks a:hover{color:var(--ink)}
+    .navlinks a:hover::after{transform:scaleX(1)}
+    @media(max-width:1000px){.navlinks{margin-right:150px}}
+    @media(max-width:860px){.navlinks{display:none}}
+
+    /* Reveal choreography */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+    .reveal.in{opacity:1;transform:none}
+    .reveal[data-delay="1"]{transition-delay:.08s}
+    .reveal[data-delay="2"]{transition-delay:.16s}
+    .reveal[data-delay="3"]{transition-delay:.24s}
+    .reveal[data-delay="4"]{transition-delay:.32s}
+    .reveal[data-delay="5"]{transition-delay:.40s}
+
+    /* Hero */
+    .hero{padding:80px 0 60px;position:relative}
+    .float-orb{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;will-change:transform;opacity:.9}
+    .float-orb.f1{width:80px;height:80px;background:radial-gradient(circle at 35% 35%,#ffb3d1,var(--accent));top:40px;right:8%;
+      animation:floaty 7s ease-in-out infinite}
+    .float-orb.f2{width:44px;height:44px;background:radial-gradient(circle at 35% 35%,#c3b3ff,var(--accent2));top:220px;right:26%;
+      animation:floaty 9s ease-in-out infinite reverse}
+    .float-orb.f3{width:30px;height:30px;background:radial-gradient(circle at 35% 35%,#a6f0ff,var(--accent3));top:120px;right:2%;
+      animation:floaty 6s ease-in-out infinite}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+    .greet{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--accent);
+      border:1px solid rgba(255,61,129,.35);background:rgba(255,61,129,.10);padding:8px 16px;border-radius:999px}
+    .hero h1{font-size:clamp(46px,10vw,116px);font-weight:800;letter-spacing:-.04em;line-height:.92;margin:22px 0 0;
+      background:linear-gradient(100deg,var(--accent),var(--accent2) 40%,var(--accent3) 75%,var(--accent));
+      background-size:280% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+      animation:hue 8s linear infinite}
+    @keyframes hue{to{background-position:280% center}}
+    .hero .headline{font-size:clamp(20px,3vw,34px);font-weight:600;margin:20px 0 0;max-width:18ch}
+    .hero .sub{font-size:16.5px;color:var(--ink-soft);margin:14px 0 0;max-width:52ch}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;
+      cursor:pointer;border:1px solid transparent;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,background .25s}
+    .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;
+      box-shadow:0 12px 30px -8px rgba(255,61,129,.6)}
+    .btn.primary:hover{transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(255,61,129,.7)}
+    .btn.ghost{background:rgba(255,255,255,.04);color:var(--ink);border-color:var(--line)}
+    .btn.ghost:hover{transform:translateY(-3px);border-color:var(--accent);background:rgba(255,61,129,.08)}
+
+    /* Stats */
+    .stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px}
+    .stat{flex:1;min-width:150px;padding:22px 22px;border-radius:var(--radius);border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
+    .stat .num{font-size:clamp(30px,5vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1;
+      background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .stat .lbl{font-size:13px;color:var(--ink-soft);margin-top:8px;font-weight:500}
+
+    /* Section head */
+    section{padding:56px 0}
+    .sec-head{margin:0 0 34px}
+    .sec-kicker{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--accent);display:inline-flex;align-items:center;gap:10px}
+    .sec-kicker::before{content:"";width:26px;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .sec-title{font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-.035em;margin:12px 0 0;line-height:1.05}
+    .u-line{position:relative;display:inline}
+    .u-line::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:4px;border-radius:4px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .8s .2s cubic-bezier(.16,1,.3,1)}
+    .in .u-line::after{transform:scaleX(1)}
+
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+      border:1px solid var(--line);border-radius:var(--radius)}
+
+    /* About */
+    .about{display:grid;grid-template-columns:280px 1fr;gap:30px;align-items:start}
+    .about .portrait{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+    .about .portrait img{width:100%;aspect-ratio:4/5;object-fit:cover}
+    .about .portrait::after{content:"";position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 55%,rgba(11,7,19,.5))}
+    .about .txt p{margin:0 0 16px;color:var(--ink-soft);font-size:16.5px}
+    .about .loc{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--accent);margin-top:6px}
+    @media(max-width:760px){.about{grid-template-columns:1fr}}
+
+    /* Education */
+    .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .edu{padding:26px 28px}
+    .edu .when{font-family:'Space Grotesk';font-size:13px;font-weight:600;color:var(--accent2);letter-spacing:.02em}
+    .edu h3{margin:10px 0 6px;font-size:18px;font-weight:700}
+    .edu .deg{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+    .edu .note{font-size:14px;color:var(--ink-faint);margin-top:6px}
+    @media(max-width:680px){.edu-grid{grid-template-columns:1fr}}
+
+    /* Marquee skills */
+    .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);
+      mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent)}
+    .marquee-track{display:flex;gap:14px;width:max-content;animation:scroll 34s linear infinite}
+    .marquee:hover .marquee-track{animation-play-state:paused}
+    .marquee + .marquee .marquee-track{animation-duration:44s;animation-direction:reverse}
+    @keyframes scroll{to{transform:translateX(-50%)}}
+    .tag{padding:12px 20px;border-radius:999px;font-weight:600;font-size:15px;white-space:nowrap;
+      border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink)}
+    .tag i{color:var(--accent);margin-right:8px}
+
+    /* Courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .course{padding:28px 26px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s}
+    .course:hover{transform:translateY(-8px);border-color:var(--accent)}
+    .course .ci{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;
+      margin-bottom:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 22px -8px rgba(255,61,129,.6)}
+    .course h4{margin:0 0 9px;font-size:17px;font-weight:700}
+    .course p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6}
+    @media(max-width:860px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.courses{grid-template-columns:1fr}}
+
+    /* Experience */
+    .exp{padding:34px 34px;position:relative;overflow:hidden}
+    .exp::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--accent2))}
+    .exp .top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:10px}
+    .exp .top h3{margin:0;font-size:21px;font-weight:800}
+    .exp .co{color:var(--accent)}
+    .exp .when{margin-left:auto;font-family:'Space Grotesk';font-size:13.5px;color:var(--ink-faint);font-weight:600}
+    .exp .summary{color:var(--ink-soft);font-size:15px;margin:0 0 18px}
+    .exp ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+    .exp li{position:relative;padding-left:28px;font-size:15px;color:var(--ink-soft)}
+    .exp li::before{content:"\f105";font-family:FontAwesome;position:absolute;left:8px;top:0;color:var(--accent);font-weight:700}
+
+    /* Cards */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+    .filters button{padding:9px 18px;border-radius:999px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--ink-soft);
+      background:rgba(255,255,255,.04);border:1px solid var(--line);transition:.25s}
+    .filters button:hover{color:var(--ink);border-color:var(--accent)}
+    .filters button.active{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{display:flex;flex-direction:column;overflow:hidden;transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s}
+    .card:hover{transform:translateY(-10px);border-color:var(--accent);box-shadow:0 24px 44px -20px rgba(255,61,129,.5)}
+    .card .cover{height:176px;overflow:hidden}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+    .card:hover .cover img{transform:scale(1.1)}
+    .card .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .card .meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.06em}
+    .card .meta .cat{color:var(--accent)}
+    .card .meta .date{color:var(--ink-faint);font-family:'Space Grotesk'}
+    .card h4{margin:0;font-size:17px;font-weight:700;line-height:1.3}
+    .card p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55;flex:1}
+    .card .stack{font-size:12.5px;font-weight:600;color:var(--accent2);font-family:'Space Grotesk'}
+    .card .more{font-weight:700;font-size:13px;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+    .card:hover .more i{transform:translateX(4px)}
+    .card .more i{transition:transform .25s}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;padding:30px;text-align:center;color:var(--ink-soft);font-size:15px}
+
+    /* Certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden;transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s}
+    .cert:hover{transform:translateY(-6px);border-color:var(--accent)}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:160px}
+    .cert .ct{padding:22px}
+    .cert .ct .meta{display:flex;justify-content:space-between;font-size:11px;font-weight:700;text-transform:uppercase;
+      letter-spacing:.06em;color:var(--accent);margin-bottom:9px}
+    .cert .ct h4{margin:0 0 8px;font-size:16.5px;font-weight:700;line-height:1.3}
+    .cert .ct p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.55}
+    @media(max-width:680px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:100px 1fr}}
+
+    /* Contact */
+    .contact{display:grid;grid-template-columns:1fr 1.15fr;gap:24px}
+    .contact-info{padding:32px 32px}
+    .contact-info .lead{color:var(--ink-soft);margin:0 0 22px;font-size:15px}
+    .contact-info a{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+    .contact-info a:first-of-type{border-top:none}
+    .contact-info a .ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background:rgba(255,61,129,.12);color:var(--accent);font-size:17px;flex-shrink:0}
+    .contact-info a .k{font-size:12px;color:var(--ink-faint)}
+    .contact-info a .v{font-size:14.5px;font-weight:600}
+    .contact-form{padding:32px 32px}
+    .contact-form label{font-size:12.5px;font-weight:600;color:var(--ink-soft);display:block;margin:0 0 6px}
+    .contact-form input,.contact-form textarea{width:100%;padding:14px 16px;border-radius:14px;font-family:inherit;font-size:15px;
+      color:var(--ink);background:rgba(255,255,255,.04);border:1px solid var(--line);margin-bottom:16px;transition:.25s;outline:none}
+    .contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent);background:rgba(255,61,129,.06)}
+    .contact-form textarea{min-height:124px;resize:vertical}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* Footer */
+    footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:20px}
+    .foot{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+    .fsoc{display:flex;flex-wrap:wrap;gap:10px}
+    .fsoc a{padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--ink-soft);
+      border:1px solid var(--line);background:rgba(255,255,255,.04);transition:.25s}
+    .fsoc a:hover{color:var(--ink);border-color:var(--accent)}
+    .fmeta{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:20px;
+      padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-faint)}
+    .fmeta a{color:var(--ink-soft)}
+
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important;animation:none!important}
+      .bg-anim{animation:none}
+      .hero h1{background-position:0 center}
+      .reveal{opacity:1!important;transform:none!important;transition:none!important}
+      .u-line::after{transform:scaleX(1)!important;transition:none}
+      .float-orb{animation:none!important}
+      .marquee-track{animation:none!important}
+      .btn,.card,.course,.cert,.card .more i{transition:none}
+      .card:hover,.course:hover,.cert:hover,.btn:hover{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-anim" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav class="nav"><div class="container nav-inner">
+    <a class="brand" href="#top"><span class="spark"></span><span>Cai Jiechao</span></a>
+    <div class="navlinks" id="nav"></div>
+  </div></nav>
+
+  <div id="top"></div>
+  <header class="hero"><div class="container">
+    <span class="float-orb f1" aria-hidden="true"></span>
+    <span class="float-orb f2" aria-hidden="true"></span>
+    <span class="float-orb f3" aria-hidden="true"></span>
+    <span class="greet reveal in" id="greet"></span>
+    <h1 class="reveal in" data-delay="1" id="name"></h1>
+    <div class="headline reveal in" data-delay="2" id="headline"></div>
+    <p class="sub reveal in" data-delay="3" id="sub"></p>
+    <div class="hero-actions reveal in" data-delay="4">
+      <a class="btn primary" id="cvBtn" href="#" download></a>
+      <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i><span></span></a>
+    </div>
+    <div class="stats reveal in" data-delay="5" id="stats"></div>
+  </div></header>
+
+  <main>
+  <section id="about"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-about"></span><h2 class="sec-title"><span class="u-line" id="l-about"></span></h2></div>
+    <div class="about">
+      <div class="portrait reveal"><img id="portrait" alt="" /></div>
+      <div class="txt reveal" data-delay="1" id="about-text"></div>
+    </div>
+  </div></section>
+
+  <section id="education"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-edu"></span><h2 class="sec-title"><span class="u-line" id="l-edu"></span></h2></div>
+    <div class="edu-grid" id="edu-list"></div>
+  </div></section>
+
+  <section id="skills"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-skills"></span><h2 class="sec-title"><span class="u-line" id="l-skills"></span></h2></div>
+    <div class="marquee reveal"><div class="marquee-track" id="mq1"></div></div>
+    <div class="marquee reveal" data-delay="1" style="margin-top:14px"><div class="marquee-track" id="mq2"></div></div>
+  </div></section>
+
+  <section id="courses"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-courses"></span><h2 class="sec-title"><span class="u-line" id="l-courses"></span></h2></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-exp"></span><h2 class="sec-title"><span class="u-line" id="l-exp"></span></h2></div>
+    <div class="reveal" id="exp-list"></div>
+  </div></section>
+
+  <section id="projects"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-projects"></span><h2 class="sec-title"><span class="u-line" id="l-projects"></span></h2></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-articles"></span><h2 class="sec-title"><span class="u-line" id="l-articles"></span></h2></div>
+    <div class="filters reveal" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-certs"></span><h2 class="sec-title"><span class="u-line" id="l-certs"></span></h2></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact"><div class="container">
+    <div class="sec-head reveal"><span class="sec-kicker" id="k-contact"></span><h2 class="sec-title"><span class="u-line" id="l-contact"></span></h2></div>
+    <div class="contact">
+      <div class="contact-info panel reveal">
+        <p class="lead" id="contact-lead"></p>
+        <div id="contact-links"></div>
+      </div>
+      <div class="contact-form panel reveal" data-delay="1">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+          <label id="lb-name" for="cf-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label id="lb-email" for="cf-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label id="lb-msg" for="cf-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn primary" id="cf-send" style="width:100%;justify-content:center"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+  </main>
+
+  <footer><div class="container">
+    <div class="foot">
+      <a class="brand" href="#top"><span class="spark"></span><span>Cai Jiechao</span></a>
+      <div class="fsoc" id="foot-social"></div>
+      <div class="fmeta">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "22-animated";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let articles = [], projects = [], filterKey = "all";
+
+    const STATS = [
+      {num:15, suffix:"+", label:{en:"Tech in the stack",zh:"技术栈数量"}},
+      {num:200, suffix:"M+", label:{en:"AI tokens consumed",zh:"消耗 AI Token"}},
+      {num:6, suffix:"", label:{en:"Core CS courses",zh:"核心课程"}},
+      {num:6, suffix:".5", label:{en:"IELTS band score",zh:"雅思总分"}},
+    ];
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      document.getElementById('greet').innerHTML = `<i class="fa fa-magic"></i>${esc(t(P.greeting))}`;
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('sub').textContent = t(P.title);
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = `<i class="fa fa-download"></i><span>${esc(t(P.ui.download_cv))}</span>`; cv.href = t(P.cv);
+      document.querySelector('#ghBtn span').textContent = "GitHub";
+      document.getElementById('ghBtn').href = P.contact.github;
+
+      document.getElementById('stats').innerHTML = STATS.map((s,i)=>
+        `<div class="stat"><div class="num" data-target="${s.num}" data-suffix="${s.suffix}">0${s.suffix}</div>
+         <div class="lbl">${esc(t(s.label))}</div></div>`).join('');
+
+      const kick = (id,n)=>{document.getElementById('k-'+id).textContent = n;};
+      kick('about','01');kick('edu','02');kick('skills','03');kick('courses','04');kick('exp','05');
+      kick('projects','06');kick('articles','07');kick('certs','08');kick('contact','09');
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('about-text').innerHTML = P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('')
+        + `<div class="loc"><i class="fa fa-map-marker"></i>${esc(t(P.location))}</div>`;
+
+      document.getElementById('edu-list').innerHTML = P.education.map((e,i)=>`
+        <div class="edu panel reveal" data-delay="${i}"><div class="when">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3><div class="deg">${esc(t(e.degree))}</div>
+        <div class="note">${esc(t(e.note))}</div></div>`).join('');
+
+      const chips = P.skillTags.map(s=>`<span class="tag"><i class="fa fa-bolt"></i>${esc(s)}</span>`).join('');
+      document.getElementById('mq1').innerHTML = chips + chips;
+      const chips2 = P.skills.map(s=>`<span class="tag"><i class="fa fa-star"></i>${esc(s)}</span>`).join('');
+      document.getElementById('mq2').innerHTML = chips2 + chips2;
+
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="course panel reveal" data-delay="${i%3}"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="exp panel">
+          <div class="top"><h3>${esc(t(x.role))} <span class="co">· ${esc(t(x.company))}</span></h3>
+          <span class="when">${esc(x.period)}</span></div>
+          <p class="summary">${esc(t(x.summary))}</p>
+          <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+        </div>`).join('');
+
+      document.getElementById('certs-list').innerHTML = P.certificates.map((c,i)=>`
+        <div class="cert panel reveal" data-delay="${i}"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('contact-lead').textContent = t(P.ui.inbox_open);
+      document.getElementById('contact-links').innerHTML = [
+        ['fa-envelope','Email',P.contact.email,'mailto:'+P.contact.email],
+        ['fa-phone','Phone',P.contact.phone,P.contact.phoneHref],
+        ['fa-github','GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['fa-weixin','WeChat','QR',P.contact.wechatQrPage],
+      ].map(([i,k,v,h])=>`<a href="${esc(h)}" target="_blank" rel="noopener">
+        <span class="ico"><i class="fa ${i}"></i></span>
+        <span><span class="k">${esc(k)}</span><br><span class="v">${esc(v)}</span></span></a>`).join('');
+
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles(); observeReveals();
+      }));
+
+      observeReveals();
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="card panel reveal" data-delay="${i%3}" href="${esc(p.href)}">
+          <div class="body">
+            <div class="meta"><span class="cat">${esc(t(P.ui.tech_stack))}</span><span class="date">${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} <i class="fa fa-long-arrow-right"></i></span>
+          </div></a>`).join('');
+      observeReveals();
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map((a,i)=>`
+        <a class="card panel reveal" data-delay="${i%3}" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="body">
+            <div class="meta"><span class="cat">${esc(a.category||'')}</span><span class="date">${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} <i class="fa fa-long-arrow-right"></i></span>
+          </div></a>`).join('');
+      observeReveals();
+    }
+
+    // Scroll reveal choreography
+    let io;
+    function observeReveals(){
+      const els = document.querySelectorAll('.reveal:not(.in)');
+      if(reduce){ els.forEach(e=>e.classList.add('in')); return; }
+      if(!io){
+        io = new IntersectionObserver((entries)=>{
+          entries.forEach(en=>{
+            if(en.isIntersecting){
+              en.target.classList.add('in');
+              if(en.target.querySelector('[data-target]')||en.target.hasAttribute('data-target')) countUp(en.target);
+              io.unobserve(en.target);
+            }
+          });
+        }, {threshold:.14, rootMargin:'0px 0px -8% 0px'});
+      }
+      els.forEach(e=>io.observe(e));
+    }
+
+    function countUp(scope){
+      const nums = scope.querySelectorAll ? scope.querySelectorAll('[data-target]') : [];
+      nums.forEach(el=>{
+        if(el.dataset.done) return; el.dataset.done='1';
+        const target = parseFloat(el.dataset.target), suffix = el.dataset.suffix||'';
+        if(reduce){ el.textContent = target + suffix; return; }
+        const dur = 1200, start = performance.now();
+        function step(now){
+          const p = Math.min(1,(now-start)/dur);
+          const eased = 1-Math.pow(1-p,3);
+          el.textContent = Math.round(target*eased) + suffix;
+          if(p<1) requestAnimationFrame(step); else el.textContent = target + suffix;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--ink-soft)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='#3ddc84'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#ff5c8a'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      // Hero stat count-up (hero is already visible)
+      countUp(document.getElementById('stats'));
+      CJCData.mountSwitcher({ accent:'#ff3d81' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

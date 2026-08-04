@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — The Consulting Detective</title>
+  <meta name="description" content="A Victorian gaslit case-file dossier — the consulting detective portfolio of Cai Jiechao, 221B Baker Street." />
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Special+Elite&family=Caveat:wght@500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --bg0:#191b16; --bg1:#24261d; --bg2:#2f3125;
+      --paper:#e7ddc6; --paper-2:#d8cba9; --paper-ink:#2a2419;
+      --brass:#c19a4b; --brass-lt:#e0c07f; --brass-dk:#8a6b2e;
+      --ink:#e6e0cf; --muted:#a99f86; --sepia:#b79a68;
+      --string:#8f2b23; --seal:#7c2118;
+      --line:rgba(193,154,75,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      font-family:'Noto Serif SC','Playfair Display',Georgia,serif;line-height:1.65;
+      background-color:var(--bg0);
+      background-image:
+        radial-gradient(1100px 620px at 50% -6%, rgba(193,154,75,.10), transparent 62%),
+        radial-gradient(900px 900px at 100% 100%, rgba(0,0,0,.55), transparent 60%),
+        radial-gradient(900px 900px at 0% 100%, rgba(0,0,0,.5), transparent 60%),
+        linear-gradient(160deg,#191b16 0%, #22241b 55%, #24261d 100%);
+      background-attachment:fixed;overflow-x:hidden;
+    }
+    /* foggy vignette + faint old-map underlay */
+    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        repeating-linear-gradient(38deg, rgba(193,154,75,.05) 0 1px, transparent 1px 46px),
+        repeating-linear-gradient(-52deg, rgba(193,154,75,.04) 0 1px, transparent 1px 62px),
+        radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(0,0,0,.6) 100%);
+      opacity:.9}
+    body>*{position:relative;z-index:1}
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+    .serif{font-family:'Playfair Display',Georgia,serif}
+    .type{font-family:'Special Elite','Noto Serif SC',monospace}
+    .hand{font-family:'Caveat',cursive}
+
+    /* ---------- Masthead ---------- */
+    .masthead{border-bottom:3px double var(--brass);background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);
+      padding:16px 0 12px}
+    .masthead .inner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .paper-name{font-family:'Playfair Display';font-weight:900;font-size:clamp(20px,4.4vw,34px);letter-spacing:.02em;
+      color:var(--brass-lt);text-shadow:0 1px 0 #000}
+    .paper-name b{color:var(--brass)}
+    .paper-sub{font-family:'Special Elite';font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+    .mast-nav{display:flex;gap:16px;flex-wrap:wrap}
+    .mast-nav a{font-family:'Special Elite';font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--sepia);text-decoration:none}
+    .mast-nav a:hover{color:var(--brass-lt)}
+    @media(max-width:760px){.mast-nav{display:none}}
+    /* keep clear of the fixed top-right switcher */
+    @media(min-width:761px){.masthead .inner{padding-right:190px}}
+
+    /* ---------- Section scaffolding ---------- */
+    section{padding:56px 0;position:relative}
+    .sec-head{margin-bottom:30px;border-bottom:1px solid var(--line);padding-bottom:14px}
+    .sec-kicker{font-family:'Special Elite';font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);
+      display:flex;align-items:center;gap:10px}
+    .sec-kicker .ln{flex:0 0 34px;height:1px;background:var(--brass);opacity:.7}
+    .sec-title{font-family:'Playfair Display';font-weight:900;font-size:clamp(30px,5.6vw,52px);margin:6px 0 4px;
+      color:var(--paper);letter-spacing:.01em}
+    .sec-note{font-family:'Caveat';font-size:20px;color:var(--brass-lt);opacity:.9}
+
+    .icn{width:1em;height:1em;vertical-align:-.12em;stroke:currentColor;fill:none;stroke-width:1.6}
+
+    /* ---------- Hero ---------- */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center;padding:46px 0 30px}
+    .greet{font-family:'Special Elite';letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:var(--brass)}
+    .hero h1{font-family:'Playfair Display';font-weight:900;font-size:clamp(46px,9vw,92px);line-height:.98;margin:8px 0 6px;
+      color:var(--paper);text-shadow:0 2px 0 #000,0 0 30px rgba(193,154,75,.15)}
+    .hero .role{font-family:'Playfair Display';font-style:italic;font-size:clamp(19px,3.4vw,28px);color:var(--brass-lt)}
+    .hero .head{font-size:clamp(16px,2.3vw,20px);margin:16px 0;max-width:30ch;color:var(--ink)}
+    .hero .loc{font-family:'Special Elite';font-size:13px;letter-spacing:.06em;color:var(--muted)}
+    .btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-family:'Special Elite';font-size:13px;
+      letter-spacing:.08em;text-transform:uppercase;padding:13px 22px;border-radius:3px;cursor:pointer;
+      border:1px solid var(--brass);color:var(--brass-lt);background:linear-gradient(180deg,rgba(193,154,75,.14),rgba(193,154,75,.04));
+      transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.5);background:var(--brass);color:#20180a}
+    .btn.solid{background:var(--brass);color:#20180a;border-color:var(--brass)}
+
+    /* photo under the glass */
+    .evidence-photo{position:relative;margin:0 auto;width:min(360px,86vw)}
+    .pin-tape{position:absolute;top:-14px;left:50%;transform:translateX(-50%) rotate(-3deg);
+      width:120px;height:26px;background:rgba(211,190,140,.35);border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(1px);z-index:3;box-shadow:0 4px 8px rgba(0,0,0,.4)}
+    .photo-frame{position:relative;background:#f3ead2;padding:12px 12px 44px;border-radius:2px;
+      box-shadow:0 18px 40px rgba(0,0,0,.6);transform:rotate(-1.6deg);border:1px solid #cbb98f}
+    .photo-frame .glass-area{position:relative;overflow:hidden;cursor:crosshair;border:1px solid #b9a679}
+    .photo-frame img{width:100%;height:340px;object-fit:cover;filter:sepia(.35) contrast(1.02) brightness(.96)}
+    .photo-frame figcaption{font-family:'Caveat';font-size:22px;color:#5b4a2a;text-align:center;padding-top:8px}
+    .lens{position:absolute;width:150px;height:150px;border-radius:50%;pointer-events:none;opacity:0;
+      border:3px solid var(--brass-dk);box-shadow:0 0 0 6px rgba(0,0,0,.25),0 10px 22px rgba(0,0,0,.5),inset 0 0 24px rgba(0,0,0,.35);
+      background-repeat:no-repeat;transition:opacity .12s;z-index:4}
+    .wax{position:absolute;bottom:22px;right:-14px;width:56px;height:56px;border-radius:50%;z-index:3;
+      background:radial-gradient(circle at 38% 34%, #a83226, var(--seal) 70%);
+      box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 -4px 8px rgba(0,0,0,.4);
+      display:flex;align-items:center;justify-content:center;color:#e7c9a0;font-family:'Playfair Display';
+      font-weight:900;font-size:20px;transform:rotate(-8deg);border:2px solid rgba(0,0,0,.15)}
+    @media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center}
+      .btns,.loc{justify-content:center}.hero .head{margin-left:auto;margin-right:auto}}
+
+    /* ---------- Paper / dossier cards ---------- */
+    .dossier{background:linear-gradient(180deg,#ece2c9,#ddd0b0);color:var(--paper-ink);border-radius:3px;
+      padding:26px 28px;box-shadow:0 14px 34px rgba(0,0,0,.5);border:1px solid #b7a578;position:relative}
+    .dossier::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:3px;
+      background:radial-gradient(120% 60% at 0% 0%, rgba(120,90,40,.10), transparent 40%),
+                radial-gradient(120% 60% at 100% 100%, rgba(120,90,40,.12), transparent 42%)}
+    .dossier p{margin:0 0 12px;font-size:16px}
+    .dossier .stamp{position:absolute;top:14px;right:16px;border:3px double var(--seal);color:var(--seal);
+      font-family:'Special Elite';font-size:12px;letter-spacing:.12em;padding:6px 10px;border-radius:4px;
+      transform:rotate(7deg);opacity:.82}
+    .about-grid{display:grid;grid-template-columns:1fr;gap:20px;max-width:820px}
+    .brief-line{font-family:'Special Elite';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--seal);
+      margin-bottom:6px}
+
+    /* ---------- Case history timeline ---------- */
+    .timeline{position:relative;padding-left:34px}
+    .timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;
+      background:repeating-linear-gradient(var(--brass) 0 6px, transparent 6px 12px)}
+    .tl-item{position:relative;margin-bottom:26px}
+    .tl-item::before{content:"";position:absolute;left:-30px;top:6px;width:14px;height:14px;border-radius:50%;
+      background:var(--bg0);border:3px solid var(--brass);box-shadow:0 0 10px rgba(193,154,75,.4)}
+    .tl-when{font-family:'Special Elite';font-size:12px;letter-spacing:.08em;color:var(--brass)}
+    .tl-item h3{font-family:'Playfair Display';font-weight:700;font-size:20px;margin:4px 0 4px;color:var(--paper)}
+    .tl-item .sub{color:var(--muted);font-size:15px}
+    .tl-item ul{margin:10px 0 0;padding-left:18px;color:var(--ink);opacity:.92;font-size:14.5px;line-height:1.7}
+    .tl-item ul li::marker{color:var(--string)}
+
+    /* ---------- Evidence board (skills as deductions) ---------- */
+    .board{position:relative;border-radius:6px;padding:26px 20px;overflow:hidden;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(0,0,0,.2), transparent 50%),
+        linear-gradient(160deg,#3a2a1c,#241a11);
+      border:10px solid #2a1d12;box-shadow:inset 0 0 60px rgba(0,0,0,.7),0 16px 40px rgba(0,0,0,.5)}
+    .board .strings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+    .clues{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px}
+    .clue{position:relative;background:#f2e8cf;color:#2a2419;padding:16px 14px 14px;border-radius:2px;
+      box-shadow:0 10px 22px rgba(0,0,0,.5);font-family:'Special Elite';font-size:13.5px;line-height:1.5;
+      transform:rotate(var(--r,-2deg))}
+    .clue:nth-child(2n){--r:2deg;background:#efe6cc}
+    .clue:nth-child(3n){--r:-1.4deg;background:#f4ecd6}
+    .clue::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+      width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#e06a5f,var(--string));
+      box-shadow:0 3px 6px rgba(0,0,0,.5)}
+    .clue .lbl{display:block;font-size:10px;letter-spacing:.14em;color:var(--seal);text-transform:uppercase;margin-bottom:4px}
+    .deduction{margin-top:22px;font-family:'Caveat';font-size:22px;color:var(--brass-lt);text-align:center}
+
+    /* ---------- Curriculum / courses ---------- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .course{background:linear-gradient(180deg,rgba(193,154,75,.08),rgba(0,0,0,.15));border:1px solid var(--line);
+      border-radius:4px;padding:22px 20px;transition:transform .18s,border-color .18s}
+    .course:hover{transform:translateY(-5px);border-color:var(--brass)}
+    .course .ci{color:var(--brass);font-size:24px;margin-bottom:10px}
+    .course h4{font-family:'Playfair Display';font-weight:700;margin:0 0 8px;font-size:18px;color:var(--paper)}
+    .course p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.courses{grid-template-columns:1fr}}
+
+    /* ---------- Case files / clippings (projects & articles) ---------- */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+    .filters button{font-family:'Special Elite';font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+      padding:9px 15px;border-radius:3px;cursor:pointer;color:var(--brass-lt);background:transparent;
+      border:1px solid var(--line);transition:.15s}
+    .filters button:hover,.filters button.active{background:var(--brass);color:#20180a;border-color:var(--brass)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .file{position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+      background:linear-gradient(180deg,#efe6cc,#ded0af);color:#2a2419;border-radius:3px;overflow:hidden;
+      box-shadow:0 12px 28px rgba(0,0,0,.5);border:1px solid #b7a578;transition:transform .18s,box-shadow .18s}
+    .file:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+    .file .cover{height:158px;overflow:hidden;position:relative;border-bottom:1px solid #b7a578;background:#cbbb95}
+    .file .cover img{width:100%;height:100%;object-fit:cover;filter:sepia(.3) contrast(1.02)}
+    .file .tab{position:absolute;top:0;left:16px;background:var(--seal);color:#f0dcae;font-family:'Special Elite';
+      font-size:10px;letter-spacing:.1em;padding:4px 10px;border-radius:0 0 4px 4px}
+    .file .fbody{padding:16px 16px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .file .meta{display:flex;justify-content:space-between;font-family:'Special Elite';font-size:10.5px;
+      letter-spacing:.06em;text-transform:uppercase;color:var(--seal)}
+    .file h4{font-family:'Playfair Display';font-weight:700;margin:0;font-size:17px;line-height:1.25;color:#241d10}
+    .file .tech{font-family:'Special Elite';font-size:12px;color:var(--brass-dk)}
+    .file p{margin:0;color:#4a4130;font-size:13.5px;line-height:1.55;flex:1}
+    .file .more{font-family:'Special Elite';font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--seal)}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;text-align:center;color:var(--muted);padding:22px;font-family:'Special Elite';font-size:15px}
+
+    /* newspaper clipping accent for articles */
+    #articles .file{background:linear-gradient(180deg,#e9e3d1,#d7ceb6)}
+    #articles .file h4{font-family:'Playfair Display';font-weight:900}
+
+    /* ---------- Commendations (certs, wax-sealed) ---------- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .cert{position:relative;display:grid;grid-template-columns:120px 1fr;background:linear-gradient(180deg,#efe6cc,#ded0af);
+      color:#2a2419;border-radius:3px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.5);border:1px solid #b7a578}
+    .cert img{width:100%;height:100%;object-fit:cover;border-right:1px solid #b7a578;filter:sepia(.25)}
+    .cert .ct{padding:16px 16px 16px}
+    .cert .meta{display:flex;justify-content:space-between;font-family:'Special Elite';font-size:10.5px;
+      letter-spacing:.06em;text-transform:uppercase;color:var(--seal)}
+    .cert h4{font-family:'Playfair Display';font-weight:700;margin:8px 0 6px;font-size:18px;color:#241d10}
+    .cert p{margin:0;color:#4a4130;font-size:13.5px;line-height:1.55}
+    .cert .seal{position:absolute;bottom:10px;right:10px;width:42px;height:42px;border-radius:50%;
+      background:radial-gradient(circle at 38% 34%,#a83226,var(--seal) 70%);color:#e7c9a0;
+      display:flex;align-items:center;justify-content:center;font-family:'Playfair Display';font-weight:900;font-size:15px;
+      box-shadow:0 5px 12px rgba(0,0,0,.4);transform:rotate(-6deg)}
+    @media(max-width:620px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:96px 1fr}}
+
+    /* ---------- Contact / telegram ---------- */
+    .contact{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px}
+    .cinfo a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;padding:14px 4px;
+      border-bottom:1px dashed var(--line);font-family:'Special Elite';font-size:14px;transition:.15s}
+    .cinfo a:hover{padding-left:8px;color:var(--brass-lt)}
+    .cinfo a .k{color:var(--muted)}
+    .cinfo a .v{color:var(--brass-lt)}
+    .telegram{background:linear-gradient(180deg,#efe6cc,#ded0af);color:#2a2419;border-radius:3px;padding:22px;
+      box-shadow:0 12px 28px rgba(0,0,0,.5);border:1px solid #b7a578}
+    .telegram .th{font-family:'Special Elite';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--seal);
+      text-align:center;border-bottom:2px solid var(--seal);padding-bottom:8px;margin-bottom:16px}
+    .telegram label{display:block;font-family:'Special Elite';font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+      color:#5b4a2a;margin:0 0 6px}
+    .telegram input,.telegram textarea{width:100%;background:#f6efdb;border:1px solid #b7a578;border-radius:2px;
+      color:#2a2419;font-family:'Special Elite';font-size:14px;padding:11px 12px;margin-bottom:14px}
+    .telegram input:focus,.telegram textarea:focus{outline:none;border-color:var(--seal);box-shadow:0 0 0 2px rgba(124,33,24,.25)}
+    .telegram textarea{min-height:120px;resize:vertical}
+    .telegram button{width:100%;justify-content:center;background:var(--seal);color:#f0dcae;border:1px solid var(--seal);
+      font-family:'Special Elite';letter-spacing:.1em;text-transform:uppercase;padding:13px;border-radius:2px;cursor:pointer;
+      transition:.15s}
+    .telegram button:hover{background:#5c1811}
+    #cf-status{font-family:'Special Elite';font-size:13px;margin:10px 0 0;text-align:center}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* ---------- Footer ---------- */
+    footer{border-top:3px double var(--brass);margin-top:20px;padding:34px 0 60px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.35))}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+    .foot .fbrand{font-family:'Playfair Display';font-weight:900;font-size:22px;color:var(--brass-lt)}
+    .foot .flinks{display:flex;flex-wrap:wrap;gap:18px}
+    .foot a{color:var(--muted);text-decoration:none;font-family:'Special Elite';font-size:13px;letter-spacing:.05em}
+    .foot a:hover{color:var(--brass-lt)}
+    .foot-note{margin-top:16px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;color:var(--muted);
+      font-family:'Special Elite';font-size:12px}
+    .foot-note a{color:var(--muted);text-decoration:none}
+    .foot-note a:hover{color:var(--brass-lt)}
+
+    :focus-visible{outline:2px solid var(--brass-lt);outline-offset:2px}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+      .lens{display:none !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="wrap inner">
+      <div>
+        <div class="paper-name serif">THE STRAND <b>DISPATCH</b></div>
+        <div class="paper-sub" id="mast-sub">Consulting Detective · 221B Baker Street</div>
+      </div>
+      <nav class="mast-nav" id="nav" aria-label="Sections"></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div>
+        <div class="greet" id="greet"></div>
+        <h1 id="name"></h1>
+        <div class="role" id="role"></div>
+        <p class="head" id="headline"></p>
+        <div class="loc"><svg class="icn" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span id="loc"></span></div>
+        <div class="btns">
+          <a class="btn solid" id="cvBtn" href="#" download>
+            <svg class="icn" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+            <span id="cvLabel"></span></a>
+          <a class="btn" id="ghBtn" target="_blank" rel="noopener">
+            <svg class="icn" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.300000000000001-4.5-1.1-4.5-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.3 9.3 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.8-2.3 4.6-4.5 4.9.3.3.6.9.6 1.8v2.7c0 .3.2.6.7.5A10 10 0 0012 2z"/></svg>
+            GitHub</a>
+        </div>
+      </div>
+      <div class="evidence-photo">
+        <span class="pin-tape" aria-hidden="true"></span>
+        <figure class="photo-frame">
+          <div class="glass-area" id="glassArea">
+            <img id="portrait" alt="" />
+            <div class="lens" id="lens" aria-hidden="true"></div>
+          </div>
+          <figcaption id="photocap"></figcaption>
+          <div class="wax" aria-hidden="true">CJ</div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- THE CLIENT (about) -->
+    <section id="about">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>DOSSIER No. 001</div>
+        <h2 class="sec-title" id="l-about"></h2>
+        <div class="sec-note" id="n-about"></div>
+      </div>
+      <div class="about-grid">
+        <div class="dossier" id="about-text"><span class="stamp">CONFIDENTIAL</span></div>
+      </div>
+    </section>
+
+    <!-- CASE HISTORY (education + experience) -->
+    <section id="history">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>THE RECORD</div>
+        <h2 class="sec-title" id="l-history"></h2>
+        <div class="sec-note" id="n-history"></div>
+      </div>
+      <div class="timeline" id="history-list"></div>
+    </section>
+
+    <!-- OBSERVATIONS (skills as deductions on an evidence board) -->
+    <section id="skills">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>THE METHOD</div>
+        <h2 class="sec-title" id="l-skills"></h2>
+        <div class="sec-note" id="n-skills"></div>
+      </div>
+      <div class="board">
+        <svg class="strings" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <g stroke="#8f2b23" stroke-width=".35" opacity=".85" fill="none">
+            <path d="M8 16 L34 40 L70 20 L92 44"/>
+            <path d="M12 70 L40 46 L66 76 L90 60"/>
+            <path d="M20 20 L52 62 L84 30"/>
+            <path d="M6 44 L30 78 L60 40 L88 80"/>
+          </g>
+        </svg>
+        <div class="clues" id="clues"></div>
+      </div>
+      <div class="deduction" id="deduction"></div>
+    </section>
+
+    <!-- THE CURRICULUM (core courses) -->
+    <section id="courses">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>THE STUDIES</div>
+        <h2 class="sec-title" id="l-courses"></h2>
+        <div class="sec-note" id="n-courses"></div>
+      </div>
+      <div class="courses" id="courses-list"></div>
+    </section>
+
+    <!-- THE CASES (projects) -->
+    <section id="projects">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>SOLVED &amp; ONGOING</div>
+        <h2 class="sec-title" id="l-projects"></h2>
+        <div class="sec-note" id="n-projects"></div>
+      </div>
+      <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+    </section>
+
+    <!-- DISPATCHES (articles) -->
+    <section id="articles">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>FROM THE PRESS</div>
+        <h2 class="sec-title" id="l-articles"></h2>
+        <div class="sec-note" id="n-articles"></div>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+    </section>
+
+    <!-- COMMENDATIONS (certificates) -->
+    <section id="certificates">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>HONOURS</div>
+        <h2 class="sec-title" id="l-certs"></h2>
+        <div class="sec-note" id="n-certs"></div>
+      </div>
+      <div class="certs" id="certs-list"></div>
+    </section>
+
+    <!-- SEND A TELEGRAM (contact) -->
+    <section id="contact">
+      <div class="sec-head">
+        <div class="sec-kicker"><span class="ln"></span>CORRESPONDENCE</div>
+        <h2 class="sec-title" id="l-contact"></h2>
+        <div class="sec-note" id="n-contact"></div>
+      </div>
+      <div class="contact">
+        <div class="cinfo" id="contact-info"></div>
+        <form class="telegram" id="cf">
+          <div class="th" id="tg-head">☎ POST OFFICE TELEGRAPH — URGENT</div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <label for="cf-name" id="lb-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label for="cf-email" id="lb-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label for="cf-msg" id="lb-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" id="cf-send"></button>
+          <p id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <a class="fbrand serif" href="#top">C. J. Chao — Consulting Detective</a>
+        <div class="flinks" id="foot-social"></div>
+      </div>
+      <div class="foot-note">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>window.THEME_ID = "50-detective";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    const NOTES = {
+      about:   {en:"“You see, but you do not observe.”", zh:"“你看见了，却没有观察。”"},
+      history: {en:"— the trail of a curious mind —", zh:"—— 一段好奇心的踪迹 ——"},
+      skills:  {en:"From these trifles, deductions are drawn.", zh:"由这些细节，推演真相。"},
+      courses: {en:"studies at the academy", zh:"学院里的研习"},
+      projects:{en:"the casebook", zh:"案卷记录"},
+      articles:{en:"fresh off the press", zh:"新鲜出炉的报道"},
+      certs:   {en:"awarded for singular merit", zh:"因卓越表现而获颁"},
+      contact: {en:"the game is afoot — wire me at once", zh:"好戏开场 —— 请速来电"},
+    };
+
+    function renderStatic(){
+      const zh = CJCData.lang()==='zh';
+      document.title = "Cai Jiechao — The Consulting Detective";
+      document.getElementById('mast-sub').textContent = zh
+        ? "咨询侦探 · 贝克街 221B" : "Consulting Detective · 221B Baker Street";
+      // nav
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['history','nav_internship'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('loc').textContent = t(P.location);
+      const cv = document.getElementById('cvBtn'); cv.href = t(P.cv);
+      document.getElementById('cvLabel').textContent = zh ? "案卷简历" : "The Dossier (CV)";
+      document.getElementById('ghBtn').href = P.contact.github;
+      const por = document.getElementById('portrait'); por.src = P.avatar; por.alt = t(P.name);
+      document.getElementById('lens').style.backgroundImage = 'url("'+P.avatar+'")';
+      document.getElementById('photocap').textContent = zh ? "本案当事人" : "the client in question";
+      // titles + notes
+      const titles = {
+        'l-about':['THE CLIENT','当事人'], 'l-history':['CASE HISTORY','案件履历'],
+        'l-skills':['OBSERVATIONS','观察与推演'], 'l-courses':['THE CURRICULUM','案头研习'],
+        'l-projects':['THE CASES','历办案件'], 'l-articles':['DISPATCHES','侦探快报'],
+        'l-certs':['COMMENDATIONS','嘉奖'], 'l-contact':['SEND A TELEGRAM','拍一封电报'],
+      };
+      Object.entries(titles).forEach(([id,[en,z]])=>{ document.getElementById(id).textContent = zh?z:en; });
+      document.getElementById('n-about').textContent = t(NOTES.about);
+      document.getElementById('n-history').textContent = t(NOTES.history);
+      document.getElementById('n-skills').textContent = t(NOTES.skills);
+      document.getElementById('n-courses').textContent = t(NOTES.courses);
+      document.getElementById('n-projects').textContent = t(NOTES.projects);
+      document.getElementById('n-articles').textContent = t(NOTES.articles);
+      document.getElementById('n-certs').textContent = t(NOTES.certs);
+      document.getElementById('n-contact').textContent = t(NOTES.contact);
+      // about dossier
+      document.getElementById('about-text').innerHTML =
+        `<span class="stamp">${zh?'机密':'CONFIDENTIAL'}</span>` +
+        `<div class="brief-line">${zh?'当事人陈述 · 记录如下':'Statement of the client, recorded as follows'}</div>` +
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<p class="hand" style="font-size:22px;color:var(--seal);margin:6px 0 0">— ${esc(t(P.location))}</p>`;
+      // case history: education + experience
+      const hist = [];
+      P.education.forEach(e=>hist.push({when:e.period, h:t(e.school),
+        sub:t(e.degree)+' — '+t(e.note), bullets:[]}));
+      P.experience.forEach(x=>hist.push({when:x.period, h:t(x.role)+' · '+t(x.company),
+        sub:t(x.summary), bullets:x.bullets.map(b=>t(b))}));
+      document.getElementById('history-list').innerHTML = hist.map(it=>`
+        <div class="tl-item"><div class="tl-when">${esc(it.when)}</div>
+        <h3>${esc(it.h)}</h3><div class="sub">${esc(it.sub)}</div>
+        ${it.bullets.length?`<ul>${it.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`:''}</div>`).join('');
+      // observations: skill lines as pinned clues
+      document.getElementById('clues').innerHTML = P.skills.map((s,i)=>`
+        <div class="clue"><span class="lbl">${zh?'线索':'CLUE'} ${String(i+1).padStart(2,'0')}</span>${esc(s)}</div>`).join('');
+      document.getElementById('deduction').textContent = zh
+        ? "结论：此人擅长以 Agent 与大模型解构复杂问题。"
+        : "Deduction: the subject dismantles complex problems with Agents & LLMs.";
+      // curriculum
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="course"><div class="ci"><i class="fa ${esc(c.icon)}" aria-hidden="true"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>
+        <div class="seal" aria-hidden="true">✦</div></div>`).join('');
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        [zh?'电子邮件':'Email', P.contact.email, 'mailto:'+P.contact.email],
+        [zh?'电话':'Telephone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        [zh?'微信':'WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}" target="_blank" rel="noopener"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = zh ? '拍发电报 →' : 'Send Telegram →';
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+      // filters
+      const fb = document.getElementById('filters');
+      fb.innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      fb.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k;
+        fb.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.k===filterKey));
+        renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="file" href="${esc(p.href)}">
+          ${p.cover_image?`<div class="cover"><span class="tab">CASE ${String(i+1).padStart(3,'0')}</span>
+            <img src="${esc(p.cover_image)}" alt="" onerror="this.src='/index_page/img/blogs/1.jpg'"></div>`:
+            `<div class="cover"><span class="tab">CASE ${String(i+1).padStart(3,'0')}</span></div>`}
+          <div class="fbody">
+            <div class="meta"><span>${esc(t(P.ui.view_project))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">Open the file →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="file" href="${esc(a.href)}">
+          <div class="cover"><span class="tab">${esc(a.category||'DISPATCH')}</span>
+            <img src="${esc(a.cover_image||'')}" alt="" onerror="this.src='/index_page/img/blogs/1.jpg'"></div>
+          <div class="fbody">
+            <div class="meta"><span>THE DAILY CHRONICLE</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))} — the archive is sealed.</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_articles))} — the press is silent.</div>`; }
+    }
+
+    // Magnifying glass over the client's photograph
+    function initLens(){
+      const area = document.getElementById('glassArea');
+      const img = document.getElementById('portrait');
+      const lens = document.getElementById('lens');
+      if(!area||!lens) return;
+      const ZOOM = 2.1, LENS = 150;
+      function move(e){
+        const r = area.getBoundingClientRect();
+        const pt = e.touches ? e.touches[0] : e;
+        let x = pt.clientX - r.left, y = pt.clientY - r.top;
+        if(x<0||y<0||x>r.width||y>r.height){ lens.style.opacity=0; return; }
+        lens.style.opacity=1;
+        lens.style.backgroundSize = (r.width*ZOOM)+'px '+(r.height*ZOOM)+'px';
+        lens.style.left = (x-LENS/2)+'px';
+        lens.style.top  = (y-LENS/2)+'px';
+        lens.style.backgroundPosition = '-'+(x*ZOOM-LENS/2)+'px -'+(y*ZOOM-LENS/2)+'px';
+      }
+      area.addEventListener('mousemove', move);
+      area.addEventListener('mouseleave', ()=>lens.style.opacity=0);
+      area.addEventListener('touchmove', (e)=>{ move(e); }, {passive:true});
+      area.addEventListener('touchend', ()=>lens.style.opacity=0);
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='#5b4a2a'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='#1f6b34'; s.textContent = (r.message||'Telegram sent.'); f.reset(); }
+      catch(err){ s.style.color='#8f2b23'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#c19a4b' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      initLens();
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

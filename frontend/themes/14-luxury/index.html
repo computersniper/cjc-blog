@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Maison</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --bg0:#0c0c0c; --bg1:#151310; --bg2:#1c1a15;
+      --gold:#c8a24a; --gold-soft:#d8b968; --gold-deep:#9a7a2f;
+      --ivory:#e9d9a8; --cream:#f2ead2; --dim:#a99f86;
+      --hair:rgba(200,162,74,.28); --hair-soft:rgba(200,162,74,.14);
+      --panel:rgba(255,255,255,.02);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--cream);
+      background:
+        radial-gradient(1200px 700px at 80% -10%, rgba(200,162,74,.10), transparent 60%),
+        linear-gradient(160deg,#0c0c0c 0%,#151310 45%,#1c1a15 100%);
+      background-attachment:fixed;
+      font-family:'EB Garamond',Georgia,serif; font-size:18px; line-height:1.7;
+      -webkit-font-smoothing:antialiased; overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    ::selection{background:rgba(200,162,74,.28);color:#fff}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 40px}
+    @media(max-width:600px){.wrap{padding:0 22px}}
+
+    .display{font-family:'Cormorant Garamond',serif;font-weight:300;letter-spacing:.005em}
+    .shimmer{
+      background:linear-gradient(100deg,var(--gold-deep) 0%,var(--gold-soft) 22%,#fff6da 40%,var(--gold-soft) 58%,var(--gold-deep) 100%);
+      background-size:220% auto;
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      animation:shine 9s linear infinite;
+    }
+    @keyframes shine{to{background-position:-220% center}}
+    @media(prefers-reduced-motion:reduce){.shimmer{animation:none}}
+
+    .kicker{font-family:'Jost',sans-serif;font-weight:400;text-transform:uppercase;
+      letter-spacing:.42em;font-size:11px;color:var(--gold);}
+    .rule{height:1px;background:linear-gradient(90deg,transparent,var(--hair),transparent);border:0;margin:0}
+
+    /* topbar */
+    .topbar{position:sticky;top:0;z-index:900;
+      background:linear-gradient(180deg,rgba(12,12,12,.86),rgba(12,12,12,.4));
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--hair-soft)}
+    .topbar .in{display:flex;align-items:center;justify-content:space-between;height:72px}
+    .brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;letter-spacing:.14em}
+    .brand .amp{color:var(--gold)}
+    .nav{display:flex;gap:34px}
+    .nav a{font-family:'Jost',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.28em;color:var(--dim);position:relative;padding:4px 0}
+    .nav a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .5s cubic-bezier(.19,1,.22,1)}
+    .nav a:hover{color:var(--ivory)}.nav a:hover::after{width:100%}
+    @media(max-width:860px){.nav{display:none}}
+
+    /* section frame */
+    section{padding:120px 0;position:relative}
+    .sec-head{text-align:center;margin-bottom:70px}
+    .sec-head .kicker{display:inline-block;margin-bottom:20px}
+    .sec-head .kicker::before,.sec-head .kicker::after{content:"";display:inline-block;width:46px;height:1px;
+      background:var(--hair);vertical-align:middle;margin:0 18px 4px}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;
+      font-size:clamp(34px,5.4vw,64px);line-height:1.02;margin:0}
+
+    /* hero */
+    .hero{min-height:92vh;display:flex;align-items:center;padding:80px 0}
+    .hero .greet{margin-bottom:26px}
+    .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+      font-size:clamp(58px,12vw,150px);line-height:.92;margin:0 0 8px;letter-spacing:.01em}
+    .hero .role{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+      font-size:clamp(24px,4vw,42px);color:var(--ivory);margin:0 0 30px}
+    .hero .lede{max-width:56ch;color:var(--dim);font-size:20px;margin:0 auto 44px}
+    .hero-inner{text-align:center;max-width:940px;margin:0 auto}
+    .actions{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+    .btn{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.26em;font-size:12px;
+      padding:17px 40px;border:1px solid var(--gold);color:var(--gold);
+      position:relative;overflow:hidden;transition:color .5s ease;z-index:0;display:inline-flex;align-items:center;gap:12px}
+    .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,var(--gold-deep),var(--gold-soft));
+      transform:translateY(101%);transition:transform .5s cubic-bezier(.19,1,.22,1);z-index:-1}
+    .btn:hover{color:#100d06}.btn:hover::before{transform:translateY(0)}
+    .btn.solid{background:linear-gradient(100deg,var(--gold-deep),var(--gold));color:#141007;border-color:transparent}
+    .btn.solid::before{background:#fff;opacity:.14}
+    .scroll-cue{margin-top:64px;color:var(--gold);font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.4em;text-transform:uppercase}
+    .scroll-cue i{display:block;margin-top:10px;animation:bob 2.4s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+    @media(prefers-reduced-motion:reduce){.scroll-cue i{animation:none}}
+
+    /* about */
+    .about{display:grid;grid-template-columns:0.9fr 1.1fr;gap:70px;align-items:center}
+    .frame{position:relative;padding:14px}
+    .frame::before{content:"";position:absolute;inset:0;border:1px solid var(--hair)}
+    .frame::after{content:"";position:absolute;inset:14px;border:1px solid var(--gold);
+      pointer-events:none;mix-blend-mode:screen}
+    .frame img{width:100%;filter:grayscale(.35) contrast(1.05) brightness(.95);position:relative}
+    .about p{color:var(--dim);margin:0 0 22px;font-size:19px}
+    .about .loc{color:var(--gold);font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.24em;font-size:12px}
+    .about .loc i{margin-right:8px}
+    @media(max-width:860px){.about{grid-template-columns:1fr;gap:44px}.frame{max-width:360px;margin:0 auto}}
+
+    /* education / experience ledger */
+    .ledger{max-width:900px;margin:0 auto}
+    .lrow{display:grid;grid-template-columns:180px 1fr;gap:34px;padding:34px 0;border-top:1px solid var(--hair-soft);align-items:baseline}
+    .lrow:last-child{border-bottom:1px solid var(--hair-soft)}
+    .lrow .yr{font-family:'Jost',sans-serif;color:var(--gold);letter-spacing:.14em;font-size:14px}
+    .lrow h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;margin:0 0 6px;color:var(--cream)}
+    .lrow .sub{color:var(--dim);font-size:17px}
+    .lrow ul{margin:16px 0 0;padding:0;list-style:none}
+    .lrow ul li{position:relative;padding-left:26px;margin-bottom:10px;color:var(--dim);font-size:16.5px}
+    .lrow ul li::before{content:"\2726";position:absolute;left:0;top:1px;color:var(--gold);font-size:12px}
+    @media(max-width:640px){.lrow{grid-template-columns:1fr;gap:8px}}
+
+    /* skills */
+    .skills{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:900px;margin:0 auto}
+    .chip{font-family:'Jost',sans-serif;font-weight:300;letter-spacing:.16em;text-transform:uppercase;font-size:12px;
+      padding:12px 24px;border:1px solid var(--hair);color:var(--ivory);border-radius:2px;
+      transition:.5s cubic-bezier(.19,1,.22,1);background:var(--panel)}
+    .chip:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.5)}
+
+    /* courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--hair-soft)}
+    .course{padding:44px 34px;border-right:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft);transition:background .6s}
+    .course:hover{background:var(--panel)}
+    .course .ci{color:var(--gold);font-size:26px;margin-bottom:22px}
+    .course h4{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;margin:0 0 12px;color:var(--cream)}
+    .course p{color:var(--dim);font-size:16px;margin:0}
+    .courses .course:nth-child(3n){border-right:0}
+    @media(max-width:860px){.courses{grid-template-columns:1fr 1fr}.courses .course:nth-child(3n){border-right:1px solid var(--hair-soft)}.courses .course:nth-child(2n){border-right:0}}
+    @media(max-width:560px){.courses{grid-template-columns:1fr}.course{border-right:0!important}}
+
+    /* cards */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{border:1px solid var(--hair-soft);background:var(--panel);display:flex;flex-direction:column;
+      transition:.55s cubic-bezier(.19,1,.22,1);position:relative;overflow:hidden}
+    .card::after{content:"";position:absolute;inset:0;border:1px solid transparent;transition:.55s;pointer-events:none}
+    .card:hover{transform:translateY(-8px)}.card:hover::after{border-color:var(--gold)}
+    .card .cover{aspect-ratio:16/10;overflow:hidden;background:#0a0a08;border-bottom:1px solid var(--hair-soft)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.5) brightness(.85);transition:.7s}
+    .card:hover .cover img{filter:grayscale(0) brightness(1);transform:scale(1.06)}
+    .card .body{padding:28px;display:flex;flex-direction:column;gap:12px;flex:1}
+    .card .tag{display:flex;justify-content:space-between;font-family:'Jost',sans-serif;text-transform:uppercase;
+      letter-spacing:.18em;font-size:10px;color:var(--gold)}
+    .card h4{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:0;color:var(--cream);line-height:1.1}
+    .card .stack{color:var(--gold-soft);font-size:14px;font-style:italic}
+    .card p{color:var(--dim);font-size:16px;margin:0;flex:1}
+    .card .more{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--gold)}
+
+    .filters{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:48px}
+    .filters button{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:11px;
+      background:transparent;border:1px solid var(--hair-soft);color:var(--dim);padding:10px 22px;cursor:pointer;transition:.4s}
+    .filters button:hover{color:var(--ivory);border-color:var(--hair)}
+    .filters button.active{color:var(--gold);border-color:var(--gold)}
+
+    /* certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:960px;margin:0 auto}
+    .cert{display:grid;grid-template-columns:130px 1fr;border:1px solid var(--hair-soft);background:var(--panel)}
+    .cert img{height:100%;width:100%;object-fit:cover;filter:grayscale(.4);border-right:1px solid var(--hair-soft)}
+    .cert .ct{padding:26px}
+    .cert .meta{display:flex;justify-content:space-between;font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:10px;color:var(--gold)}
+    .cert h4{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:23px;margin:12px 0 8px;color:var(--cream)}
+    .cert p{color:var(--dim);font-size:15px;margin:0}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:100px 1fr}}
+
+    /* contact */
+    .contact{display:grid;grid-template-columns:1fr 1fr;gap:64px;max-width:1000px;margin:0 auto}
+    .cinfo .lede{color:var(--dim);font-size:19px;margin:0 0 34px}
+    .cinfo a.row{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--hair-soft)}
+    .cinfo a.row:last-child{border-bottom:1px solid var(--hair-soft)}
+    .cinfo a.row .k{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--dim)}
+    .cinfo a.row .v{color:var(--ivory);font-size:18px;transition:color .4s}
+    .cinfo a.row:hover .v{color:var(--gold)}
+    form input,form textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--hair-soft);
+      color:var(--cream);font-family:'EB Garamond',serif;font-size:18px;padding:16px 2px;margin-bottom:22px;transition:border-color .4s}
+    form input::placeholder,form textarea::placeholder{color:var(--dim);opacity:.7}
+    form input:focus,form textarea:focus{outline:none;border-color:var(--gold)}
+    form textarea{min-height:120px;resize:vertical}
+    form button{width:100%;font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.26em;font-size:12px;
+      padding:18px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;
+      position:relative;overflow:hidden;z-index:0;transition:color .5s}
+    form button::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,var(--gold-deep),var(--gold-soft));transform:translateY(101%);transition:transform .5s cubic-bezier(.19,1,.22,1);z-index:-1}
+    form button:hover{color:#100d06}form button:hover::before{transform:translateY(0)}
+    #cf-status{margin-top:16px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.05em}
+    @media(max-width:760px){.contact{grid-template-columns:1fr;gap:48px}}
+
+    footer{border-top:1px solid var(--hair-soft);padding:70px 0 60px;text-align:center}
+    footer .brand{display:inline-block;margin-bottom:24px}
+    footer .fsoc{display:flex;gap:30px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+    footer .fsoc a{font-family:'Jost',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--dim);transition:color .4s}
+    footer .fsoc a:hover{color:var(--gold)}
+    footer .muted{color:var(--dim);font-size:13px;opacity:.7;margin:6px 0}
+    footer .muted a{color:var(--gold-deep)}
+    .load-note{grid-column:1/-1;text-align:center;color:var(--dim);font-style:italic;padding:20px}
+
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s cubic-bezier(.19,1,.22,1)}
+    .reveal.in{opacity:1;transform:none}
+    @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="wrap in">
+    <a class="brand" href="#top">Cai<span class="amp">·</span>Jiechao</a>
+    <nav class="nav" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap"><div class="hero-inner">
+    <div class="kicker greet" id="greet"></div>
+    <h1 class="shimmer" id="name"></h1>
+    <p class="role" id="role"></p>
+    <p class="lede" id="lede"></p>
+    <div class="actions">
+      <a class="btn solid" id="cvBtn" href="#" download></a>
+      <a class="btn" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i><span></span></a>
+    </div>
+    <div class="scroll-cue">Scroll<i class="fa fa-angle-down"></i></div>
+  </div></div></header>
+
+  <div class="wrap"><hr class="rule"></div>
+
+  <section id="about"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-about"></span></div>
+    <div class="about">
+      <div class="frame"><img id="portrait" alt="Portrait of Cai Jiechao"></div>
+      <div>
+        <div id="about-text"></div>
+        <div class="loc"><i class="fa fa-map-marker"></i><span id="loc"></span></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="education"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-edu"></span><h2 class="sec-title" id="l-edu-t"></h2></div>
+    <div class="ledger" id="edu-list"></div>
+  </div></section>
+
+  <section id="skills"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-skills"></span><h2 class="sec-title" id="l-skills-t"></h2></div>
+    <div class="skills" id="skills-list"></div>
+  </div></section>
+
+  <section id="courses"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-courses"></span><h2 class="sec-title" id="l-courses-t"></h2></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-exp"></span><h2 class="sec-title" id="l-exp-t"></h2></div>
+    <div class="ledger" id="exp-list"></div>
+  </div></section>
+
+  <section id="projects"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-proj"></span><h2 class="sec-title" id="l-proj-t"></h2></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-art"></span><h2 class="sec-title" id="l-art-t"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-certs"></span><h2 class="sec-title" id="l-certs-t"></h2></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact"><div class="wrap reveal">
+    <div class="sec-head"><span class="kicker" id="l-contact"></span><h2 class="sec-title" id="l-contact-t"></h2></div>
+    <div class="contact">
+      <div class="cinfo">
+        <p class="lede" id="contact-lede"></p>
+        <div id="contact-info"></div>
+      </div>
+      <form id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <a class="brand" href="#top">Cai<span class="amp">·</span>Jiechao</a>
+    <div class="fsoc" id="foot-social"></div>
+    <p class="muted" id="foot-desc"></p>
+    <p class="muted"><a id="foot-icp" target="_blank"></a></p>
+  </div></footer>
+
+  <script>window.THEME_ID = "14-luxury";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+    const $ = id => document.getElementById(id);
+
+    function renderStatic(){
+      document.title = (CJCData.lang()==='zh' ? '蔡杰超' : 'Cai Jiechao') + ' — Maison';
+      $('nav').innerHTML = [['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']]
+        .map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      $('greet').textContent = t(P.greeting);
+      $('name').textContent = t(P.name);
+      $('role').textContent = t(P.role);
+      $('lede').textContent = t(P.title);
+      const cv=$('cvBtn'); cv.textContent=t(P.ui.download_cv); cv.href=t(P.cv);
+      const gh=$('ghBtn'); gh.querySelector('span').textContent='GitHub'; gh.href=P.contact.github;
+
+      $('l-about').textContent = t(P.ui.about_desc);
+      $('l-edu').textContent='Academia'; $('l-edu-t').textContent=t(P.ui.education_bg);
+      $('l-skills').textContent='Métier'; $('l-skills-t').textContent=t(P.ui.core_tech);
+      $('l-courses').textContent='Curriculum'; $('l-courses-t').textContent=t(P.ui.core_courses);
+      $('l-exp').textContent='Atelier'; $('l-exp-t').textContent=t(P.ui.internship_exp);
+      $('l-proj').textContent='Portfolio'; $('l-proj-t').textContent=t(P.ui.latest_projects);
+      $('l-art').textContent='Journal'; $('l-art-t').textContent=t(P.ui.latest_articles);
+      $('l-certs').textContent='Distinctions'; $('l-certs-t').textContent=t(P.ui.certificates);
+      $('l-contact').textContent='Correspondence'; $('l-contact-t').textContent=t(P.ui.get_in_touch);
+
+      $('portrait').src = P.avatar;
+      $('about-text').innerHTML = P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      $('loc').textContent = t(P.location);
+
+      $('edu-list').innerHTML = P.education.map(e=>`
+        <div class="lrow"><div class="yr">${esc(e.period)}</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      $('skills-list').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+
+      $('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      $('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="lrow"><div class="yr">${esc(x.period)}</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      $('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      $('contact-lede').textContent = t(P.ui.inbox_open);
+      $('contact-info').innerHTML = [
+        ['Email',P.contact.email,'mailto:'+P.contact.email],
+        ['Phone',P.contact.phone,P.contact.phoneHref],
+        ['GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['WeChat','QR',P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a class="row" href="${esc(h)}"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      $('cf-name').placeholder=t(P.ui.name_placeholder);
+      $('cf-email').placeholder=t(P.ui.email_placeholder);
+      $('cf-msg').placeholder=t(P.ui.msg_placeholder);
+      $('cf-send').textContent=t(P.ui.send);
+
+      $('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      $('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp=$('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
+
+      $('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+      observeReveal();
+    }
+
+    function renderProjects(){
+      const box=$('projects-list');
+      if(!projects.length){box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`;return;}
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="body">
+            <div class="tag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box=$('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`;return;}
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="body">
+            <div class="tag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects=await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ $('projects-list').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles=await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ $('articles-list').innerHTML=`<div class="load-note">⚠ 内容加载失败 / Failed to load</div>`; }
+    }
+
+    let io;
+    function observeReveal(){
+      const els=document.querySelectorAll('.reveal:not(.in)');
+      if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in'));return;}
+      io=io||new IntersectionObserver((ents)=>{ents.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:.12});
+      els.forEach(e=>io.observe(e));
+    }
+
+    $('cf').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const f=e.target, s=$('cf-status');
+      s.style.color='var(--dim)'; s.textContent=t(P.ui.sending);
+      try{ const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='var(--gold)'; s.textContent=r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#d98b6a'; s.textContent=err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#c8a24a' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

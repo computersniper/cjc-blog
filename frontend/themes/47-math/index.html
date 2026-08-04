@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Mathematics</title>
+  <meta name="description" content="Cai Jiechao — a mathematician's chalkboard portfolio rendered in real LaTeX." />
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Kalam:wght@400;700&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <!-- KaTeX styles + math fonts. cdnjs.cloudflare.com is allowed by the site CSP for
+       style-src AND font-src, so (unlike jsdelivr) the KaTeX .woff2 fonts actually load. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --board:#12261f;        /* chalkboard green-black */
+      --board-2:#0e1f19;
+      --chalk:#eef3ea;        /* chalk white */
+      --chalk-dim:#b8c6bb;    /* faded chalk */
+      --accent:#7fbfff;       /* blue chalk */
+      --accent-2:#ffd27f;     /* yellow chalk */
+      --pink:#ff9ec4;         /* pink chalk */
+      --grid:rgba(127,191,255,.10);
+      --grid-strong:rgba(127,191,255,.20);
+      --hair:rgba(238,243,234,.16);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--chalk);
+      background:
+        radial-gradient(1200px 700px at 78% -8%, rgba(127,191,255,.10), transparent 60%),
+        radial-gradient(900px 600px at 8% 12%, rgba(255,210,127,.06), transparent 55%),
+        var(--board);
+      font-family:"STIX Two Text", Georgia, "Times New Roman", serif;
+      line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    }
+    /* faint chalk dust + eraser smudges over everything */
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+      background:
+        radial-gradient(220px 90px at 20% 30%, rgba(238,243,234,.05), transparent 70%),
+        radial-gradient(280px 120px at 82% 68%, rgba(238,243,234,.045), transparent 70%),
+        radial-gradient(180px 80px at 55% 88%, rgba(238,243,234,.04), transparent 70%);
+      mix-blend-mode:screen;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+
+    /* graph-paper grid used on content sections */
+    .graph{
+      position:relative;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(var(--grid-strong) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px);
+      background-size:26px 26px, 26px 26px, 130px 130px, 130px 130px;
+    }
+
+    section{padding:70px 0;position:relative}
+    .sec-head{display:flex;align-items:flex-end;gap:14px;margin-bottom:30px;flex-wrap:wrap}
+    .sec-no{font-family:"Kalam",cursive;color:var(--accent);font-size:15px;letter-spacing:.05em;
+      border:1.5px solid var(--accent);border-radius:60% 40% 55% 45%/50% 55% 45% 50%;padding:5px 12px;transform:rotate(-3deg)}
+    .sec-title{font-family:"Caveat",cursive;font-weight:700;font-size:clamp(34px,6vw,60px);line-height:.95;margin:0}
+    .sec-sub{font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:15px;margin:4px 0 0}
+    .chalk-underline{display:block;height:16px;margin-top:-2px;color:var(--accent)}
+    .chalk-underline path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;
+      opacity:.9;stroke-dasharray:1000;stroke-dashoffset:0}
+
+    /* ---- Topbar ---- */
+    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(3px);
+      background:linear-gradient(var(--board),rgba(18,38,31,.82));border-bottom:1px solid var(--hair)}
+    .topbar .in{display:flex;align-items:center;justify-content:space-between;height:58px}
+    .brand{font-family:"Caveat",cursive;font-size:26px;font-weight:700;letter-spacing:.02em}
+    .brand .fx{color:var(--accent)}
+    .nav{display:flex;gap:20px}
+    .nav a{font-family:"Kalam",cursive;font-size:14.5px;color:var(--chalk-dim)}
+    .nav a:hover{color:var(--chalk)}
+    @media(max-width:860px){.nav{display:none}}
+
+    /* ---- Hero (pure chalkboard) ---- */
+    .hero{padding:74px 0 54px;position:relative;overflow:hidden}
+    .hero .eqfloat{position:absolute;color:var(--chalk-dim);opacity:.34;pointer-events:none;user-select:none;z-index:1}
+    .hero .eqfloat.a{top:40px;right:3%;transform:rotate(-6deg);font-size:20px}
+    .hero .eqfloat.b{top:210px;right:12%;transform:rotate(4deg);opacity:.26}
+    .hero .eqfloat.c{bottom:60px;left:2%;transform:rotate(-3deg);opacity:.24}
+    .hero .eqfloat.d{top:120px;left:38%;transform:rotate(2deg);opacity:.18;font-size:15px}
+    .hero-inner{position:relative;z-index:3;max-width:820px}
+    .greet{font-family:"Kalam",cursive;color:var(--accent);font-size:clamp(18px,2.6vw,24px)}
+    .hero h1{font-family:"Caveat",cursive;font-weight:700;font-size:clamp(64px,14vw,150px);line-height:.82;
+      margin:6px 0 0;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.05)}
+    .hero .role{font-family:"Kalam",cursive;color:var(--accent-2);font-size:clamp(18px,3vw,26px);margin-top:14px}
+    .hero .head{font-size:clamp(17px,2.2vw,21px);color:var(--chalk-dim);margin-top:14px;max-width:42ch;font-style:italic}
+    .hero .qed{font-family:"Kalam",cursive;color:var(--pink);margin-top:8px}
+    .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+    .btn{font-family:"Kalam",cursive;font-size:16px;padding:12px 22px;border-radius:40% 60% 55% 45%/55% 45% 60% 40%;
+      border:2px solid var(--accent);color:var(--board);background:var(--accent);cursor:pointer;transition:transform .15s, box-shadow .15s;
+      display:inline-flex;align-items:center;gap:8px}
+    .btn:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 8px 22px rgba(127,191,255,.28)}
+    .btn.ghost{background:transparent;color:var(--accent)}
+    .btn.ghost:hover{box-shadow:0 8px 22px rgba(127,191,255,.18)}
+    .hero .meta{margin-top:22px;font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:15px}
+
+    /* ---- About ---- */
+    .about{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:start}
+    .about>*,.contact>*,.card,.def,.cert{min-width:0}
+    .card h4,.card p,.def p,.cert .ct{overflow-wrap:anywhere}
+    .figure{position:relative;padding:14px 14px 40px;background:rgba(238,243,234,.03);
+      border:1.5px solid var(--hair);transform:rotate(-1.4deg)}
+    .figure img{width:100%;filter:grayscale(.25) contrast(1.02);border:1px solid var(--hair)}
+    .figure figcaption{position:absolute;left:0;right:0;bottom:10px;text-align:center;
+      font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:14px}
+    .about-body p{font-size:clamp(15.5px,1.7vw,18px);margin:0 0 16px;max-width:62ch}
+    .about-body p .hl{color:var(--accent)}
+    .loc-pin{font-family:"Kalam",cursive;color:var(--accent-2);font-size:16px;display:inline-flex;gap:8px;align-items:center}
+    @media(max-width:760px){.about{grid-template-columns:1fr}.figure{max-width:280px;margin:0 auto}}
+
+    /* ---- Theorem/lemma list (education & skills) ---- */
+    .thm{border-left:3px solid var(--accent);padding:14px 18px;margin:0 0 16px;background:rgba(127,191,255,.05);
+      position:relative}
+    .thm .tag{font-family:"Kalam",cursive;color:var(--accent);font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
+    .thm h3{margin:2px 0 4px;font-size:19px;font-weight:600}
+    .thm .when{font-family:"Kalam",cursive;color:var(--accent-2);font-size:14px}
+    .thm p{margin:6px 0 0;color:var(--chalk-dim);font-size:15.5px}
+
+    .skills-wrap{display:grid;grid-template-columns:1.35fr .9fr;gap:34px;align-items:start}
+    .skills-wrap>*{min-width:0}
+    .lemmas{display:grid;gap:12px;min-width:0}
+    .lemma .txt{overflow-wrap:anywhere}
+    .lemma{display:flex;gap:12px;align-items:baseline;border-bottom:1px dashed var(--hair);padding:9px 0}
+    .lemma .n{font-family:"Kalam",cursive;color:var(--accent);font-weight:700;min-width:74px}
+    .lemma .txt{font-size:16.5px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .chip{font-family:"Kalam",cursive;font-size:13.5px;padding:5px 12px;border:1.5px solid var(--hair);
+      border-radius:60% 40% 55% 45%/50% 60% 40% 50%;color:var(--chalk-dim)}
+    .chip:nth-child(3n){color:var(--accent);border-color:rgba(127,191,255,.4)}
+    .chip:nth-child(3n+1){color:var(--accent-2);border-color:rgba(255,210,127,.35)}
+    .sidebox{border:1.5px dashed var(--hair);padding:18px;background:rgba(238,243,234,.02);min-width:0;overflow:hidden}
+    .sidebox .cap{font-family:"Kalam",cursive;color:var(--pink);font-size:15px;margin-bottom:10px}
+    .eq-block{margin:8px 0;overflow-x:auto;max-width:100%}
+    .eq-note{font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:13.5px;margin-top:6px}
+    @media(max-width:820px){.skills-wrap{grid-template-columns:1fr}}
+
+    /* ---- Courses (definitions grid) ---- */
+    .defs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .def{border:1.5px solid var(--hair);padding:18px;background:rgba(238,243,234,.025);position:relative;
+      transition:transform .15s, border-color .15s}
+    .def:hover{transform:translateY(-3px);border-color:rgba(127,191,255,.5)}
+    .def .ico{color:var(--accent);font-size:22px;margin-bottom:10px}
+    .def h4{margin:0 0 6px;font-size:17.5px;font-weight:600}
+    .def p{margin:0;color:var(--chalk-dim);font-size:14.5px;line-height:1.55}
+    .def .dn{position:absolute;top:10px;right:14px;font-family:"Kalam",cursive;color:var(--chalk-dim);opacity:.6;font-size:13px}
+    @media(max-width:820px){.defs{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.defs{grid-template-columns:1fr}}
+
+    /* ---- Experience (proof) ---- */
+    .proof{border:1.5px solid var(--hair);padding:22px 24px;background:rgba(127,191,255,.04);position:relative}
+    .proof::after{content:"∎";position:absolute;right:22px;bottom:14px;font-size:26px;color:var(--accent)}
+    .proof .ttl{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+    .proof .ttl h3{margin:0;font-size:21px;font-weight:700}
+    .proof .ttl .co{color:var(--accent)}
+    .proof .ttl .when{font-family:"Kalam",cursive;color:var(--accent-2);font-size:15px;margin-left:auto}
+    .proof .sum{color:var(--chalk-dim);font-size:15.5px;margin:10px 0 8px;font-style:italic}
+    .proof ul{margin:0;padding-left:0;list-style:none;display:grid;gap:8px}
+    .proof li{padding-left:26px;position:relative;font-size:15.5px}
+    .proof li::before{content:"⟹";position:absolute;left:0;color:var(--accent);font-weight:700}
+
+    /* ---- Problem cards (projects & articles) ---- */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+    .filters button{font-family:"Kalam",cursive;background:transparent;border:1.5px solid var(--hair);
+      color:var(--chalk-dim);font-size:14px;padding:7px 15px;cursor:pointer;border-radius:55% 45% 50% 50%/50%;transition:.15s}
+    .filters button:hover{color:var(--chalk);border-color:var(--accent)}
+    .filters button.active{background:var(--accent);color:var(--board);border-color:var(--accent)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .card{border:1.5px solid var(--hair);background:rgba(238,243,234,.03);display:flex;flex-direction:column;
+      overflow:hidden;transition:transform .15s, box-shadow .15s, border-color .15s;position:relative}
+    .card:hover{transform:translateY(-4px);border-color:rgba(127,191,255,.55);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+    .card .cover{height:150px;background:var(--board-2);overflow:hidden;border-bottom:1.5px solid var(--hair)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.15)}
+    .card .body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .card .pn{font-family:"Kalam",cursive;color:var(--accent);font-size:14px}
+    .card .meta{display:flex;justify-content:space-between;font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:12.5px}
+    .card h4{margin:0;font-size:17.5px;font-weight:600;line-height:1.25}
+    .card p{margin:0;color:var(--chalk-dim);font-size:14px;line-height:1.5;flex:1}
+    .card .tech{color:var(--accent-2);font-family:"Kalam",cursive;font-size:13px}
+    .card .more{font-family:"Kalam",cursive;color:var(--accent);font-size:14px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;font-family:"Kalam",cursive;color:var(--chalk-dim);padding:18px 0}
+
+    /* ---- Certificates ---- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .cert{border:1.5px solid var(--hair);background:rgba(238,243,234,.03);display:grid;grid-template-columns:120px 1fr;overflow:hidden}
+    .cert img{height:100%;width:100%;object-fit:cover;border-right:1.5px solid var(--hair);filter:grayscale(.2)}
+    .cert .ct{padding:16px}
+    .cert .ct .m{display:flex;justify-content:space-between;font-family:"Kalam",cursive;color:var(--accent);font-size:13px}
+    .cert .ct h4{margin:8px 0 6px;font-size:17px;font-weight:600}
+    .cert .ct p{margin:0;color:var(--chalk-dim);font-size:14px;line-height:1.5}
+    @media(max-width:620px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:92px 1fr}}
+
+    /* ---- Contact ---- */
+    .contact{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}
+    .cinfo a{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--hair);padding:13px 0}
+    .cinfo a span:first-child{font-family:"Kalam",cursive;color:var(--chalk-dim)}
+    .cinfo a span:last-child{color:var(--accent)}
+    .cform label{font-family:"Kalam",cursive;color:var(--accent);font-size:14px;display:block;margin:0 0 5px}
+    .cform input,.cform textarea{width:100%;background:rgba(18,38,31,.6);border:1.5px solid var(--hair);
+      color:var(--chalk);font-family:inherit;font-size:15.5px;padding:12px;margin-bottom:14px;border-radius:2px}
+    .cform input:focus,.cform textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+    .cform textarea{min-height:130px;resize:vertical}
+    #cf-status{font-family:"Kalam",cursive;margin-top:8px;font-size:15px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* ---- Footer ---- */
+    footer{border-top:1px solid var(--hair);padding:40px 0 60px;margin-top:20px}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center}
+    .foot a{font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:14px}
+    .foot a:hover{color:var(--chalk)}
+    .foot .soc{display:flex;gap:18px;flex-wrap:wrap}
+    .foot-icp{margin-top:14px;font-family:"Kalam",cursive;color:var(--chalk-dim);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap}
+    .katex{font-size:1.02em}
+
+    /* ---- Decorative handwritten-chalk background (a blackboard covered in working) ---- */
+    /* Fixed, full-page, behind all content (z-index:0 < body::before z-index:1 < .wrap z-index:2).
+       pointer-events:none so it never blocks clicks; overflow:hidden clips any glyph that runs
+       past the edge, guaranteeing no horizontal scroll even at 375px. */
+    .chalk-bg{
+      position:fixed;inset:0;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none;
+      overflow:hidden;opacity:.12;color:var(--chalk);
+      font-family:"Caveat","Kalam",cursive;font-weight:600;
+    }
+    .chalk-bg b{
+      position:absolute;white-space:nowrap;font-weight:inherit;line-height:1.05;
+      text-shadow:0 1px 0 rgba(0,0,0,.30);
+    }
+    .chalk-bg .c-a{color:var(--accent)}
+    .chalk-bg .c-y{color:var(--accent-2)}
+    .chalk-bg .c-p{color:var(--pink)}
+    .chalk-bg .mtx{line-height:.9;text-align:center}
+    /* optional ultra-slow drift, only when the user hasn't asked to reduce motion */
+    @media (prefers-reduced-motion: no-preference){
+      .chalk-bg{animation:chalkDrift 46s ease-in-out infinite alternate}
+    }
+    @keyframes chalkDrift{
+      from{transform:translate3d(-6px,-4px,0)}
+      to{transform:translate3d(6px,4px,0)}
+    }
+    @media(max-width:640px){ .chalk-bg{opacity:.10} }
+
+    @media (prefers-reduced-motion: reduce){
+      .chalk-bg{animation:none}
+      *{scroll-behavior:auto !important}
+      .btn:hover,.card:hover,.def:hover{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative chalkboard "working": many handwritten-style formulas scattered behind the
+       whole page. Plain text/unicode in the Caveat/Kalam chalk font (no KaTeX needed), faint
+       and non-interactive so foreground content stays perfectly readable. aria-hidden. -->
+  <div class="chalk-bg" aria-hidden="true">
+    <b class="c-a" style="top:3%;left:2%;font-size:34px;transform:rotate(-6deg)">e^{iπ} + 1 = 0</b>
+    <b style="top:6%;left:34%;font-size:26px;transform:rotate(3deg)">∫₋∞^∞ e^{−x²} dx = √π</b>
+    <b class="c-y" style="top:4%;left:70%;font-size:30px;transform:rotate(-3deg)">a² + b² = c²</b>
+    <b style="top:9%;left:88%;font-size:22px;transform:rotate(7deg)">∇·E = ρ/ε₀</b>
+    <b class="c-p" style="top:13%;left:12%;font-size:24px;transform:rotate(-2deg)">∑ 1/n² = π²/6</b>
+    <b style="top:15%;left:52%;font-size:28px;transform:rotate(4deg)">P(A|B) = P(B|A)·P(A) / P(B)</b>
+    <b class="mtx" style="top:12%;left:78%;font-size:26px;transform:rotate(-5deg)">⎡a&nbsp;&nbsp;b⎤<br>⎣c&nbsp;&nbsp;d⎦</b>
+    <b class="c-a" style="top:21%;left:3%;font-size:27px;transform:rotate(5deg)">f′(x) = lim<sub>h→0</sub> (f(x+h) − f(x))/h</b>
+    <b style="top:23%;left:44%;font-size:23px;transform:rotate(-4deg)">x = (−b ± √(b²−4ac)) / 2a</b>
+    <b class="c-y" style="top:25%;left:82%;font-size:30px;transform:rotate(2deg)">E = mc²</b>
+    <b style="top:30%;left:16%;font-size:25px;transform:rotate(-3deg)">σ(z)ᵢ = e^{zᵢ} / ∑ⱼ e^{zⱼ}</b>
+    <b class="c-p" style="top:33%;left:58%;font-size:26px;transform:rotate(6deg)">{ x ∈ ℝ | x &gt; 0 }</b>
+    <b style="top:35%;left:86%;font-size:24px;transform:rotate(-6deg)">O(n log n)</b>
+    <b class="c-a" style="top:40%;left:6%;font-size:29px;transform:rotate(3deg)">lim<sub>n→∞</sub> (1 + 1/n)ⁿ = e</b>
+    <b style="top:42%;left:40%;font-size:22px;transform:rotate(-5deg)">cos²θ + sin²θ = 1</b>
+    <b class="c-y" style="top:44%;left:73%;font-size:27px;transform:rotate(4deg)">∮ B·dl = μ₀ I</b>
+    <b style="top:49%;left:20%;font-size:24px;transform:rotate(-2deg)">∀ε&gt;0 ∃δ&gt;0</b>
+    <b class="c-p" style="top:51%;left:55%;font-size:26px;transform:rotate(5deg)">d/dx eˣ = eˣ</b>
+    <b style="top:53%;left:88%;font-size:23px;transform:rotate(-4deg)">i² = −1</b>
+    <b class="c-a" style="top:58%;left:4%;font-size:28px;transform:rotate(4deg)">∂u/∂t = α ∇²u</b>
+    <b style="top:60%;left:38%;font-size:25px;transform:rotate(-6deg)">det(A − λI) = 0</b>
+    <b class="c-y" style="top:62%;left:70%;font-size:24px;transform:rotate(3deg)">∫ₐᵇ f(x)dx = F(b) − F(a)</b>
+    <b style="top:67%;left:14%;font-size:26px;transform:rotate(-3deg)">∑<sub>k=0</sub>ⁿ C(n,k) = 2ⁿ</b>
+    <b class="c-p" style="top:69%;left:50%;font-size:27px;transform:rotate(6deg)">Δx·Δp ≥ ℏ/2</b>
+    <b style="top:71%;left:84%;font-size:22px;transform:rotate(-5deg)">π ≈ 3.14159…</b>
+    <b class="c-a" style="top:76%;left:7%;font-size:25px;transform:rotate(2deg)">lim<sub>x→0</sub> sin x / x = 1</b>
+    <b style="top:78%;left:42%;font-size:24px;transform:rotate(-4deg)">φ = (1 + √5)/2</b>
+    <b class="c-y" style="top:80%;left:75%;font-size:28px;transform:rotate(5deg)">∇ × B = μ₀J + μ₀ε₀ ∂E/∂t</b>
+    <b style="top:85%;left:10%;font-size:23px;transform:rotate(-3deg)">Var(X) = E[X²] − E[X]²</b>
+    <b class="c-p" style="top:87%;left:48%;font-size:26px;transform:rotate(4deg)">e = ∑ 1/k!</b>
+    <b style="top:90%;left:80%;font-size:24px;transform:rotate(-6deg)">∴ ∎ q.e.d.</b>
+    <b class="c-a" style="top:94%;left:22%;font-size:22px;transform:rotate(3deg)">ζ(2) = π²/6</b>
+    <b style="top:96%;left:60%;font-size:25px;transform:rotate(-2deg)">∮ E·dA = Q/ε₀</b>
+    <!-- little chalk marks: arrows, a circled term, squiggly underlines -->
+    <b class="c-y" style="top:19%;left:65%;font-size:40px;transform:rotate(-18deg)">↗</b>
+    <b class="c-p" style="top:47%;left:9%;font-size:44px;transform:rotate(12deg)">↺</b>
+    <b style="top:64%;left:60%;font-size:30px;transform:rotate(-10deg)">⟹</b>
+    <b class="c-a" style="top:37%;left:34%;font-size:26px;transform:rotate(2deg)">(&nbsp;π²/6&nbsp;)</b>
+    <b class="c-y" style="top:73%;left:33%;font-size:30px;letter-spacing:-2px;transform:rotate(1deg)">‿‿‿‿</b>
+    <b class="c-p" style="top:28%;left:70%;font-size:30px;letter-spacing:-2px;transform:rotate(-2deg)">～～～</b>
+    <b style="top:56%;left:47%;font-size:34px;transform:rotate(15deg)">→</b>
+  </div>
+
+  <div class="topbar"><div class="wrap in">
+    <a class="brand" href="#top">Cai<span class="fx">Jiechao</span></a>
+    <nav class="nav" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+
+  <header class="hero graph"><div class="wrap">
+    <div class="eqfloat a"><span class="eq" data-tex="e^{i\pi}+1=0"></span></div>
+    <div class="eqfloat b"><span class="eq" data-tex="\int_{-\infty}^{\infty} e^{-x^2}\,dx=\sqrt{\pi}"></span></div>
+    <div class="eqfloat c"><span class="eq" data-tex="\nabla_\theta\,J(\theta)"></span></div>
+    <div class="eqfloat d"><span class="eq" data-tex="\begin{bmatrix}a&b\\c&d\end{bmatrix}"></span></div>
+    <div class="hero-inner">
+      <div class="greet" id="greet"></div>
+      <h1 id="name"></h1>
+      <svg class="chalk-underline" viewBox="0 0 420 16" preserveAspectRatio="none" aria-hidden="true" style="width:min(460px,80%)">
+        <path d="M4 10 C 90 3, 180 15, 260 7 S 400 4, 416 9" />
+      </svg>
+      <div class="role" id="role"></div>
+      <p class="head" id="headline"></p>
+      <div class="qed">— q.e.d. <span class="eq" data-tex="\blacksquare"></span></div>
+      <div class="hero-cta">
+        <a class="btn" id="cvBtn" href="#" download></a>
+        <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <div class="meta" id="meta"></div>
+    </div>
+  </div></header>
+
+  <section id="about" class="graph"><div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no">§ 01</span>
+      <div><h2 class="sec-title" id="l-about"></h2>
+      <svg class="chalk-underline" viewBox="0 0 260 16" preserveAspectRatio="none" aria-hidden="true" style="width:180px"><path d="M4 9 C 70 4, 150 13, 256 8"/></svg></div>
+    </div>
+    <div class="about">
+      <figure class="figure">
+        <img id="portrait" alt="Portrait of Cai Jiechao" />
+        <figcaption id="fig-cap">Fig. 1 — the author</figcaption>
+      </figure>
+      <div class="about-body" id="about-body"></div>
+    </div>
+  </div></section>
+
+  <section id="education" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 02</span>
+      <div><h2 class="sec-title" id="l-edu"></h2><p class="sec-sub" id="s-edu"></p></div></div>
+    <div id="edu-list"></div>
+  </div></section>
+
+  <section id="skills" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 03</span>
+      <div><h2 class="sec-title" id="l-skills"></h2><p class="sec-sub" id="s-skills"></p></div></div>
+    <div class="skills-wrap">
+      <div>
+        <div class="lemmas" id="skills-list"></div>
+        <div class="chips" id="chip-list"></div>
+      </div>
+      <aside class="sidebox">
+        <div class="cap" id="cap-attn"></div>
+        <div class="eq-block"><span class="eq" data-tex="\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\left(\dfrac{QK^{\top}}{\sqrt{d_k}}\right)V"></span></div>
+        <div class="eq-note" id="note-attn"></div>
+        <div class="eq-block" style="margin-top:18px"><span class="eq" data-tex="\sigma(z)_i=\dfrac{e^{z_i}}{\sum_{j} e^{z_j}}"></span></div>
+        <div class="eq-note" id="note-softmax"></div>
+      </aside>
+    </div>
+  </div></section>
+
+  <section id="courses" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 04</span>
+      <div><h2 class="sec-title" id="l-courses"></h2>
+      <p class="sec-sub"><span class="eq" data-tex="\text{complexity} \;\in\; O(n\log n)"></span></p></div></div>
+    <div class="defs" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 05</span>
+      <div><h2 class="sec-title" id="l-exp"></h2>
+      <p class="sec-sub"><span class="eq" data-tex="P(A\mid B)=\dfrac{P(B\mid A)\,P(A)}{P(B)}"></span></p></div></div>
+    <div id="exp-list"></div>
+  </div></section>
+
+  <section id="projects" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 06</span>
+      <div><h2 class="sec-title" id="l-projects"></h2><p class="sec-sub" id="s-projects"></p></div></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 07</span>
+      <div><h2 class="sec-title" id="l-articles"></h2><p class="sec-sub" id="s-articles"></p></div></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 08</span>
+      <div><h2 class="sec-title" id="l-certs"></h2><p class="sec-sub" id="s-certs"></p></div></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact" class="graph"><div class="wrap">
+    <div class="sec-head"><span class="sec-no">§ 09</span>
+      <div><h2 class="sec-title" id="l-contact"></h2><p class="sec-sub" id="s-contact"></p></div></div>
+    <div class="contact">
+      <div class="cinfo" id="contact-info"></div>
+      <form class="cform" id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+        <label for="cf-name" id="lb-name"></label>
+        <input type="text" name="name" id="cf-name" required>
+        <label for="cf-email" id="lb-email"></label>
+        <input type="email" name="email" id="cf-email" required>
+        <label for="cf-msg" id="lb-msg"></label>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="btn" id="cf-send"></button>
+        <p id="cf-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="foot">
+      <a class="brand" href="#top" style="font-size:22px">Cai<span class="fx">Jiechao</span></a>
+      <div class="soc" id="foot-social"></div>
+    </div>
+    <div class="foot-icp">
+      <span id="foot-desc"></span>
+      <a id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "47-math";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <!-- KaTeX runtime is fetched dynamically from within the app script (cdnjs primary), so a
+       blocked or failed KaTeX can never throw during head parsing and blank the page. -->
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+    const S = { // small bilingual strings local to this theme
+      eduSub:{en:"Axioms & foundations",zh:"公理与基础"},
+      skillsSub:{en:"Theorems the author can prove",zh:"作者能证明的定理"},
+      projSub:{en:"Selected problems",zh:"精选习题"},
+      artSub:{en:"Worked proofs",zh:"求解过程"},
+      certSub:{en:"Q.E.D. — verified results",zh:"证毕 —— 已核验成果"},
+      contactSub:{en:"Solve for a reply",zh:"求解一次回复"},
+      capAttn:{en:"Flourish · scaled dot-product attention",zh:"点睛 · 缩放点积注意力"},
+      noteAttn:{en:"The mechanism behind the LLMs I work with.",zh:"我所研究的大模型背后的机制。"},
+      noteSoftmax:{en:"softmax — turning logits into a distribution.",zh:"softmax —— 把 logits 变为概率分布。"},
+      thmEdu:{en:"Axiom",zh:"公理"},
+      lemma:{en:"Lemma",zh:"引理"},
+      problem:{en:"Problem",zh:"习题"},
+      proof:{en:"Proof",zh:"证明"},
+      def:{en:"Def.",zh:"定义"},
+    };
+
+    // ---- KaTeX typesetting (guarded so failure never breaks the page) ----
+    function typesetMath(root){
+      const scope = root || document;
+      const nodes = scope.querySelectorAll(".eq[data-tex]");
+      const ok = (typeof window.katex !== "undefined" && window.katex && typeof window.katex.render === "function");
+      nodes.forEach(function(el){
+        if(el.dataset.done === "1") return;
+        const tex = el.getAttribute("data-tex") || "";
+        if(ok){
+          try{ window.katex.render(tex, el, {throwOnError:false, displayMode:false}); el.dataset.done="1"; }
+          catch(e){ el.textContent = tex; }
+        }else{
+          el.textContent = tex; // graceful fallback: raw LaTeX in chalk font
+        }
+      });
+    }
+
+    // ---- Robust KaTeX loader --------------------------------------------------------------
+    // The KaTeX *styles + fonts* load from cdnjs (allowed by CSP style-src AND font-src, so the
+    // math .woff2 fonts actually render — jsdelivr fonts are blocked by font-src). The *engine
+    // script* is fetched from the first origin the CSP script-src permits: this repo's current
+    // CSP allows cdn.jsdelivr.net but NOT cdnjs, so jsdelivr is tried first (clean, no CSP-
+    // violation noise) and cdnjs is the automatic fallback — flip the order, or simply drop the
+    // fallback, once "https://cdnjs.cloudflare.com" is added to script-src in vite.config.js.
+    // If EVERY source fails the page is untouched: content already rendered and typesetMath()
+    // has drawn the raw-LaTeX fallback in the chalk font. Nothing here can throw or blank it.
+    function loadKaTeX(){
+      var sources = [
+        "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js",
+        "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+      ];
+      var i = 0, settled = false;
+      function ready(){ if(settled) return; settled = true; try{ typesetMath(document); }catch(e){} }
+      function attempt(){
+        if(settled || i >= sources.length) return;
+        var src = sources[i++], advanced = false;
+        function advance(){ if(advanced) return; advanced = true; attempt(); }
+        var s = document.createElement("script");
+        s.src = src; s.crossOrigin = "anonymous"; s.referrerPolicy = "no-referrer";
+        s.onload = function(){ (typeof window.katex !== "undefined") ? ready() : advance(); };
+        s.onerror = advance;
+        (document.head || document.documentElement).appendChild(s);
+        // Safety net in case a CSP block or hang doesn't fire onerror promptly.
+        setTimeout(function(){ if(!settled && typeof window.katex === "undefined") advance(); }, 3000);
+      }
+      attempt();
+    }
+    loadKaTeX();
+
+    function renderStatic(){
+      document.title = CJCData.lang()==="zh" ? "蔡杰超 — 数学黑板" : "Cai Jiechao — Mathematics";
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['skills','core_tech'],['courses','nav_courses'],
+        ['projects','nav_portfolio'],['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = '<span aria-hidden="true">↓</span> '+esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      document.getElementById('ghBtn').href = P.contact.github;
+      document.getElementById('meta').textContent = t(P.title)+"  ·  "+t(P.location);
+
+      // labels
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('s-edu').textContent = t(S.eduSub);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('s-skills').textContent = t(S.skillsSub);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('s-projects').textContent = t(S.projSub);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('s-articles').textContent = t(S.artSub);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('s-certs').textContent = t(S.certSub);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      document.getElementById('s-contact').textContent = t(S.contactSub);
+      document.getElementById('cap-attn').textContent = t(S.capAttn);
+      document.getElementById('note-attn').textContent = t(S.noteAttn);
+      document.getElementById('note-softmax').textContent = t(S.noteSoftmax);
+      document.getElementById('fig-cap').textContent = CJCData.lang()==="zh" ? "图 1 — 作者本人" : "Fig. 1 — the author";
+
+      // about
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('about-body').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<div class="loc-pin"><i class="fa fa-map-marker" aria-hidden="true"></i> ${esc(t(P.location))}</div>`;
+
+      // education as axioms
+      document.getElementById('edu-list').innerHTML = P.education.map((e,i)=>`
+        <div class="thm"><span class="tag">${esc(t(S.thmEdu))} ${i+1}</span>
+          <h3>${esc(t(e.school))}</h3>
+          <div class="when">${esc(e.period)}</div>
+          <p>${esc(t(e.degree))} — ${esc(t(e.note))}</p></div>`).join('');
+
+      // skills as lemmas + chips
+      document.getElementById('skills-list').innerHTML = P.skills.map((s,i)=>`
+        <div class="lemma"><span class="n">${esc(t(S.lemma))} ${i+1}.</span><span class="txt">${esc(s)}</span></div>`).join('');
+      document.getElementById('chip-list').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+
+      // courses as definitions
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="def"><span class="dn">${esc(t(S.def))} ${i+1}</span>
+          <div class="ico"><i class="fa ${esc(c.icon)}" aria-hidden="true"></i></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      // experience as proof
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="proof">
+          <div class="ttl"><h3>${esc(t(x.role))} <span class="co">· ${esc(t(x.company))}</span></h3>
+            <span class="when">${esc(x.period)}</span></div>
+          <p class="sum">${esc(t(x.summary))}</p>
+          <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+          <div class="ct"><div class="m"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      // contact
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '<span aria-hidden="true">∴</span> '+esc(t(P.ui.send));
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles(); typesetMath();
+      }));
+
+      typesetMath();
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="body">
+            <div class="pn">${esc(t(S.problem))} ${i+1}</div>
+            <div class="meta"><span>${esc(p.tech_stack? '' : t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map((a,i)=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
+          <div class="body">
+            <div class="pn">${esc(t(S.proof))} ${i+1}</div>
+            <div class="meta"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ 内容加载失败 / Failed to load.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      s.style.color='var(--chalk-dim)'; s.textContent = t(P.ui.sending);
+      try{
+        const r = await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='#7fe0a2'; s.textContent = r.message||'Sent ✓ ∎'; f.reset();
+      }catch(err){ s.style.color='#ff9ec4'; s.textContent = err.message; }
+    });
+
+    // Retry math typeset once KaTeX finishes loading (script is defer)
+    window.addEventListener('load', function(){ typesetMath(); });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#7fbfff' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); typesetMath(); });
+      loadDynamic();
+      typesetMath();
+    });
+  })();
+  </script>
+</body>
+</html>

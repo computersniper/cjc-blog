@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Cyber City</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --night-1:#0b0518;      /* deep indigo night */
+      --night-2:#241246;      /* violet upper glow  */
+      --pink:#ff2e88;
+      --cyan:#7df9ff;
+      --ink:#eae6ff;
+      --dim:#a99fce;
+      --panel:rgba(10,5,24,.72);
+      --panel-solid:rgba(14,7,32,.92);
+      --pink-line:rgba(255,46,136,.45);
+      --cyan-line:rgba(125,249,255,.38);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      font-family:"Rajdhani","Chakra Petch",system-ui,sans-serif;
+      background:
+        radial-gradient(140% 90% at 50% -10%, #34195e 0%, rgba(52,25,94,0) 42%),
+        linear-gradient(180deg,#1a0c36 0%, var(--night-2) 26%, #150a2e 60%, var(--night-1) 100%);
+      background-attachment:fixed;
+      min-height:100vh;line-height:1.55;letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    h1,h2,h3,h4{font-family:"Chakra Petch","Rajdhani",sans-serif;margin:0}
+    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+    .wrap{max-width:1180px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
+
+    /* ---------- Neon helpers ---------- */
+    .neon-p{color:#fff;text-shadow:0 0 6px rgba(255,46,136,.9),0 0 20px rgba(255,46,136,.6),0 0 42px rgba(255,46,136,.35)}
+    .neon-c{color:#fff;text-shadow:0 0 6px rgba(125,249,255,.9),0 0 20px rgba(125,249,255,.55),0 0 42px rgba(125,249,255,.3)}
+    .kicker{font-family:"Chakra Petch",sans-serif;text-transform:uppercase;letter-spacing:.34em;
+      font-size:12px;font-weight:600;color:var(--cyan);text-shadow:0 0 12px rgba(125,249,255,.5)}
+
+    /* ---------- Rain (fixed, behind content, above bg) ---------- */
+    .rain{position:fixed;inset:-20% 0;pointer-events:none;z-index:1;opacity:.5}
+    .rain::before,.rain::after{content:"";position:absolute;inset:0;
+      background-repeat:repeat;background-size:auto;}
+    .rain::before{
+      background-image:repeating-linear-gradient(14deg,
+        rgba(190,220,255,0) 0px, rgba(190,220,255,0) 22px,
+        rgba(190,220,255,.16) 22px, rgba(190,220,255,0) 24px);
+      animation:rainfall 0.7s linear infinite}
+    .rain::after{
+      background-image:repeating-linear-gradient(12deg,
+        rgba(125,249,255,0) 0px, rgba(125,249,255,0) 40px,
+        rgba(125,249,255,.10) 40px, rgba(125,249,255,0) 43px);
+      animation:rainfall 1.15s linear infinite;opacity:.7}
+    @keyframes rainfall{from{transform:translateY(-260px)}to{transform:translateY(260px)}}
+
+    /* ---------- Sticky topbar ---------- */
+    .topbar{position:sticky;top:0;z-index:800;
+      background:linear-gradient(180deg,rgba(11,5,24,.92),rgba(11,5,24,.45));
+      border-bottom:1px solid var(--pink-line);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:58px;padding-right:210px}
+    .brand{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;color:#fff;
+      text-shadow:0 0 10px rgba(125,249,255,.5)}
+    .brand b{color:var(--pink);text-shadow:0 0 12px rgba(255,46,136,.75)}
+    .topbar nav{display:flex;gap:22px}
+    .topbar nav a{font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--dim);transition:.2s}
+    .topbar nav a:hover{color:var(--cyan);text-shadow:0 0 12px rgba(125,249,255,.7)}
+    @media(max-width:980px){.topbar nav{display:none}.topbar .row{padding-right:150px}}
+
+    /* ---------- Hero ---------- */
+    .hero{position:relative;overflow:hidden;padding:74px 0 0;min-height:88vh;display:flex;flex-direction:column;justify-content:center}
+    .hero .wrap{padding-top:20px;padding-bottom:220px}
+    /* skyline sits behind hero content */
+    .skyline{position:absolute;left:0;right:0;bottom:120px;width:100%;height:min(52vh,440px);z-index:0;opacity:.9}
+    .skyline svg{width:100%;height:100%;display:block}
+    .win{opacity:.85}
+    .win.p{fill:#ff5aa0}
+    .win.c{fill:#a6fbff}
+    .win.dim{opacity:.28}
+    /* haze / atmospheric glow above skyline */
+    .hero::before{content:"";position:absolute;left:0;right:0;bottom:110px;height:340px;z-index:0;pointer-events:none;
+      background:radial-gradient(60% 120% at 22% 100%, rgba(255,46,136,.28), transparent 60%),
+                 radial-gradient(60% 120% at 78% 100%, rgba(125,249,255,.22), transparent 60%)}
+
+    /* Decorative neon signs */
+    .signs{position:absolute;inset:0;z-index:0;pointer-events:none}
+    .sign{position:absolute;font-family:"Chakra Petch",sans-serif;font-weight:700;line-height:1;
+      writing-mode:vertical-rl;padding:12px 8px;border-radius:4px}
+    .sign.pk{color:#fff;border:2px solid var(--pink);
+      text-shadow:0 0 8px rgba(255,46,136,.95),0 0 22px rgba(255,46,136,.6);
+      box-shadow:0 0 18px rgba(255,46,136,.5),inset 0 0 12px rgba(255,46,136,.25)}
+    .sign.cy{color:#fff;border:2px solid var(--cyan);writing-mode:horizontal-tb;
+      text-shadow:0 0 8px rgba(125,249,255,.95),0 0 22px rgba(125,249,255,.55);
+      box-shadow:0 0 18px rgba(125,249,255,.45),inset 0 0 12px rgba(125,249,255,.22)}
+    .s1{top:14%;right:6%;font-size:44px}
+    .s2{top:42%;right:15%;font-size:30px}
+    .s3{top:20%;left:3%;font-size:26px;padding:8px 12px}
+    .s4{bottom:210px;left:8%;font-size:34px}
+    .s5{top:60%;right:4%;font-size:22px;padding:7px 11px}
+    .flicker{animation:flick 5.5s infinite steps(1)}
+    .flicker2{animation:flick2 3.8s infinite steps(1)}
+    @keyframes flick{0%,17%,19%,21%,55%,57%,100%{opacity:1}18%,20%,56%{opacity:.35}}
+    @keyframes flick2{0%,40%,42%,80%,100%{opacity:1}41%,81%,83%{opacity:.4}}
+    @media(max-width:760px){.s1,.s2,.s5{display:none}.s3{font-size:20px}.s4{font-size:24px;bottom:200px}}
+
+    /* Wet street reflection at bottom of hero */
+    .street{position:absolute;left:0;right:0;bottom:0;height:190px;z-index:0;pointer-events:none;
+      background:linear-gradient(180deg, rgba(11,5,24,0) 0%, rgba(9,4,20,.65) 32%, #07030f 100%)}
+    .street::before{content:"";position:absolute;left:0;right:0;top:36px;bottom:0;
+      background:
+        linear-gradient(90deg, transparent 6%, rgba(255,46,136,.5) 9%, transparent 13%),
+        linear-gradient(90deg, transparent 24%, rgba(125,249,255,.42) 27%, transparent 32%),
+        linear-gradient(90deg, transparent 47%, rgba(255,46,136,.4) 50%, transparent 55%),
+        linear-gradient(90deg, transparent 68%, rgba(125,249,255,.45) 71%, transparent 76%),
+        linear-gradient(90deg, transparent 86%, rgba(255,120,190,.4) 89%, transparent 94%);
+      filter:blur(7px);opacity:.9;
+      -webkit-mask-image:linear-gradient(180deg,transparent,#000 45%);
+      mask-image:linear-gradient(180deg,transparent,#000 45%)}
+    .street::after{content:"";position:absolute;left:0;right:0;top:34px;height:2px;
+      background:linear-gradient(90deg,transparent,rgba(125,249,255,.55),rgba(255,46,136,.55),transparent);
+      box-shadow:0 0 16px rgba(125,249,255,.4)}
+
+    .hero-inner{position:relative;z-index:3;max-width:760px}
+    .greet{font-family:"Chakra Petch",sans-serif;letter-spacing:.28em;text-transform:uppercase;
+      font-size:14px;color:var(--cyan);margin-bottom:14px;text-shadow:0 0 12px rgba(125,249,255,.5)}
+    .hero h1{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:clamp(46px,10vw,110px);
+      line-height:.94;letter-spacing:.01em;margin:0}
+    .hero .head{font-weight:600;font-size:clamp(19px,3.2vw,32px);margin:22px 0 0;color:var(--ink);max-width:24ch}
+    .hero .head b{color:var(--pink);text-shadow:0 0 14px rgba(255,46,136,.6)}
+    .hero .sub{margin-top:16px;color:var(--dim);font-size:clamp(15px,1.8vw,18px);max-width:52ch}
+    .hero .sub .loc{color:var(--cyan)}
+    .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+    .btn{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:14px;padding:14px 26px;
+      cursor:pointer;border-radius:6px;transition:.2s;display:inline-flex;align-items:center;gap:9px;
+      border:2px solid var(--pink);background:rgba(255,46,136,.08);color:#fff;
+      text-shadow:0 0 8px rgba(255,46,136,.6);box-shadow:0 0 18px rgba(255,46,136,.25)}
+    .btn:hover{background:var(--pink);box-shadow:0 0 28px rgba(255,46,136,.8);color:#0b0518;text-shadow:none}
+    .btn.cy{border-color:var(--cyan);background:rgba(125,249,255,.07);text-shadow:0 0 8px rgba(125,249,255,.6);box-shadow:0 0 18px rgba(125,249,255,.22)}
+    .btn.cy:hover{background:var(--cyan);box-shadow:0 0 28px rgba(125,249,255,.8);color:#0b0518;text-shadow:none}
+
+    /* ---------- Sections ---------- */
+    section{padding:66px 0;position:relative;z-index:2}
+    .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:34px}
+    .sec-head .idx{font-family:"Chakra Petch",monospace;color:var(--pink);font-size:14px;font-weight:600;
+      border:1px solid var(--pink-line);border-radius:4px;padding:5px 11px;
+      box-shadow:0 0 14px rgba(255,46,136,.3);white-space:nowrap}
+    .sec-head h2{font-size:clamp(24px,4.4vw,42px);color:#fff;letter-spacing:.01em;
+      text-shadow:0 0 16px rgba(125,249,255,.35)}
+    .sec-head .flt{flex:1;height:1px;background:linear-gradient(90deg,var(--pink),rgba(125,249,255,.3),transparent)}
+
+    /* Neon panel */
+    .panel{background:var(--panel);border:1px solid var(--pink-line);border-radius:12px;padding:24px;
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      box-shadow:0 0 24px rgba(255,46,136,.14),inset 0 0 26px rgba(125,249,255,.05)}
+    .panel.cy{border-color:var(--cyan-line);box-shadow:0 0 24px rgba(125,249,255,.16),inset 0 0 26px rgba(255,46,136,.05)}
+
+    /* About */
+    .about{display:grid;grid-template-columns:290px 1fr;gap:34px;align-items:stretch}
+    .portrait-frame{position:relative;border-radius:12px;padding:8px;
+      border:1px solid var(--cyan-line);box-shadow:0 0 26px rgba(125,249,255,.2)}
+    .portrait-frame img{width:100%;height:100%;object-fit:cover;border-radius:8px;filter:saturate(1.05) contrast(1.02)}
+    .about-body p{margin:0 0 15px;font-size:16.5px;color:var(--ink);line-height:1.65}
+    .about-body .locpill{display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:8px 14px;border-radius:999px;
+      border:1px solid var(--pink-line);color:var(--pink);font-weight:600;box-shadow:0 0 14px rgba(255,46,136,.25)}
+    @media(max-width:760px){.about{grid-template-columns:1fr}}
+
+    /* Rows: education & experience */
+    .rows{display:flex;flex-direction:column;gap:18px}
+    .rowcard{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:22px 24px}
+    .rowcard .when{color:var(--cyan);font-weight:700;font-variant-numeric:tabular-nums;font-size:15px;
+      text-shadow:0 0 10px rgba(125,249,255,.4)}
+    .rowcard h3{font-size:19px;color:#fff;margin:0 0 5px;font-weight:600}
+    .rowcard .sub{color:var(--dim);font-size:15px}
+    .rowcard .exp-sum{color:var(--ink);margin:6px 0 12px;font-size:15px}
+    .rowcard ul{margin:0;padding-left:18px;color:var(--dim);font-size:15px;line-height:1.7}
+    .rowcard ul li::marker{color:var(--pink)}
+    @media(max-width:620px){.rowcard{grid-template-columns:1fr;gap:8px}}
+
+    /* Skills / tags */
+    .tags{display:flex;flex-wrap:wrap;gap:12px}
+    .tag{padding:9px 16px;border-radius:999px;border:1px solid var(--cyan-line);color:var(--ink);font-weight:600;font-size:15px;
+      background:rgba(125,249,255,.05);transition:.2s;box-shadow:0 0 12px rgba(125,249,255,.12)}
+    .tag:nth-child(2n){border-color:var(--pink-line);background:rgba(255,46,136,.05);box-shadow:0 0 12px rgba(255,46,136,.14)}
+    .tag:hover{transform:translateY(-2px);color:#fff}
+    .skill-lines{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;margin-top:24px}
+    .skill-lines .sl{display:flex;gap:12px;align-items:baseline;padding:11px 0;border-top:1px solid rgba(255,46,136,.18);
+      font-size:16px;color:var(--ink)}
+    .skill-lines .sl::before{content:"//";color:var(--pink);font-weight:700;text-shadow:0 0 8px rgba(255,46,136,.5)}
+    @media(max-width:620px){.skill-lines{grid-template-columns:1fr}}
+
+    /* Courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .course{padding:24px}
+    .course .ci{font-size:26px;color:var(--pink);margin-bottom:14px;text-shadow:0 0 16px rgba(255,46,136,.6)}
+    .course:nth-child(3n-1) .ci{color:var(--cyan);text-shadow:0 0 16px rgba(125,249,255,.6)}
+    .course h4{font-size:18px;color:#fff;margin-bottom:9px;font-weight:600;line-height:1.25}
+    .course p{margin:0;color:var(--dim);font-size:14.5px;line-height:1.6}
+    @media(max-width:860px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.courses{grid-template-columns:1fr}}
+
+    /* Cards: projects & articles */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{display:flex;flex-direction:column;overflow:hidden;border-radius:12px;
+      background:var(--panel-solid);border:1px solid var(--cyan-line);transition:.22s;
+      box-shadow:0 0 20px rgba(125,249,255,.1)}
+    .card:hover{transform:translateY(-5px);border-color:var(--pink);
+      box-shadow:0 12px 34px rgba(0,0,0,.5),0 0 26px rgba(255,46,136,.4)}
+    .card .cover{height:172px;overflow:hidden;position:relative;background:#160a2e;border-bottom:1px solid var(--pink-line)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+    .card:hover .cover img{transform:scale(1.06)}
+    .card .cbody{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .card .ctag{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.1em;color:var(--cyan)}
+    .card .ctag .dt{color:var(--dim);font-weight:600;letter-spacing:.04em}
+    .card h4{font-size:18px;color:#fff;margin:0;line-height:1.28;font-weight:600}
+    .card .stack{color:var(--pink);font-weight:600;font-size:13px}
+    .card p{margin:0;color:var(--dim);font-size:14.5px;line-height:1.6;flex:1}
+    .card .more{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--cyan)}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+
+    /* Filters */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+    .filters button{font-family:inherit;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em;
+      padding:9px 16px;cursor:pointer;border-radius:999px;transition:.2s;color:var(--dim);
+      border:1px solid var(--cyan-line);background:rgba(125,249,255,.04)}
+    .filters button:hover{color:#fff;border-color:var(--cyan)}
+    .filters button.active{color:#0b0518;background:var(--pink);border-color:var(--pink);
+      box-shadow:0 0 20px rgba(255,46,136,.6)}
+
+    /* Certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden;border-radius:12px;
+      background:var(--panel-solid);border:1px solid var(--pink-line);box-shadow:0 0 20px rgba(255,46,136,.12)}
+    .cert img{width:100%;height:100%;object-fit:cover;border-right:1px solid var(--pink-line)}
+    .cert .ct{padding:18px}
+    .cert .ct .meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.08em;color:var(--cyan)}
+    .cert .ct h4{font-size:17px;color:#fff;margin:9px 0 7px;font-weight:600}
+    .cert .ct p{margin:0;color:var(--dim);font-size:13.5px;line-height:1.55}
+    @media(max-width:620px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:100px 1fr}}
+
+    /* Contact */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:30px;align-items:start}
+    .cinfo{display:flex;flex-direction:column;gap:2px}
+    .cinfo a{display:flex;justify-content:space-between;gap:12px;padding:15px 4px;border-top:1px solid rgba(125,249,255,.16);
+      font-weight:600;transition:.2s}
+    .cinfo a:first-child{border-top:none}
+    .cinfo a span:last-child{color:var(--cyan)}
+    .cinfo a:hover span:last-child{color:var(--pink);text-shadow:0 0 12px rgba(255,46,136,.5)}
+    .cform input,.cform textarea{width:100%;background:rgba(4,2,10,.6);border:1px solid var(--cyan-line);border-radius:8px;
+      font-family:inherit;font-size:15.5px;padding:14px;margin-bottom:14px;color:var(--ink)}
+    .cform input::placeholder,.cform textarea::placeholder{color:#7a72a0}
+    .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 16px rgba(255,46,136,.3)}
+    .cform textarea{min-height:140px;resize:vertical}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14.5px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* Footer */
+    footer{position:relative;z-index:2;border-top:1px solid var(--pink-line);padding:44px 0 60px;
+      background:linear-gradient(180deg,transparent,rgba(4,2,10,.6))}
+    .frow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px}
+    .fsocial{display:flex;gap:22px;flex-wrap:wrap}
+    .fsocial a{color:var(--dim);font-weight:600;font-size:14px;transition:.2s}
+    .fsocial a:hover{color:var(--cyan);text-shadow:0 0 12px rgba(125,249,255,.6)}
+    .fmeta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:20px}
+    .muted{color:#8479a8;font-size:13px}
+    .muted:hover{color:var(--dim)}
+
+    .load-note{grid-column:1/-1;color:var(--dim);font-size:15px;padding:18px;text-align:center;
+      border:1px dashed var(--cyan-line);border-radius:10px}
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce){
+      .rain{display:none}
+      .flicker,.flicker2,.card,.card .cover img{animation:none !important;transition:none !important}
+      html{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="rain" aria-hidden="true"></div>
+
+  <div class="topbar">
+    <div class="wrap row">
+      <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+      <nav id="nav"></nav>
+    </div>
+  </div>
+
+  <div id="top"></div>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <!-- Neon signage (decorative only) -->
+    <div class="signs" aria-hidden="true">
+      <div class="sign pk s1 flicker">電</div>
+      <div class="sign pk s2">都市</div>
+      <div class="sign cy s3 flicker2">ネオン</div>
+      <div class="sign pk s4">夜</div>
+      <div class="sign cy s5">雨</div>
+    </div>
+
+    <!-- City skyline silhouette -->
+    <div class="skyline" aria-hidden="true">
+      <svg viewBox="0 0 1440 440" preserveAspectRatio="xMidYMax slice" role="presentation">
+        <defs>
+          <linearGradient id="tower" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#221041"/>
+            <stop offset="1" stop-color="#0c0620"/>
+          </linearGradient>
+          <linearGradient id="towerB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2a1550"/>
+            <stop offset="1" stop-color="#100827"/>
+          </linearGradient>
+        </defs>
+        <!-- far towers -->
+        <g fill="url(#tower)" opacity=".8">
+          <rect x="40"  y="220" width="70"  height="220"/>
+          <rect x="150" y="160" width="54"  height="280"/>
+          <rect x="250" y="250" width="90"  height="190"/>
+          <rect x="470" y="200" width="60"  height="240"/>
+          <rect x="700" y="170" width="80"  height="270"/>
+          <rect x="980" y="230" width="70"  height="210"/>
+          <rect x="1180" y="180" width="60" height="260"/>
+          <rect x="1330" y="240" width="80" height="200"/>
+        </g>
+        <!-- near towers -->
+        <g fill="url(#towerB)">
+          <rect x="0"    y="300" width="120" height="140"/>
+          <rect x="110"  y="250" width="96"  height="190"/>
+          <rect x="300"  y="150" width="86"  height="290"/>
+          <rect x="386"  y="210" width="70"  height="230"/>
+          <rect x="520"  y="120" width="100" height="320"/>
+          <rect x="620"  y="260" width="70"  height="180"/>
+          <rect x="760"  y="90"  width="110" height="350"/>
+          <rect x="870"  y="230" width="76"  height="210"/>
+          <rect x="1000" y="160" width="96"  height="280"/>
+          <rect x="1096" y="280" width="80"  height="160"/>
+          <rect x="1240" y="140" width="104" height="300"/>
+          <rect x="1360" y="250" width="80"  height="190"/>
+        </g>
+        <!-- lit windows -->
+        <g id="windows"></g>
+        <!-- antenna beacons -->
+        <circle cx="815" cy="86" r="3" class="win p"/>
+        <circle cx="570" cy="116" r="3" class="win c"/>
+        <circle cx="1292" cy="136" r="3" class="win p"/>
+      </svg>
+    </div>
+
+    <div class="street" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="greet" id="greet"></div>
+        <h1 id="name"><span class="neon-p">Cai Jiechao</span></h1>
+        <div class="head" id="headline"></div>
+        <p class="sub" id="hero-sub"></p>
+        <div class="cta-row">
+          <a class="btn" id="cvBtn" href="#" download></a>
+          <a class="btn cy" id="ghBtn" target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about"><div class="wrap">
+    <div class="sec-head"><span class="idx">01</span><h2 id="l-about"></h2><span class="flt"></span></div>
+    <div class="about">
+      <div class="portrait-frame"><img id="portrait" alt="" /></div>
+      <div class="panel about-body" id="about-body"></div>
+    </div>
+  </div></section>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <section id="education"><div class="wrap">
+    <div class="sec-head"><span class="idx">02</span><h2 id="l-edu"></h2><span class="flt"></span></div>
+    <div class="rows" id="edu-list"></div>
+  </div></section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills"><div class="wrap">
+    <div class="sec-head"><span class="idx">03</span><h2 id="l-skills"></h2><span class="flt"></span></div>
+    <div class="tags" id="tag-list"></div>
+    <div class="skill-lines" id="skill-lines"></div>
+  </div></section>
+
+  <!-- ===================== COURSES ===================== -->
+  <section id="courses"><div class="wrap">
+    <div class="sec-head"><span class="idx">04</span><h2 id="l-courses"></h2><span class="flt"></span></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section id="experience"><div class="wrap">
+    <div class="sec-head"><span class="idx">05</span><h2 id="l-exp"></h2><span class="flt"></span></div>
+    <div class="rows" id="exp-list"></div>
+  </div></section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section id="projects"><div class="wrap">
+    <div class="sec-head"><span class="idx">06</span><h2 id="l-projects"></h2><span class="flt"></span></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <!-- ===================== ARTICLES ===================== -->
+  <section id="articles"><div class="wrap">
+    <div class="sec-head"><span class="idx">07</span><h2 id="l-articles"></h2><span class="flt"></span></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <!-- ===================== CERTIFICATES ===================== -->
+  <section id="certificates"><div class="wrap">
+    <div class="sec-head"><span class="idx">08</span><h2 id="l-certs"></h2><span class="flt"></span></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact"><div class="wrap">
+    <div class="sec-head"><span class="idx">09</span><h2 id="l-contact"></h2><span class="flt"></span></div>
+    <div class="contact">
+      <div class="panel cy cinfo" id="contact-info"></div>
+      <div class="panel cform">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <input type="text" name="name" id="cf-name" required>
+          <input type="email" name="email" id="cf-email" required>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn" id="cf-send"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer><div class="wrap">
+    <div class="frow">
+      <a class="brand" href="#top" style="font-size:18px">Cai<b>Jiechao</b></a>
+      <div class="fsocial" id="foot-social"></div>
+    </div>
+    <div class="fmeta">
+      <span class="muted" id="foot-desc"></span>
+      <a class="muted" id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "31-cybercity";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    // --- Populate skyline lit windows once (decorative) ---
+    (function seedWindows(){
+      const g = document.getElementById('windows');
+      if(!g) return;
+      // tower footprints [x, topY, width]
+      const towers = [
+        [0,300,120],[110,250,96],[300,150,86],[386,210,70],[520,120,100],
+        [620,260,70],[760,90,110],[870,230,76],[1000,160,96],[1096,280,80],
+        [1240,140,104],[1360,250,80]
+      ];
+      let out = "";
+      towers.forEach(function(tw){
+        const x0=tw[0], y0=tw[1], w=tw[2];
+        for(let yy=y0+14; yy<430; yy+=22){
+          for(let xx=x0+8; xx<x0+w-6; xx+=16){
+            const r = Math.random();
+            if(r<0.30){
+              const cls = r<0.14 ? 'p' : (r<0.22 ? 'c' : 'dim');
+              out += '<rect class="win '+cls+'" x="'+xx+'" y="'+yy+'" width="6" height="9"/>';
+            }
+          }
+        }
+      });
+      g.innerHTML = out;
+    })();
+
+    function renderStatic(){
+      // nav
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').innerHTML = `<span class="neon-p">${esc(t(P.name))}</span>`;
+      document.getElementById('headline').innerHTML = esc(t(P.headline));
+      document.getElementById('hero-sub').innerHTML =
+        `${esc(t(P.title))} · <span class="loc">${esc(t(P.location))}</span>`;
+      const cv = document.getElementById('cvBtn');
+      cv.textContent = t(P.ui.download_cv); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.textContent = "GitHub ↗"; gh.href = P.contact.github;
+
+      // section labels
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+
+      // about
+      const portrait = document.getElementById('portrait');
+      portrait.src = P.avatar; portrait.alt = t(P.name);
+      document.getElementById('about-body').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<span class="locpill">📍 ${esc(t(P.location))}</span>`;
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="panel cy rowcard">
+          <div class="when">${esc(e.period)}</div>
+          <div><h3>${esc(t(e.school))}</h3>
+          <div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>
+        </div>`).join('');
+
+      // skills: tag cloud + grouped lines
+      document.getElementById('tag-list').innerHTML =
+        (P.skillTags||[]).map(s=>`<span class="tag">${esc(s)}</span>`).join('');
+      document.getElementById('skill-lines').innerHTML =
+        (P.skills||[]).map(s=>`<div class="sl">${esc(s)}</div>`).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="panel course">
+          <div class="ci"><i class="fa ${esc(c.icon)}" aria-hidden="true"></i></div>
+          <h4>${esc(t(c.title))}</h4>
+          <p>${esc(t(c.desc))}</p>
+        </div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="panel rowcard">
+          <div class="when">${esc(x.period)}</div>
+          <div>
+            <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+            <div class="exp-sum">${esc(t(x.summary))}</div>
+            <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+          </div>
+        </div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert">
+          <img src="${esc(c.image)}" alt="${esc(t(c.title))}"
+               onerror="this.src='/index_page/img/blogs/1.jpg'">
+          <div class="ct">
+            <div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+            <h4>${esc(t(c.title))}</h4>
+            <p>${esc(t(c.desc))}</p>
+          </div>
+        </div>`).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span class="dt">${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover">
+            <img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="">
+          </div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span class="dt">${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML =
+        `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML =
+        `<div class="load-note">⚠ Failed to load articles / 内容加载失败</div>`; }
+    }
+
+    // Contact submit
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--dim)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--cyan)'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='var(--pink)'; s.textContent = err.message; }
+    });
+
+    // Font Awesome 4.7 for course icons
+    const fa = document.createElement('link');
+    fa.rel='stylesheet';
+    fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#ff2e88' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Nokia LCD</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --room:#12140d;
+      --plastic:#262a1e; --plastic-2:#171a10; --plastic-hi:#3c412e;
+      /* authentic 3310 monochrome LCD: shades of pea-green + dark ink only */
+      --lcd:#93a06f; --lcd-hi:#9daa78; --lcd-lo:#828f61;
+      --ink:#1f2a16; --ink-2:#2c3a1d; --ink-soft:rgba(31,42,22,.60); --line:rgba(31,42,22,.30);
+      --fill:rgba(31,42,22,.07); --fill-2:rgba(31,42,22,.12);
+      --frame:#3a3f30;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      height:100vh;height:100dvh;overflow:hidden;
+      background:radial-gradient(120% 90% at 50% 8%,#1b1e14,#0c0e08 82%);
+      color:var(--ink);
+      font-family:'Pixelify Sans',ui-monospace,'Courier New',monospace;
+      font-weight:500;line-height:1.55;-webkit-font-smoothing:none;text-rendering:optimizeSpeed;
+      display:flex;align-items:center;justify-content:center;
+      padding:12px;
+    }
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    ::selection{background:var(--ink);color:var(--lcd)}
+
+    /* ---------------- phone body (fixed, fits in viewport) ---------------- */
+    .phone{
+      position:relative;
+      width:100%;max-width:390px;height:100%;max-height:860px;
+      display:flex;flex-direction:column;min-height:0;
+      background:linear-gradient(160deg,var(--plastic-hi),var(--plastic) 22%,var(--plastic-2));
+      border-radius:44px 44px 38px 38px;
+      padding:14px 16px 16px;
+      box-shadow:
+        0 2px 0 rgba(255,255,255,.05) inset,
+        0 -14px 30px rgba(0,0,0,.5) inset,
+        0 26px 66px rgba(0,0,0,.6),
+        0 0 0 2px #0c0e08;
+    }
+    .phone-top{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;padding:2px 0 11px}
+    .speaker{width:66px;height:7px;border-radius:6px;
+      background:repeating-linear-gradient(90deg,#0c0e08 0 3px,#2b3021 3px 6px);
+      box-shadow:0 1px 0 rgba(255,255,255,.05)}
+    .nokia-logo{font-size:21px;letter-spacing:.34em;color:#c9d0b8;text-indent:.34em;
+      text-shadow:0 1px 0 #000;font-weight:700}
+
+    /* ---------------- LCD screen (the ONLY scrolling area) ---------------- */
+    .screen{
+      position:relative;flex:1 1 auto;min-height:0;
+      display:flex;flex-direction:column;overflow:hidden;
+      border-radius:12px;
+      background:
+        radial-gradient(120% 88% at 50% 22%,var(--lcd-hi) 0%,var(--lcd) 56%,var(--lcd-lo) 100%);
+      box-shadow:
+        0 0 0 3px #0c0e08, 0 0 0 7px #313626,
+        inset 0 0 22px rgba(31,42,22,.30),
+        0 0 26px rgba(147,160,111,.22); /* faint greenish glow */
+    }
+    /* crisp dot-matrix pixel grid + backlight vignette — fixed over the screen */
+    .lcd-grid{position:absolute;inset:0;z-index:5;pointer-events:none;
+      background-image:
+        repeating-linear-gradient(0deg,rgba(31,42,22,.13) 0 1px,transparent 1px 3px),
+        repeating-linear-gradient(90deg,rgba(31,42,22,.13) 0 1px,transparent 1px 3px),
+        radial-gradient(125% 90% at 50% 28%,transparent 52%,rgba(31,42,22,.26) 100%);
+      background-size:3px 3px,3px 3px,100% 100%;
+      mix-blend-mode:multiply}
+
+    /* status bar (pinned top of screen) */
+    .statusbar{flex:none;position:relative;z-index:2;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:7px 12px;border-bottom:2px solid var(--ink);gap:10px;
+      font-family:'VT323',monospace;font-size:19px;line-height:1}
+    .signal{display:flex;align-items:flex-end;gap:2px;height:13px}
+    .signal i{width:3px;background:var(--ink);display:block}
+    .signal i:nth-child(1){height:5px}.signal i:nth-child(2){height:8px}
+    .signal i:nth-child(3){height:11px}.signal i:nth-child(4){height:13px}
+    .op{letter-spacing:.10em;font-weight:600}
+    .status-right{display:flex;align-items:center;gap:9px}
+    .clock{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+    .battery{display:flex;align-items:center;gap:2px}
+    .battery .body{width:22px;height:12px;border:2px solid var(--ink);border-radius:2px;
+      display:flex;gap:1px;padding:1px}
+    .battery .body i{flex:1;background:var(--ink)}
+    .battery .cap{width:2px;height:6px;background:var(--ink);border-radius:0 1px 1px 0}
+
+    /* the scroll surface — everything below the status bar scrolls in here */
+    .lcd-scroll{flex:1 1 auto;min-height:0;position:relative;z-index:1;overflow-y:auto;overflow-x:hidden;
+      scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+    .lcd-scroll::-webkit-scrollbar{width:7px}
+    .lcd-scroll::-webkit-scrollbar-thumb{background:rgba(31,42,22,.55);border-radius:4px}
+    .lcd-scroll::-webkit-scrollbar-track{background:transparent}
+
+    /* soft-key bar (pinned bottom of screen) */
+    .softkeys{flex:none;position:relative;z-index:2;
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      padding:6px 10px;border-top:2px solid var(--ink);
+      font-size:13px;font-weight:600;letter-spacing:.06em}
+    .softkeys .sk{background:var(--fill-2);border:2px solid var(--ink);border-radius:6px;padding:2px 9px;cursor:pointer}
+    .softkeys .sk-mid{border:0;background:transparent;letter-spacing:.28em;font-size:15px;padding:0;opacity:.75;cursor:default}
+
+    /* generic screen padding */
+    .pad{padding:12px 13px}
+
+    /* hero / welcome */
+    .hero{padding:18px 13px 18px;text-align:center}
+    .hero .greet{font-size:14px;letter-spacing:.14em;color:var(--ink-soft)}
+    .hero h1{font-size:clamp(34px,8.5vw,46px);line-height:.95;margin:6px 0 0;font-weight:700}
+    .hero .role{margin-top:7px;font-size:17px;font-weight:600}
+    .hero .head{margin:10px auto 0;max-width:30ch;font-size:14px;color:var(--ink-2)}
+    .hero .meta{margin-top:10px;font-size:13px;color:var(--ink-soft)}
+    .caret{display:inline-block;width:.5em;height:1em;background:var(--ink);vertical-align:-2px;margin-left:2px;
+      animation:blink 1.1s steps(1) infinite}
+    @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+    .btnrow{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:16px}
+    .btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;
+      font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.04em;
+      background:var(--fill);color:var(--ink);border:2px solid var(--ink);border-radius:8px;
+      padding:8px 13px;box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+    .btn:hover,.btn:focus{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+    .btn.solid{background:var(--ink);color:var(--lcd)}
+
+    /* Nokia MENU list nav */
+    .menu-screen{border-top:2px solid var(--ink)}
+    .menu-title{background:var(--ink);color:var(--lcd);padding:6px 12px;font-size:14px;letter-spacing:.16em;font-weight:600}
+    .menu-list{list-style:none;margin:0;padding:0}
+    .menu-list li{border-bottom:1px solid var(--line)}
+    .menu-list a{display:flex;align-items:center;gap:12px;padding:8px 12px;text-decoration:none;font-size:16px}
+    .menu-list a .no{min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;
+      border:2px solid var(--ink);border-radius:5px;font-size:13px;font-weight:700}
+    .menu-list a:hover,.menu-list a:focus{background:var(--ink);color:var(--lcd)}
+    .menu-list a:hover .no,.menu-list a:focus .no{border-color:var(--lcd)}
+
+    /* section = message screen */
+    section{padding:0}
+    .msg{border-top:2px solid var(--ink)}
+    .msgbar{display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--lcd);
+      padding:6px 12px;font-size:15px;letter-spacing:.1em;font-weight:600}
+    .msgbar .idx{opacity:.8;font-size:12px}
+    .msgbody{padding:13px 13px 16px}
+    .msgbody p{margin:0 0 11px;font-size:14px;color:var(--ink-2)}
+
+    /* about */
+    .about{display:flex;gap:13px;align-items:flex-start}
+    .about .thumb{flex:0 0 auto;width:70px;height:70px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--fill-2)}
+    .about .thumb img{width:100%;height:100%;object-fit:cover;
+      filter:grayscale(1) sepia(1) hue-rotate(46deg) saturate(.6) contrast(.9) brightness(1.02)}
+    .loc{font-weight:600;color:var(--ink);font-size:14px;margin-top:2px}
+    @media(max-width:420px){.about{flex-direction:column}}
+
+    /* list rows (edu/exp) */
+    .item{padding:10px 0;border-bottom:1px solid var(--line)}
+    .item:last-child{border-bottom:0}
+    .item .when{font-size:12px;color:var(--ink-soft);letter-spacing:.04em}
+    .item h3{margin:2px 0 3px;font-size:16px;font-weight:700}
+    .item .sub{font-size:14px;color:var(--ink-2)}
+    .item ul{margin:8px 0 0;padding-left:16px;font-size:13px;color:var(--ink-2)}
+    .item ul li{margin-bottom:5px}
+
+    /* skills chips */
+    .chips{display:flex;flex-wrap:wrap;gap:7px}
+    .chip{border:2px solid var(--ink);border-radius:6px;padding:4px 9px;font-size:13px;background:var(--fill)}
+    .skill-lines{list-style:none;margin:0 0 12px;padding:0}
+    .skill-lines li{padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;display:flex;gap:8px}
+    .skill-lines li::before{content:"\25BA";font-size:11px;color:var(--ink);margin-top:2px}
+
+    /* courses / cards grids */
+    .stack{display:grid;gap:10px}
+    .cell{border:2px solid var(--ink);border-radius:8px;background:var(--fill);padding:11px}
+    .cell .ci{font-size:18px;margin-bottom:5px}
+    .cell h4{margin:0 0 5px;font-size:15px;font-weight:700}
+    .cell p{margin:0;font-size:13px;color:var(--ink-2)}
+
+    .card{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--ink);border-radius:8px;
+      background:var(--fill);padding:11px;text-decoration:none;color:inherit;
+      box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+    .card:hover,.card:focus{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+    .card .cthumb{flex:0 0 auto;width:56px;height:56px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--fill-2)}
+    .card .cthumb img{width:100%;height:100%;object-fit:cover;
+      filter:grayscale(1) sepia(1) hue-rotate(46deg) saturate(.6) contrast(.9) brightness(1.02)}
+    .card .cmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);letter-spacing:.04em;gap:8px}
+    .card h4{margin:3px 0 4px;font-size:15px;font-weight:700;line-height:1.25}
+    .card .tech{font-size:12px;color:var(--ink-2)}
+    .card p{margin:4px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.4}
+    .card .more{display:inline-block;margin-top:6px;font-size:12px;font-weight:700}
+
+    .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .filters button{font-family:inherit;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.03em;
+      background:var(--fill);color:var(--ink);border:2px solid var(--ink);border-radius:6px;padding:5px 9px;transition:.1s}
+    .filters button.active{background:var(--ink);color:var(--lcd)}
+    .load-note{font-size:14px;color:var(--ink-soft);padding:6px 0}
+
+    /* certificates */
+    .cert{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--ink);border-radius:8px;background:var(--fill);padding:11px;margin-bottom:10px}
+    .cert .cthumb{flex:0 0 auto;width:60px;height:60px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--fill-2)}
+    .cert .cthumb img{width:100%;height:100%;object-fit:cover;
+      filter:grayscale(1) sepia(1) hue-rotate(46deg) saturate(.6) contrast(.9) brightness(1.02)}
+    .cert .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);gap:8px}
+    .cert h4{margin:3px 0 4px;font-size:15px;font-weight:700}
+    .cert p{margin:0;font-size:12.5px;color:var(--ink-2)}
+
+    /* contact */
+    .cinfo{list-style:none;margin:0 0 14px;padding:0}
+    .cinfo a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;
+      padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+    .cinfo a span:last-child{font-weight:600}
+    .cform label{display:block;font-size:12px;letter-spacing:.08em;margin:0 0 5px;color:var(--ink-soft)}
+    .cform input,.cform textarea{width:100%;font-family:inherit;font-size:15px;color:var(--ink);
+      background:var(--fill-2);border:2px solid var(--ink);border-radius:6px;padding:9px;margin-bottom:11px}
+    .cform input:focus,.cform textarea:focus{outline:none;box-shadow:0 0 0 2px var(--ink)}
+    .cform textarea{min-height:90px;resize:vertical}
+    #cf-status{font-size:14px;font-weight:600;min-height:1.2em}
+
+    /* footer + snake */
+    .footer{border-top:2px solid var(--ink);padding:13px 13px 16px}
+    .snake-wrap{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+    .snake-grid{--c:9px;display:grid;grid-template-columns:repeat(10,var(--c));grid-template-rows:repeat(5,var(--c));
+      gap:1px;background:var(--line);border:2px solid var(--ink);padding:2px}
+    .snake-grid i{background:transparent}
+    .snake-grid i.on{background:var(--ink)}
+    .snake-grid i.food{background:var(--ink);animation:foodblink 1s steps(1) infinite}
+    @keyframes foodblink{0%,50%{opacity:1}51%,100%{opacity:.15}}
+    .snake-cap{font-size:13px;color:var(--ink-2)}
+    .snake-cap b{font-weight:700;color:var(--ink)}
+    .foot-links{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:13px}
+    .foot-links a{text-decoration:none;font-weight:600}
+    .foot-meta{margin-top:8px;font-size:12px;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between}
+    .foot-meta a{text-decoration:none}
+
+    /* physical controls (decorative) */
+    .controls{flex:none;padding-top:10px}
+    .navpad{display:flex;justify-content:center;margin:0 0 9px}
+    .navpad button{width:118px;height:38px;border-radius:20px;border:2px solid #0c0e08;cursor:pointer;
+      background:linear-gradient(160deg,var(--plastic-hi),var(--plastic-2));color:#c9d0b8;font-family:inherit;
+      font-size:13px;font-weight:600;letter-spacing:.1em;box-shadow:0 3px 0 #0a0c07}
+    .navpad button:active{transform:translateY(2px);box-shadow:0 1px 0 #0a0c07}
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:264px;margin:0 auto}
+    .key{background:linear-gradient(160deg,var(--plastic-hi),var(--plastic-2));color:#c9d0b8;
+      border:2px solid #0c0e08;border-radius:10px;padding:5px 4px;text-align:center;font-size:14px;font-weight:600;
+      box-shadow:0 3px 0 #0a0c07;cursor:default;line-height:1.05}
+    .key small{display:block;font-size:8px;letter-spacing:.1em;opacity:.7}
+
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+      outline:3px solid var(--ink);outline-offset:2px}
+
+    /* short viewports: drop the keypad so the phone still fits within 100vh */
+    @media (max-height:640px){
+      .keypad{display:none}
+      .navpad{margin-bottom:2px}
+      .controls{padding-top:6px}
+      .phone{padding-bottom:12px}
+    }
+    @media (max-height:520px){
+      .navpad{display:none}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .caret,.snake-grid i.food{animation:none}
+      *{animation-duration:.001s!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="phone-top">
+      <div class="speaker" aria-hidden="true"></div>
+      <div class="nokia-logo">NOKIA</div>
+    </div>
+
+    <div class="screen">
+      <div class="lcd-grid" aria-hidden="true"></div>
+
+      <!-- status bar (fixed) -->
+      <div class="statusbar">
+        <div class="signal" aria-label="signal" title="signal"><i></i><i></i><i></i><i></i></div>
+        <div class="op" id="operator">CJC-NET</div>
+        <div class="status-right">
+          <span class="clock" id="clock">12:00</span>
+          <span class="battery" aria-label="battery"><span class="body"><i></i><i></i><i></i></span><span class="cap"></span></span>
+        </div>
+      </div>
+
+      <!-- ONLY this area scrolls -->
+      <div class="lcd-scroll" id="lcd-scroll">
+        <div id="top"></div>
+        <header class="hero">
+          <div class="greet" id="greet"></div>
+          <h1 id="name"></h1>
+          <div class="role" id="role"></div>
+          <div class="head" id="headline"></div>
+          <div class="meta" id="meta"></div>
+          <div class="btnrow">
+            <a class="btn solid" id="cvBtn" href="#" download></a>
+            <a class="btn" id="ghBtn" target="_blank" rel="noopener"></a>
+          </div>
+        </header>
+
+        <!-- MENU -->
+        <div class="menu-screen">
+          <div class="menu-title" id="menu-title"></div>
+          <ul class="menu-list" id="nav"></ul>
+        </div>
+
+        <!-- sections -->
+        <section id="about"><div class="msg">
+          <div class="msgbar"><span class="idx">01</span><span id="l-about"></span></div>
+          <div class="msgbody">
+            <div class="about">
+              <div class="thumb"><img id="portrait" alt=""></div>
+              <div id="about-text" style="flex:1"></div>
+            </div>
+          </div>
+        </div></section>
+
+        <section id="education"><div class="msg">
+          <div class="msgbar"><span class="idx">02</span><span id="l-edu"></span></div>
+          <div class="msgbody" id="edu-list"></div>
+        </div></section>
+
+        <section id="skills"><div class="msg">
+          <div class="msgbar"><span class="idx">03</span><span id="l-skills"></span></div>
+          <div class="msgbody">
+            <ul class="skill-lines" id="skills-list"></ul>
+            <div class="chips" id="tag-list"></div>
+          </div>
+        </div></section>
+
+        <section id="courses"><div class="msg">
+          <div class="msgbar"><span class="idx">04</span><span id="l-courses"></span></div>
+          <div class="msgbody"><div class="stack" id="courses-list"></div></div>
+        </div></section>
+
+        <section id="experience"><div class="msg">
+          <div class="msgbar"><span class="idx">05</span><span id="l-exp"></span></div>
+          <div class="msgbody" id="exp-list"></div>
+        </div></section>
+
+        <section id="projects"><div class="msg">
+          <div class="msgbar"><span class="idx">06</span><span id="l-projects"></span></div>
+          <div class="msgbody"><div class="stack" id="projects-list"><div class="load-note" id="proj-load"></div></div></div>
+        </div></section>
+
+        <section id="articles"><div class="msg">
+          <div class="msgbar"><span class="idx">07</span><span id="l-articles"></span></div>
+          <div class="msgbody">
+            <div class="filters" id="filters"></div>
+            <div class="stack" id="articles-list"><div class="load-note" id="art-load"></div></div>
+          </div>
+        </div></section>
+
+        <section id="certificates"><div class="msg">
+          <div class="msgbar"><span class="idx">08</span><span id="l-certs"></span></div>
+          <div class="msgbody" id="certs-list"></div>
+        </div></section>
+
+        <section id="contact"><div class="msg">
+          <div class="msgbar"><span class="idx">09</span><span id="l-contact"></span></div>
+          <div class="msgbody">
+            <ul class="cinfo" id="contact-info"></ul>
+            <form class="cform" id="cf">
+              <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+              <label id="lb-name" for="cf-name"></label>
+              <input type="text" name="name" id="cf-name" required>
+              <label id="lb-email" for="cf-email"></label>
+              <input type="email" name="email" id="cf-email" required>
+              <label id="lb-msg" for="cf-msg"></label>
+              <textarea name="message" id="cf-msg" required></textarea>
+              <button type="submit" class="btn solid" id="cf-send"></button>
+              <p id="cf-status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div></section>
+
+        <!-- footer / snake -->
+        <div class="footer">
+          <div class="snake-wrap">
+            <div class="snake-grid" id="snake" aria-hidden="true"></div>
+            <div class="snake-cap"><b>SNAKE II</b><br><span id="snake-cap"></span></div>
+          </div>
+          <div class="foot-links" id="foot-social"></div>
+          <div class="foot-meta">
+            <span id="foot-desc"></span>
+            <a id="foot-icp" target="_blank" rel="noopener"></a>
+          </div>
+        </div>
+      </div><!-- /lcd-scroll -->
+
+      <!-- soft-key bar (fixed) -->
+      <div class="softkeys">
+        <span class="sk" id="sk-menu"></span>
+        <span class="sk-mid" aria-hidden="true">&#9650;&#9660;</span>
+        <span class="sk" id="sk-back"></span>
+      </div>
+    </div><!-- /screen -->
+
+    <!-- physical controls (decorative) -->
+    <div class="controls">
+      <div class="navpad"><button type="button" id="navMenu">MENU</button></div>
+      <div class="keypad" aria-hidden="true">
+        <div class="key">1<small>&nbsp;</small></div>
+        <div class="key">2<small>ABC</small></div>
+        <div class="key">3<small>DEF</small></div>
+        <div class="key">4<small>GHI</small></div>
+        <div class="key">5<small>JKL</small></div>
+        <div class="key">6<small>MNO</small></div>
+        <div class="key">7<small>PQRS</small></div>
+        <div class="key">8<small>TUV</small></div>
+        <div class="key">9<small>WXYZ</small></div>
+        <div class="key">*<small>&nbsp;</small></div>
+        <div class="key">0<small>+</small></div>
+        <div class="key">#<small>&nbsp;</small></div>
+      </div>
+    </div>
+  </div>
+
+  <script>window.THEME_ID = "39-nokia";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      const zh = CJCData.lang()==='zh';
+      document.title = (zh ? '蔡杰超' : 'Cai Jiechao') + " — Nokia LCD";
+      // menu title + softkeys
+      document.getElementById('menu-title').textContent = (zh?'菜单':'MENU');
+      document.getElementById('sk-menu').textContent = (zh?'选择':'Select');
+      document.getElementById('sk-back').textContent = (zh?'顶部':'Top');
+      document.getElementById('snake-cap').textContent = (zh?'高分: 蔡杰超':'Hi-score: CJC');
+      document.getElementById('navMenu').textContent = 'MENU';
+      // nav (Nokia menu 1..9)
+      const navItems = [
+        ['about','nav_about'],['education','education_bg'],['skills','core_tech'],
+        ['courses','nav_courses'],['experience','internship_exp'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['certificates','certificates'],['contact','nav_contact']
+      ];
+      document.getElementById('nav').innerHTML = navItems.map(([id,k],i)=>
+        `<li><a href="#${id}"><span class="no">${i+1}</span><span>${esc(t(P.ui[k]))}</span></a></li>`).join('');
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').innerHTML = esc(t(P.name)) + '<span class="caret" aria-hidden="true"></span>';
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('meta').innerHTML = `${esc(t(P.title))}<br>◈ ${esc(t(P.location))}`;
+      const cv = document.getElementById('cvBtn');
+      cv.textContent = "▼ " + t(P.ui.download_cv); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.textContent = "GitHub »"; gh.href = P.contact.github;
+      // section labels
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      // about
+      const por = document.getElementById('portrait'); por.src = P.avatar; por.alt = t(P.name);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<div class="loc">◈ ${esc(t(P.location))}</div>`;
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="item"><div class="when">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3>
+        <div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>`).join('');
+      // skills
+      document.getElementById('skills-list').innerHTML = P.skills.map(s=>`<li>${esc(s)}</li>`).join('');
+      document.getElementById('tag-list').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="cell"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="item"><div class="when">${esc(x.period)}</div>
+        <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><div class="cthumb"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'"></div>
+        <div><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR »', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div style="flex:1">
+            <div class="cmeta"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} »</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cthumb"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div style="flex:1">
+            <div class="cmeta"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} »</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load / 内容加载失败</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.opacity='.7'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.opacity='1'; s.textContent = "✓ " + (r.message||'Sent.'); f.reset(); }
+      catch(err){ s.style.opacity='1'; s.textContent = "✗ " + err.message; }
+    });
+
+    // decorative snake in footer
+    function buildSnake(){
+      const grid = document.getElementById('snake'); if(!grid) return;
+      const cells=50; let html='';
+      const snake=[12,13,14,15,25,35,34,33]; // some segments
+      for(let i=0;i<cells;i++){
+        const cls = i===7 ? 'food' : (snake.indexOf(i)!==-1 ? 'on' : '');
+        html+=`<i class="${cls}"></i>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function tickClock(){
+      const c=document.getElementById('clock'); if(!c) return;
+      const d=new Date();
+      c.textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    }
+
+    // Font Awesome 4 for course icons
+    const fa = document.createElement('link');
+    fa.rel='stylesheet'; fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      buildSnake();
+      tickClock(); setInterval(tickClock, 30000);
+      document.getElementById('navMenu').addEventListener('click', ()=>{
+        document.getElementById('top').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      document.getElementById('sk-back').addEventListener('click', ()=>{
+        document.getElementById('top').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      CJCData.mountSwitcher({ accent:'#3a3f30' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

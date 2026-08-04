@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Brutalist</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --paper:#f5f1e6; --ink:#111111; --yellow:#fde000; --cobalt:#2d5bff;
+      --pink:#ff5da2; --white:#ffffff; --shadow:6px 6px 0 #000;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:var(--paper);color:var(--ink);
+      font-family:'Space Mono','IBM Plex Mono',monospace;line-height:1.55;
+      overflow-x:hidden;
+    }
+    h1,h2,h3,h4{font-family:'Archivo Black','Space Mono',sans-serif;font-weight:400;letter-spacing:-.01em;margin:0}
+    img{max-width:100%;display:block}
+    a{color:inherit}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+    /* ---- Marquee header strip ---- */
+    .marquee{background:var(--ink);color:var(--yellow);border-bottom:4px solid #000;overflow:hidden;white-space:nowrap}
+    .marquee .track{display:inline-block;padding:10px 0;font-family:'Archivo Black',sans-serif;
+      font-size:15px;text-transform:uppercase;letter-spacing:.04em;animation:marq 22s linear infinite;will-change:transform}
+    .marquee .track span{padding:0 22px}
+    .marquee .track span i{color:var(--pink);font-style:normal}
+    @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* ---- Nav ---- */
+    .nav{position:sticky;top:0;z-index:800;background:var(--yellow);border-bottom:4px solid #000}
+    /* Make the global theme switcher opaque + brutalist so it doesn't clash with the marquee */
+    #cjc-switcher{top:10px!important;right:10px!important;gap:10px!important}
+    #cjc-switcher button{background:#fff!important;color:#000!important;border:3px solid #000!important;
+      border-radius:0!important;box-shadow:4px 4px 0 #000!important;font-weight:800!important;
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;text-transform:uppercase}
+    #cjc-switcher .cjc-theme-btn{background:var(--yellow)!important;color:#000!important}
+    #cjc-switcher button:hover{transform:translate(-2px,-2px)!important;box-shadow:6px 6px 0 #000!important}
+    .nav .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 0}
+    .brand{font-family:'Archivo Black',sans-serif;font-size:22px;text-decoration:none;
+      background:#000;color:var(--yellow);padding:6px 12px;border:3px solid #000;box-shadow:4px 4px 0 var(--pink)}
+    .navlinks{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;padding-right:170px}
+    .navlinks a{font-weight:700;font-size:12px;text-transform:uppercase;text-decoration:none;
+      background:var(--white);border:3px solid #000;padding:6px 10px;box-shadow:3px 3px 0 #000;transition:transform .12s,box-shadow .12s}
+    .navlinks a:hover{transform:translate(3px,3px);box-shadow:0 0 0 #000;background:var(--cobalt);color:#fff}
+    @media(max-width:920px){.navlinks{display:none}}
+
+    /* ---- Section scaffolding ---- */
+    section{padding:52px 0;border-bottom:4px solid #000}
+    .label{display:inline-block;background:var(--pink);color:#000;border:3px solid #000;
+      font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:13px;letter-spacing:.05em;
+      padding:6px 12px;box-shadow:var(--shadow);transform:rotate(-2deg);margin-bottom:26px}
+    .num{background:var(--cobalt);color:#fff}
+    .sec-title{font-size:clamp(28px,5vw,52px);line-height:.95;text-transform:uppercase;margin:0 0 8px}
+
+    /* ---- Hero ---- */
+    .hero{padding:56px 0 46px}
+    .greet{display:inline-block;background:var(--cobalt);color:#fff;border:3px solid #000;padding:6px 12px;
+      box-shadow:var(--shadow);font-weight:700;text-transform:uppercase;transform:rotate(-1.5deg);font-size:14px}
+    .hero h1{font-size:clamp(46px,12vw,120px);line-height:.86;text-transform:uppercase;margin:22px 0 0}
+    .hero .head{font-size:clamp(18px,3vw,30px);font-weight:700;max-width:20ch;margin:18px 0 0;
+      background:var(--yellow);display:inline-block;padding:6px 10px;border:3px solid #000;box-shadow:5px 5px 0 var(--cobalt)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .chip{background:var(--white);border:3px solid #000;padding:6px 11px;font-weight:700;font-size:13px;box-shadow:3px 3px 0 #000}
+    .btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'Archivo Black',sans-serif;
+      text-transform:uppercase;font-size:14px;border:3px solid #000;padding:13px 20px;cursor:pointer;
+      box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;background:var(--pink);color:#000}
+    .btn.alt{background:var(--cobalt);color:#fff}
+    .btn:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 #000}
+    .btn:active{transform:translate(6px,6px);box-shadow:0 0 0 #000}
+
+    /* ---- About ---- */
+    .about{display:grid;grid-template-columns:300px 1fr;gap:30px;align-items:start}
+    .portrait{border:4px solid #000;box-shadow:10px 10px 0 var(--cobalt);width:100%}
+    .about p{font-size:16px;margin:0 0 16px;max-width:60ch}
+    .about .loc{display:inline-block;background:var(--yellow);border:3px solid #000;padding:5px 10px;font-weight:700;box-shadow:3px 3px 0 #000}
+    @media(max-width:760px){.about{grid-template-columns:1fr}}
+
+    /* ---- Rows (education / experience) ---- */
+    .stack{display:flex;flex-direction:column;gap:18px}
+    .block{background:var(--white);border:4px solid #000;box-shadow:var(--shadow);padding:18px 20px;transition:transform .12s,box-shadow .12s}
+    .block:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 #000}
+    .block .when{display:inline-block;background:var(--cobalt);color:#fff;border:2px solid #000;padding:3px 9px;font-weight:700;font-size:13px;margin-bottom:10px}
+    .block h3{font-size:20px;text-transform:uppercase;margin:0 0 6px}
+    .block .sub{font-size:14.5px;font-weight:700}
+    .block ul{margin:12px 0 0;padding-left:20px}
+    .block ul li{margin-bottom:7px;font-size:14.5px}
+
+    /* ---- Skills tags ---- */
+    .tags{display:flex;flex-wrap:wrap;gap:12px}
+    .tag{border:3px solid #000;padding:8px 13px;font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;
+      box-shadow:4px 4px 0 #000;transition:transform .12s,box-shadow .12s}
+    .tag:hover{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+
+    /* ---- Courses ---- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .course{border:4px solid #000;box-shadow:var(--shadow);padding:18px;background:var(--white);transition:transform .12s,box-shadow .12s}
+    .course:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 #000}
+    .course .ic{width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+      border:3px solid #000;font-size:24px;margin-bottom:12px;color:#000}
+    .course h4{font-size:16px;text-transform:uppercase;margin:0 0 8px;line-height:1.15}
+    .course p{margin:0;font-size:13.5px;line-height:1.5}
+    @media(max-width:860px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.courses{grid-template-columns:1fr}}
+
+    /* ---- Cards (projects / articles) ---- */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{border:4px solid #000;box-shadow:var(--shadow);background:var(--white);text-decoration:none;color:inherit;
+      display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s}
+    .card:hover{transform:translate(4px,4px);box-shadow:2px 2px 0 #000}
+    .card .cover{height:158px;border-bottom:4px solid #000;overflow:hidden;background:var(--yellow)}
+    .card .cover img{width:100%;height:100%;object-fit:cover}
+    .card .body{padding:15px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .card .ctag{display:flex;justify-content:space-between;gap:8px;font-weight:700;font-size:11px;text-transform:uppercase}
+    .card .ctag .cat{background:var(--pink);border:2px solid #000;padding:2px 7px}
+    .card h4{font-size:16px;text-transform:uppercase;line-height:1.15;margin:0}
+    .card p{margin:0;font-size:13.5px;line-height:1.5;flex:1}
+    .card .stack-line{font-weight:700;font-size:12.5px;color:var(--cobalt)}
+    .card .more{font-family:'Archivo Black',sans-serif;font-size:12px;text-transform:uppercase}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+
+    /* ---- Filters ---- */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+    .filters button{background:var(--white);border:3px solid #000;font-family:'Space Mono',monospace;font-weight:700;
+      text-transform:uppercase;font-size:12px;padding:8px 13px;cursor:pointer;box-shadow:3px 3px 0 #000;transition:transform .12s,box-shadow .12s}
+    .filters button.active{background:var(--yellow)}
+    .filters button:hover{transform:translate(3px,3px);box-shadow:0 0 0 #000}
+
+    /* ---- Certificates ---- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .cert{border:4px solid #000;box-shadow:var(--shadow);background:var(--white);display:grid;grid-template-columns:120px 1fr}
+    .cert img{height:100%;object-fit:cover;border-right:4px solid #000}
+    .cert .ct{padding:16px}
+    .cert .ct .meta{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;font-weight:700;font-size:11px;text-transform:uppercase;margin-bottom:8px}
+    .cert .ct .meta .tg{background:var(--cobalt);color:#fff;border:2px solid #000;padding:2px 7px}
+    .cert .ct h4{font-size:16px;text-transform:uppercase;margin:0 0 6px}
+    .cert .ct p{margin:0;font-size:13px;line-height:1.5}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+
+    /* ---- Contact ---- */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:30px;align-items:start}
+    .cinfo a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;font-weight:700;
+      border:3px solid #000;padding:12px 14px;margin-bottom:12px;background:var(--white);box-shadow:4px 4px 0 #000;transition:transform .12s,box-shadow .12s}
+    .cinfo a:hover{transform:translate(4px,4px);box-shadow:0 0 0 #000;background:var(--yellow)}
+    .cinfo a span:last-child{color:var(--cobalt)}
+    form input,form textarea{width:100%;background:var(--white);border:4px solid #000;font-family:'Space Mono',monospace;
+      font-size:15px;padding:13px;margin-bottom:14px;color:var(--ink);box-shadow:inset 0 0 0 rgba(0,0,0,0)}
+    form input:focus,form textarea:focus{outline:none;box-shadow:5px 5px 0 var(--pink)}
+    form textarea{min-height:130px;resize:vertical}
+    #cf-status{font-weight:700;margin-top:10px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* ---- Footer ---- */
+    footer{background:var(--ink);color:var(--paper);padding:38px 0;border-bottom:none}
+    footer .frow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+    footer a{color:var(--yellow);text-decoration:underline;font-weight:700;font-size:14px}
+    footer .fbrand{font-family:'Archivo Black',sans-serif;color:var(--yellow);font-size:22px;text-decoration:none}
+    footer .muted{color:#bdbdbd;font-size:12.5px}
+    .load-note{font-weight:700;border:3px dashed #000;padding:16px;grid-column:1/-1}
+
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+    @media(prefers-reduced-motion:reduce){
+      .marquee .track{animation:none}
+      *{transition:none!important}
+      html{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="marquee"><div class="track" id="marquee"></div></div>
+
+  <div class="nav"><div class="wrap row">
+    <a class="brand" href="#top">CJC</a>
+    <nav class="navlinks" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+  <header class="hero"><div class="wrap">
+    <div class="greet" id="greet"></div>
+    <h1 id="name"></h1>
+    <div class="head" id="headline"></div>
+    <div class="chips" id="chips"></div>
+    <div class="btns">
+      <a class="btn" id="cvBtn" href="#" download></a>
+      <a class="btn alt" id="ghBtn" target="_blank" rel="noopener"></a>
+    </div>
+  </div></header>
+
+  <section id="about"><div class="wrap">
+    <div class="label num">01</div><div class="label" id="l-about"></div>
+    <div class="about">
+      <img class="portrait" id="portrait" alt="" />
+      <div id="about-text"></div>
+    </div>
+  </div></section>
+
+  <section id="education"><div class="wrap">
+    <div class="label num">02</div><div class="label" id="l-edu"></div>
+    <div class="stack" id="edu-list"></div>
+  </div></section>
+
+  <section id="skills"><div class="wrap">
+    <div class="label num">03</div><div class="label" id="l-skills"></div>
+    <div class="tags" id="skills-list"></div>
+  </div></section>
+
+  <section id="courses"><div class="wrap">
+    <div class="label num">04</div><div class="label" id="l-courses"></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience"><div class="wrap">
+    <div class="label num">05</div><div class="label" id="l-exp"></div>
+    <div class="stack" id="exp-list"></div>
+  </div></section>
+
+  <section id="projects"><div class="wrap">
+    <div class="label num">06</div><div class="label" id="l-projects"></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles"><div class="wrap">
+    <div class="label num">07</div><div class="label" id="l-articles"></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="wrap">
+    <div class="label num">08</div><div class="label" id="l-certs"></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact"><div class="wrap">
+    <div class="label num">09</div><div class="label" id="l-contact"></div>
+    <div class="contact">
+      <div class="cinfo" id="contact-info"></div>
+      <form id="cf">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+        <input type="text" name="name" id="cf-name" required>
+        <input type="email" name="email" id="cf-email" required>
+        <textarea name="message" id="cf-msg" required></textarea>
+        <button type="submit" class="btn" id="cf-send"></button>
+        <p id="cf-status"></p>
+      </form>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="frow">
+      <a class="fbrand" href="#top">CAIJIECHAO</a>
+      <div class="frow" id="foot-social" style="gap:16px"></div>
+    </div>
+    <div class="frow" style="margin-top:18px">
+      <span class="muted" id="foot-desc"></span>
+      <a id="foot-icp" class="muted" style="color:#bdbdbd" target="_blank"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "02-brutalist";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    const swatches = ['var(--yellow)','var(--cobalt)','var(--pink)','var(--white)'];
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      // marquee
+      const mText = `<span>${esc(t(P.name))} — <i>${esc(t(P.role))}</i></span>`
+        + `<span>★ ${esc(t(P.headline))}</span>`
+        + `<span>◆ ${esc(t(P.location))}</span>`
+        + `<span>@${esc(P.contact.githubUser)}</span>`;
+      document.getElementById('marquee').innerHTML = mText + mText;
+      // nav
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['skills','core_tech'],['courses','nav_courses'],
+        ['projects','nav_portfolio'],['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('chips').innerHTML =
+        `<span class="chip">${esc(t(P.title))}</span><span class="chip">◆ ${esc(t(P.location))}</span>`;
+      const cv = document.getElementById('cvBtn');
+      cv.textContent = '↓ ' + t(P.ui.download_cv); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.textContent = 'GitHub ↗'; gh.href = P.contact.github;
+      // labels
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      // about
+      const portrait = document.getElementById('portrait');
+      portrait.src = P.avatar; portrait.alt = t(P.name);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<div class="loc">◆ ${esc(t(P.location))}</div>`;
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="block"><span class="when">${esc(e.period)}</span>
+        <h3>${esc(t(e.school))}</h3>
+        <div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>`).join('');
+      // skills
+      document.getElementById('skills-list').innerHTML = (P.skillTags||[]).map((s,i)=>
+        `<span class="tag" style="background:${swatches[i%swatches.length]}">${esc(s)}</span>`).join('');
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="course"><div class="ic" style="background:${swatches[i%swatches.length]}"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="block"><span class="when">${esc(x.period)}</span>
+        <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+        <div class="ct"><div class="meta"><span class="tg">${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="body">
+            <div class="ctag"><span class="cat">${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack-line">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="body">
+            <div class="ctag"><span class="cat">${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='#000'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--cobalt)'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#d40000'; s.textContent = err.message; }
+    });
+
+    // Font Awesome for course icons
+    const fa = document.createElement('link');
+    fa.rel='stylesheet'; fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#ffde00' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

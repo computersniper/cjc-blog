@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter loaded only as a graceful fallback on non-Apple systems; SF Pro / system UI leads the stack. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Inter,sans-serif;
+      --accent:#0071e3;         /* pill fill */
+      --accent-press:#0077ed;
+      --link:#0066cc;           /* chevron text links */
+      --paper:#ffffff;
+      --band:#f5f5f7;
+      --nav:rgba(251,251,253,.8);
+      --ink:#1d1d1f;
+      --ink-soft:#6e6e73;
+      --ink-faint:#86868b;
+      --line:#d2d2d7;
+      --hair:rgba(0,0,0,.08);
+      --radius:22px;
+      --shadow:0 4px 20px rgba(0,0,0,.06),0 18px 46px -22px rgba(0,0,0,.20);
+      --maxw:1024px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{
+      margin:0;background:var(--paper);color:var(--ink);
+      font-family:var(--sans);
+      font-size:17px;line-height:1.47;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{font-family:inherit}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 22px;width:100%}
+
+    /* ---- Nav: slim translucent sticky bar with centered small links ---- */
+    .nav{position:sticky;top:0;z-index:900;height:44px;background:var(--nav);
+      -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+      border-bottom:1px solid var(--hair)}
+    .nav-inner{position:relative;display:flex;align-items:center;justify-content:center;height:44px;
+      max-width:var(--maxw);margin:0 auto;padding:0 22px}
+    .brand{position:absolute;left:22px;top:50%;transform:translateY(-50%);
+      font-weight:600;font-size:14px;letter-spacing:-.01em;color:var(--ink)}
+    .navlinks{display:flex;gap:30px}
+    .navlinks a{font-size:12px;color:rgba(0,0,0,.72);font-weight:400;letter-spacing:-.01em;transition:color .2s}
+    .navlinks a:hover{color:var(--ink)}
+    @media(max-width:860px){.navlinks{display:none}}
+
+    /* ---- Chevron text-links (Apple "Learn more ›" style) ---- */
+    .chev{display:inline-flex;align-items:center;color:var(--link);font-size:20px;font-weight:400;
+      letter-spacing:-.01em;line-height:1;padding:4px 2px}
+    .chev span{white-space:nowrap}
+    .chev::after{content:"\203A";margin-left:6px;font-size:1.05em;line-height:1;transition:transform .22s ease}
+    .chev:hover span{text-decoration:underline}
+    .chev:hover::after{transform:translateX(4px)}
+
+    /* ---- Pill buttons ---- */
+    .pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px 22px;border-radius:980px;font-size:17px;font-weight:400;letter-spacing:-.01em;
+      cursor:pointer;border:1px solid transparent;transition:background .2s,transform .2s}
+    .pill.primary{background:var(--accent);color:#fff}
+    .pill.primary:hover{background:var(--accent-press)}
+
+    /* ---- Hero (Apple product "chapter") ---- */
+    .hero{background:var(--paper);text-align:center;padding:76px 22px clamp(56px,8vw,86px)}
+    .hero .eyebrow{font-size:clamp(17px,2vw,21px);font-weight:600;color:var(--accent);letter-spacing:-.01em;margin:0 0 10px}
+    .hero-title{font-weight:600;font-size:clamp(40px,8vw,64px);line-height:1.04;letter-spacing:-.022em;margin:0;color:var(--ink)}
+    .hero-sub{font-size:clamp(21px,3.4vw,32px);font-weight:500;line-height:1.16;letter-spacing:-.012em;
+      color:var(--ink-soft);max-width:20ch;margin:16px auto 0}
+    .hero-links{display:flex;flex-wrap:wrap;gap:12px 34px;justify-content:center;align-items:center;margin-top:26px}
+    .hero-shot{margin:clamp(40px,6vw,64px) auto 0;max-width:400px}
+    .hero-shot img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:30px;
+      box-shadow:var(--shadow);background:var(--band)}
+    .hero-cap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
+      margin:22px 0 0;font-size:15px;color:var(--ink-faint)}
+    .hero-cap i{color:var(--accent);margin-right:2px}
+    .hero-cap .dot{color:var(--line)}
+
+    /* ---- Section scaffolding: stacked full-width chapters ---- */
+    section{padding:clamp(76px,10vw,120px) 0}
+    .band{background:var(--band)}
+    .sec-head{text-align:center;max-width:760px;margin:0 auto clamp(44px,6vw,64px)}
+    .sec-title{font-weight:600;font-size:clamp(32px,5vw,56px);line-height:1.07;letter-spacing:-.016em;margin:0;color:var(--ink)}
+    .sec-sub{font-size:clamp(19px,2.6vw,26px);font-weight:400;color:var(--ink-soft);letter-spacing:-.01em;
+      margin:14px auto 0;max-width:32ch;line-height:1.3}
+
+    /* ---- About (centered narrative) ---- */
+    .about{max-width:700px;margin:0 auto;text-align:center}
+    .about p{font-size:clamp(18px,2.1vw,21px);color:var(--ink);margin:0 0 22px;line-height:1.55;letter-spacing:-.01em}
+    .about p:last-of-type{margin-bottom:0}
+    .about .loc{margin-top:28px;font-size:16px;font-weight:500;color:var(--accent)}
+    .about .loc i{margin-right:6px}
+
+    /* ---- Education (rounded tiles) ---- */
+    .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:920px;margin:0 auto}
+    .edu{background:var(--paper);border-radius:var(--radius);padding:36px 34px;box-shadow:var(--shadow);
+      transition:transform .3s cubic-bezier(.28,.84,.42,1)}
+    .edu:hover{transform:translateY(-6px)}
+    .edu .when{font-size:15px;color:var(--accent);font-weight:600;letter-spacing:-.01em}
+    .edu h3{margin:14px 0 6px;font-size:23px;font-weight:600;letter-spacing:-.015em;line-height:1.22}
+    .edu .deg{font-size:16px;color:var(--ink-soft)}
+    .edu .note{font-size:15px;color:var(--ink-faint);margin-top:12px;line-height:1.5}
+    @media(max-width:680px){.edu-grid{grid-template-columns:1fr}}
+
+    /* ---- Skills chips ---- */
+    .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:820px;margin:0 auto}
+    .chip{padding:11px 22px;border-radius:980px;font-size:16px;font-weight:500;letter-spacing:-.01em;color:var(--ink);
+      background:var(--paper);border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
+    .chip:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+    .band .chip{background:#fff}
+
+    /* ---- Courses (bento of rounded tiles) ---- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .course{background:var(--band);border-radius:26px;padding:34px 30px;
+      transition:transform .3s cubic-bezier(.28,.84,.42,1),box-shadow .3s}
+    .course:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+    .course .ci{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+      font-size:24px;color:var(--accent);background:rgba(0,113,227,.10);margin-bottom:22px}
+    .course h4{margin:0 0 10px;font-size:21px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+    .course p{margin:0;font-size:15.5px;color:var(--ink-soft);line-height:1.6}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.courses{grid-template-columns:1fr}}
+
+    /* ---- Experience ---- */
+    .exp{background:var(--paper);border-radius:26px;padding:46px 48px;box-shadow:var(--shadow);max-width:860px;margin:0 auto;text-align:left}
+    .exp .top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;margin-bottom:8px}
+    .exp .top h3{margin:0;font-size:26px;font-weight:600;letter-spacing:-.018em}
+    .exp .co{color:var(--accent)}
+    .exp .when{margin-left:auto;font-size:15px;color:var(--ink-faint);font-weight:500}
+    .exp .summary{color:var(--ink-soft);font-size:17px;margin:0 0 26px;line-height:1.55}
+    .exp ul{margin:0;padding:0;list-style:none;display:grid;gap:16px}
+    .exp li{position:relative;padding-left:32px;font-size:16.5px;color:var(--ink);line-height:1.5}
+    .exp li::before{content:"\f00c";font-family:FontAwesome;position:absolute;left:0;top:3px;color:var(--accent);font-size:14px}
+    @media(max-width:560px){.exp{padding:34px 26px}.exp .when{margin-left:0}}
+
+    /* ---- Cards (Projects / Articles) ---- */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:48px}
+    .filters button{padding:9px 20px;border-radius:980px;font-size:14px;font-weight:500;letter-spacing:-.01em;cursor:pointer;
+      color:var(--ink-soft);background:#fff;border:1px solid var(--line);transition:.2s}
+    .filters button:hover{color:var(--ink);border-color:var(--ink-faint)}
+    .filters button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+    .card{background:var(--paper);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+      text-align:left;transition:transform .3s cubic-bezier(.28,.84,.42,1),box-shadow .3s}
+    .card:hover{transform:translateY(-8px);box-shadow:0 30px 54px -24px rgba(0,0,0,.30)}
+    .card .cover{height:180px;overflow:hidden;background:var(--band)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .55s}
+    .card:hover .cover img{transform:scale(1.05)}
+    .card .body{padding:24px 24px 26px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .card .meta{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600}
+    .card .meta .cat{color:var(--accent)}
+    .card .meta .date{color:var(--ink-faint);font-weight:400}
+    .card h4{margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;line-height:1.28}
+    .card p{margin:0;font-size:15px;color:var(--ink-soft);line-height:1.55;flex:1}
+    .card .stack{font-size:13.5px;color:var(--accent);font-weight:500}
+    .card .more{font-size:14px;color:var(--link);font-weight:400;display:inline-flex;align-items:center;gap:6px}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;padding:44px;text-align:center;color:var(--ink-soft);font-size:16px}
+
+    /* ---- Certificates ---- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:920px;margin:0 auto}
+    .cert{background:var(--band);border-radius:22px;overflow:hidden;display:grid;grid-template-columns:150px 1fr;
+      text-align:left;transition:transform .3s cubic-bezier(.28,.84,.42,1),box-shadow .3s}
+    .cert:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:180px;background:#fff}
+    .cert .ct{padding:26px}
+    .cert .ct .meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px}
+    .cert .ct h4{margin:0 0 9px;font-size:18px;font-weight:600;letter-spacing:-.012em;line-height:1.3}
+    .cert .ct p{margin:0;font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+    @media(max-width:680px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:110px 1fr}}
+
+    /* ---- Contact ---- */
+    .contact{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;max-width:920px;margin:0 auto;align-items:start;text-align:left}
+    .contact-info a{display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+    .contact-info a:first-of-type{border-top:1px solid var(--line)}
+    .contact-info a .ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background:rgba(0,113,227,.10);color:var(--accent);font-size:18px;flex-shrink:0}
+    .contact-info a .k{font-size:13px;color:var(--ink-faint)}
+    .contact-info a .v{font-size:16px;font-weight:500}
+    .contact-form input,.contact-form textarea{width:100%;padding:15px 18px;border-radius:14px;font-family:inherit;font-size:16px;
+      color:var(--ink);background:#fff;border:1px solid var(--line);margin-bottom:16px;transition:.2s;outline:none}
+    .contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,113,227,.14)}
+    .contact-form textarea{min-height:140px;resize:vertical}
+    .contact-form label{font-size:13px;font-weight:500;color:var(--ink-soft);display:block;margin:0 0 7px}
+    #cf-status{margin:14px 0 0;font-weight:500;font-size:15px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr;gap:28px}}
+
+    /* ---- Footer ---- */
+    footer{background:var(--paper);border-top:1px solid var(--line);padding:44px 0 56px}
+    .foot-links{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin-bottom:22px}
+    .foot-links a{font-size:12.5px;color:var(--ink-soft);font-weight:400}
+    .foot-links a:hover{color:var(--ink);text-decoration:underline}
+    .foot-meta{text-align:center;font-size:12.5px;color:var(--ink-faint);line-height:1.9}
+    .foot-meta a{color:var(--ink-faint)}
+    .foot-meta a:hover{text-decoration:underline}
+
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
+      .card,.course,.cert,.chip,.edu,.pill,.chev,.card .cover img{transition:none}
+      .card:hover,.course:hover,.cert:hover,.chip:hover,.edu:hover{transform:none}
+      .chev:hover::after,.card:hover .cover img{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a class="brand" href="#top">Cai Jiechao</a>
+    <div class="navlinks" id="nav"></div>
+  </div></nav>
+
+  <header id="top" class="hero">
+    <p class="eyebrow" id="greet"></p>
+    <h1 class="hero-title" id="name"></h1>
+    <p class="hero-sub" id="headline"></p>
+    <div class="hero-links">
+      <a class="chev" id="cvBtn" href="#" download></a>
+      <a class="chev" id="ghBtn" target="_blank" rel="noopener"></a>
+    </div>
+    <figure class="hero-shot">
+      <img id="portrait" alt="" />
+      <figcaption class="hero-cap">
+        <i class="fa fa-map-marker"></i>
+        <span id="sub"></span><span class="dot">·</span><span id="loc"></span>
+      </figcaption>
+    </figure>
+  </header>
+
+  <main>
+  <section id="about" class="band"><div class="container">
+    <div class="sec-head">
+      <h2 class="sec-title" id="l-about"></h2>
+      <p class="sec-sub" id="about-sub"></p>
+    </div>
+    <div class="about" id="about-text"></div>
+  </div></section>
+
+  <section id="education"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-edu"></h2></div>
+    <div class="edu-grid" id="edu-list"></div>
+  </div></section>
+
+  <section id="skills" class="band"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-skills"></h2><p class="sec-sub" id="skills-sub"></p></div>
+    <div class="chips" id="skills-list"></div>
+  </div></section>
+
+  <section id="courses"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-courses"></h2></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience" class="band"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-exp"></h2></div>
+    <div id="exp-list"></div>
+  </div></section>
+
+  <section id="projects"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-projects"></h2></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles" class="band"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-articles"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-certs"></h2></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact" class="band"><div class="container">
+    <div class="sec-head"><h2 class="sec-title" id="l-contact"></h2><p class="sec-sub" id="contact-lead"></p></div>
+    <div class="contact">
+      <div class="contact-info" id="contact-links"></div>
+      <div class="contact-form">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+          <label id="lb-name" for="cf-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label id="lb-email" for="cf-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label id="lb-msg" for="cf-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="pill primary" id="cf-send" style="width:100%"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+  </main>
+
+  <footer><div class="container">
+    <div class="foot-links" id="foot-social"></div>
+    <div class="foot-meta">
+      <div id="foot-desc"></div>
+      <div><a id="foot-icp" target="_blank" rel="noopener"></a></div>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "28-apple";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('sub').textContent = t(P.role);
+      document.getElementById('loc').textContent = t(P.location);
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = `<span>${esc(t(P.ui.download_cv))}</span>`; cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.innerHTML = `<span>GitHub</span>`; gh.href = P.contact.github;
+
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('about-sub').textContent = t(P.title);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('skills-sub').textContent = t(P.ui.tech_stack);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      document.getElementById('contact-lead').textContent = t(P.ui.inbox_open);
+
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('about-text').innerHTML = P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('')
+        + `<div class="loc"><i class="fa fa-map-marker"></i> ${esc(t(P.location))}</div>`;
+
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="edu"><div class="when">${esc(e.period)}</div>
+        <h3>${esc(t(e.school))}</h3><div class="deg">${esc(t(e.degree))}</div>
+        <div class="note">${esc(t(e.note))}</div></div>`).join('');
+
+      document.getElementById('skills-list').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="exp">
+          <div class="top"><h3>${esc(t(x.role))} <span class="co">· ${esc(t(x.company))}</span></h3>
+          <span class="when">${esc(x.period)}</span></div>
+          <p class="summary">${esc(t(x.summary))}</p>
+          <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+        </div>`).join('');
+
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('contact-links').innerHTML = [
+        ['fa-envelope','Email',P.contact.email,'mailto:'+P.contact.email],
+        ['fa-phone','Phone',P.contact.phone,P.contact.phoneHref],
+        ['fa-github','GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['fa-weixin','WeChat','QR',P.contact.wechatQrPage],
+      ].map(([i,k,v,h])=>`<a href="${esc(h)}" target="_blank" rel="noopener">
+        <span class="ico"><i class="fa ${i}"></i></span>
+        <span><span class="k">${esc(k)}</span><br><span class="v">${esc(v)}</span></span></a>`).join('');
+
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="body">
+            <div class="meta"><span class="cat">${esc(t(P.ui.tech_stack))}</span><span class="date">${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} <i class="fa fa-angle-right"></i></span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="body">
+            <div class="meta"><span class="cat">${esc(a.category||'')}</span><span class="date">${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} <i class="fa fa-angle-right"></i></span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--ink-soft)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='#1a8a3f'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#d70015'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#0071e3' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

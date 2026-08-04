@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Lo-Fi Player</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --accent:#ff5e8a; --accent2:#7c5cff; --warm:#ffb86b; --cyan:#5be2c8;
+      --bg0:#140f1f; --bg1:#1b1430; --bg2:#241a3a;
+      --panel:rgba(255,255,255,.045); --panel-2:rgba(255,255,255,.07);
+      --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
+      --ink:#f5f1ff; --mut:#b6accd; --mut2:#8a80a3;
+      --barh:78px; /* bottom player height */
+      --vu:0; --bass:0; --mid:0; /* audio-reactive, set by JS */
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+      -webkit-font-smoothing:antialiased;line-height:1.55;
+      padding-bottom:calc(var(--barh) + 8px);
+      background:
+        radial-gradient(1100px 620px at 82% -8%, rgba(124,92,255,.30), transparent 60%),
+        radial-gradient(950px 640px at 6% 8%, rgba(255,94,138,.22), transparent 58%),
+        radial-gradient(800px 700px at 60% 108%, rgba(91,226,200,.10), transparent 60%),
+        linear-gradient(160deg,var(--bg0),var(--bg1) 55%,var(--bg2));
+      background-attachment:fixed;
+    }
+    /* subtle film grain */
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.05;mix-blend-mode:overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+    .mono{font-variant-numeric:tabular-nums;font-family:'Space Grotesk',ui-monospace,monospace;letter-spacing:.02em}
+
+    /* ---------- Section scaffolding ---------- */
+    section{padding:52px 0;scroll-margin-top:20px}
+    .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+    .sec-kicker{width:34px;height:34px;flex:none;border-radius:11px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:15px;box-shadow:0 8px 22px rgba(255,94,138,.32)}
+    .sec-title{font-family:'Space Grotesk';font-weight:700;font-size:clamp(22px,3.6vw,34px);margin:0;letter-spacing:-.01em}
+    .sec-sub{color:var(--mut2);font-size:12px;text-transform:uppercase;letter-spacing:.2em;margin:2px 0 0}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(8px)}
+
+    /* audio-reactive gentle bounce on cards */
+    .reactive{transition:transform .08s linear}
+    body.playing .reactive{transform:translateY(calc(var(--vu) * -5px))}
+
+    /* ---------- Top brand row ---------- */
+    .topbar{position:relative;z-index:2}
+    .topbar .wrap{display:flex;align-items:center;gap:12px;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:18px}
+    .brand .disc{width:26px;height:26px;border-radius:50%;background:
+      radial-gradient(circle at 50% 50%, #2a2140 0 22%, transparent 23%),
+      repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.10) 0 1px, transparent 1px 3px),
+      conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent));
+      border:1px solid var(--line-2)}
+    body.playing .brand .disc{animation:spin 3.2s linear infinite}
+    .brand b{color:var(--accent)}
+
+    /* ---------- HERO / NOW PLAYING ---------- */
+    .hero{padding-top:14px}
+    .np{display:grid;grid-template-columns:300px 1fr;gap:34px;align-items:center;
+      padding:30px;border-radius:26px;position:relative;overflow:hidden}
+    .np::after{content:"";position:absolute;inset:0;border-radius:26px;pointer-events:none;
+      box-shadow:inset 0 0 0 1px var(--line);}
+    /* vinyl */
+    .vinyl{position:relative;width:300px;height:300px;margin:0 auto;filter:drop-shadow(0 26px 46px rgba(0,0,0,.5))}
+    .disc-big{position:absolute;inset:0;border-radius:50%;
+      background:
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.045) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 38% 34%, rgba(255,255,255,.16), transparent 42%),
+        radial-gradient(circle at 50% 50%, #1c1530 0 33%, #0d0a17 34% 100%);
+      border:2px solid rgba(255,255,255,.08);
+      transform:scale(calc(1 + var(--bass) * .05));transition:transform .07s linear}
+    body.playing .disc-big{animation:spin 4s linear infinite}
+    .label{position:absolute;inset:31%;border-radius:50%;overflow:hidden;border:4px solid #0d0a17;
+      box-shadow:0 0 0 2px var(--accent)}
+    .label img{width:100%;height:100%;object-fit:cover}
+    .spindle{position:absolute;inset:47.5%;border-radius:50%;background:#0d0a17;box-shadow:0 0 0 3px rgba(255,255,255,.14)}
+    .glow-ring{position:absolute;inset:-14px;border-radius:50%;z-index:-1;
+      background:radial-gradient(circle,rgba(255,94,138,.5),transparent 62%);
+      opacity:calc(.30 + var(--bass) * .7);transition:opacity .1s linear}
+
+    .np-info{min-width:0}
+    .now-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.24em;
+      text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+    .now-tag .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+    .now-tag .eq i{width:3px;background:var(--accent);border-radius:2px;height:4px;display:block}
+    body.playing .now-tag .eq i{animation:eqp .9s ease-in-out infinite}
+    body.playing .now-tag .eq i:nth-child(2){animation-delay:.15s}
+    body.playing .now-tag .eq i:nth-child(3){animation-delay:.3s}
+    .greet{color:var(--mut);font-size:15px;margin:0 0 2px}
+    .hero h1{font-family:'Space Grotesk';font-weight:700;font-size:clamp(38px,7vw,74px);line-height:.98;margin:2px 0 8px;letter-spacing:-.02em}
+    .hero h1 .grad{background:linear-gradient(100deg,var(--accent),var(--warm) 55%,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .headline{font-size:clamp(16px,2.3vw,22px);color:var(--mut);margin:0 0 6px;max-width:34ch}
+    .role-line{font-family:'Space Grotesk';font-weight:600;font-size:16px;color:var(--ink)}
+    .role-line b{color:var(--accent)}
+    .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 20px;color:var(--mut2);font-size:13.5px}
+    .meta b{color:var(--ink);font-weight:600}
+    .hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:12px 20px;font-weight:600;
+      font-size:14px;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink);
+      font-family:inherit;transition:transform .14s,box-shadow .14s,background .14s}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent2));border-color:transparent;
+      box-shadow:0 12px 30px rgba(255,94,138,.35)}
+    .btn.big{padding:15px 26px;font-size:15px}
+    .btn i{font-size:15px}
+
+    /* visualizer canvas */
+    .viz-shell{margin-top:24px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:rgba(0,0,0,.22)}
+    #viz{display:block;width:100%;height:96px}
+
+    @media(max-width:760px){
+      .np{grid-template-columns:1fr;gap:22px;padding:22px}
+      .vinyl{width:220px;height:220px}
+      .disc-big{}
+    }
+
+    /* ---------- PLAYLIST / TRACKLIST ---------- */
+    .tracklist{padding:8px 8px 12px}
+    .tl-row{display:grid;grid-template-columns:34px 1fr auto auto;gap:14px;align-items:center;
+      padding:11px 14px;border-radius:12px;cursor:pointer;transition:background .14s;border:1px solid transparent}
+    .tl-row:hover{background:var(--panel-2)}
+    .tl-row.active{background:linear-gradient(90deg,rgba(255,94,138,.16),rgba(124,92,255,.10));border-color:var(--line)}
+    .tl-idx{color:var(--mut2);font-size:13px;text-align:center}
+    .tl-row.active .tl-idx{color:var(--accent)}
+    .tl-title{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .tl-title small{display:block;color:var(--mut2);font-weight:400;font-size:12px}
+    .tl-dur{color:var(--mut2);font-size:13px}
+    .tl-play{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--mut);font-size:12px}
+    .tl-row.active .tl-play{color:var(--accent)}
+    .tl-live{display:none;gap:2px;align-items:flex-end;height:14px}
+    .tl-live i{width:3px;background:var(--accent);border-radius:2px;height:4px}
+    .tl-row.active .tl-live{display:inline-flex}
+    .tl-row.active .tl-play span{display:none}
+    body.playing .tl-row.active .tl-live i{animation:eqp .8s ease-in-out infinite}
+    body.playing .tl-row.active .tl-live i:nth-child(2){animation-delay:.2s}
+    body.playing .tl-row.active .tl-live i:nth-child(3){animation-delay:.4s}
+
+    /* ---------- About ---------- */
+    .about{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+    .about .portrait{border-radius:18px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;background:#0d0a17}
+    .about .portrait img{width:100%;height:100%;object-fit:cover}
+    .liner{padding:24px}
+    .liner p{margin:0 0 14px;color:var(--mut);font-size:15.5px}
+    .liner .loc{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-weight:600;font-size:14px}
+    @media(max-width:700px){.about{grid-template-columns:1fr}.about .portrait{max-width:240px}}
+
+    /* ---------- Rows (education / experience) ---------- */
+    .rows{display:flex;flex-direction:column;gap:12px}
+    .rowc{padding:18px 20px;display:grid;grid-template-columns:150px 1fr;gap:18px}
+    .rowc .when{color:var(--warm);font-weight:600;font-size:13.5px}
+    .rowc h3{margin:0 0 4px;font-size:17px;font-family:'Space Grotesk'}
+    .rowc .sub{color:var(--mut);font-size:14px}
+    .rowc ul{margin:10px 0 0;padding-left:18px;color:var(--mut);font-size:14px;line-height:1.7}
+    .rowc ul li::marker{color:var(--accent)}
+    @media(max-width:600px){.rowc{grid-template-columns:1fr;gap:6px}}
+
+    /* ---------- Skills equalizer ---------- */
+    .eq-wrap{padding:20px 22px}
+    .eq-row{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:16px;align-items:center;
+      padding:11px 0;border-top:1px solid var(--line)}
+    .eq-row:first-child{border-top:none}
+    .eq-label{font-size:14px;color:var(--ink);font-weight:500}
+    .eq-bars{display:flex;gap:3px;align-items:flex-end;height:34px;overflow:hidden}
+    .eq-bars i{flex:1;min-width:2px;border-radius:2px;height:18%;
+      background:linear-gradient(180deg,var(--accent),var(--accent2));transform-origin:bottom;transition:height .06s linear}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .tag{font-size:12.5px;padding:7px 13px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);color:var(--mut)}
+    .tag:hover{color:var(--ink);border-color:var(--accent)}
+
+    /* ---------- Courses ---------- */
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .course{padding:20px}
+    .course .ci{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:18px;color:#fff;
+      background:linear-gradient(135deg,var(--accent2),var(--accent));margin-bottom:14px}
+    .course h4{margin:0 0 8px;font-size:16px;font-family:'Space Grotesk'}
+    .course p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.6}
+    @media(max-width:820px){.grid3{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.grid3{grid-template-columns:1fr}}
+
+    /* ---------- Cards (projects/articles) ---------- */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .pcard{display:flex;flex-direction:column;overflow:hidden;transition:transform .16s,box-shadow .16s}
+    .pcard:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.4),0 0 0 1px var(--accent)}
+    .pcard .cover{aspect-ratio:16/10;background:#0d0a17;overflow:hidden;position:relative}
+    .pcard .cover img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+    .pcard:hover .cover img{transform:scale(1.05)}
+    .pcard .cover .badge{position:absolute;left:10px;top:10px;background:rgba(13,10,23,.78);backdrop-filter:blur(6px);
+      color:var(--accent);font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
+    .pbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .pbody .ctag{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut2);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+    .pbody h4{margin:0;font-size:16px;font-family:'Space Grotesk';line-height:1.25}
+    .pbody .tech{color:var(--cyan);font-size:12.5px;font-weight:600}
+    .pbody p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.55;flex:1}
+    .pbody .more{color:var(--accent);font-weight:600;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;color:var(--mut);padding:20px;text-align:center;font-size:14px}
+
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+    .filters button{background:var(--panel-2);border:1px solid var(--line);color:var(--mut);font-family:inherit;
+      font-weight:600;font-size:13px;padding:8px 15px;border-radius:999px;cursor:pointer;transition:.14s}
+    .filters button.active,.filters button:hover{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+
+    /* ---------- Certificates ---------- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden}
+    .cert img{height:100%;width:100%;object-fit:cover}
+    .cert .ct{padding:16px}
+    .cert .cm{display:flex;justify-content:space-between;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+    .cert h4{margin:8px 0 6px;font-size:15.5px;font-family:'Space Grotesk'}
+    .cert p{margin:0;color:var(--mut);font-size:13px;line-height:1.55}
+    @media(max-width:560px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:100px 1fr}}
+
+    /* ---------- Contact ---------- */
+    .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:20px}
+    .cinfo{padding:22px}
+    .cinfo a.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line);font-weight:500}
+    .cinfo a.row:first-of-type{border-top:none}
+    .cinfo a.row span:last-child{color:var(--accent);font-weight:600}
+    .cform{padding:22px}
+    .cform input,.cform textarea{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;
+      font-family:inherit;font-size:14.5px;padding:13px 15px;margin-bottom:12px;color:var(--ink)}
+    .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,94,138,.18)}
+    .cform textarea{min-height:120px;resize:vertical}
+    .cform button{width:100%}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14px}
+    @media(max-width:700px){.contact{grid-template-columns:1fr}}
+
+    /* ---------- Footer ---------- */
+    footer{border-top:1px solid var(--line);margin-top:20px;padding:34px 0 44px}
+    .frow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+    footer .links{display:flex;gap:18px;flex-wrap:wrap}
+    footer a{color:var(--mut)}
+    footer a:hover{color:var(--accent)}
+    .muted{color:var(--mut2);font-size:12.5px}
+
+    /* ---------- Fixed bottom player bar ---------- */
+    .player{position:fixed;left:0;right:0;bottom:0;z-index:9000;height:var(--barh);
+      background:rgba(16,11,26,.82);backdrop-filter:blur(18px);border-top:1px solid var(--line-2);
+      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:0 18px}
+    .pl-now{display:flex;align-items:center;gap:12px;min-width:0}
+    .pl-now .thumb{width:46px;height:46px;border-radius:10px;flex:none;overflow:hidden;border:1px solid var(--line-2);background:#0d0a17}
+    .pl-now .thumb img{width:100%;height:100%;object-fit:cover}
+    body.playing .pl-now .thumb{animation:spin 5s linear infinite;border-radius:50%}
+    .pl-meta{min-width:0}
+    .pl-meta .t{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pl-meta .a{color:var(--mut2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pl-center{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:260px}
+    .transport{display:flex;align-items:center;gap:16px}
+    .tbtn{background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;padding:4px;transition:color .14s,transform .14s}
+    .tbtn:hover{color:var(--ink);transform:scale(1.1)}
+    .play-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(120deg,var(--accent),var(--accent2));
+      color:#fff;font-size:17px;display:grid;place-items:center;box-shadow:0 8px 22px rgba(255,94,138,.4)}
+    .play-btn:hover{color:#fff}
+    .progress-line{display:flex;align-items:center;gap:10px;width:100%;font-size:11px;color:var(--mut2)}
+    .bar{flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.12);position:relative;cursor:default;overflow:hidden}
+    .bar .fill{position:absolute;left:0;top:0;bottom:0;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--warm))}
+    .pl-right{display:flex;align-items:center;gap:12px;justify-content:flex-end}
+    .pl-right .tbtn{font-size:15px}
+    .vol{width:96px;accent-color:var(--accent);cursor:pointer}
+    .hint{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);
+      background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;font-size:12.5px;font-weight:600;
+      padding:8px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 24px rgba(0,0,0,.4);
+      opacity:0;pointer-events:none;transition:opacity .3s}
+    .hint.show{opacity:1;animation:bob 1.8s ease-in-out infinite}
+    .hint::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+      border:6px solid transparent;border-top-color:var(--accent2)}
+
+    @media(max-width:760px){
+      .player{grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:6px 12px;height:auto;padding:8px 14px}
+      :root{--barh:104px}
+      .pl-center{grid-column:1/-1;order:3;min-width:0;width:100%}
+      .pl-right{grid-column:2}
+      .vol{display:none}
+      .pl-now .a{display:none}
+    }
+    @media(max-width:420px){ .pl-meta .t{max-width:120px} }
+
+    /* ---------- Motion prefs ---------- */
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes eqp{0%,100%{height:4px}50%{height:12px}}
+    @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      *{animation:none !important}
+      body.playing .disc-big,body.playing .brand .disc,body.playing .pl-now .thumb{animation:none !important}
+      .disc-big{transform:none !important}
+      body.playing .reactive{transform:none !important}
+      .glow-ring{opacity:.35 !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- Top brand -->
+  <div class="topbar"><div class="wrap">
+    <a class="brand" href="#top"><span class="disc" aria-hidden="true"></span>Cai<b>Jiechao</b><span style="color:var(--mut2);font-weight:400;font-size:13px;margin-left:4px">lo-fi</span></a>
+  </div></div>
+
+  <div id="top"></div>
+
+  <!-- HERO / NOW PLAYING -->
+  <header class="hero"><div class="wrap">
+    <div class="np card reactive">
+      <div class="vinyl">
+        <div class="glow-ring" aria-hidden="true"></div>
+        <div class="disc-big" aria-hidden="true"></div>
+        <div class="label"><img id="np-art" alt="Cai Jiechao portrait" /></div>
+        <div class="spindle" aria-hidden="true"></div>
+      </div>
+      <div class="np-info">
+        <span class="now-tag"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="now-tag-txt">Now Playing</span></span>
+        <p class="greet" id="greet"></p>
+        <h1 id="name"></h1>
+        <p class="headline" id="headline"></p>
+        <p class="role-line" id="roleLine"></p>
+        <div class="meta" id="meta"></div>
+        <div class="hero-cta">
+          <button class="btn primary big" id="playHero"><i>▶</i><span id="playHeroTxt">Play the vibe</span></button>
+          <a class="btn" id="cvBtn" href="#" download><i>⬇</i><span></span></a>
+          <a class="btn" id="ghBtn" target="_blank" rel="noopener"><i></i><span>GitHub</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="viz-shell"><canvas id="viz" width="1120" height="96" aria-hidden="true"></canvas></div>
+  </div></header>
+
+  <!-- TRACKLIST -->
+  <section id="tracklist"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">☰</span><div><h2 class="sec-title" id="l-tracklist"></h2><p class="sec-sub" id="s-tracklist"></p></div></div>
+    <div class="card tracklist" id="tl-list"></div>
+  </div></section>
+
+  <!-- ABOUT -->
+  <section id="about"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">♪</span><h2 class="sec-title" id="l-about"></h2></div>
+    <div class="about">
+      <div class="portrait"><img id="portrait" alt="Cai Jiechao" /></div>
+      <div class="liner card reactive" id="about-text"></div>
+    </div>
+  </div></section>
+
+  <!-- EDUCATION -->
+  <section id="education"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">🎓</span><h2 class="sec-title" id="l-edu"></h2></div>
+    <div class="rows" id="edu-list"></div>
+  </div></section>
+
+  <!-- SKILLS / EQUALIZER -->
+  <section id="skills"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">🎚</span><div><h2 class="sec-title" id="l-skills"></h2><p class="sec-sub" id="s-skills"></p></div></div>
+    <div class="card eq-wrap"><div id="eq-list"></div><div class="tags" id="tags"></div></div>
+  </div></section>
+
+  <!-- COURSES -->
+  <section id="courses"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">▤</span><h2 class="sec-title" id="l-courses"></h2></div>
+    <div class="grid3" id="courses-list"></div>
+  </div></section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">💼</span><h2 class="sec-title" id="l-exp"></h2></div>
+    <div class="rows" id="exp-list"></div>
+  </div></section>
+
+  <!-- PROJECTS -->
+  <section id="projects"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">◆</span><h2 class="sec-title" id="l-projects"></h2></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <!-- ARTICLES -->
+  <section id="articles"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">✎</span><h2 class="sec-title" id="l-articles"></h2></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <!-- CERTIFICATES -->
+  <section id="certificates"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">🏅</span><h2 class="sec-title" id="l-certs"></h2></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <!-- CONTACT -->
+  <section id="contact"><div class="wrap">
+    <div class="sec-head"><span class="sec-kicker">✉</span><h2 class="sec-title" id="l-contact"></h2></div>
+    <div class="contact">
+      <div class="cinfo card reactive" id="contact-info"></div>
+      <div class="cform card">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <input type="text" name="name" id="cf-name" required aria-label="Name">
+          <input type="email" name="email" id="cf-email" required aria-label="Email">
+          <textarea name="message" id="cf-msg" required aria-label="Message"></textarea>
+          <button type="submit" class="btn primary" id="cf-send"></button>
+          <p id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- FOOTER -->
+  <footer><div class="wrap">
+    <div class="frow">
+      <a class="brand" href="#top"><span class="disc" aria-hidden="true"></span>Cai<b>Jiechao</b></a>
+      <div class="links" id="foot-social"></div>
+    </div>
+    <div class="frow" style="margin-top:16px">
+      <span class="muted" id="foot-desc"></span>
+      <a class="muted" id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <!-- FIXED PLAYER BAR -->
+  <div class="player" role="region" aria-label="Music player">
+    <div class="pl-now">
+      <div class="thumb"><img id="pl-art" alt="" /></div>
+      <div class="pl-meta"><div class="t" id="pl-title">—</div><div class="a" id="pl-artist"></div></div>
+    </div>
+    <div class="pl-center">
+      <div class="transport">
+        <button class="tbtn" id="prevBtn" aria-label="Previous track" title="Previous">⏮</button>
+        <button class="tbtn play-btn" id="playBtn" aria-label="Play"><span id="playIcon">▶</span></button>
+        <button class="tbtn" id="nextBtn" aria-label="Next track" title="Next">⏭</button>
+      </div>
+      <div class="progress-line">
+        <span class="mono" id="tCur">0:00</span>
+        <div class="bar" aria-hidden="true"><div class="fill" id="progFill"></div></div>
+        <span class="mono" id="tTot">0:00</span>
+      </div>
+      <div class="hint" id="hint">tap ▶ to start the vibe</div>
+    </div>
+    <div class="pl-right">
+      <button class="tbtn" id="muteBtn" aria-label="Mute">🔊</button>
+      <input class="vol" id="vol" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">
+    </div>
+  </div>
+
+  <script>window.THEME_ID = "45-music";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    "use strict";
+    var P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var articles = [], projects = [], filterKey = "all";
+    var root = document.documentElement;
+
+    /* ============================================================
+     *  SECTIONS / TRACKLIST MODEL
+     * ========================================================== */
+    var SECTIONS = [
+      { id:'top',          uk:'nav_home' },
+      { id:'about',        uk:'about_me' },
+      { id:'education',    uk:'education_bg' },
+      { id:'skills',       uk:'core_tech' },
+      { id:'courses',      uk:'core_courses' },
+      { id:'experience',   uk:'internship_exp' },
+      { id:'projects',     uk:'latest_projects' },
+      { id:'articles',     uk:'latest_articles' },
+      { id:'certificates', uk:'certificates' },
+      { id:'contact',      uk:'get_in_touch' }
+    ];
+    var current = 0;
+    // deterministic fake durations for flavor
+    function fakeDur(i){ var s = 96 + (i*37 % 165); return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+    function fmtTime(sec){ if(!isFinite(sec)||sec<0)sec=0; var m=Math.floor(sec/60),s=Math.floor(sec%60); return m+':'+('0'+s).slice(-2); }
+
+    /* ============================================================
+     *  STATIC RENDER (all bilingual, re-runs on lang switch)
+     * ========================================================== */
+    function trackTitle(i){ return i===0 ? t(P.role) : t(P.ui[SECTIONS[i].uk]); }
+
+    function renderStatic(){
+      document.title = (CJCData.lang()==='zh' ? '蔡杰超' : 'Cai Jiechao') + ' — Lo-Fi Player';
+      // hero
+      document.getElementById('np-art').src = P.avatar;
+      document.getElementById('pl-art').src = P.avatar;
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').innerHTML = '<span class="grad">'+esc(t(P.name))+'</span>';
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('roleLine').innerHTML = '<b>♬</b> '+esc(t(P.role));
+      document.getElementById('meta').innerHTML =
+        '<span>'+esc(t(P.title))+'</span><span>📍 <b>'+esc(t(P.location))+'</b></span>';
+      var cv = document.getElementById('cvBtn');
+      cv.querySelector('span').textContent = t(P.ui.download_cv); cv.href = t(P.cv);
+      var gh = document.getElementById('ghBtn'); gh.href = P.contact.github;
+      document.getElementById('playHeroTxt').textContent = playing
+        ? (CJCData.lang()==='zh' ? '暂停' : 'Pause')
+        : (CJCData.lang()==='zh' ? '播放氛围' : 'Play the vibe');
+      document.querySelector('#playHero i').textContent = playing ? '❚❚' : '▶';
+      document.getElementById('now-tag-txt').textContent =
+        (CJCData.lang()==='zh' ? '正在播放' : 'Now Playing');
+      document.getElementById('hint').textContent =
+        (CJCData.lang()==='zh' ? '点击 ▶ 开启氛围音乐' : 'tap ▶ to start the vibe');
+
+      // section labels
+      document.getElementById('l-tracklist').textContent = (CJCData.lang()==='zh'?'播放列表':'Tracklist');
+      document.getElementById('s-tracklist').textContent = (CJCData.lang()==='zh'?'点击任意曲目跳转':'Click any track to jump');
+      set('l-about', t(P.ui.about_me));
+      set('l-edu', t(P.ui.education_bg));
+      set('l-skills', t(P.ui.core_tech));
+      document.getElementById('s-skills').textContent = (CJCData.lang()==='zh'?'均衡器 · 随节拍跳动':'Equalizer · reacts to the beat');
+      set('l-courses', t(P.ui.core_courses));
+      set('l-exp', t(P.ui.internship_exp));
+      set('l-projects', t(P.ui.latest_projects));
+      set('l-articles', t(P.ui.latest_articles));
+      set('l-certs', t(P.ui.certificates));
+      set('l-contact', t(P.ui.get_in_touch));
+
+      // tracklist
+      document.getElementById('tl-list').innerHTML = SECTIONS.map(function(s,i){
+        return '<div class="tl-row'+(i===current?' active':'')+'" data-i="'+i+'" role="button" tabindex="0">'+
+          '<span class="tl-idx mono">'+('0'+(i+1)).slice(-2)+'</span>'+
+          '<span class="tl-title">'+esc(trackTitle(i))+'<small>'+esc(t(P.name))+'</small></span>'+
+          '<span class="tl-dur mono">'+fakeDur(i)+'</span>'+
+          '<span class="tl-play"><span>▶</span><span class="tl-live"><i></i><i></i><i></i></span></span>'+
+        '</div>';
+      }).join('');
+      Array.prototype.forEach.call(document.querySelectorAll('.tl-row'), function(r){
+        var go = function(){ setTrack(+r.dataset.i, true); };
+        r.addEventListener('click', go);
+        r.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+      });
+
+      // about
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(function(b){ return '<p>'+esc(t(b))+'</p>'; }).join('') +
+        '<span class="loc">📍 '+esc(t(P.location))+'</span>';
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(function(e){
+        return '<div class="rowc card reactive"><div class="when mono">'+esc(e.period)+'</div>'+
+          '<div><h3>'+esc(t(e.school))+'</h3><div class="sub">'+esc(t(e.degree))+' — '+esc(t(e.note))+'</div></div></div>';
+      }).join('');
+
+      // skills equalizer
+      document.getElementById('eq-list').innerHTML = P.skills.map(function(s){
+        var bars = '';
+        for(var b=0;b<20;b++) bars += '<i></i>';
+        return '<div class="eq-row"><span class="eq-label">'+esc(s)+'</span><div class="eq-bars">'+bars+'</div></div>';
+      }).join('');
+      buildEqRefs();
+      document.getElementById('tags').innerHTML = P.skillTags.map(function(x){ return '<span class="tag">'+esc(x)+'</span>'; }).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map(function(c){
+        return '<div class="course card reactive"><div class="ci"><i class="fa '+esc(c.icon)+'"></i></div>'+
+          '<h4>'+esc(t(c.title))+'</h4><p>'+esc(t(c.desc))+'</p></div>';
+      }).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(function(x){
+        return '<div class="rowc card reactive"><div class="when mono">'+esc(x.period)+'</div>'+
+          '<div><h3>'+esc(t(x.role))+' · '+esc(t(x.company))+'</h3>'+
+          '<div class="sub">'+esc(t(x.summary))+'</div>'+
+          '<ul>'+x.bullets.map(function(b){ return '<li>'+esc(t(b))+'</li>'; }).join('')+'</ul></div></div>';
+      }).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(function(c){
+        return '<div class="cert card"><img src="'+esc(c.image)+'" alt="'+esc(t(c.title))+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'">'+
+          '<div class="ct"><div class="cm"><span>'+esc(t(c.tag))+'</span><span>'+esc(t(c.date))+'</span></div>'+
+          '<h4>'+esc(t(c.title))+'</h4><p>'+esc(t(c.desc))+'</p></div></div>';
+      }).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage]
+      ].map(function(a){ return '<a class="row" href="'+esc(a[2])+'"><span>'+esc(a[0])+'</span><span>'+esc(a[1])+'</span></a>'; }).join('');
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        '<a href="'+P.contact.github+'" target="_blank" rel="noopener">GitHub</a>'+
+        '<a href="mailto:'+P.contact.email+'">Email</a>'+
+        '<a href="'+P.contact.wechatQrPage+'">WeChat</a>'+
+        '<a href="/admin.html">'+esc(t(P.ui.admin_panel))+'</a>';
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      var icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(function(f){
+        return '<button data-k="'+esc(f.key)+'" class="'+(f.key===filterKey?'active':'')+'">'+esc(t(f.label))+'</button>';
+      }).join('');
+      Array.prototype.forEach.call(document.querySelectorAll('#filters button'), function(b){
+        b.addEventListener('click', function(){ filterKey=b.dataset.k; renderStatic(); renderArticles(); });
+      });
+
+      updateNowPlaying();
+    }
+    function set(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+
+    /* ---------- dynamic projects & articles ---------- */
+    function renderProjects(){
+      var box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = '<div class="load-note">'+esc(t(P.ui.no_projects))+'</div>'; return; }
+      box.innerHTML = projects.map(function(p){
+        return '<a class="pcard card reactive" href="'+esc(p.href)+'">'+
+          '<div class="cover"><img src="'+esc(p.cover_image||'/index_page/img/blogs/1.jpg')+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="'+esc(p.localTitle())+' cover">'+
+            '<span class="badge">◆ '+esc(t(P.ui.view_project))+'</span></div>'+
+          '<div class="pbody"><div class="ctag"><span>'+esc(t(P.ui.tech_stack))+'</span><span>'+esc(p.dateText())+'</span></div>'+
+          '<h4>'+esc(p.localTitle())+'</h4>'+
+          '<p class="tech">'+esc(p.tech_stack||'')+'</p>'+
+          '<p>'+esc(p.localSummary()||'')+'</p>'+
+          '<span class="more">'+esc(t(P.ui.view_project))+' →</span></div></a>';
+      }).join('');
+    }
+    function renderArticles(){
+      var box = document.getElementById('articles-list');
+      var list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = '<div class="load-note">'+esc(t(P.ui.no_articles))+'</div>'; return; }
+      box.innerHTML = list.map(function(a){
+        return '<a class="pcard card reactive" href="'+esc(a.href)+'">'+
+          '<div class="cover"><img src="'+esc(a.cover_image||'')+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="'+esc(a.localTitle())+' cover">'+
+            '<span class="badge">'+esc(a.category||'♪')+'</span></div>'+
+          '<div class="pbody"><div class="ctag"><span>'+esc(a.category||'')+'</span><span>'+esc(a.dateText())+'</span></div>'+
+          '<h4>'+esc(a.localTitle())+'</h4>'+
+          '<p>'+esc(a.localSummary()||'')+'</p>'+
+          '<span class="more">'+esc(t(P.ui.read_more))+' →</span></div></a>';
+      }).join('');
+    }
+    function loadDynamic(){
+      CJCData.fetchProjects().then(function(list){ projects=list; renderProjects(); })
+        .catch(function(){ document.getElementById('projects-list').innerHTML = '<div class="load-note">⚠ '+esc(t(P.ui.no_projects))+'</div>'; });
+      CJCData.fetchArticles().then(function(list){ articles=list; renderArticles(); })
+        .catch(function(){ document.getElementById('articles-list').innerHTML = '<div class="load-note">⚠ Failed to load articles / 内容加载失败</div>'; });
+    }
+
+    /* ---------- contact ---------- */
+    document.getElementById('cf').addEventListener('submit', function(e){
+      e.preventDefault();
+      var f=e.target, s=document.getElementById('cf-status');
+      s.style.color='var(--mut)'; s.textContent=t(P.ui.sending);
+      CJCData.sendContact({ name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value })
+        .then(function(r){ s.style.color='var(--cyan)'; s.textContent=r.message||'Sent.'; f.reset(); })
+        .catch(function(err){ s.style.color='var(--accent)'; s.textContent=err.message; });
+    });
+
+    /* ============================================================
+     *  TRANSPORT (track navigation)
+     * ========================================================== */
+    function setTrack(i, scroll){
+      current = (i + SECTIONS.length) % SECTIONS.length;
+      Array.prototype.forEach.call(document.querySelectorAll('.tl-row'), function(r){
+        r.classList.toggle('active', +r.dataset.i===current);
+      });
+      updateNowPlaying();
+      if(scroll){
+        var el = document.getElementById(SECTIONS[current].id);
+        if(el) el.scrollIntoView({ behavior: reduce ? 'auto':'smooth', block:'start' });
+      }
+    }
+    function updateNowPlaying(){
+      document.getElementById('pl-title').textContent = trackTitle(current);
+      document.getElementById('pl-artist').textContent = t(P.name) + ' · ' + t(P.role);
+    }
+    document.getElementById('prevBtn').addEventListener('click', function(){ setTrack(current-1, true); });
+    document.getElementById('nextBtn').addEventListener('click', function(){ setTrack(current+1, true); });
+
+    /* ============================================================
+     *  WEB AUDIO — PROCEDURAL LO-FI ENGINE
+     *  Everything is created lazily on the first user gesture so
+     *  nothing throws before/without interaction.
+     * ========================================================== */
+    var A = null;           // holds all audio nodes once initialised
+    var playing = false;
+    var volume = 0.7, muted = false;
+    var schedTimer = null, step64 = 0, nextTime = 0, playStart = 0;
+    var BPM = 78, SEC16 = 60/BPM/4, LOOP = 64*SEC16;
+
+    function mtof(m){ return 440 * Math.pow(2, (m-69)/12); }
+    // I – vi – ii – V in C  (warm lo-fi maj7/min7)
+    var PROG = [
+      { notes:[60,64,67,71], bass:36 }, // Cmaj7
+      { notes:[57,60,64,67], bass:33 }, // Am7
+      { notes:[62,65,69,72], bass:38 }, // Dm7
+      { notes:[55,59,62,65], bass:31 }  // G7
+    ];
+    // sparse pentatonic melody: {step: midi}
+    var MEL = {4:76,10:79, 20:72,26:76, 36:74,42:77, 48:74,54:71,60:67};
+
+    function initAudio(){
+      if(A) return true;
+      try{
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if(!Ctx) throw new Error('no webaudio');
+        var ctx = new Ctx();
+
+        var master = ctx.createGain(); master.gain.value = 0.0001;
+        var comp = ctx.createDynamicsCompressor();
+        comp.threshold.value=-18; comp.knee.value=24; comp.ratio.value=3; comp.attack.value=.006; comp.release.value=.25;
+        var warmth = ctx.createBiquadFilter(); warmth.type='lowpass'; warmth.frequency.value=2600; warmth.Q.value=.7;
+        var analyser = ctx.createAnalyser(); analyser.fftSize=1024; analyser.smoothingTimeConstant=.82;
+
+        warmth.connect(comp); comp.connect(master); master.connect(analyser); analyser.connect(ctx.destination);
+
+        // slow filter wobble (lo-fi wow)
+        var lfo = ctx.createOscillator(); lfo.frequency.value=.07;
+        var lfoG = ctx.createGain(); lfoG.gain.value=360;
+        lfo.connect(lfoG); lfoG.connect(warmth.frequency); lfo.start();
+
+        // reverb (generated impulse) send bus
+        var conv = ctx.createConvolver(); conv.buffer = makeImpulse(ctx, 2.0, 2.4);
+        var revSend = ctx.createGain(); revSend.gain.value=1;
+        var revRet = ctx.createGain(); revRet.gain.value=.5;
+        revSend.connect(conv); conv.connect(revRet); revRet.connect(master);
+
+        // feedback delay send bus (for melody echoes)
+        var delay = ctx.createDelay(1.0); delay.delayTime.value = SEC16*3; // dotted-ish
+        var fb = ctx.createGain(); fb.gain.value=.34;
+        var delLP = ctx.createBiquadFilter(); delLP.type='lowpass'; delLP.frequency.value=1800;
+        var delSend = ctx.createGain(); delSend.gain.value=1;
+        var delRet = ctx.createGain(); delRet.gain.value=.4;
+        delSend.connect(delay); delay.connect(delLP); delLP.connect(fb); fb.connect(delay); delLP.connect(delRet); delRet.connect(master);
+
+        // vinyl crackle (sparse pops, looped) for lo-fi warmth
+        var crackle = ctx.createBufferSource(); crackle.buffer = makeCrackle(ctx, 3); crackle.loop=true;
+        var crLP = ctx.createBiquadFilter(); crLP.type='lowpass'; crLP.frequency.value=5200;
+        var crG = ctx.createGain(); crG.gain.value=.10;
+        crackle.connect(crLP); crLP.connect(crG); crG.connect(warmth); crackle.start();
+
+        // shared noise buffer for drums
+        var noise = makeNoise(ctx, 1);
+
+        var freq = new Uint8Array(analyser.frequencyBinCount);
+        A = { ctx:ctx, master:master, warmth:warmth, analyser:analyser, freq:freq,
+              revSend:revSend, delSend:delSend, noise:noise };
+        return true;
+      }catch(err){
+        console.warn('Audio init failed:', err);
+        A = null;
+        return false;
+      }
+    }
+
+    function makeNoise(ctx, sec){
+      var len = Math.floor(ctx.sampleRate*sec), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for(var i=0;i<len;i++) d[i] = Math.random()*2-1;
+      return buf;
+    }
+    function makeImpulse(ctx, dur, decay){
+      var rate=ctx.sampleRate, len=Math.floor(rate*dur), buf=ctx.createBuffer(2,len,rate);
+      for(var ch=0; ch<2; ch++){ var d=buf.getChannelData(ch);
+        for(var i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, decay); }
+      return buf;
+    }
+    function makeCrackle(ctx, sec){
+      var len=Math.floor(ctx.sampleRate*sec), buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+      for(var i=0;i<len;i++){
+        if(Math.random()<0.0009){ d[i] = (Math.random()*2-1); }  // sparse click
+        else d[i] = 0;
+      }
+      return buf;
+    }
+
+    // --- voice helpers (all take an absolute AudioContext time) ---
+    function playPad(freqs, time, dur){
+      var ctx=A.ctx;
+      freqs.forEach(function(f, idx){
+        var o=ctx.createOscillator(); o.type = idx%2 ? 'sine':'triangle'; o.frequency.value=f;
+        o.detune.value = (Math.random()*8-4);
+        var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1400;
+        var g=ctx.createGain(); var peak=0.045;
+        g.gain.setValueAtTime(0.0001, time);
+        g.gain.linearRampToValueAtTime(peak, time+0.6);
+        g.gain.setValueAtTime(peak, time+dur-0.8);
+        g.gain.exponentialRampToValueAtTime(0.0001, time+dur);
+        o.connect(lp); lp.connect(g); g.connect(A.warmth); g.connect(A.revSend);
+        o.start(time); o.stop(time+dur+0.05);
+      });
+    }
+    function playBass(f, time, dur){
+      var ctx=A.ctx, o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=mtof(f);
+      var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=260; lp.Q.value=6;
+      var g=ctx.createGain(), peak=0.17;
+      g.gain.setValueAtTime(0.0001, time);
+      g.gain.linearRampToValueAtTime(peak, time+0.03);
+      g.gain.setValueAtTime(peak*0.8, time+dur*0.6);
+      g.gain.exponentialRampToValueAtTime(0.0001, time+dur);
+      o.connect(lp); lp.connect(g); g.connect(A.warmth);
+      o.start(time); o.stop(time+dur+0.05);
+    }
+    function playKick(time){
+      var ctx=A.ctx, o=ctx.createOscillator(); o.type='sine';
+      o.frequency.setValueAtTime(130, time);
+      o.frequency.exponentialRampToValueAtTime(42, time+0.12);
+      var g=ctx.createGain();
+      g.gain.setValueAtTime(0.55, time);
+      g.gain.exponentialRampToValueAtTime(0.0001, time+0.2);
+      o.connect(g); g.connect(A.warmth);
+      o.start(time); o.stop(time+0.24);
+    }
+    function playSnare(time){
+      var ctx=A.ctx;
+      var n=ctx.createBufferSource(); n.buffer=A.noise;
+      var bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1700; bp.Q.value=.8;
+      var g=ctx.createGain();
+      g.gain.setValueAtTime(0.14, time);
+      g.gain.exponentialRampToValueAtTime(0.0001, time+0.16);
+      n.connect(bp); bp.connect(g); g.connect(A.warmth); g.connect(A.revSend);
+      n.start(time); n.stop(time+0.18);
+    }
+    function playHat(time, accent){
+      var ctx=A.ctx;
+      var n=ctx.createBufferSource(); n.buffer=A.noise;
+      var hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7200;
+      var g=ctx.createGain(); var peak = accent?0.06:0.032;
+      g.gain.setValueAtTime(peak, time);
+      g.gain.exponentialRampToValueAtTime(0.0001, time+(accent?0.06:0.035));
+      n.connect(hp); hp.connect(g); g.connect(A.warmth);
+      n.start(time); n.stop(time+0.08);
+    }
+    function playLead(f, time){
+      var ctx=A.ctx, o=ctx.createOscillator(); o.type='sine'; o.frequency.value=mtof(f);
+      var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2600;
+      var g=ctx.createGain(), peak=0.055, dur=0.5;
+      g.gain.setValueAtTime(0.0001, time);
+      g.gain.linearRampToValueAtTime(peak, time+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, time+dur);
+      o.connect(lp); lp.connect(g); g.connect(A.warmth); g.connect(A.delSend); g.connect(A.revSend);
+      o.start(time); o.stop(time+dur+0.05);
+    }
+
+    function scheduleStep(step, time){
+      var s = step % 16, bar = Math.floor(step/16) % 4, chord = PROG[bar];
+      var barDur = 16*SEC16;
+      if(s===0){
+        playPad(chord.notes.map(mtof), time, barDur*0.98);
+        playBass(chord.bass, time, barDur*0.98);
+      }
+      // drums (mellow boom-bap)
+      if(s===0 || s===10) playKick(time);
+      if(s===8) playSnare(time);
+      if(s%2===0) playHat(time, (s%8===4));
+      // melody
+      if(MEL[step]!=null) playLead(MEL[step], time);
+    }
+
+    function scheduler(){
+      if(!A) return;
+      var ct = A.ctx.currentTime;
+      while(nextTime < ct + 0.12){
+        scheduleStep(step64, nextTime);
+        nextTime += SEC16;
+        step64 = (step64+1) % 64;
+      }
+    }
+
+    /* ---------- play / pause ---------- */
+    function startPlayback(){
+      if(!initAudio()){
+        document.getElementById('hint').textContent = 'Audio unavailable';
+        return;
+      }
+      var ctx = A.ctx;
+      var go = function(){
+        playing = true;
+        document.body.classList.add('playing');
+        document.getElementById('playIcon').textContent = '❚❚';
+        var hb = document.getElementById('playHero');
+        hb.querySelector('i').textContent='❚❚'; document.getElementById('playHeroTxt').textContent=(CJCData.lang()==='zh'?'暂停':'Pause');
+        document.getElementById('hint').classList.remove('show');
+        // volume ramp up (avoid click)
+        var target = muted ? 0.0001 : Math.max(0.0001, volume*0.5);
+        A.master.gain.cancelScheduledValues(ctx.currentTime);
+        A.master.gain.setValueAtTime(A.master.gain.value, ctx.currentTime);
+        A.master.gain.linearRampToValueAtTime(target, ctx.currentTime+0.4);
+        // align progress clock to the current step, then run scheduler
+        nextTime = ctx.currentTime + 0.06;
+        playStart = ctx.currentTime - step64*SEC16;
+        if(schedTimer) clearInterval(schedTimer);
+        schedTimer = setInterval(scheduler, 25);
+        if(!rafRunning) startRAF();
+      };
+      if(ctx.state === 'suspended') ctx.resume().then(go); else go();
+    }
+    function pausePlayback(){
+      if(!A) return;
+      playing = false;
+      document.body.classList.remove('playing');
+      document.getElementById('playIcon').textContent = '▶';
+      var hb=document.getElementById('playHero'); hb.querySelector('i').textContent='▶';
+      document.getElementById('playHeroTxt').textContent=(CJCData.lang()==='zh'?'播放氛围':'Play the vibe');
+      var ctx=A.ctx;
+      A.master.gain.cancelScheduledValues(ctx.currentTime);
+      A.master.gain.setValueAtTime(A.master.gain.value, ctx.currentTime);
+      A.master.gain.linearRampToValueAtTime(0.0001, ctx.currentTime+0.25);
+      if(schedTimer){ clearInterval(schedTimer); schedTimer=null; }
+    }
+    function togglePlay(){ if(playing) pausePlayback(); else startPlayback(); }
+
+    document.getElementById('playBtn').addEventListener('click', togglePlay);
+    document.getElementById('playHero').addEventListener('click', togglePlay);
+    document.getElementById('muteBtn').addEventListener('click', function(){
+      muted = !muted;
+      this.textContent = muted ? '🔇' : '🔊';
+      if(A && playing){
+        var ctx=A.ctx, target = muted?0.0001:Math.max(0.0001,volume*0.5);
+        A.master.gain.cancelScheduledValues(ctx.currentTime);
+        A.master.gain.setValueAtTime(A.master.gain.value, ctx.currentTime);
+        A.master.gain.linearRampToValueAtTime(target, ctx.currentTime+0.12);
+      }
+    });
+    document.getElementById('vol').addEventListener('input', function(){
+      volume = parseFloat(this.value); if(volume>0 && muted){ muted=false; document.getElementById('muteBtn').textContent='🔊'; }
+      if(A && playing && !muted){
+        var ctx=A.ctx;
+        A.master.gain.cancelScheduledValues(ctx.currentTime);
+        A.master.gain.setValueAtTime(A.master.gain.value, ctx.currentTime);
+        A.master.gain.linearRampToValueAtTime(Math.max(0.0001, volume*0.5), ctx.currentTime+0.08);
+      }
+    });
+
+    /* ============================================================
+     *  VISUALS — audio-reactive (guarded, reduced-motion aware)
+     * ========================================================== */
+    var eqRefs = [];
+    function buildEqRefs(){
+      eqRefs = [];
+      Array.prototype.forEach.call(document.querySelectorAll('.eq-bars'), function(row){
+        eqRefs.push(Array.prototype.slice.call(row.querySelectorAll('i')));
+      });
+    }
+    var canvas = document.getElementById('viz'), cctx = canvas.getContext('2d');
+    var rafRunning = false, rafId = 0;
+
+    function drawViz(freq, bins){
+      var w = canvas.width, h = canvas.height;
+      cctx.clearRect(0,0,w,h);
+      var N = 64, step = Math.floor(bins/N);
+      var bw = w/N;
+      for(var i=0;i<N;i++){
+        var v = freq[i*step]/255;
+        var bh = Math.max(2, v*v*h*0.95);
+        var x = i*bw;
+        var grad = cctx.createLinearGradient(0,h,0,h-bh);
+        grad.addColorStop(0,'rgba(124,92,255,.85)');
+        grad.addColorStop(1,'rgba(255,94,138,.95)');
+        cctx.fillStyle = grad;
+        cctx.fillRect(x+bw*0.15, h-bh, bw*0.7, bh);
+      }
+    }
+
+    function frame(){
+      rafId = requestAnimationFrame(frame);
+      if(!A){ return; }
+      var freq = A.freq, bins = A.analyser.frequencyBinCount;
+      A.analyser.getByteFrequencyData(freq);
+      // bass = low bins, overall level
+      var bass=0, sum=0, mid=0;
+      for(var i=1;i<8;i++) bass+=freq[i];
+      for(var j=8;j<40;j++) mid+=freq[j];
+      for(var k=0;k<bins;k++) sum+=freq[k];
+      bass=(bass/7)/255; mid=(mid/32)/255; var lvl=(sum/bins)/255;
+      if(!reduce){
+        root.style.setProperty('--bass', bass.toFixed(3));
+        root.style.setProperty('--mid', mid.toFixed(3));
+        root.style.setProperty('--vu', lvl.toFixed(3));
+        // equalizer bars
+        for(var r=0;r<eqRefs.length;r++){
+          var bars=eqRefs[r], off = r*6 + 2;
+          for(var b=0;b<bars.length;b++){
+            var val = freq[(off + b*2) % bins]/255;
+            bars[b].style.height = (12 + val*val*88).toFixed(1)+'%';
+          }
+        }
+        drawViz(freq, bins);
+      }
+      // progress reflects loop position (even under reduced motion, numbers update)
+      if(playing){
+        var pos = ((A.ctx.currentTime - playStart) % LOOP + LOOP) % LOOP;
+        var frac = pos/LOOP;
+        document.getElementById('progFill').style.width = (frac*100).toFixed(2)+'%';
+        document.getElementById('tCur').textContent = fmtTime(pos);
+        document.getElementById('tTot').textContent = fmtTime(LOOP);
+      }
+    }
+    function startRAF(){ if(rafRunning) return; rafRunning=true; frame(); }
+
+    // Under reduced motion, give the equalizer stable static heights so the
+    // section still looks like a mixer (no animation).
+    function staticEq(){
+      for(var r=0;r<eqRefs.length;r++){
+        var bars=eqRefs[r];
+        for(var b=0;b<bars.length;b++){
+          var seed = (Math.sin((r*13.7 + b*2.3)) * 0.5 + 0.5);
+          bars[b].style.height = (18 + seed*60).toFixed(0)+'%';
+        }
+      }
+    }
+
+    /* ============================================================
+     *  Font Awesome (course icons) via allowed CDN
+     * ========================================================== */
+    var fa=document.createElement('link'); fa.rel='stylesheet';
+    fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    /* ============================================================
+     *  BOOT
+     * ========================================================== */
+    document.addEventListener('DOMContentLoaded', function(){
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#ff5e8a' });
+      CJCData.onLang(function(){
+        renderStatic(); renderProjects(); renderArticles();
+        if(reduce) staticEq();
+      });
+      loadDynamic();
+
+      if(reduce){
+        staticEq();
+      } else {
+        // show the "tap to start" hint until first play
+        setTimeout(function(){ if(!playing) document.getElementById('hint').classList.add('show'); }, 700);
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

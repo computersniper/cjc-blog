@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — The Creed</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Marcellus&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --bg1:#0b0b0d; --bg2:#171215; --ink:#e9e2d6; --parch:#cdbfa6;
+      --crimson:#b3122b; --crimson-lt:#e0324b; --crimson-deep:#7a0d1e;
+      --gold:#c8ab6e; --silver:#9aa0a6; --line:rgba(200,171,110,.22);
+      --line-strong:rgba(200,171,110,.42); --panel:rgba(18,14,16,.72); --muted:#8b8178;
+      --serif:'Cinzel',serif; --serif2:'Marcellus',serif; --sans:'Inter',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden;
+      background:
+        radial-gradient(120% 80% at 50% -10%, rgba(179,18,43,.10), transparent 55%),
+        radial-gradient(100% 60% at 85% 20%, rgba(200,171,110,.05), transparent 50%),
+        linear-gradient(160deg,var(--bg1) 0%, var(--bg2) 60%, #0c0a0c 100%);
+      background-attachment:fixed;-webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    ::selection{background:var(--crimson);color:#fff}
+
+    /* vignette + spotlight */
+    .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:radial-gradient(80% 60% at 50% 12%, rgba(0,0,0,0) 30%, rgba(0,0,0,.55) 100%);}
+    .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+    .content{position:relative;z-index:2}
+
+    .container{max-width:1120px;margin:0 auto;padding:0 24px}
+    .crimson{color:var(--crimson-lt)}
+    .gold{color:var(--gold)}
+
+    /* engraved divider */
+    .engrave{display:flex;align-items:center;gap:14px;color:var(--gold);opacity:.8;margin:0}
+    .engrave:before,.engrave:after{content:"";height:1px;flex:1;
+      background:linear-gradient(90deg,transparent,var(--line-strong),transparent)}
+    .engrave .dia{width:7px;height:7px;background:var(--crimson);transform:rotate(45deg);box-shadow:0 0 8px rgba(179,18,43,.6)}
+
+    /* Top bar */
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.82);backdrop-filter:blur(6px);
+      border-bottom:1px solid var(--line)}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+    .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:700;
+      letter-spacing:.14em;font-size:16px;text-transform:uppercase;color:var(--ink)}
+    .brand svg{width:26px;height:26px}
+    .navlinks{display:flex;gap:22px;flex-wrap:wrap}
+    .navlinks a{font-family:var(--serif2);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .navlinks a:hover{color:var(--gold)}
+    @media(max-width:860px){.navlinks{display:none}}
+    @media(min-width:861px){.topbar .inner{padding-right:196px}}
+    @media(max-width:430px){.topbar #brand-txt{display:none}}
+
+    /* Section scaffolding */
+    section{padding:64px 0}
+    .eyebrow{font-family:var(--serif2);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--crimson-lt)}
+    .sec-title{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.6vw,46px);
+      letter-spacing:.06em;text-transform:uppercase;margin:8px 0 0;color:var(--ink);
+      text-shadow:0 2px 30px rgba(0,0,0,.6)}
+    .sec-head{margin-bottom:34px}
+    .sec-head .engrave{margin-top:16px;max-width:520px}
+
+    /* Hero */
+    .hero{padding:70px 0 40px;position:relative}
+    .hero .grid{display:grid;grid-template-columns:1.25fr .85fr;gap:40px;align-items:center}
+    @media(max-width:900px){.hero .grid{grid-template-columns:1fr;gap:30px}}
+    .creed{font-family:var(--serif2);font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.85}
+    .greet{font-family:var(--serif2);font-size:16px;color:var(--parch);margin-top:22px}
+    .hero h1{font-family:var(--serif);font-weight:800;font-size:clamp(44px,10vw,104px);line-height:.94;
+      letter-spacing:.02em;margin:8px 0 0;color:#f4ede0;text-shadow:0 3px 40px rgba(0,0,0,.7)}
+    .hero h1 .fade{display:block;font-size:.42em;font-weight:600;letter-spacing:.16em;color:var(--crimson-lt);margin-top:12px}
+    .hero .headline{font-family:var(--serif2);font-size:clamp(17px,2.4vw,23px);color:var(--parch);margin-top:22px;max-width:26ch}
+    .hero .title{font-size:15px;color:var(--muted);margin-top:12px;max-width:44ch}
+    .hero .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+    .btn{position:relative;display:inline-flex;align-items:center;gap:10px;font-family:var(--serif2);font-size:14px;
+      letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:13px 24px;overflow:hidden;
+      background:var(--crimson);color:#fff;border:1px solid var(--crimson);transition:.25s}
+    .btn:hover{background:var(--crimson-deep);border-color:var(--gold);box-shadow:0 8px 30px rgba(179,18,43,.35)}
+    .btn.ghost{background:transparent;color:var(--parch);border-color:var(--line-strong)}
+    .btn.ghost:hover{background:rgba(200,171,110,.08);color:var(--gold);border-color:var(--gold);box-shadow:none}
+    /* blade-flash sweep */
+    .btn:before{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;transform:skewX(-20deg);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .5s ease}
+    .btn:hover:before{left:130%}
+
+    /* Hero insignia panel */
+    .insignia-wrap{display:flex;justify-content:center;align-items:center;position:relative}
+    .insignia-wrap .halo{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;
+      background:radial-gradient(circle,rgba(179,18,43,.22),transparent 68%);filter:blur(6px)}
+    .insignia{width:min(340px,80%);height:auto;filter:drop-shadow(0 10px 40px rgba(0,0,0,.6))}
+    .insignia .spin{transform-origin:center;animation:spin 60s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* dossier / cards frame */
+    .frame{position:relative;background:var(--panel);border:1px solid var(--line);
+      box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 60px rgba(0,0,0,.35);padding:26px}
+    .frame:before{content:"";position:absolute;inset:8px;border:1px solid var(--line);pointer-events:none}
+    .corner{position:absolute;width:14px;height:14px;border:1px solid var(--gold);opacity:.6}
+    .corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+    .corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+    .corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+    .corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+
+    /* About */
+    .about-grid{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:center}
+    @media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:26px}}
+    .portrait-frame{position:relative;border:1px solid var(--line-strong);padding:10px;background:rgba(0,0,0,.3)}
+    .portrait-frame img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(.55) contrast(1.08) brightness(.82)}
+    .portrait-frame:after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(160deg,transparent 55%,rgba(179,18,43,.22))}
+    .about-text p{font-size:16px;color:var(--parch);margin:0 0 16px}
+    .loc-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif2);letter-spacing:.14em;
+      text-transform:uppercase;font-size:13px;color:var(--gold);border:1px solid var(--line);padding:7px 14px;margin-top:6px}
+
+    /* rows */
+    .rows{display:flex;flex-direction:column}
+    .row{display:grid;grid-template-columns:200px 1fr;gap:22px;padding:22px 0;border-top:1px solid var(--line)}
+    .row:first-child{border-top:none}
+    .row .when{font-family:var(--serif2);color:var(--crimson-lt);font-size:14px;letter-spacing:.08em}
+    .row h3{font-family:var(--serif);font-weight:600;margin:0 0 6px;font-size:19px;letter-spacing:.03em;color:var(--ink)}
+    .row .sub{color:var(--muted);font-size:15px}
+    .row ul{margin:12px 0 0;padding:0;list-style:none}
+    .row ul li{position:relative;padding-left:22px;margin-bottom:8px;color:var(--parch);font-size:15px}
+    .row ul li:before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;background:var(--crimson);transform:rotate(45deg)}
+    @media(max-width:640px){.row{grid-template-columns:1fr;gap:8px}}
+
+    /* Skills */
+    .skills-list{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    @media(max-width:640px){.skills-list{grid-template-columns:1fr}}
+    .skill{display:flex;align-items:center;gap:14px;padding:14px 6px;border-bottom:1px solid var(--line)}
+    .skill i{color:var(--crimson-lt);width:18px;text-align:center}
+    .skill span{font-family:var(--serif2);font-size:16px;letter-spacing:.03em;color:var(--parch)}
+    .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+    .tag{font-family:var(--serif2);font-size:13px;letter-spacing:.08em;color:var(--gold);
+      border:1px solid var(--line);padding:6px 14px;transition:.2s}
+    .tag:hover{border-color:var(--gold);color:var(--ink);background:rgba(200,171,110,.06)}
+
+    /* Courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.courses{grid-template-columns:1fr}}
+    .course{position:relative;background:var(--panel);border:1px solid var(--line);padding:24px 20px;transition:.25s}
+    .course:hover{border-color:var(--line-strong);transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.5)}
+    .course .ci{font-size:24px;color:var(--gold);margin-bottom:14px}
+    .course h4{font-family:var(--serif);font-weight:600;margin:0 0 10px;font-size:17px;letter-spacing:.02em;color:var(--ink)}
+    .course p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Cards (contracts / intel) */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+    .filters button{font-family:var(--serif2);font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+      background:transparent;color:var(--muted);border:1px solid var(--line);padding:9px 16px;transition:.2s}
+    .filters button.active,.filters button:hover{color:var(--ink);border-color:var(--crimson);background:rgba(179,18,43,.14)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);
+      transition:transform .25s, box-shadow .25s, border-color .25s;overflow:hidden}
+    .card:hover{transform:translateY(-4px);border-color:var(--crimson);box-shadow:0 18px 40px rgba(0,0,0,.55)}
+    .card .cover{height:160px;overflow:hidden;position:relative;background:#0c0a0c}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.6) contrast(1.05) brightness(.75);transition:.4s}
+    .card:hover .cover img{filter:grayscale(.15) brightness(.92)}
+    .card .cover:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(11,11,13,.85))}
+    /* blade-flash */
+    .card:before{content:"";position:absolute;top:0;left:-140%;width:60%;height:100%;transform:skewX(-20deg);z-index:3;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);transition:left .55s ease}
+    .card:hover:before{left:150%}
+    .cbody{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .ctag{display:flex;justify-content:space-between;gap:8px;font-family:var(--serif2);font-size:11px;
+      letter-spacing:.14em;text-transform:uppercase;color:var(--crimson-lt)}
+    .card h4{font-family:var(--serif);font-weight:600;margin:0;font-size:17px;line-height:1.35;letter-spacing:.02em;color:var(--ink)}
+    .card p{margin:0;color:var(--muted);font-size:14px;flex:1}
+    .card .tech{color:var(--gold);font-family:var(--serif2);font-size:13px;letter-spacing:.04em}
+    .card .more{font-family:var(--serif2);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--parch)}
+    .card:hover .more{color:var(--gold)}
+    .load-note{grid-column:1/-1;color:var(--muted);font-family:var(--serif2);letter-spacing:.06em;padding:10px 2px}
+    .load-note.err{color:var(--crimson-lt)}
+
+    /* Certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:120px 1fr;background:var(--panel);border:1px solid var(--line)}
+    .cert img{height:100%;width:100%;object-fit:cover;filter:grayscale(.5) contrast(1.05) brightness(.85);border-right:1px solid var(--line)}
+    .cert .ct{padding:18px}
+    .cert .meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--serif2);font-size:11px;
+      letter-spacing:.12em;text-transform:uppercase;color:var(--crimson-lt)}
+    .cert h4{font-family:var(--serif);font-weight:600;margin:10px 0 8px;font-size:17px;color:var(--ink)}
+    .cert p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:30px}
+    @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+    .contact-info a{display:flex;justify-content:space-between;gap:12px;padding:15px 0;border-top:1px solid var(--line)}
+    .contact-info a:first-child{border-top:none}
+    .contact-info a:hover .v{color:var(--gold)}
+    .contact-info a .k{font-family:var(--serif2);letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+    .contact-info a .v{color:var(--parch);font-size:15px}
+    .wax{display:flex;align-items:center;gap:16px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+    .wax .seal{width:60px;height:60px;flex:0 0 auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+    .wax .cred{font-family:var(--serif2);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);opacity:.85}
+    .cf label{display:block;font-family:var(--serif2);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+    .cf input,.cf textarea{width:100%;background:rgba(0,0,0,.32);border:1px solid var(--line);
+      font-family:var(--sans);font-size:15px;color:var(--ink);padding:13px;margin-bottom:16px;transition:.2s}
+    .cf input:focus,.cf textarea:focus{outline:none;border-color:var(--crimson);box-shadow:0 0 0 2px rgba(179,18,43,.18)}
+    .cf textarea{min-height:120px;resize:vertical}
+    #cf-status{font-family:var(--serif2);letter-spacing:.06em;font-size:14px;margin-top:8px}
+
+    footer{border-top:1px solid var(--line);padding:40px 0 56px;margin-top:20px}
+    footer .frow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+    .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+    .foot-links a{font-family:var(--serif2);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .foot-links a:hover{color:var(--gold)}
+    .muted{color:var(--muted);font-size:12.5px;font-family:var(--serif2);letter-spacing:.06em}
+
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+      outline:2px solid var(--crimson-lt);outline-offset:3px}
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      .insignia .spin{animation:none}
+      .btn:before,.card:before{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- reusable SVG defs: insignia + wax seal -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#e6d29a"/><stop offset="1" stop-color="#9c8149"/>
+      </linearGradient>
+      <symbol id="crest" viewBox="0 0 120 120">
+        <!-- angular hooded / hidden-blade crest (original, non-trademarked) -->
+        <g fill="none" stroke="url(#gGold)" stroke-width="2.4" stroke-linejoin="miter">
+          <path d="M60 6 L108 30 L60 114 L12 30 Z"/>
+          <path d="M60 20 L94 37 L60 98 L26 37 Z" opacity=".7"/>
+        </g>
+        <!-- inner blade motif -->
+        <path d="M60 30 L70 60 L60 86 L50 60 Z" fill="#b3122b"/>
+        <path d="M60 42 L64 60 L60 78 L56 60 Z" fill="#e9e2d6"/>
+        <!-- hood wings -->
+        <path d="M60 30 L84 44 L60 52 L36 44 Z" fill="url(#gGold)" opacity=".85"/>
+      </symbol>
+      <symbol id="waxseal" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="#7a0d1e"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#4d0812" stroke-width="3"/>
+        <circle cx="50" cy="50" r="37" fill="none" stroke="#e0324b" stroke-width="1" opacity=".5"/>
+        <path d="M50 24 L58 50 L50 74 L42 50 Z" fill="#e9e2d6" opacity=".92"/>
+        <path d="M50 34 L64 42 L50 46 L36 42 Z" fill="#e9e2d6" opacity=".7"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="content">
+    <div class="topbar"><div class="container inner">
+      <a class="brand" href="#top"><svg><use href="#crest"/></svg><span id="brand-txt">CaiJiechao</span></a>
+      <nav class="navlinks" id="nav" aria-label="Primary"></nav>
+    </div></div>
+
+    <div id="top"></div>
+
+    <header class="hero"><div class="container">
+      <div class="grid">
+        <div>
+          <div class="creed" id="creed"></div>
+          <div class="greet" id="greet"></div>
+          <h1><span id="name"></span><span class="fade" id="role"></span></h1>
+          <div class="headline" id="headline"></div>
+          <div class="title" id="title"></div>
+          <div class="cta-row">
+            <a class="btn" id="cvBtn" href="#" download></a>
+            <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+        <div class="insignia-wrap">
+          <div class="halo" aria-hidden="true"></div>
+          <svg class="insignia" viewBox="0 0 120 120" role="img" aria-label="Order insignia">
+            <g class="spin" fill="none" stroke="var(--line-strong)" stroke-width="1">
+              <circle cx="60" cy="60" r="58"/>
+              <circle cx="60" cy="60" r="50" stroke-dasharray="2 6"/>
+            </g>
+            <use href="#crest" x="18" y="18" width="84" height="84"/>
+          </svg>
+        </div>
+      </div>
+      <p class="engrave" style="margin-top:44px"><span class="dia"></span></p>
+    </div></header>
+
+    <section id="about"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-about"></div>
+        <h2 class="sec-title" id="l-about"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="frame">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <div class="about-grid">
+          <div class="portrait-frame"><img id="portrait" alt="" /></div>
+          <div class="about-text" id="about-text"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section id="education"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-edu"></div>
+        <h2 class="sec-title" id="l-edu"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="rows" id="edu-list"></div>
+    </div></section>
+
+    <section id="skills"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-skills"></div>
+        <h2 class="sec-title" id="l-skills"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="skills-list" id="skills-list"></div>
+      <div class="tags" id="tags-list"></div>
+    </div></section>
+
+    <section id="courses"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-courses"></div>
+        <h2 class="sec-title" id="l-courses"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="courses" id="courses-list"></div>
+    </div></section>
+
+    <section id="experience"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-exp"></div>
+        <h2 class="sec-title" id="l-exp"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="rows" id="exp-list"></div>
+    </div></section>
+
+    <section id="projects"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-projects"></div>
+        <h2 class="sec-title" id="l-projects"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+    </div></section>
+
+    <section id="articles"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-articles"></div>
+        <h2 class="sec-title" id="l-articles"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="filters" id="filters"></div>
+      <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+    </div></section>
+
+    <section id="certificates"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-certs"></div>
+        <h2 class="sec-title" id="l-certs"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="certs" id="certs-list"></div>
+    </div></section>
+
+    <section id="contact"><div class="container">
+      <div class="sec-head"><div class="eyebrow" id="e-contact"></div>
+        <h2 class="sec-title" id="l-contact"></h2>
+        <p class="engrave"><span class="dia"></span></p></div>
+      <div class="contact-grid">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <div class="contact-info" id="contact-info"></div>
+          <div class="wax">
+            <svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><use href="#waxseal"/></svg>
+            <span class="cred" id="wax-cred"></span>
+          </div>
+        </div>
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <form id="cf" class="cf">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+            <label id="lb-name" for="cf-name"></label>
+            <input type="text" name="name" id="cf-name" required>
+            <label id="lb-email" for="cf-email"></label>
+            <input type="email" name="email" id="cf-email" required>
+            <label id="lb-msg" for="cf-msg"></label>
+            <textarea name="message" id="cf-msg" required></textarea>
+            <button type="submit" class="btn" id="cf-send"></button>
+            <p id="cf-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div></section>
+
+    <footer><div class="container">
+      <div class="frow">
+        <a class="brand" href="#top" style="font-size:15px"><svg style="width:22px;height:22px"><use href="#crest"/></svg><span id="foot-brand">CaiJiechao</span></a>
+        <div class="foot-links" id="foot-social"></div>
+      </div>
+      <p class="engrave" style="margin:24px 0"><span class="dia"></span></p>
+      <div class="frow">
+        <span class="muted" id="foot-desc"></span>
+        <a class="muted" id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div></footer>
+  </div>
+
+  <script>window.THEME_ID = "44-assassin";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    const CREED = { en:"Nothing is true — everything is permitted", zh:"万物皆虚，万事皆允" };
+    const EYE = {
+      about:  { en:"Dossier · 01", zh:"档案 · 01" },
+      edu:    { en:"Training · 02", zh:"训练 · 02" },
+      skills: { en:"Arsenal · 03", zh:"军械库 · 03" },
+      courses:{ en:"Doctrine · 04", zh:"教义 · 04" },
+      exp:    { en:"Field Record · 05", zh:"战地记录 · 05" },
+      proj:   { en:"Contracts · 06", zh:"契约 · 06" },
+      art:    { en:"Intel · 07", zh:"情报 · 07" },
+      certs:  { en:"Seals · 08", zh:"印信 · 08" },
+      contact:{ en:"Rendezvous · 09", zh:"接头 · 09" },
+    };
+    const TITLES = {
+      about:  { en:"Target Dossier", zh:"目标档案" },
+      proj:   { en:"Contracts", zh:"契约任务" },
+      art:    { en:"Intel", zh:"情报密档" },
+    };
+
+    const NAV = [['about','nav_about'],['skills','core_tech'],['projects','nav_portfolio'],['articles','nav_article'],['contact','nav_contact']];
+
+    function renderStatic(){
+      document.getElementById('brand-txt').textContent = P.brand;
+      document.getElementById('foot-brand').textContent = P.brand;
+      document.getElementById('nav').innerHTML = NAV.map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      // hero
+      document.getElementById('creed').textContent = t(CREED);
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('title').textContent = t(P.title);
+      const cv = document.getElementById('cvBtn'); cv.textContent = t(P.ui.download_cv); cv.href = t(P.cv);
+      document.getElementById('ghBtn').href = P.contact.github;
+
+      // eyebrows + titles
+      document.getElementById('e-about').textContent = t(EYE.about);
+      document.getElementById('e-edu').textContent = t(EYE.edu);
+      document.getElementById('e-skills').textContent = t(EYE.skills);
+      document.getElementById('e-courses').textContent = t(EYE.courses);
+      document.getElementById('e-exp').textContent = t(EYE.exp);
+      document.getElementById('e-projects').textContent = t(EYE.proj);
+      document.getElementById('e-articles').textContent = t(EYE.art);
+      document.getElementById('e-certs').textContent = t(EYE.certs);
+      document.getElementById('e-contact').textContent = t(EYE.contact);
+
+      document.getElementById('l-about').textContent = t(TITLES.about);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(TITLES.proj);
+      document.getElementById('l-articles').textContent = t(TITLES.art);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+
+      // about
+      const pt = document.getElementById('portrait'); pt.src = P.avatar; pt.alt = t(P.name);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<span class="loc-badge"><i class="fa fa-map-marker"></i> ${esc(t(P.location))}</span>`;
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="row"><div class="when">${esc(e.period)}</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      // skills
+      document.getElementById('skills-list').innerHTML = P.skills.map(s=>`
+        <div class="skill"><i class="fa fa-shield"></i><span>${esc(s)}</span></div>`).join('');
+      document.getElementById('tags-list').innerHTML = P.skillTags.map(tg=>`<span class="tag">${esc(tg)}</span>`).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="row"><div class="when">${esc(x.period)}</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR →', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('wax-cred').textContent = t(P.ui.inbox_open);
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${esc(P.contact.github)}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${esc(P.contact.email)}">Email</a>
+         <a href="${esc(P.contact.wechatQrPage)}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k;
+        document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active', x.dataset.k===filterKey));
+        renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(p.category||t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note err">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note err">⚠ Failed to load / 内容加载失败</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--muted)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--gold)'; s.textContent = r.message||'Message delivered.'; f.reset(); }
+      catch(err){ s.style.color='var(--crimson-lt)'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#b3122b' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

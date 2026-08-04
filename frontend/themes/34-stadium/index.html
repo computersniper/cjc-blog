@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Stadium</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --pitch-a:#1f9d47; --pitch-b:#178a3c;
+      --accent:#2fbf4f; --accent-dk:#1f8f3a;
+      --line:#ffffff;
+      --board:#08150e; --board-2:#0c1e13;
+      --led-amber:#ffc233; --led-green:#4dff86;
+      --ink:#0d1b12; --grey:#5d6d62; --muted:#8a9990;
+      --panel:#ffffff; --panel-2:#f1f7f3;
+      --hair:rgba(13,27,18,.12);
+      --shadow:0 18px 40px rgba(5,30,15,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);position:relative;min-height:100vh;
+      font-family:'Inter',system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;
+      background:
+        repeating-linear-gradient(90deg, var(--pitch-a) 0 46px, var(--pitch-b) 46px 92px);
+      background-attachment:fixed;
+    }
+    /* Floodlight glows at the top corners */
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:
+        radial-gradient(620px 420px at 6% -10%, rgba(255,255,255,.55), transparent 62%),
+        radial-gradient(620px 420px at 94% -10%, rgba(255,255,255,.55), transparent 62%),
+        radial-gradient(1200px 700px at 50% -30%, rgba(255,255,255,.12), transparent 70%);
+    }
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    .wrap{position:relative;z-index:1}
+    .container{max-width:1140px;margin:0 auto;padding:0 22px}
+
+    /* Typographic helpers */
+    .teko{font-family:'Teko',sans-serif;font-weight:600;line-height:.9;letter-spacing:.01em}
+    .oswald{font-family:'Oswald',sans-serif}
+
+    /* ---- Floating brand bar (kept clear of top-right ~200px cluster) ---- */
+    .topbar{position:sticky;top:0;z-index:800}
+    .topbar .inner{display:flex;align-items:center;gap:14px;height:56px;
+      padding-right:210px}
+    .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+      background:var(--board);color:#fff;padding:8px 14px;border-radius:8px;
+      box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.08)}
+    .brand .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);
+      box-shadow:0 0 0 3px rgba(47,191,79,.3)}
+    .brand b{font-family:'Teko',sans-serif;font-weight:600;font-size:24px;letter-spacing:.02em;color:#fff}
+    .brand b i{color:var(--accent);font-style:normal}
+    .navlinks{display:flex;gap:8px}
+    .navlinks a{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;
+      letter-spacing:.12em;text-decoration:none;color:#fff;background:rgba(8,21,14,.72);
+      padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.1)}
+    .navlinks a:hover,.navlinks a:focus-visible{background:var(--accent);color:#04210f;outline:none}
+    @media(max-width:900px){.navlinks{display:none}.topbar .inner{padding-right:0}}
+
+    /* ---- Section scaffolding ---- */
+    section{padding:30px 0}
+    .panel{background:var(--panel);border-radius:16px;box-shadow:var(--shadow);
+      border:2px solid rgba(255,255,255,.7);padding:30px 26px 34px;position:relative;overflow:hidden}
+    @media(min-width:760px){.panel{padding:38px 34px 42px}}
+
+    /* Jersey number badge */
+    .jersey{flex:none;width:52px;height:58px;display:grid;place-items:center;
+      background:var(--accent);color:#04210f;border:3px solid #fff;
+      border-radius:8px 8px 10px 10px;box-shadow:0 6px 14px rgba(5,30,15,.3);
+      clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%)}
+    .jersey span{font-family:'Teko',sans-serif;font-weight:700;font-size:38px;line-height:1;
+      transform:translateY(-3px);font-variant-numeric:tabular-nums}
+
+    /* Broadcast lower-third title */
+    .lower-third{display:flex;align-items:center;gap:14px;margin:0 0 26px}
+    .lt-caption{position:relative;overflow:hidden}
+    .lt-bar{display:inline-flex;align-items:center;gap:12px;
+      background:linear-gradient(90deg,var(--board),var(--board-2));
+      color:#fff;padding:10px 22px 10px 16px;transform:skewX(-11deg);
+      border-left:5px solid var(--accent);box-shadow:0 8px 20px rgba(5,30,15,.28)}
+    .lt-bar > *{transform:skewX(11deg)}
+    .lt-kicker{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:.24em;
+      text-transform:uppercase;color:var(--accent)}
+    .lt-title{font-family:'Teko',sans-serif;font-weight:600;font-size:36px;line-height:.9;letter-spacing:.01em;color:#fff}
+    /* wipe-in */
+    .lt-caption{--wipe:0}
+    .lt-caption.in .lt-bar{animation:wipe .5s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+
+    /* ---- HERO scoreboard ---- */
+    .hero{padding:26px 0 10px}
+    .scoreboard{position:relative;background:radial-gradient(120% 140% at 50% 0%,var(--board-2),var(--board));
+      border-radius:18px;box-shadow:var(--shadow),0 0 0 2px rgba(255,255,255,.06) inset;
+      padding:30px 24px 34px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    @media(min-width:760px){.scoreboard{padding:44px 44px 48px}}
+    /* LED dot-matrix texture overlay */
+    .scoreboard::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+      background-image:radial-gradient(circle,rgba(0,0,0,.55) 1px,transparent 1.4px);
+      background-size:4px 4px;mix-blend-mode:multiply}
+    .scoreboard::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(180deg,rgba(77,255,134,.05),transparent 40%)}
+    .sb-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+      position:relative;z-index:2;border-bottom:1px dashed rgba(255,255,255,.16);padding-bottom:14px}
+    .sb-tag{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3em;
+      text-transform:uppercase;color:var(--led-amber)}
+    .sb-live{display:inline-flex;align-items:center;gap:8px;font-family:'Oswald',sans-serif;
+      font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#fff}
+    .sb-live .blink{width:10px;height:10px;border-radius:50%;background:#ff4242;box-shadow:0 0 10px #ff4242;
+      animation:blink 1.4s steps(2,jump-none) infinite}
+    @keyframes blink{50%{opacity:.25}}
+    .sb-clock{font-family:'Teko',sans-serif;font-size:26px;color:var(--led-green);letter-spacing:.08em;
+      text-shadow:0 0 10px rgba(77,255,134,.5);font-variant-numeric:tabular-nums}
+    .sb-body{position:relative;z-index:2;padding-top:20px}
+    .sb-greet{font-family:'Oswald',sans-serif;font-size:13px;font-weight:500;letter-spacing:.26em;
+      text-transform:uppercase;color:var(--led-amber)}
+    .sb-name{font-family:'Teko',sans-serif;font-weight:700;color:#fff;margin:16px 0 0;
+      font-size:clamp(58px,13vw,132px);line-height:.92;letter-spacing:.02em;
+      text-shadow:0 0 26px rgba(47,191,79,.35)}
+    .sb-headline{font-family:'Teko',sans-serif;font-weight:500;color:var(--led-green);
+      font-size:clamp(26px,5.5vw,52px);line-height:.95;margin-top:8px;letter-spacing:.02em;
+      text-shadow:0 0 16px rgba(77,255,134,.4)}
+    .sb-meta{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:20px}
+    .sb-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);color:#e8f5ec;border-radius:999px;
+      padding:8px 14px;font-size:13px;font-weight:500}
+    .sb-chip i{color:var(--accent)}
+    .sb-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+    .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;cursor:pointer;
+      font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;
+      padding:13px 22px;border-radius:8px;border:2px solid transparent;transition:transform .15s,background .15s,color .15s}
+    .btn-primary{background:var(--accent);color:#04210f;box-shadow:0 8px 18px rgba(47,191,79,.4)}
+    .btn-primary:hover,.btn-primary:focus-visible{transform:translateY(-2px);background:#3fd960;outline:none}
+    .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+    .btn-ghost:hover,.btn-ghost:focus-visible{background:#fff;color:var(--board);outline:none}
+
+    /* Pitch markings divider (center circle + halfway line) */
+    .markings{display:block;margin:8px auto 0;width:100%;max-width:1140px;height:120px}
+
+    /* ---- About ---- */
+    .about-grid{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start}
+    .portrait-frame{position:relative;border-radius:14px;overflow:hidden;border:3px solid #fff;
+      box-shadow:0 12px 26px rgba(5,30,15,.28)}
+    .portrait-frame img{width:100%;aspect-ratio:1/1;object-fit:cover}
+    .portrait-frame .plabel{position:absolute;left:10px;bottom:10px;background:var(--accent);color:#04210f;
+      font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+      padding:5px 11px;border-radius:6px}
+    .about-text p{font-size:15.5px;margin:0 0 15px;color:#1f3327;max-width:64ch}
+    .loc-pill{display:inline-flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--hair);
+      color:var(--accent-dk);font-weight:600;padding:9px 15px;border-radius:999px;font-size:14px}
+    @media(max-width:720px){.about-grid{grid-template-columns:1fr}.portrait-frame{max-width:280px}}
+
+    /* ---- Education ---- */
+    .edu-item{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--hair)}
+    .edu-item:first-child{border-top:0}
+    .edu-when{font-family:'Oswald',sans-serif;font-weight:600;color:var(--accent-dk);font-size:14px;letter-spacing:.04em}
+    .edu-item h3{margin:0 0 5px;font-size:18px;font-weight:700;font-family:'Oswald',sans-serif}
+    .edu-item .sub{color:var(--grey);font-size:14.5px}
+    @media(max-width:560px){.edu-item{grid-template-columns:1fr;gap:6px}}
+
+    /* ---- Skills (jersey chips) ---- */
+    .skill-chips{display:flex;flex-wrap:wrap;gap:10px}
+    .skill-chip{display:inline-flex;align-items:center;gap:9px;background:var(--panel-2);
+      border:1px solid var(--hair);border-radius:8px;padding:9px 13px;font-weight:600;font-size:14px}
+    .skill-chip .num{font-family:'Teko',sans-serif;font-weight:700;font-size:20px;color:#fff;
+      background:var(--accent);width:26px;height:26px;border-radius:6px;display:grid;place-items:center;line-height:1}
+    .skill-lines{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:10px 26px}
+    .skill-lines .line{display:flex;gap:11px;align-items:baseline;padding:9px 0;border-top:1px solid var(--hair);font-size:15px;font-weight:500}
+    .skill-lines .line i{color:var(--accent);font-size:12px}
+    @media(max-width:620px){.skill-lines{grid-template-columns:1fr}}
+
+    /* ---- Courses (with jersey numbers) ---- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .course{background:var(--panel-2);border:1px solid var(--hair);border-radius:12px;padding:20px 18px;position:relative;overflow:hidden}
+    .course::before{content:"";position:absolute;top:0;left:0;width:100%;height:5px;background:var(--accent)}
+    .course .cnum{position:absolute;top:12px;right:14px;font-family:'Teko',sans-serif;font-weight:700;
+      font-size:44px;color:rgba(31,143,58,.14);line-height:1}
+    .course .ci{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;
+      background:var(--accent);color:#04210f;font-size:20px;margin-bottom:14px;box-shadow:0 6px 14px rgba(47,191,79,.35)}
+    .course h4{margin:0 0 8px;font-size:17px;font-weight:700;font-family:'Oswald',sans-serif;line-height:1.15;max-width:15ch}
+    .course p{margin:0;color:var(--grey);font-size:13.5px;line-height:1.55}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.courses{grid-template-columns:1fr}}
+
+    /* ---- Experience ---- */
+    .exp{display:grid;grid-template-columns:160px 1fr;gap:22px}
+    .exp .side{font-family:'Oswald',sans-serif;font-weight:600;color:var(--accent-dk);font-size:15px}
+    .exp h3{margin:0 0 8px;font-size:20px;font-weight:700;font-family:'Oswald',sans-serif}
+    .exp .summary{color:var(--grey);font-size:14.5px;margin:0 0 16px}
+    .exp ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+    .exp li{display:flex;gap:11px;font-size:14.5px;color:#22362a}
+    .exp li::before{content:"";flex:none;width:9px;height:9px;margin-top:6px;border-radius:2px;
+      background:var(--accent);transform:rotate(45deg)}
+    @media(max-width:620px){.exp{grid-template-columns:1fr;gap:12px}}
+
+    /* ---- Cards (projects / articles) ---- */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+    .filters button{font-family:'Oswald',sans-serif;background:var(--panel-2);border:1px solid var(--hair);
+      color:var(--ink);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+      padding:8px 14px;border-radius:999px;cursor:pointer;transition:.15s}
+    .filters button.active,.filters button:hover,.filters button:focus-visible{
+      background:var(--accent);border-color:var(--accent);color:#04210f;outline:none}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--panel);border:1px solid var(--hair);border-radius:14px;overflow:hidden;
+      display:flex;flex-direction:column;text-decoration:none;color:inherit;
+      box-shadow:0 8px 20px rgba(5,30,15,.14);transition:transform .16s,box-shadow .16s}
+    .card:hover,.card:focus-visible{transform:translateY(-5px);box-shadow:0 16px 32px rgba(5,30,15,.24);outline:none}
+    .card .cover{height:158px;background:#dfe9e2;overflow:hidden;position:relative}
+    .card .cover img{width:100%;height:100%;object-fit:cover}
+    .card .cbody{padding:16px 16px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .card .ctag{display:flex;justify-content:space-between;align-items:center;gap:8px;
+      font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+    .card .ctag .cat{background:var(--accent);color:#04210f;padding:3px 9px;border-radius:5px}
+    .card .ctag .date{color:var(--muted)}
+    .card h4{margin:0;font-size:17px;font-weight:700;font-family:'Oswald',sans-serif;line-height:1.2}
+    .card .tech{color:var(--accent-dk);font-weight:600;font-size:13px}
+    .card p{margin:0;color:var(--grey);font-size:13.5px;line-height:1.55;flex:1}
+    .card .more{font-family:'Oswald',sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;
+      letter-spacing:.08em;color:var(--accent-dk)}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;color:var(--grey);font-size:14.5px;padding:8px 0}
+
+    /* ---- Certificates ---- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .cert{display:grid;grid-template-columns:118px 1fr;background:var(--panel-2);border:1px solid var(--hair);
+      border-radius:12px;overflow:hidden}
+    .cert img{width:100%;height:100%;object-fit:cover}
+    .cert .ct{padding:16px}
+    .cert .ct .meta{display:flex;justify-content:space-between;gap:8px;font-family:'Oswald',sans-serif;
+      font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-dk)}
+    .cert .ct h4{margin:8px 0 6px;font-size:16px;font-weight:700;font-family:'Oswald',sans-serif;line-height:1.2}
+    .cert .ct p{margin:0;color:var(--grey);font-size:13px;line-height:1.5}
+    @media(max-width:620px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:96px 1fr}}
+
+    /* ---- Contact ---- */
+    .contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:28px}
+    .contact-info a{display:flex;justify-content:space-between;align-items:center;gap:10px;
+      border-top:1px solid var(--hair);padding:14px 2px;text-decoration:none;font-weight:600}
+    .contact-info a:first-child{border-top:0}
+    .contact-info a .k{display:inline-flex;align-items:center;gap:10px;color:var(--ink)}
+    .contact-info a .k i{color:var(--accent);width:18px;text-align:center}
+    .contact-info a .v{color:var(--accent-dk)}
+    .contact-info a:hover .v,.contact-info a:focus-visible .v{text-decoration:underline;outline:none}
+    .cf input,.cf textarea{width:100%;background:var(--panel-2);border:1px solid var(--hair);border-radius:10px;
+      font-family:inherit;font-size:15px;padding:13px 14px;margin-bottom:13px;color:var(--ink)}
+    .cf input:focus,.cf textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+    .cf textarea{min-height:128px;resize:vertical}
+    .cf button{width:100%;justify-content:center}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14px}
+    @media(max-width:720px){.contact-grid{grid-template-columns:1fr}}
+
+    /* ---- Footer ---- */
+    footer.foot{position:relative;z-index:1;margin-top:24px}
+    .foot-inner{background:var(--board);color:#dfeee5;border-radius:16px 16px 0 0;
+      box-shadow:var(--shadow);padding:30px 26px;border:1px solid rgba(255,255,255,.08);border-bottom:0}
+    .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+    .foot-social{display:flex;flex-wrap:wrap;gap:8px}
+    .foot-social a{text-decoration:none;color:#dfeee5;background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);padding:8px 13px;border-radius:8px;font-size:13px;font-weight:600}
+    .foot-social a:hover,.foot-social a:focus-visible{background:var(--accent);color:#04210f;outline:none}
+    .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:20px;
+      padding-top:18px;border-top:1px dashed rgba(255,255,255,.16)}
+    .foot-bottom span,.foot-bottom a{color:#9fb6a8;font-size:12.5px;text-decoration:none}
+    .foot-bottom a:hover{color:#fff}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;scroll-behavior:auto !important;transition:none !important}
+      .lt-caption .lt-bar{clip-path:none !important}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar"><div class="container inner">
+      <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span><b>Cai<i>Jiechao</i></b></a>
+      <nav class="navlinks" id="nav" aria-label="Section navigation"></nav>
+    </div></div>
+
+    <div id="top"></div>
+
+    <!-- HERO: stadium scoreboard -->
+    <header class="hero"><div class="container">
+      <div class="scoreboard">
+        <div class="sb-strip">
+          <span class="sb-tag" id="sb-tag">● MATCH DAY ●</span>
+          <span class="sb-live"><span class="blink" aria-hidden="true"></span><span id="sb-live-txt">LIVE</span></span>
+          <span class="sb-clock" id="sb-clock">90:00</span>
+        </div>
+        <div class="sb-body">
+          <div class="sb-greet" id="greet"></div>
+          <h1 class="sb-name" id="name"></h1>
+          <div class="sb-headline" id="headline"></div>
+          <div class="sb-meta" id="meta"></div>
+          <div class="sb-cta">
+            <a class="btn btn-primary" id="cvBtn" href="#" download></a>
+            <a class="btn btn-ghost" id="ghBtn" target="_blank" rel="noopener"></a>
+          </div>
+        </div>
+      </div>
+      <!-- Pitch markings: halfway line + center circle -->
+      <svg class="markings" viewBox="0 0 1140 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <line x1="0" y1="60" x2="1140" y2="60" stroke="#ffffff" stroke-width="3" opacity=".85"/>
+        <circle cx="570" cy="60" r="46" fill="none" stroke="#ffffff" stroke-width="3" opacity=".85"/>
+        <circle cx="570" cy="60" r="5" fill="#ffffff" opacity=".85"/>
+      </svg>
+    </div></header>
+
+    <!-- ABOUT -->
+    <section id="about"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>01</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-about"></span><span class="lt-title" id="l-about"></span>
+        </div></div>
+      </div>
+      <div class="about-grid">
+        <div class="portrait-frame">
+          <img id="portrait" alt="" />
+          <span class="plabel">#10 · CAPTAIN</span>
+        </div>
+        <div class="about-text" id="about-text"></div>
+      </div>
+    </div></div></section>
+
+    <!-- EDUCATION -->
+    <section id="education"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>02</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-edu"></span><span class="lt-title" id="l-edu"></span>
+        </div></div>
+      </div>
+      <div id="edu-list"></div>
+    </div></div></section>
+
+    <!-- SKILLS -->
+    <section id="skills"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>03</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-skills"></span><span class="lt-title" id="l-skills"></span>
+        </div></div>
+      </div>
+      <div class="skill-chips" id="skill-chips"></div>
+      <div class="skill-lines" id="skill-lines"></div>
+    </div></div></section>
+
+    <!-- COURSES -->
+    <section id="courses"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>04</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-courses"></span><span class="lt-title" id="l-courses"></span>
+        </div></div>
+      </div>
+      <div class="courses" id="courses-list"></div>
+    </div></div></section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>05</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-exp"></span><span class="lt-title" id="l-exp"></span>
+        </div></div>
+      </div>
+      <div id="exp-list"></div>
+    </div></div></section>
+
+    <!-- PROJECTS -->
+    <section id="projects"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>06</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-projects"></span><span class="lt-title" id="l-projects"></span>
+        </div></div>
+      </div>
+      <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+    </div></div></section>
+
+    <!-- ARTICLES -->
+    <section id="articles"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>07</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-articles"></span><span class="lt-title" id="l-articles"></span>
+        </div></div>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+    </div></div></section>
+
+    <!-- CERTIFICATES -->
+    <section id="certificates"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>08</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-certs"></span><span class="lt-title" id="l-certs"></span>
+        </div></div>
+      </div>
+      <div class="certs" id="certs-list"></div>
+    </div></div></section>
+
+    <!-- CONTACT -->
+    <section id="contact"><div class="container"><div class="panel">
+      <div class="lower-third">
+        <div class="jersey"><span>09</span></div>
+        <div class="lt-caption"><div class="lt-bar">
+          <span class="lt-kicker" id="k-contact"></span><span class="lt-title" id="l-contact"></span>
+        </div></div>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info" id="contact-info"></div>
+        <div>
+          <form class="cf" id="cf">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+            <input type="text" name="name" id="cf-name" required aria-label="Name">
+            <input type="email" name="email" id="cf-email" required aria-label="Email">
+            <textarea name="message" id="cf-msg" required aria-label="Message"></textarea>
+            <button class="btn btn-primary" type="submit" id="cf-send"></button>
+            <p id="cf-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div></div></section>
+
+    <footer class="foot"><div class="container"><div class="foot-inner">
+      <div class="foot-top">
+        <a class="brand" href="#top" style="box-shadow:none"><span class="dot" aria-hidden="true"></span><b>Cai<i>Jiechao</i></b></a>
+        <nav class="foot-social" id="foot-social" aria-label="Social links"></nav>
+      </div>
+      <div class="foot-bottom">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div></div></footer>
+  </div>
+
+  <script>window.THEME_ID = "34-stadium";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      document.title = (CJCData.lang()==="zh" ? "蔡杰超" : "Cai Jiechao") + " — Stadium";
+
+      // nav
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      // hero scoreboard
+      document.getElementById('sb-tag').textContent = CJCData.lang()==="zh" ? "● 比赛日 ●" : "● MATCH DAY ●";
+      document.getElementById('sb-live-txt').textContent = CJCData.lang()==="zh" ? "直播" : "LIVE";
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('meta').innerHTML =
+        `<span class="sb-chip"><i class="fa fa-user"></i>${esc(t(P.role))}</span>`+
+        `<span class="sb-chip"><i class="fa fa-graduation-cap"></i>${esc(t(P.title))}</span>`+
+        `<span class="sb-chip"><i class="fa fa-map-marker"></i>${esc(t(P.location))}</span>`;
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = `<i class="fa fa-download"></i>${esc(t(P.ui.download_cv))}`; cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.innerHTML = `<i class="fa fa-github"></i>GitHub`; gh.href = P.contact.github;
+
+      // lower-third captions (kicker + title)
+      const caps = [
+        ['k-about','l-about','Profile', P.ui.about_me],
+        ['k-edu','l-edu','Academy', P.ui.education_bg],
+        ['k-skills','l-skills','Squad', P.ui.core_tech],
+        ['k-courses','l-courses','Training', P.ui.core_courses],
+        ['k-exp','l-exp','Transfer', P.ui.internship_exp],
+        ['k-projects','l-projects','Highlights', P.ui.latest_projects],
+        ['k-articles','l-articles','Match Report', P.ui.latest_articles],
+        ['k-certs','l-certs','Trophies', P.ui.certificates],
+        ['k-contact','l-contact','Full Time', P.ui.get_in_touch],
+      ];
+      caps.forEach(([kid,tid,kicker,field])=>{
+        document.getElementById(kid).textContent = kicker;
+        document.getElementById(tid).textContent = t(field);
+      });
+
+      // about
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<span class="loc-pill"><i class="fa fa-map-marker"></i>${esc(t(P.location))}</span>`;
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="edu-item">
+          <div class="edu-when">${esc(e.period)}</div>
+          <div><h3>${esc(t(e.school))}</h3>
+          <div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div>
+        </div>`).join('');
+
+      // skills — tags as jersey chips + grouped lines
+      document.getElementById('skill-chips').innerHTML = P.skillTags.map((s,i)=>`
+        <span class="skill-chip"><span class="num">${(i+1)}</span>${esc(s)}</span>`).join('');
+      document.getElementById('skill-lines').innerHTML = P.skills.map(s=>`
+        <div class="line"><i class="fa fa-futbol-o"></i>${esc(s)}</div>`).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="course">
+          <span class="cnum">${String(i+1).padStart(2,'0')}</span>
+          <div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+          <h4>${esc(t(c.title))}</h4>
+          <p>${esc(t(c.desc))}</p>
+        </div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="exp">
+          <div class="side">${esc(x.period)}</div>
+          <div>
+            <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+            <p class="summary">${esc(t(x.summary))}</p>
+            <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+          </div>
+        </div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert">
+          <img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+          <div class="ct">
+            <div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+            <h4>${esc(t(c.title))}</h4>
+            <p>${esc(t(c.desc))}</p>
+          </div>
+        </div>`).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['fa-envelope','Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['fa-phone','Phone', P.contact.phone, P.contact.phoneHref],
+        ['fa-github','GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['fa-weixin','WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([ic,k,v,h])=>`<a href="${esc(h)}" target="_blank" rel="noopener">
+          <span class="k"><i class="fa ${ic}"></i>${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = `<i class="fa fa-paper-plane"></i>${esc(t(P.ui.get_in_touch))}`;
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener"><i class="fa fa-github"></i> GitHub</a>
+         <a href="mailto:${P.contact.email}"><i class="fa fa-envelope"></i> Email</a>
+         <a href="${P.contact.wechatQrPage}" target="_blank" rel="noopener"><i class="fa fa-weixin"></i> WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+
+      revealCaptions();
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span class="cat">${esc(t(P.ui.tech_stack))}</span><span class="date">${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
+          <div class="cbody">
+            <div class="ctag"><span class="cat">${esc(a.category||'')}</span><span class="date">${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ ${CJCData.lang()==="zh"?"内容加载失败":"Failed to load articles."}</div>`; }
+    }
+
+    // Broadcast lower-third wipe-in on scroll (respects reduced-motion)
+    let ioObs = null;
+    function revealCaptions(){
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const caps = document.querySelectorAll('.lt-caption');
+      if(reduce){ caps.forEach(c=>c.classList.add('in')); return; }
+      if(!('IntersectionObserver' in window)){ caps.forEach(c=>c.classList.add('in')); return; }
+      if(!ioObs){
+        ioObs = new IntersectionObserver((entries)=>{
+          entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); ioObs.unobserve(en.target); } });
+        }, { threshold:.35 });
+      }
+      caps.forEach(c=>{ if(!c.classList.contains('in')) ioObs.observe(c); });
+    }
+
+    // Contact submit
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--grey)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--accent-dk)'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#d23'; s.textContent = err.message; }
+    });
+
+    // Font Awesome 4.7 for icons
+    const fa = document.createElement('link');
+    fa.rel='stylesheet';
+    fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent: "#2fbf4f" });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Astronaut</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg0:#0a0f2c; --bg1:#152046; --panel:#101a42; --panel2:#0c1436;
+      --accent:#ff7043; --accent2:#ffab40; --blue:#4d7cff; --cyan:#57d0ff;
+      --ink:#eaf0ff; --muted:#9fb0dd; --dim:#6c7ba8;
+      --line:rgba(120,150,230,.22); --hud:rgba(255,112,67,.55);
+      --ok:#57e08a;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      font-family:'Inter',system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;
+      background:
+        radial-gradient(1000px 620px at 85% -6%, rgba(77,124,255,.18), transparent 60%),
+        radial-gradient(760px 520px at 8% 8%, rgba(255,112,67,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg0),#0c1536 55%,var(--bg1));
+      background-attachment:fixed;min-height:100vh;overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .mono{font-family:'Orbitron','Inter',sans-serif;letter-spacing:.06em}
+    ::selection{background:rgba(255,112,67,.35)}
+
+    /* Starry dot backdrop */
+    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.9}
+    .planet{position:absolute;z-index:0;pointer-events:none;border-radius:50%}
+    .planet.p1{width:180px;height:180px;top:12%;right:6%;
+      background:radial-gradient(circle at 32% 28%,#ffd0b0,#ff7043 45%,#7a2d16 100%);
+      box-shadow:0 0 60px rgba(255,112,67,.35), inset -14px -10px 30px rgba(0,0,0,.45)}
+    .planet.p1::after{content:"";position:absolute;inset:-34% -18%;border-radius:50%;
+      border:10px solid rgba(255,171,64,.28);transform:rotate(-24deg);border-right-color:transparent;border-left-color:transparent}
+    .planet.p2{width:90px;height:90px;bottom:14%;left:5%;
+      background:radial-gradient(circle at 34% 30%,#bcd2ff,#4d7cff 50%,#182a63 100%);
+      box-shadow:0 0 40px rgba(77,124,255,.35), inset -8px -6px 18px rgba(0,0,0,.5)}
+    @media(max-width:760px){.planet.p1{width:120px;height:120px}.planet.p2{display:none}}
+
+    .wrap{position:relative;z-index:2}
+    .container{max-width:1180px;margin:0 auto;padding:0 24px}
+
+    /* Mission control top HUD */
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(10,15,44,.86);
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+    .brand{font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px}
+    .brand .astro{font-size:20px}
+    .brand b{color:var(--accent)}
+    .navlinks{display:flex;gap:20px}
+    .navlinks a{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+    .navlinks a:hover{color:var(--accent)}
+    @media(min-width:901px){.topbar .inner{padding-right:220px}}
+    @media(max-width:900px){.navlinks{display:none}}
+
+    /* Telemetry ticker */
+    .ticker{border-bottom:1px solid var(--line);background:rgba(12,20,54,.6);overflow:hidden}
+    .ticker .track{display:flex;gap:40px;white-space:nowrap;padding:7px 0;
+      font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.14em;color:var(--dim);
+      animation:tick 30s linear infinite}
+    .ticker .track span b{color:var(--accent)}
+    .ticker .track span i{color:var(--ok);font-style:normal}
+    @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    section{padding:70px 0;position:relative}
+    .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+    .sec-badge{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.14em;color:var(--accent);
+      border:1px solid var(--hud);border-radius:6px;padding:6px 10px;white-space:nowrap;
+      background:rgba(255,112,67,.08)}
+    .sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(22px,3.6vw,38px);font-weight:800;margin:0;letter-spacing:.02em}
+    .sec-title small{color:var(--dim);font-size:12px;font-weight:600;letter-spacing:.14em;display:block;margin-top:4px}
+
+    /* HUD panel */
+    .panel{position:relative;background:linear-gradient(180deg,rgba(16,26,66,.72),rgba(12,20,54,.72));
+      border:1px solid var(--line);border-radius:12px;
+      box-shadow:0 18px 46px rgba(2,6,26,.5), inset 0 1px 0 rgba(255,255,255,.04)}
+    /* HUD corner ticks */
+    .panel::before,.panel::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--hud);opacity:.7}
+    .panel::before{top:8px;left:8px;border-right:none;border-bottom:none;border-radius:3px 0 0 0}
+    .panel::after{bottom:8px;right:8px;border-left:none;border-top:none;border-radius:0 0 3px 0}
+
+    /* Hero */
+    .hero{padding:64px 0 30px;overflow-x:clip}
+    .hero-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:38px;align-items:center}
+    @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:26px}}
+    .greet{display:inline-flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:12px;
+      letter-spacing:.14em;color:var(--accent);border:1px solid var(--hud);border-radius:6px;padding:7px 12px;
+      background:rgba(255,112,67,.08)}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(38px,7vw,74px);line-height:1.02;margin:18px 0 0;font-weight:900;
+      letter-spacing:.01em;text-shadow:0 0 34px rgba(77,124,255,.3)}
+    .hero .role{font-size:clamp(16px,2.2vw,22px);color:var(--accent);font-weight:700;margin-top:12px;font-family:'Orbitron',sans-serif;letter-spacing:.04em}
+    .hero .head{font-size:clamp(15px,1.9vw,19px);color:var(--muted);margin-top:16px;max-width:32ch}
+    .hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13.5px;color:var(--dim)}
+    .hero .meta b{color:var(--ink)}
+    .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:13px;padding:14px 24px;border-radius:8px;
+      border:1px solid transparent;cursor:pointer;font-family:'Orbitron',sans-serif;letter-spacing:.06em;
+      transition:transform .15s,box-shadow .2s,background .2s}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#231007;
+      box-shadow:0 10px 26px rgba(255,112,67,.4)}
+    .btn.primary:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(255,112,67,.55)}
+    .btn.ghost{background:rgba(120,150,230,.08);border-color:var(--line);color:var(--ink)}
+    .btn.ghost:hover{background:rgba(120,150,230,.16);transform:translateY(-2px)}
+
+    /* Hero capsule / astronaut */
+    .capsule{position:relative;max-width:360px;margin:0 auto;width:100%;padding:26px}
+    .capsule .orbit{position:absolute;inset:6%;border:1px dashed var(--line);border-radius:50%;animation:spin 42s linear infinite}
+    .capsule .orbit.o2{inset:20%;border-color:rgba(255,112,67,.22);animation-duration:64s;animation-direction:reverse}
+    .capsule .moon{position:absolute;top:6%;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;
+      background:radial-gradient(circle at 34% 30%,#fff,var(--cyan));box-shadow:0 0 12px var(--cyan);
+      transform-origin:0 340%;animation:spin 42s linear infinite}
+    /* Astronaut helmet housing the portrait */
+    .capsule .helmet{position:relative;z-index:3;width:100%;
+      filter:drop-shadow(0 20px 42px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(255,112,67,.18))}
+    .capsule .helmet svg{width:100%;height:auto;display:block;overflow:visible}
+    .capsule .readout{display:flex;justify-content:space-between;margin-top:16px;font-family:'Orbitron',sans-serif;font-size:10px;
+      letter-spacing:.1em;color:var(--dim)}
+    .capsule .readout b{color:var(--ok)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* content grids */
+    .about .panel{padding:28px}
+    .about p{color:var(--muted);font-size:16px;margin:0 0 14px;max-width:74ch}
+    .about .loc{display:inline-flex;gap:8px;align-items:center;color:var(--accent);font-weight:700;font-size:14px;font-family:'Orbitron',sans-serif}
+
+    .rows{display:flex;flex-direction:column;gap:16px}
+    .rowcard{display:grid;grid-template-columns:160px 1fr;gap:20px;padding:22px 24px}
+    .rowcard .when{font-family:'Orbitron',sans-serif;font-size:12px;color:var(--accent);letter-spacing:.06em}
+    .rowcard h3{margin:0 0 6px;font-size:18px;font-weight:700}
+    .rowcard .sub{color:var(--muted);font-size:14.5px}
+    .rowcard ul{margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.7}
+    .rowcard ul li::marker{content:"▸ ";color:var(--accent)}
+    @media(max-width:640px){.rowcard{grid-template-columns:1fr;gap:8px}}
+
+    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .chip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.04em;padding:8px 14px;border-radius:6px;
+      border:1px solid var(--line);background:rgba(120,150,230,.06);color:var(--ink);transition:.18s}
+    .chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 16px rgba(255,112,67,.25);transform:translateY(-2px)}
+    .skill-lines{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+    .skill-lines .sl{display:flex;gap:10px;padding:12px 16px;border-radius:8px;background:rgba(120,150,230,.05);
+      border:1px solid var(--line);font-size:14px;color:var(--muted)}
+    .skill-lines .sl b{color:var(--accent);font-family:'Orbitron',sans-serif;font-size:11px}
+    @media(max-width:640px){.skill-lines{grid-template-columns:1fr}}
+
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.grid3{grid-template-columns:1fr}}
+    .course{padding:24px}
+    .course .ci{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;font-size:20px;color:var(--accent);
+      background:rgba(255,112,67,.1);border:1px solid var(--hud);margin-bottom:14px}
+    .course h4{margin:0 0 8px;font-size:16.5px;font-weight:700}
+    .course p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{display:flex;flex-direction:column;overflow:hidden;transition:transform .2s,box-shadow .25s,border-color .2s}
+    .card:hover{transform:translateY(-6px);border-color:var(--hud);box-shadow:0 24px 56px rgba(2,6,26,.6),0 0 24px rgba(255,112,67,.2)}
+    .card .cover{aspect-ratio:16/10;overflow:hidden;background:#0a1436;border-bottom:1px solid var(--line)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .card:hover .cover img{transform:scale(1.06)}
+    .card .cbody{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .card .ctag{display:flex;justify-content:space-between;font-family:'Orbitron',sans-serif;font-size:10px;
+      letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+    .card h4{margin:0;font-size:16px;font-weight:700;line-height:1.3}
+    .card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.55;flex:1}
+    .card .tech{color:var(--cyan);font-weight:600;font-size:12.5px}
+    .card .more{font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;color:var(--accent);letter-spacing:.06em}
+
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+    .filters button{font-family:'Orbitron',sans-serif;background:rgba(120,150,230,.05);border:1px solid var(--line);
+      color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;padding:9px 15px;border-radius:6px;cursor:pointer;transition:.18s}
+    .filters button.active,.filters button:hover{background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#231007;border-color:transparent;box-shadow:0 6px 18px rgba(255,112,67,.4)}
+
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:640px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden}
+    .cert img{height:100%;width:100%;object-fit:cover;border-right:1px solid var(--line)}
+    .cert .ct{padding:20px}
+    .cert .ct .meta{display:flex;justify-content:space-between;gap:10px;font-family:'Orbitron',sans-serif;font-size:10px;
+      text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+    .cert .ct h4{margin:10px 0 7px;font-size:16px;font-weight:700}
+    .cert .ct p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    @media(max-width:400px){.cert{grid-template-columns:90px 1fr}}
+
+    .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px}
+    @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+    .contact-info{padding:26px}
+    .contact-info a{display:flex;justify-content:space-between;gap:12px;padding:15px 0;border-top:1px solid var(--line);font-weight:500}
+    .contact-info a:first-of-type{border-top:none}
+    .contact-info a span:first-child{color:var(--dim);font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.06em}
+    .contact-info a span:last-child{color:var(--accent);font-weight:600}
+    .contact-form{padding:26px}
+    .contact-form label{display:block;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
+    .contact-form input,.contact-form textarea{width:100%;background:rgba(6,12,36,.6);border:1px solid var(--line);
+      border-radius:8px;font-family:inherit;font-size:15px;padding:13px 15px;margin-bottom:16px;color:var(--ink);transition:.18s}
+    .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,112,67,.18)}
+    .contact-form textarea{min-height:130px;resize:vertical}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14px}
+
+    footer{border-top:1px solid var(--line);padding:44px 0 60px;margin-top:20px;background:linear-gradient(180deg,transparent,rgba(21,32,70,.5))}
+    .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+    .foot-social{display:flex;gap:18px;flex-wrap:wrap}
+    .foot-social a{color:var(--muted);font-weight:500;font-size:14px}
+    .foot-social a:hover{color:var(--accent)}
+    .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:20px}
+    .muted{color:var(--dim);font-size:13px}
+    .muted a{color:var(--dim)}.muted a:hover{color:var(--accent)}
+    .load-note{color:var(--muted);font-size:14px;grid-column:1/-1;padding:20px;text-align:center;border:1px dashed var(--line);border-radius:10px}
+
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="bg" aria-hidden="true">
+    <div class="planet p1"></div>
+    <div class="planet p2"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar"><div class="container inner">
+      <a class="brand" href="#top"><span class="astro" aria-hidden="true">👨‍🚀</span>Cai<b>Jiechao</b></a>
+      <nav class="navlinks" id="nav"></nav>
+    </div></div>
+
+    <div class="ticker"><div class="track" id="ticker"></div></div>
+
+    <div id="top"></div>
+    <header class="hero"><div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="greet mono" id="greet"></div>
+          <h1 id="name"></h1>
+          <div class="role" id="role"></div>
+          <div class="head" id="headline"></div>
+          <div class="meta" id="meta"></div>
+          <div class="btns">
+            <a class="btn primary" id="cvBtn" href="#" download></a>
+            <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"></a>
+          </div>
+        </div>
+        <div class="panel capsule">
+          <div class="orbit"></div><div class="orbit o2"></div>
+          <div class="moon"></div>
+          <div class="helmet">
+            <svg viewBox="0 0 400 442" role="img" aria-labelledby="portrait-title" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <title id="portrait-title">Astronaut portrait</title>
+              <defs>
+                <linearGradient id="shellGrad" x1="0" y1="0" x2="0.25" y2="1">
+                  <stop offset="0" stop-color="#ffffff"/>
+                  <stop offset="0.42" stop-color="#e6eaf2"/>
+                  <stop offset="0.72" stop-color="#c2c9d8"/>
+                  <stop offset="1" stop-color="#949cb0"/>
+                </linearGradient>
+                <radialGradient id="shellSheen" cx="0.34" cy="0.24" r="0.72">
+                  <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+                  <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.14"/>
+                  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="visorGlass" x1="0" y1="0" x2="0.2" y2="1">
+                  <stop offset="0" stop-color="#16244c"/>
+                  <stop offset="0.5" stop-color="#0a1330"/>
+                  <stop offset="1" stop-color="#04081c"/>
+                </linearGradient>
+                <linearGradient id="visorSheen" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffe082" stop-opacity="0.50"/>
+                  <stop offset="0.34" stop-color="#ffab40" stop-opacity="0.16"/>
+                  <stop offset="0.56" stop-color="#57d0ff" stop-opacity="0.12"/>
+                  <stop offset="1" stop-color="#4d7cff" stop-opacity="0.30"/>
+                </linearGradient>
+                <linearGradient id="ringGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#cfd5e2"/>
+                  <stop offset="0.5" stop-color="#f2f5fa"/>
+                  <stop offset="1" stop-color="#878fa2"/>
+                </linearGradient>
+                <linearGradient id="reflStreak" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+                  <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.5"/>
+                  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                </linearGradient>
+                <clipPath id="visorClip">
+                  <path d="M 74 152 Q 74 100 134 96 L 266 96 Q 326 100 326 152 L 326 204 Q 326 252 266 256 L 134 256 Q 74 252 74 204 Z"/>
+                </clipPath>
+              </defs>
+
+              <!-- neck ring (drawn first so the shell overlaps its top) -->
+              <rect x="120" y="356" width="160" height="62" rx="14" fill="url(#ringGrad)" stroke="#7c8398" stroke-width="2"/>
+              <line x1="132" y1="374" x2="268" y2="374" stroke="#7c8398" stroke-width="2" opacity="0.55"/>
+              <line x1="132" y1="388" x2="268" y2="388" stroke="#7c8398" stroke-width="2" opacity="0.55"/>
+              <line x1="132" y1="402" x2="268" y2="402" stroke="#7c8398" stroke-width="2" opacity="0.55"/>
+
+              <!-- side ear housings -->
+              <rect x="4" y="180" width="44" height="92" rx="18" fill="url(#ringGrad)" stroke="#7c8398" stroke-width="2"/>
+              <circle cx="26" cy="226" r="11" fill="#2b3252"/>
+              <rect x="352" y="180" width="44" height="92" rx="18" fill="url(#ringGrad)" stroke="#7c8398" stroke-width="2"/>
+              <circle cx="374" cy="226" r="11" fill="#2b3252"/>
+
+              <!-- helmet shell -->
+              <path d="M 200 22 C 306 22 374 98 374 202 C 374 288 320 350 238 362 L 162 362 C 80 350 26 288 26 202 C 26 98 94 22 200 22 Z" fill="url(#shellGrad)" stroke="#aeb4c4" stroke-width="2"/>
+              <path d="M 200 22 C 306 22 374 98 374 202 C 374 288 320 350 238 362 L 162 362 C 80 350 26 288 26 202 C 26 98 94 22 200 22 Z" fill="url(#shellSheen)"/>
+
+              <!-- antenna -->
+              <line x1="200" y1="24" x2="200" y2="8" stroke="#b7bdcc" stroke-width="3"/>
+              <circle cx="200" cy="6" r="5" fill="#ff7043"/>
+
+              <!-- lower mission patch -->
+              <circle cx="200" cy="312" r="21" fill="rgba(255,112,67,.14)" stroke="#ff7043" stroke-width="2"/>
+              <path d="M200 300 l3.4 7 7.6 .6 -5.8 5 1.8 7.4 -7-4 -7 4 1.8-7.4 -5.8-5 7.6-.6 Z" fill="#ffab40"/>
+
+              <!-- visor recess (dark bezel; inner half hidden by clipped photo) -->
+              <path d="M 74 152 Q 74 100 134 96 L 266 96 Q 326 100 326 152 L 326 204 Q 326 252 266 256 L 134 256 Q 74 252 74 204 Z" fill="#04081c" stroke="#0c1533" stroke-width="9"/>
+
+              <!-- portrait behind the glass -->
+              <g clip-path="url(#visorClip)">
+                <rect x="60" y="80" width="280" height="196" fill="url(#visorGlass)"/>
+                <image id="portrait" x="64" y="76" width="272" height="210" preserveAspectRatio="xMidYMid slice" href="" xlink:href=""/>
+                <!-- subtle tint so the face reads as behind tinted glass -->
+                <rect x="60" y="80" width="280" height="196" fill="#0a1330" opacity="0.14"/>
+                <!-- gold / iridescent visor sheen -->
+                <rect x="60" y="80" width="280" height="196" fill="url(#visorSheen)"/>
+                <!-- soft top glass highlight -->
+                <path d="M90 128 Q200 108 314 128" fill="none" stroke="#ffffff" stroke-width="7" opacity="0.16"/>
+                <!-- diagonal reflection streak -->
+                <polygon points="96,90 168,90 118,264 58,264" fill="url(#reflStreak)" opacity="0.55"/>
+              </g>
+
+              <!-- gold visor rim highlight -->
+              <path d="M 74 152 Q 74 100 134 96 L 266 96 Q 326 100 326 152 L 326 204 Q 326 252 266 256 L 134 256 Q 74 252 74 204 Z" fill="none" stroke="#ffc23a" stroke-width="2.5" opacity="0.65"/>
+            </svg>
+          </div>
+          <div class="readout mono">
+            <span>ALT <b>384,400km</b></span><span>O₂ <b>98%</b></span><span>SYS <b>NOMINAL</b></span>
+          </div>
+        </div>
+      </div>
+    </div></header>
+
+    <div class="container">
+
+      <section id="about">
+        <div class="sec-head"><span class="sec-badge">MODULE 01</span><h2 class="sec-title" id="l-about"></h2></div>
+        <div class="about"><div class="panel" id="about-text"></div></div>
+      </section>
+
+      <section id="education">
+        <div class="sec-head"><span class="sec-badge">MODULE 02</span><h2 class="sec-title" id="l-edu"></h2></div>
+        <div class="rows" id="edu-list"></div>
+      </section>
+
+      <section id="skills">
+        <div class="sec-head"><span class="sec-badge">MODULE 03</span><h2 class="sec-title" id="l-skills"></h2></div>
+        <div class="chips" id="skill-tags"></div>
+        <div class="skill-lines" id="skills-list"></div>
+      </section>
+
+      <section id="courses">
+        <div class="sec-head"><span class="sec-badge">MODULE 04</span><h2 class="sec-title" id="l-courses"></h2></div>
+        <div class="grid3" id="courses-list"></div>
+      </section>
+
+      <section id="experience">
+        <div class="sec-head"><span class="sec-badge">MODULE 05</span><h2 class="sec-title" id="l-exp"></h2></div>
+        <div class="rows" id="exp-list"></div>
+      </section>
+
+      <section id="projects">
+        <div class="sec-head"><span class="sec-badge">MODULE 06</span><h2 class="sec-title" id="l-projects"></h2></div>
+        <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+      </section>
+
+      <section id="articles">
+        <div class="sec-head"><span class="sec-badge">MODULE 07</span><h2 class="sec-title" id="l-articles"></h2></div>
+        <div class="filters" id="filters"></div>
+        <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+      </section>
+
+      <section id="certificates">
+        <div class="sec-head"><span class="sec-badge">MODULE 08</span><h2 class="sec-title" id="l-certs"></h2></div>
+        <div class="certs" id="certs-list"></div>
+      </section>
+
+      <section id="contact">
+        <div class="sec-head"><span class="sec-badge">COMMS</span><h2 class="sec-title" id="l-contact"></h2></div>
+        <div class="contact-grid">
+          <div class="panel contact-info" id="contact-info"></div>
+          <div class="panel contact-form">
+            <form id="cf">
+              <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+              <label for="cf-name" id="lb-name"></label>
+              <input type="text" name="name" id="cf-name" required>
+              <label for="cf-email" id="lb-email"></label>
+              <input type="email" name="email" id="cf-email" required>
+              <label for="cf-msg" id="lb-msg"></label>
+              <textarea name="message" id="cf-msg" required></textarea>
+              <button type="submit" class="btn primary" id="cf-send"></button>
+              <p id="cf-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer><div class="container">
+      <div class="foot-top">
+        <a class="brand" href="#top"><span class="astro" aria-hidden="true">👨‍🚀</span>Cai<b>Jiechao</b></a>
+        <div class="foot-social" id="foot-social"></div>
+      </div>
+      <div class="foot-bottom">
+        <span class="muted" id="foot-desc"></span>
+        <a class="muted" id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div></footer>
+  </div>
+
+  <script>window.THEME_ID = "26-astronaut";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      document.title = (CJCData.lang()==='zh' ? '蔡杰超' : 'Cai Jiechao') + ' — Astronaut';
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      // telemetry ticker (duplicated for seamless loop)
+      const tk = `<span class="mono">MISSION: <b>PORTFOLIO</b></span>
+        <span class="mono">SYS: <i>NOMINAL</i></span>
+        <span class="mono">CREW: <b>${esc(t(P.name))}</b></span>
+        <span class="mono">LOC: <b>${esc(t(P.location))}</b></span>
+        <span class="mono">ROLE: <b>${esc(t(P.role))}</b></span>
+        <span class="mono">STATUS: <i>ONLINE</i></span>`;
+      document.getElementById('ticker').innerHTML = tk + tk;
+
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('meta').innerHTML =
+        `<span>${esc(t(P.title))}</span><span>◎ <b>${esc(t(P.location))}</b></span>`;
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = '▲ ' + esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.innerHTML = 'GITHUB ↗'; gh.href = P.contact.github;
+
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+
+      const port = document.getElementById('portrait');
+      port.setAttribute('href', P.avatar);
+      port.setAttributeNS('http://www.w3.org/1999/xlink','href', P.avatar);
+      port.setAttribute('aria-label', t(P.name));
+
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<span class="loc">◎ ${esc(t(P.location))}</span>`;
+
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="panel rowcard"><div class="when">${esc(e.period)}</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      document.getElementById('skill-tags').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+      document.getElementById('skills-list').innerHTML = P.skills.map((s,i)=>`<div class="sl"><b>${String(i+1).padStart(2,'0')}</b><span>${esc(s)}</span></div>`).join('');
+
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="panel course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="panel rowcard"><div class="when">${esc(x.period)}</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="panel cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '▲ ' + esc(t(P.ui.send));
+
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="panel card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="panel card" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--muted)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--ok)'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#ff8a8a'; s.textContent = err.message; }
+    });
+
+    const fa = document.createElement('link');
+    fa.rel='stylesheet'; fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fa);
+
+    // ---- Starfield dots (subtle, static-friendly) ----
+    (function stars(){
+      const canvas = document.getElementById('stars');
+      const ctx = canvas.getContext('2d');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let W,H,pts=[],raf;
+      function size(){
+        W=canvas.width=Math.floor(innerWidth*devicePixelRatio);
+        H=canvas.height=Math.floor(innerHeight*devicePixelRatio);
+        canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px';
+        const n=Math.min(220,Math.floor((innerWidth*innerHeight)/9000)); pts=[];
+        for(let i=0;i<n;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*1.2+0.3)*devicePixelRatio,a:Math.random()*0.5+0.25,ph:Math.random()*6.28,tw:Math.random()*0.015+0.004});
+      }
+      function draw(anim){
+        ctx.clearRect(0,0,W,H);
+        for(const p of pts){ const a = anim ? p.a*(0.6+0.4*Math.sin(p.ph+=p.tw)) : p.a;
+          ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fillStyle='rgba(200,215,255,'+a.toFixed(3)+')';ctx.fill(); }
+        if(anim) raf=requestAnimationFrame(()=>draw(true));
+      }
+      function start(){ size(); if(reduce) draw(false); else {cancelAnimationFrame(raf);draw(true);} }
+      let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(start,200)});
+      start();
+    })();
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#ff7043' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

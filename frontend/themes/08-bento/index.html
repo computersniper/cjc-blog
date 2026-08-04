@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Bento</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --accent:#0a84ff; --accent2:#5ac8fa; --accent-deep:#0060df;
+      --ink:#0b1424; --sub:#5a6b82; --card:#ffffff; --hair:rgba(11,20,36,.08);
+      --shadow:0 10px 30px -12px rgba(20,44,80,.28);
+      --shadow-lg:0 26px 60px -22px rgba(20,44,80,.42);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      background:linear-gradient(135deg,#eef2f7 0%,#dfe7f0 100%);
+      background-attachment:fixed;
+      font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display','Segoe UI',sans-serif;
+      -webkit-font-smoothing:antialiased;line-height:1.5;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:88px 20px 60px}
+
+    /* Section heading */
+    .sec-head{display:flex;align-items:baseline;gap:14px;margin:46px 4px 20px}
+    .sec-head h2{margin:0;font-size:clamp(20px,2.6vw,30px);font-weight:800;letter-spacing:-.02em}
+    .sec-head .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none;align-self:center}
+    .sec-head .cnt{font-size:13px;font-weight:600;color:var(--sub);background:rgba(10,132,255,.1);
+      padding:3px 10px;border-radius:999px}
+
+    /* Bento grid */
+    .bento{display:grid;grid-template-columns:repeat(4,1fr);
+      grid-auto-rows:minmax(150px,auto);gap:16px;grid-auto-flow:row dense}
+    .tile{background:var(--card);border-radius:var(--radius);padding:24px;
+      box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.6);
+      position:relative;overflow:hidden;transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s}
+    .tile:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}
+    .r2{grid-row:span 2}
+    .tile.flat:hover{transform:none;box-shadow:var(--shadow)}
+
+    /* tints */
+    .tint-a{background:linear-gradient(150deg,#0a84ff,#005fe0);color:#fff;border-color:transparent}
+    .tint-b{background:linear-gradient(160deg,#eaf4ff,#dbeafe)}
+    .tint-c{background:linear-gradient(160deg,#eafaf1,#d6f0e2)}
+    .tint-d{background:linear-gradient(160deg,#fdf2ff,#f3e6ff)}
+    .tint-glass{background:linear-gradient(150deg,rgba(10,132,255,.92),rgba(90,200,250,.92));
+      color:#fff;border-color:transparent;
+      box-shadow:0 18px 40px -16px rgba(10,132,255,.6)}
+
+    /* Hero tile */
+    .hero-tile{display:flex;flex-direction:column;justify-content:center;min-height:320px}
+    .hero-tile .greet{font-size:14px;font-weight:600;letter-spacing:.02em;opacity:.9}
+    .hero-tile h1{margin:6px 0 0;font-size:clamp(34px,5vw,54px);font-weight:900;letter-spacing:-.03em;line-height:1}
+    .hero-tile .role{margin-top:14px;font-size:clamp(16px,2.2vw,20px);font-weight:600;opacity:.95}
+    .hero-tile .hl{margin-top:8px;font-size:15px;opacity:.85;max-width:34ch}
+    .hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;
+      padding:11px 18px;border-radius:14px;transition:transform .15s,background .15s,box-shadow .15s;cursor:pointer;border:none}
+    .btn-light{background:#fff;color:var(--accent-deep)}
+    .btn-light:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.18)}
+    .btn-ghost{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.5)}
+    .btn-ghost:hover{background:rgba(255,255,255,.28)}
+    .hero-blob{position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 70%);pointer-events:none}
+
+    /* About tile */
+    .about-tile{display:flex;flex-direction:column;gap:14px}
+    .about-tile .top{display:flex;align-items:center;gap:14px}
+    .about-tile img{width:64px;height:64px;border-radius:18px;object-fit:cover;flex:none;box-shadow:var(--shadow)}
+    .about-tile .who{font-weight:800;font-size:18px}
+    .about-tile .loc{font-size:13px;color:var(--sub);font-weight:600}
+    .about-tile p{margin:0;font-size:14px;color:var(--sub);line-height:1.6}
+
+    /* Stat tile */
+    .stat{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px}
+    .stat .num{font-size:clamp(38px,6vw,52px);font-weight:900;line-height:1;letter-spacing:-.03em}
+    .stat .lbl{font-size:13px;font-weight:600;opacity:.9}
+    .stat .ic{font-size:18px;opacity:.85;margin-bottom:6px}
+
+    /* label / kicker inside tiles */
+    .kicker{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:12px}
+    .tint-a .kicker,.tint-glass .kicker{color:rgba(255,255,255,.85)}
+
+    /* Skills chips */
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;
+      background:rgba(10,132,255,.1);color:var(--accent-deep)}
+
+    /* Education / experience list inside tiles */
+    .edu-item{padding:12px 0;border-top:1px solid var(--hair)}
+    .edu-item:first-of-type{border-top:none;padding-top:0}
+    .edu-item .when{font-size:12px;font-weight:700;color:var(--accent)}
+    .edu-item h4{margin:3px 0 2px;font-size:15px;font-weight:800}
+    .edu-item .sub{font-size:13px;color:var(--sub)}
+
+    .exp-tile .bul{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+    .exp-tile .bul li{font-size:13.5px;color:var(--sub);padding-left:20px;position:relative;line-height:1.5}
+    .exp-tile .bul li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+    .exp-tile h3{margin:0;font-size:19px;font-weight:800}
+    .exp-tile .meta{font-size:13px;color:var(--sub);font-weight:600;margin:2px 0 8px}
+    .exp-tile .summary{font-size:13.5px;color:var(--sub);margin:0}
+
+    /* Course tile */
+    .course-tile{display:flex;flex-direction:column;gap:8px}
+    .course-tile .ci{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+      background:rgba(10,132,255,.12);color:var(--accent);font-size:20px}
+    .course-tile h4{margin:2px 0 0;font-size:15px;font-weight:800;line-height:1.25}
+    .course-tile p{margin:0;font-size:12.5px;color:var(--sub);line-height:1.5}
+
+    /* Cards for projects/articles */
+    .card-tile{display:flex;flex-direction:column;padding:0}
+    .card-tile .cover{height:150px;background:#e6eef7;overflow:hidden}
+    .card-tile .cover img{width:100%;height:100%;object-fit:cover}
+    .card-tile .cbody{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .card-tile .ctag{display:flex;justify-content:space-between;align-items:center;font-size:11px;
+      font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+    .card-tile h4{margin:0;font-size:16px;font-weight:800;line-height:1.25}
+    .card-tile p{margin:0;font-size:13px;color:var(--sub);line-height:1.5;flex:1}
+    .card-tile .tech{font-size:12px;color:var(--accent-deep);font-weight:600}
+    .card-tile .more{font-size:12px;font-weight:700;color:var(--accent)}
+
+    /* Filters */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 4px 18px}
+    .filters button{background:#fff;border:1px solid var(--hair);color:var(--ink);font-family:inherit;
+      font-weight:600;font-size:13px;padding:8px 15px;border-radius:999px;cursor:pointer;transition:.15s;box-shadow:var(--shadow)}
+    .filters button.active,.filters button:hover{background:var(--accent);color:#fff;border-color:transparent}
+
+    /* Certificate tile */
+    .cert-tile{padding:0;display:flex;flex-direction:column}
+    .cert-tile img{height:170px;width:100%;object-fit:cover}
+    .cert-tile .cb{padding:18px}
+    .cert-tile .meta{display:flex;justify-content:space-between;font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+    .cert-tile h4{margin:8px 0 5px;font-size:16px;font-weight:800}
+    .cert-tile p{margin:0;font-size:13px;color:var(--sub);line-height:1.5}
+
+    /* Contact */
+    .contact-info a{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid var(--hair);font-weight:600;font-size:14px}
+    .contact-info a:first-child{border-top:none}
+    .contact-info a .v{color:var(--accent)}
+    form .fld{width:100%;background:#f5f8fc;border:1px solid var(--hair);border-radius:14px;
+      font-family:inherit;font-size:14px;padding:13px 15px;margin-bottom:12px;color:var(--ink)}
+    form .fld:focus{outline:2px solid var(--accent);border-color:transparent;background:#fff}
+    form textarea.fld{min-height:120px;resize:vertical}
+    form button{width:100%;background:var(--accent);color:#fff;border:none;border-radius:14px;font-family:inherit;
+      font-weight:700;font-size:15px;padding:14px;cursor:pointer;transition:.15s}
+    form button:hover{background:var(--accent-deep);transform:translateY(-1px)}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:13.5px;text-align:center}
+
+    /* Footer */
+    footer{max-width:1200px;margin:36px auto 0;padding:22px}
+    .foot-tile{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);
+      display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+    .foot-tile .brand{font-weight:900;font-size:18px;letter-spacing:-.02em}
+    .foot-tile .brand b{color:var(--accent)}
+    .foot-links{display:flex;flex-wrap:wrap;gap:18px;font-size:13.5px;font-weight:600;color:var(--sub)}
+    .foot-links a:hover{color:var(--accent)}
+    .foot-meta{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;
+      margin-top:14px;padding-top:14px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--sub)}
+    .foot-meta a:hover{color:var(--accent)}
+    .load-note{grid-column:1/-1;background:#fff;border-radius:var(--radius);padding:26px;text-align:center;
+      color:var(--sub);font-weight:600;box-shadow:var(--shadow)}
+
+    @media(max-width:900px){
+      .bento{grid-template-columns:repeat(2,1fr)}
+      .c3,.c4{grid-column:span 2}
+    }
+    @media(max-width:560px){
+      .wrap{padding:78px 14px 40px}
+      .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+      .c2,.c3,.c4{grid-column:span 1}
+      .r2{grid-row:auto}
+      .hero-tile{min-height:auto}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
+      .tile,.btn,form button{transition:none!important}
+      .tile:hover{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <!-- Hero + About + Stats bento -->
+    <section class="bento" id="hero-bento" aria-label="Intro"></section>
+
+    <!-- Experience -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-exp"></h2></div>
+    <section class="bento" id="exp-bento" aria-label="Experience"></section>
+
+    <!-- Projects -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-projects"></h2><span class="cnt" id="cnt-projects"></span></div>
+    <section class="bento" id="projects-bento" aria-label="Projects"></section>
+
+    <!-- Articles -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-articles"></h2><span class="cnt" id="cnt-articles"></span></div>
+    <div class="filters" id="filters"></div>
+    <section class="bento" id="articles-bento" aria-label="Articles"></section>
+
+    <!-- Courses -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-courses"></h2></div>
+    <section class="bento" id="courses-bento" aria-label="Courses"></section>
+
+    <!-- Certificates -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-certs"></h2></div>
+    <section class="bento" id="certs-bento" aria-label="Certificates"></section>
+
+    <!-- Contact -->
+    <div class="sec-head"><span class="dot"></span><h2 id="l-contact"></h2></div>
+    <section class="bento" id="contact-bento" aria-label="Contact"></section>
+  </main>
+
+  <footer>
+    <div class="foot-tile">
+      <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+      <div class="foot-links" id="foot-links"></div>
+      <div class="foot-meta">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>window.THEME_ID = "08-bento";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderHero(){
+      document.title = "Cai Jiechao — Bento";
+      const el = document.getElementById('hero-bento');
+      const projN = projects.length ? projects.length : "—";
+      const artN = articles.length ? articles.length : "—";
+      el.innerHTML = `
+        <article class="tile tint-glass c2 r2 hero-tile">
+          <div class="hero-blob"></div>
+          <div class="greet">${esc(t(P.greeting))}</div>
+          <h1>${esc(t(P.name))}</h1>
+          <div class="role">${esc(t(P.role))}</div>
+          <div class="hl">${esc(t(P.headline))}</div>
+          <div class="hero-cta">
+            <a class="btn btn-light" href="${esc(t(P.cv))}" download><i class="fa fa-download"></i>${esc(t(P.ui.download_cv))}</a>
+            <a class="btn btn-ghost" href="${esc(P.contact.github)}" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+          </div>
+        </article>
+
+        <article class="tile c2 r2 about-tile">
+          <div class="kicker">${esc(t(P.ui.about_me))}</div>
+          <div class="top">
+            <img src="${esc(P.avatar)}" alt="${esc(t(P.name))}" onerror="this.src='${esc(P.avatarAlt)}'">
+            <div><div class="who">${esc(t(P.name))}</div><div class="loc"><i class="fa fa-map-marker"></i> ${esc(t(P.location))}</div></div>
+          </div>
+          ${P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('')}
+        </article>
+
+        <article class="tile tint-b stat">
+          <div class="ic" style="color:var(--accent)"><i class="fa fa-folder-open"></i></div>
+          <div class="num" style="color:var(--accent-deep)">${projN}</div>
+          <div class="lbl" style="color:var(--sub)">${esc(t(P.ui.latest_projects))}</div>
+        </article>
+        <article class="tile tint-c stat">
+          <div class="ic" style="color:#159a5b"><i class="fa fa-file-text-o"></i></div>
+          <div class="num" style="color:#0f7a48">${artN}</div>
+          <div class="lbl" style="color:var(--sub)">${esc(t(P.ui.latest_articles))}</div>
+        </article>
+        <article class="tile tint-d stat">
+          <div class="ic" style="color:#8b3ecf"><i class="fa fa-code"></i></div>
+          <div class="num" style="color:#7a2fbd">${P.skillTags.length}</div>
+          <div class="lbl" style="color:var(--sub)">${esc(t(P.ui.tech_stack))}</div>
+        </article>
+        <article class="tile tint-a stat">
+          <div class="ic"><i class="fa fa-graduation-cap"></i></div>
+          <div class="num">${P.courses.length}</div>
+          <div class="lbl">${esc(t(P.ui.core_courses))}</div>
+        </article>
+
+        <article class="tile c2">
+          <div class="kicker">${esc(t(P.ui.core_tech))}</div>
+          <div class="chips">${P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
+        </article>
+
+        <article class="tile c2">
+          <div class="kicker">${esc(t(P.ui.education_bg))}</div>
+          ${P.education.map(e=>`
+            <div class="edu-item"><div class="when">${esc(e.period)}</div>
+            <h4>${esc(t(e.school))}</h4>
+            <div class="sub">${esc(t(e.degree))} · ${esc(t(e.note))}</div></div>`).join('')}
+        </article>`;
+    }
+
+    function renderExp(){
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('exp-bento').innerHTML = P.experience.map(x=>`
+        <article class="tile c4 exp-tile">
+          <div class="kicker">${esc(x.period)}</div>
+          <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+          <div class="meta">${esc(t(P.ui.internship_exp))}</div>
+          <p class="summary">${esc(t(x.summary))}</p>
+          <ul class="bul">${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+        </article>`).join('');
+    }
+
+    function renderCourses(){
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('courses-bento').innerHTML = P.courses.map((c,i)=>`
+        <article class="tile ${i%3===0?'tint-b':''} course-tile">
+          <div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+          <h4>${esc(t(c.title))}</h4>
+          <p>${esc(t(c.desc))}</p>
+        </article>`).join('');
+    }
+
+    function renderCerts(){
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('certs-bento').innerHTML = P.certificates.map(c=>`
+        <article class="tile c2 cert-tile">
+          <img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+          <div class="cb">
+            <div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+            <h4>${esc(t(c.title))}</h4>
+            <p>${esc(t(c.desc))}</p>
+          </div>
+        </article>`).join('');
+    }
+
+    function renderProjects(){
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('cnt-projects').textContent = projects.length ? projects.length : "";
+      const box = document.getElementById('projects-bento');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="tile ${i===0?'c2':''} card-tile" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="ctag"><span>${esc(t(P.ui.view_project))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <p class="tech">${esc(p.tech_stack||'')}</p>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    function renderArticles(){
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('cnt-articles').textContent = articles.length ? articles.length : "";
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderArticles();
+      }));
+      const box = document.getElementById('articles-bento');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map((a,i)=>`
+        <a class="tile ${i===0?'c2':''} card-tile" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div>
+        </a>`).join('');
+    }
+
+    function renderContact(){
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      document.getElementById('contact-bento').innerHTML = `
+        <article class="tile c2 r2">
+          <div class="kicker">${esc(t(P.ui.drop_msg))}</div>
+          <p style="font-size:14px;color:var(--sub);margin:0 0 16px">${esc(t(P.ui.inbox_open))}</p>
+          <div class="contact-info">
+            <a href="mailto:${esc(P.contact.email)}"><span>Email</span><span class="v">${esc(P.contact.email)}</span></a>
+            <a href="${esc(P.contact.phoneHref)}"><span>Phone</span><span class="v">${esc(P.contact.phone)}</span></a>
+            <a href="${esc(P.contact.github)}" target="_blank" rel="noopener"><span>GitHub</span><span class="v">@${esc(P.contact.githubUser)}</span></a>
+            <a href="${esc(P.contact.wechatQrPage)}"><span>WeChat</span><span class="v">QR →</span></a>
+          </div>
+        </article>
+        <article class="tile flat c2 r2">
+          <div class="kicker">${esc(t(P.ui.get_in_touch))}</div>
+          <form id="cf">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+            <input class="fld" type="text" name="name" id="cf-name" required>
+            <input class="fld" type="email" name="email" id="cf-email" required>
+            <textarea class="fld" name="message" id="cf-msg" required></textarea>
+            <button type="submit" id="cf-send"></button>
+            <p id="cf-status"></p>
+          </form>
+        </article>`;
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+      document.getElementById('cf').addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const f = e.target, s = document.getElementById('cf-status');
+        s.style.color='var(--sub)'; s.textContent = t(P.ui.sending);
+        try{
+          const r = await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+          s.style.color='#159a5b'; s.textContent = r.message||'Sent.'; f.reset();
+        }catch(err){ s.style.color='#e2231a'; s.textContent = err.message; }
+      });
+    }
+
+    function renderFooter(){
+      document.getElementById('foot-links').innerHTML =
+        `<a href="${esc(P.contact.github)}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${esc(P.contact.email)}">Email</a>
+         <a href="${esc(P.contact.wechatQrPage)}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+    }
+
+    function renderAll(){
+      renderHero(); renderExp(); renderCourses(); renderCerts();
+      renderProjects(); renderArticles(); renderContact(); renderFooter();
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); }catch(e){ projects = []; }
+      try{ articles = await CJCData.fetchArticles(); }catch(e){ articles = []; }
+      renderHero(); renderProjects(); renderArticles();
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderAll();
+      CJCData.mountSwitcher({ accent:'#0a84ff' });
+      CJCData.onLang(renderAll);
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

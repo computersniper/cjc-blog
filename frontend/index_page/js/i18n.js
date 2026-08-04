@@ -85,7 +85,8 @@
     email_placeholder: "Email",
     msg_placeholder: "Your Message",
     footer_desc: "Designed and Developed By Cai Jiechao.",
-    admin_panel: "Admin Panel"
+    admin_panel: "Admin Panel",
+    switch_theme: "🎨 Themes"
   },
   zh: {
     nav_home: "首页",
@@ -173,7 +174,8 @@
     email_placeholder: "邮箱",
     msg_placeholder: "您的留言",
     footer_desc: "由 蔡杰超 设计与开发。",
-    admin_panel: "后台管理"
+    admin_panel: "后台管理",
+    switch_theme: "🎨 切换主题"
   }
 };
 

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Sniper</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --bg0:#05070a; --bg1:#141a10;
+      --olive:#c6d0b6; --olive-dim:#8a967a; --olive-deep:#5a6448;
+      --red:#d13b3b; --red-dim:#8f2626;
+      --white:#eef1e6;
+      --panel:rgba(20,26,16,.55);
+      --panel-line:rgba(198,208,182,.16);
+      --panel-line-strong:rgba(198,208,182,.32);
+      --hud:rgba(198,208,182,.08);
+      --mono:'Share Tech Mono',ui-monospace,monospace;
+      --sans:'Chakra Petch',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--olive);
+      background:radial-gradient(circle at 50% 40%,var(--bg1),var(--bg0) 70%);
+      background-attachment:fixed;
+      font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    /* faint grid overlay */
+    body::before{
+      content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+      background-image:
+        linear-gradient(rgba(198,208,182,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(198,208,182,.035) 1px,transparent 1px);
+      background-size:44px 44px;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+    .mono{font-family:var(--mono)}
+
+    /* ---- cursor-tracking crosshair ---- */
+    #xhair{position:fixed;inset:0;z-index:60;pointer-events:none;display:none}
+    #xhair .lx,#xhair .ly{position:absolute;background:linear-gradient(currentColor,currentColor);color:rgba(209,59,59,.35)}
+    #xhair .lx{left:0;right:0;height:1px;top:50%}
+    #xhair .ly{top:0;bottom:0;width:1px;left:50%}
+    #xhair .dot{position:absolute;top:50%;left:50%;width:16px;height:16px;margin:-8px 0 0 -8px;
+      border:1px solid rgba(209,59,59,.6);border-radius:50%}
+    #xhair .dot::before,#xhair .dot::after{content:"";position:absolute;background:rgba(209,59,59,.7)}
+    #xhair .dot::before{left:50%;top:-6px;bottom:-6px;width:1px;margin-left:-.5px}
+    #xhair .dot::after{top:50%;left:-6px;right:-6px;height:1px;margin-top:-.5px}
+    @media (hover:hover) and (pointer:fine){#xhair{display:block}}
+
+    /* ---- top status bar ---- */
+    .statusbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(6px);
+      background:linear-gradient(180deg,rgba(5,7,10,.92),rgba(5,7,10,.55));
+      border-bottom:1px solid var(--panel-line)}
+    .statusbar .row{display:flex;align-items:center;justify-content:flex-start;height:46px;gap:28px}
+    .sb-brand{font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--olive);
+      display:flex;align-items:center;gap:8px}
+    .sb-brand .rec{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);
+      animation:blink 1.4s steps(2) infinite}
+    @keyframes blink{50%{opacity:.25}}
+    .sb-nav{display:flex;gap:20px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--olive-dim)}
+    .sb-nav a:hover{color:var(--red)}
+    @media(max-width:980px){.sb-nav{display:none}}
+    @media(max-width:520px){.sb-suffix{display:none}}
+
+    /* ---- section scaffolding ---- */
+    section{padding:70px 0;position:relative}
+    .fcs-head{margin-bottom:34px}
+    .fcs-tag{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--red);
+      display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .fcs-tag::before{content:"";width:22px;height:1px;background:var(--red)}
+    .fcs-tag .sub{color:var(--olive-dim)}
+    .fcs-title{font-family:var(--sans);font-weight:700;font-size:clamp(24px,4vw,40px);line-height:1.02;
+      letter-spacing:.01em;color:var(--white);margin:0;text-transform:uppercase}
+    .fcs-title .accent{color:var(--red)}
+
+    /* ---- HERO / SCOPE ---- */
+    .hero{padding:52px 0 40px}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+    @media(max-width:940px){.hero-grid{grid-template-columns:1fr;gap:34px}}
+    .hero-lead{font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--red);margin-bottom:16px}
+    .hero h1{font-family:var(--sans);font-weight:700;font-size:clamp(44px,8vw,84px);line-height:.92;
+      letter-spacing:.01em;margin:0;color:var(--white);text-transform:uppercase}
+    .hero .head{font-size:clamp(17px,2.4vw,22px);color:var(--olive);margin:18px 0 0;max-width:26ch;font-weight:500}
+    .hero .role{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;color:var(--olive-dim);margin-top:14px}
+    .hero .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+    .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;
+      letter-spacing:.12em;text-transform:uppercase;padding:13px 20px;border:1px solid var(--red);
+      color:var(--white);background:linear-gradient(180deg,rgba(209,59,59,.18),rgba(209,59,59,.06));
+      cursor:pointer;transition:.16s;position:relative}
+    .btn:hover{background:var(--red);color:#0b0d08;box-shadow:0 0 22px rgba(209,59,59,.4)}
+    .btn.ghost{border-color:var(--panel-line-strong);color:var(--olive);background:transparent}
+    .btn.ghost:hover{border-color:var(--olive);color:var(--white);box-shadow:none;background:rgba(198,208,182,.06)}
+    .hero-stats{display:flex;gap:26px;margin-top:30px;flex-wrap:wrap}
+    .hero-stats .st{font-family:var(--mono)}
+    .hero-stats .st .k{font-size:10px;letter-spacing:.16em;color:var(--olive-deep)}
+    .hero-stats .st .v{font-size:16px;color:var(--red);letter-spacing:.06em}
+
+    /* Scope */
+    .scope-wrap{position:relative;justify-self:center;width:min(440px,86vw);aspect-ratio:1}
+    .scope{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+      border:2px solid rgba(198,208,182,.22);
+      box-shadow:0 0 0 8px rgba(5,7,10,.7),0 0 0 9px rgba(198,208,182,.12),0 24px 60px rgba(0,0,0,.6);
+      background:#0a0e08}
+    .scope img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+      filter:grayscale(.55) contrast(1.05) brightness(.82) sepia(.25) hue-rotate(45deg);}
+    /* vignette + optical tint */
+    .scope .vig{position:absolute;inset:0;
+      background:radial-gradient(circle at 50% 50%,transparent 46%,rgba(5,7,10,.5) 66%,rgba(5,7,10,.96) 86%);}
+    .scope .tint{position:absolute;inset:0;mix-blend-mode:overlay;
+      background:radial-gradient(circle at 42% 40%,rgba(120,160,90,.35),transparent 60%)}
+    .scope svg{position:absolute;inset:0;width:100%;height:100%}
+    /* scanning sweep line */
+    .scope .sweep{position:absolute;left:50%;top:50%;width:50%;height:1px;transform-origin:0 50%;
+      background:linear-gradient(90deg,rgba(209,59,59,.0),rgba(209,59,59,.55));
+      animation:sweep 5.5s linear infinite}
+    @keyframes sweep{to{transform:rotate(360deg)}}
+    .scope-tele{position:absolute;left:50%;bottom:-2px;transform:translate(-50%,120%);
+      font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--olive-dim);white-space:nowrap;text-align:center}
+    .scope-tele b{color:var(--red)}
+    .scope-badges{position:absolute;top:6%;left:50%;transform:translateX(-50%);
+      font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--red);text-shadow:0 0 6px rgba(0,0,0,.8)}
+
+    /* ---- panels ---- */
+    .panel{border:1px solid var(--panel-line);background:var(--panel);position:relative}
+    .panel::before,.panel::after{content:"";position:absolute;width:9px;height:9px;border:1px solid var(--red);opacity:.55}
+    .panel::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+    .panel::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+    /* About */
+    .about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:30px;align-items:start}
+    @media(max-width:820px){.about-grid{grid-template-columns:1fr}}
+    .id-card{padding:16px}
+    .id-card img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:grayscale(.4) contrast(1.05);
+      border:1px solid var(--panel-line)}
+    .id-card .idrow{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;
+      letter-spacing:.1em;color:var(--olive-dim);margin-top:12px;border-top:1px solid var(--panel-line);padding-top:10px}
+    .id-card .idrow b{color:var(--olive)}
+    .about-text p{font-size:16px;line-height:1.75;color:var(--olive);margin:0 0 18px;max-width:62ch}
+    .about-text .loc{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--red)}
+
+    /* Education / mission log rows */
+    .log-item{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:20px;border-bottom:1px solid var(--panel-line)}
+    .log-item:last-child{border-bottom:0}
+    .log-item .when{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--red)}
+    .log-item h3{margin:0 0 6px;font-size:19px;font-weight:600;color:var(--white)}
+    .log-item .sub{color:var(--olive-dim);font-size:14.5px}
+    .log-item .bul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+    .log-item .bul li{position:relative;padding-left:20px;font-size:14.5px;color:var(--olive);line-height:1.55}
+    .log-item .bul li::before{content:"›";position:absolute;left:2px;color:var(--red);font-family:var(--mono)}
+    @media(max-width:600px){.log-item{grid-template-columns:1fr;gap:8px}}
+
+    /* Skills — LOADOUT */
+    .loadout{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+    @media(max-width:700px){.loadout{grid-template-columns:1fr}}
+    .lo-item{display:flex;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--panel-line);
+      border-right:1px solid var(--panel-line)}
+    .lo-item .no{font-family:var(--mono);font-size:11px;color:var(--olive-deep);letter-spacing:.1em;min-width:34px}
+    .lo-item .bar{flex:1}
+    .lo-item .bar .nm{font-size:15px;color:var(--white);font-weight:500}
+    .lo-item .bar .tk{height:5px;margin-top:8px;background:rgba(198,208,182,.1);position:relative;overflow:hidden}
+    .lo-item .bar .tk i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--red-dim),var(--red));display:block}
+    .lo-item .rd{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.08em}
+    /* tag cloud */
+    .ammo{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+    .ammo span{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--olive);
+      border:1px solid var(--panel-line-strong);padding:6px 11px;background:var(--hud)}
+    .ammo span:hover{border-color:var(--red);color:var(--red)}
+
+    /* Courses grid */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.courses{grid-template-columns:1fr}}
+    .course{padding:20px;transition:.16s}
+    .course:hover{transform:translateY(-3px)}
+    .course .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .course .ic{color:var(--red);font-size:22px}
+    .course .cn{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--olive-deep)}
+    .course h4{margin:0 0 8px;font-size:16px;font-weight:600;color:var(--white);line-height:1.25}
+    .course p{margin:0;color:var(--olive-dim);font-size:13.5px;line-height:1.6}
+
+    /* Cards (projects/articles) */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{display:flex;flex-direction:column;overflow:hidden;transition:.16s}
+    .card:hover{transform:translateY(-4px)}
+    .card:hover .cover img{filter:grayscale(.15) contrast(1.05) brightness(.95)}
+    .card .cover{aspect-ratio:16/10;overflow:hidden;background:#0a0e08;border-bottom:1px solid var(--panel-line);position:relative}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.55) contrast(1.05) brightness(.8);transition:.3s}
+    .card .cover .rt{position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+      color:var(--red);background:rgba(5,7,10,.8);padding:3px 7px;border:1px solid rgba(209,59,59,.4)}
+    .card .cbody{padding:16px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .card .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;
+      letter-spacing:.1em;color:var(--olive-deep)}
+    .card .meta .cat{color:var(--red)}
+    .card h4{margin:0;font-size:16px;font-weight:600;color:var(--white);line-height:1.3}
+    .card .tech{font-family:var(--mono);font-size:11px;color:var(--olive-dim);letter-spacing:.04em}
+    .card p{margin:0;color:var(--olive-dim);font-size:13.5px;line-height:1.6;flex:1}
+    .card .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--red)}
+
+    /* filters */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+    .filters button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+      background:transparent;border:1px solid var(--panel-line-strong);color:var(--olive-dim);padding:8px 13px;cursor:pointer;transition:.15s}
+    .filters button:hover{color:var(--olive);border-color:var(--olive-dim)}
+    .filters button.active{background:var(--red);border-color:var(--red);color:#0b0d08}
+
+    /* Certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:700px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden}
+    .cert img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4) contrast(1.05);border-right:1px solid var(--panel-line)}
+    .cert .ct{padding:16px}
+    .cert .ct .m{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--red)}
+    .cert .ct h4{margin:9px 0 7px;font-size:15px;font-weight:600;color:var(--white);line-height:1.3}
+    .cert .ct p{margin:0;color:var(--olive-dim);font-size:13px;line-height:1.55}
+    @media(max-width:420px){.cert{grid-template-columns:92px 1fr}}
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px}
+    @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+    .contact-info{padding:6px 20px}
+    .contact-info a{display:flex;justify-content:space-between;gap:14px;padding:15px 0;border-bottom:1px solid var(--panel-line);
+      font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+    .contact-info a:last-child{border-bottom:0}
+    .contact-info a .k{color:var(--olive-deep)}
+    .contact-info a .v{color:var(--olive)}
+    .contact-info a:hover .v{color:var(--red)}
+    .contact-form{padding:22px}
+    .contact-form label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--olive-deep);display:block;margin-bottom:6px}
+    .contact-form input,.contact-form textarea{width:100%;background:rgba(5,7,10,.5);border:1px solid var(--panel-line-strong);
+      color:var(--white);font-family:var(--sans);font-size:15px;padding:12px 13px;margin-bottom:16px;transition:.15s}
+    .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 1px rgba(209,59,59,.4)}
+    .contact-form textarea{min-height:120px;resize:vertical}
+    #cf-status{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;margin-top:6px}
+
+    footer{border-top:1px solid var(--panel-line);padding:40px 0 60px;margin-top:20px}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+    .foot .fl{display:flex;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--olive-dim)}
+    .foot .fl a:hover{color:var(--red)}
+    .foot-note{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--olive-deep);margin-top:16px;display:flex;
+      justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .foot-note a:hover{color:var(--olive)}
+    .load-note{grid-column:1/-1;font-family:var(--mono);font-size:13px;color:var(--olive-dim);letter-spacing:.06em;padding:20px 0}
+
+    :focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto}
+      .scope .sweep{animation:none;display:none}
+      .sb-brand .rec{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <!-- cursor crosshair -->
+  <div id="xhair" aria-hidden="true"><div class="lx"></div><div class="ly"></div><div class="dot"></div></div>
+
+  <div class="statusbar">
+    <div class="wrap row">
+      <a class="sb-brand" href="#top"><span class="rec"></span>CJC-FCS<span class="sb-suffix"> // <b id="sb-brand-name">CAIJIECHAO</b></span></a>
+      <nav class="sb-nav" id="nav"></nav>
+    </div>
+  </div>
+
+  <div id="top"></div>
+
+  <!-- HERO -->
+  <header class="hero"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-lead" id="greet"></div>
+        <h1 id="name"></h1>
+        <p class="head" id="headline"></p>
+        <div class="role" id="role"></div>
+        <div class="cta-row">
+          <a class="btn" id="cvBtn" href="#" download></a>
+          <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+
+      <div class="scope-wrap">
+        <div class="scope-badges">● TARGET ACQUIRED</div>
+        <div class="scope">
+          <img id="scope-img" alt="" />
+          <div class="tint"></div>
+          <div class="vig"></div>
+          <div class="sweep"></div>
+          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <g id="ticks"></g>
+            </defs>
+            <!-- outer range ring -->
+            <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(198,208,182,.28)" stroke-width="1"/>
+            <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(198,208,182,.12)" stroke-width="1"/>
+            <!-- heavy duplex posts -->
+            <rect x="198.4" y="18" width="3.2" height="86" fill="rgba(238,241,230,.9)"/>
+            <rect x="198.4" y="296" width="3.2" height="86" fill="rgba(238,241,230,.9)"/>
+            <rect x="18" y="198.4" width="86" height="3.2" fill="rgba(238,241,230,.9)"/>
+            <rect x="296" y="198.4" width="86" height="3.2" fill="rgba(238,241,230,.9)"/>
+            <!-- fine crosshair to centre -->
+            <line x1="200" y1="104" x2="200" y2="296" stroke="rgba(238,241,230,.85)" stroke-width="1"/>
+            <line x1="104" y1="200" x2="296" y2="200" stroke="rgba(238,241,230,.85)" stroke-width="1"/>
+            <!-- red aim line accents -->
+            <line x1="200" y1="150" x2="200" y2="250" stroke="var(--red)" stroke-width="1" opacity=".55"/>
+            <line x1="150" y1="200" x2="250" y2="200" stroke="var(--red)" stroke-width="1" opacity=".55"/>
+            <!-- mil dots -->
+            <g id="mildots" fill="rgba(238,241,230,.9)"></g>
+            <!-- centre aiming pip -->
+            <circle cx="200" cy="200" r="2.4" fill="var(--red)"/>
+            <circle cx="200" cy="200" r="6" fill="none" stroke="var(--red)" stroke-width="1" opacity=".7"/>
+          </svg>
+        </div>
+        <div class="scope-tele" id="scope-tele"></div>
+      </div>
+    </div>
+  </div></header>
+
+  <!-- ABOUT -->
+  <section id="about"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-01<span class="sub" id="tag-about"></span></div>
+      <h2 class="fcs-title" id="l-about"></h2>
+    </div>
+    <div class="about-grid">
+      <div class="panel id-card">
+        <img id="portrait" alt="" />
+        <div class="idrow"><span>OPERATOR</span><b id="id-name"></b></div>
+        <div class="idrow"><span>POSITION</span><b id="id-loc"></b></div>
+      </div>
+      <div class="about-text" id="about-text"></div>
+    </div>
+  </div></section>
+
+  <!-- EDUCATION -->
+  <section id="education"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-02<span class="sub" id="tag-edu"></span></div>
+      <h2 class="fcs-title" id="l-edu"></h2>
+    </div>
+    <div class="panel" id="edu-list"></div>
+  </div></section>
+
+  <!-- SKILLS / LOADOUT -->
+  <section id="skills"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-03<span class="sub" id="tag-skills"></span></div>
+      <h2 class="fcs-title" id="l-skills"></h2>
+    </div>
+    <div class="panel"><div class="loadout" id="skills-list"></div></div>
+    <div class="ammo" id="ammo"></div>
+  </div></section>
+
+  <!-- COURSES -->
+  <section id="courses"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-04<span class="sub" id="tag-courses"></span></div>
+      <h2 class="fcs-title" id="l-courses"></h2>
+    </div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-05<span class="sub" id="tag-exp"></span></div>
+      <h2 class="fcs-title" id="l-exp"></h2>
+    </div>
+    <div class="panel" id="exp-list"></div>
+  </div></section>
+
+  <!-- PROJECTS -->
+  <section id="projects"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-06<span class="sub" id="tag-proj"></span></div>
+      <h2 class="fcs-title" id="l-projects"></h2>
+    </div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load">◌ ACQUIRING TARGETS…</div></div>
+  </div></section>
+
+  <!-- ARTICLES -->
+  <section id="articles"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-07<span class="sub" id="tag-art"></span></div>
+      <h2 class="fcs-title" id="l-articles"></h2>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load">◌ ACQUIRING INTEL…</div></div>
+  </div></section>
+
+  <!-- CERTIFICATES -->
+  <section id="certificates"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-08<span class="sub" id="tag-certs"></span></div>
+      <h2 class="fcs-title" id="l-certs"></h2>
+    </div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <!-- CONTACT -->
+  <section id="contact"><div class="wrap">
+    <div class="fcs-head">
+      <div class="fcs-tag">FCS-09<span class="sub" id="tag-contact"></span></div>
+      <h2 class="fcs-title" id="l-contact"></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="panel contact-info" id="contact-info"></div>
+      <div class="panel contact-form">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <label for="cf-name" id="lbl-name">CALLSIGN</label>
+          <input type="text" name="name" id="cf-name" required>
+          <label for="cf-email" id="lbl-email">FREQUENCY</label>
+          <input type="email" name="email" id="cf-email" required>
+          <label for="cf-msg" id="lbl-msg">TRANSMISSION</label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn" id="cf-send" style="width:100%;justify-content:center"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="foot">
+      <a class="sb-brand" href="#top" style="font-size:14px"><span class="rec"></span>CAI<b style="color:var(--red)">JIECHAO</b></a>
+      <div class="fl" id="foot-social"></div>
+    </div>
+    <div class="foot-note">
+      <span id="foot-desc"></span>
+      <a id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "41-sniper";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    // Build mil-dots along the fine crosshair (4 per arm)
+    (function buildReticle(){
+      const g = document.getElementById('mildots');
+      if(!g) return;
+      const offs = [30,55,80]; // px from centre 200
+      let s = '';
+      offs.forEach(function(d){
+        s += `<circle cx="${200-d}" cy="200" r="2.1"/><circle cx="${200+d}" cy="200" r="2.1"/>`;
+        s += `<circle cx="200" cy="${200-d}" r="2.1"/><circle cx="200" cy="${200+d}" r="2.1"/>`;
+      });
+      g.innerHTML = s;
+      // range/windage ticks around ring
+      const svg = g.ownerSVGElement;
+      let ticks = '';
+      for(let i=0;i<72;i++){
+        const a = (i/72)*Math.PI*2;
+        const big = i%6===0;
+        const r1 = 150, r2 = big?140:145;
+        const x1 = 200+Math.cos(a)*r1, y1 = 200+Math.sin(a)*r1;
+        const x2 = 200+Math.cos(a)*r2, y2 = 200+Math.sin(a)*r2;
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="rgba(198,208,182,${big?'.5':'.22'})" stroke-width="1"/>`;
+      }
+      const wrap = document.createElementNS('http://www.w3.org/2000/svg','g');
+      wrap.innerHTML = ticks;
+      svg.appendChild(wrap);
+    })();
+
+    function tele(){
+      return CJCData.lang()==='zh'
+        ? 'RANGE 800m · WIND 4 · <b>目标锁定</b>'
+        : 'RANGE 800m · WIND 4 · <b>TARGET ACQUIRED</b>';
+    }
+
+    function renderStatic(){
+      document.title = "Cai Jiechao — Sniper";
+      const nav = [
+        ['about','nav_about'],['skills','core_tech'],['courses','nav_courses'],
+        ['projects','nav_portfolio'],['articles','nav_article'],['contact','nav_contact']
+      ];
+      document.getElementById('nav').innerHTML = nav.map(([id,k])=>
+        `<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      document.getElementById('sb-brand-name').textContent = P.brand.toUpperCase();
+      document.getElementById('greet').textContent = '// '+t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('role').textContent = '['+t(P.role)+'] · '+t(P.title);
+      document.getElementById('scope-tele').innerHTML = tele();
+
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = '<i class="fa fa-crosshairs"></i> '+esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.innerHTML = '<i class="fa fa-github"></i> GITHUB'; gh.href = P.contact.github;
+
+      document.getElementById('hero-stats').innerHTML = [
+        ['ELEV','+2.5 MIL'],['WIND','L 0.4'],['ZERO','100 M'],['STATUS','READY']
+      ].map(([k,v])=>`<div class="st"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+      // section tags/titles
+      const setT=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
+      setT('l-about',t(P.ui.about_me)); setT('tag-about','// TARGET PROFILE');
+      setT('l-edu',t(P.ui.education_bg)); setT('tag-edu','// TRAINING RECORD');
+      setT('l-skills',t(P.ui.core_tech)); setT('tag-skills','// LOADOUT');
+      setT('l-courses',t(P.ui.core_courses)); setT('tag-courses','// FIELD MANUAL');
+      setT('l-exp',t(P.ui.internship_exp)); setT('tag-exp','// MISSION LOG');
+      setT('l-projects',t(P.ui.latest_projects)); setT('tag-proj','// CONFIRMED TARGETS');
+      setT('l-articles',t(P.ui.latest_articles)); setT('tag-art','// INTEL FEED');
+      setT('l-certs',t(P.ui.certificates)); setT('tag-certs','// COMMENDATIONS');
+      setT('l-contact',t(P.ui.get_in_touch)); setT('tag-contact','// OPEN CHANNEL');
+
+      // about
+      document.getElementById('scope-img').src = P.hero || P.avatar;
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('scope-img').alt = t(P.name);
+      document.getElementById('id-name').textContent = t(P.name);
+      document.getElementById('id-loc').textContent = t(P.location);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<div class="loc"><i class="fa fa-map-marker"></i> ${esc(t(P.location))}</div>`;
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="log-item"><div class="when">${esc(e.period)}</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      // skills loadout
+      const rd = ['98%','95%','92%','90%','88%','94%'];
+      document.getElementById('skills-list').innerHTML = P.skills.map((s,i)=>`
+        <div class="lo-item">
+          <div class="no">${String(i+1).padStart(2,'0')}</div>
+          <div class="bar"><div class="nm">${esc(s)}</div>
+          <div class="tk"><i style="width:${rd[i%rd.length]}"></i></div></div>
+          <div class="rd">${rd[i%rd.length]}</div>
+        </div>`).join('');
+      document.getElementById('ammo').innerHTML = P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="panel course">
+          <div class="top"><span class="ic"><i class="fa ${esc(c.icon)}"></i></span>
+          <span class="cn">MOD-${String(i+1).padStart(2,'0')}</span></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="log-item"><div class="when">${esc(x.period)}</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul class="bul">${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="panel cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+        <div class="ct"><div class="m"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['EMAIL', P.contact.email, 'mailto:'+P.contact.email],
+        ['PHONE', P.contact.phone, P.contact.phoneHref],
+        ['GITHUB', '@'+P.contact.githubUser, P.contact.github],
+        ['WECHAT', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}" ${h.startsWith('http')?'target="_blank" rel="noopener"':''}><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('lbl-name').textContent = CJCData.lang()==='zh'?'呼号 / CALLSIGN':'CALLSIGN';
+      document.getElementById('lbl-email').textContent = CJCData.lang()==='zh'?'频率 / FREQUENCY':'FREQUENCY';
+      document.getElementById('lbl-msg').textContent = CJCData.lang()==='zh'?'通讯内容 / TRANSMISSION':'TRANSMISSION';
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '<i class="fa fa-paper-plane"></i> '+esc(t(P.ui.get_in_touch));
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GITHUB</a>
+         <a href="mailto:${P.contact.email}">EMAIL</a>
+         <a href="${P.contact.wechatQrPage}">WECHAT</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel)).toUpperCase()}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k;
+        document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.k===filterKey));
+        renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="panel card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="meta"><span class="cat">TGT-${String(i+1).padStart(3,'0')}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} ›</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="panel card" href="${esc(a.href)}">
+          <div class="cover"><span class="rt">◎ ${esc(a.category||'INTEL')}</span>
+            <img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="meta"><span class="cat">${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} ›</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ ${CJCData.lang()==='zh'?'情报加载失败':'Failed to load intel.'}</div>`; }
+    }
+
+    // Contact submit
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--olive-dim)'; s.textContent = '◌ '+t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--olive)'; s.textContent = '✔ '+(r.message||'Sent.'); f.reset(); }
+      catch(err){ s.style.color='var(--red)'; s.textContent = '✖ '+err.message; }
+    });
+
+    // cursor crosshair tracking
+    (function(){
+      const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      if(reduce) return;
+      const xh = document.getElementById('xhair');
+      const lx = xh.querySelector('.lx'), ly = xh.querySelector('.ly'), dot = xh.querySelector('.dot');
+      window.addEventListener('mousemove', (e)=>{
+        lx.style.top = e.clientY+'px';
+        ly.style.left = e.clientX+'px';
+        dot.style.top = e.clientY+'px'; dot.style.left = e.clientX+'px';
+      }, {passive:true});
+    })();
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#d13b3b' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Spec-Ops</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --field0:#20241a; --field1:#2e3423;
+      --khaki:#c1892f; --khaki-dim:#9a6f2a;
+      --olive:#6b7355; --olive-dark:#3a4030; --olive-darker:#262b1d;
+      --sand:#e6e4d2; --sand-dim:#b6b59a;
+      --brown:#5a4a2e; --brown-dim:#4a3f28;
+      --blood:#7a3b32; --blood-hi:#8f4438; --tan:#cfc9aa;
+      --ink:#171a10;
+      --panel:#2a3020; --panel-hi:#333a26;
+      --line:rgba(230,228,210,.16);
+      --line-strong:rgba(230,228,210,.3);
+      --stencil:'Stardos Stencil',Impact,sans-serif;
+      --head:'Oswald',system-ui,sans-serif;
+      --body:'Inter',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--sand);
+      background:linear-gradient(160deg,var(--field0),var(--field1));
+      background-attachment:fixed;
+      font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    }
+
+    /* ---- CAMOUFLAGE FIELD: displaced organic blotches (olive/khaki/brown/black) ---- */
+    .camo-field{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.55}
+    /* faded map grid on top for battlefield / MGRS feel */
+    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
+      background-image:linear-gradient(rgba(230,228,210,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(230,228,210,.045) 1px,transparent 1px);background-size:54px 54px}
+    /* dust / grit vignette */
+    body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:radial-gradient(130% 100% at 50% -10%,transparent 52%,rgba(0,0,0,.5))}
+    /* film-grain wear */
+    .grit{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay}
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+    .mono{font-family:var(--head)}
+    .master-defs{position:absolute;width:0;height:0;overflow:hidden}
+
+    /* ---- riveted panel (solid, keeps text readable over camo) ---- */
+    .panel{position:relative;background:
+      linear-gradient(180deg,var(--panel-hi),var(--panel));
+      border:1px solid var(--line-strong);border-radius:3px;
+      box-shadow:inset 0 1px 0 rgba(230,228,210,.06),0 10px 26px rgba(0,0,0,.34)}
+    .panel.riv{padding:20px}
+    .panel.riv::before,.panel.riv::after,
+    .panel.riv > .rv1,.panel.riv > .rv2{content:"";position:absolute;width:7px;height:7px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,#d9d6bf,#5c6146 70%);box-shadow:0 1px 1px rgba(0,0,0,.5);z-index:2}
+    .panel.riv::before{top:8px;left:8px}
+    .panel.riv::after{top:8px;right:8px}
+    .panel.riv > .rv1{bottom:8px;left:8px}
+    .panel.riv > .rv2{bottom:8px;right:8px}
+
+    /* ---- stenciled ammo-crate panel ---- */
+    .crate{padding-top:46px;border:2px solid var(--ink);
+      background:
+        linear-gradient(180deg,#333a26,#2a3020),
+        repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 2px,transparent 2px 62px);
+      box-shadow:inset 0 0 0 2px rgba(230,228,210,.12),inset 0 1px 0 rgba(230,228,210,.06),0 12px 28px rgba(0,0,0,.4)}
+    .crate-band{position:absolute;top:12px;left:16px;right:16px;z-index:2;display:flex;justify-content:space-between;gap:10px;
+      flex-wrap:wrap;align-items:baseline;font-family:var(--stencil);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--khaki);border-bottom:1px dashed var(--line-strong);padding-bottom:7px}
+    .crate-band .cb-r{color:var(--sand-dim)}
+    @media(max-width:520px){.crate-band{font-size:9.5px}}
+
+    /* ---- torn tape ---- */
+    .tape{position:absolute;top:16px;left:-14px;z-index:4;padding:6px 20px;
+      font-family:var(--stencil);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#211f14;
+      background:linear-gradient(180deg,rgba(216,210,178,.94),rgba(188,182,148,.94));
+      box-shadow:0 4px 10px rgba(0,0,0,.4);transform:rotate(-6deg);
+      clip-path:polygon(3% 0,96% 6%,100% 42%,98% 100%,4% 94%,0 52%)}
+
+    /* ---- stamp / classification label ---- */
+    .stamp{display:inline-block;font-family:var(--stencil);font-weight:700;letter-spacing:.06em;
+      text-transform:uppercase;color:var(--khaki);border:2px solid var(--khaki);
+      padding:3px 10px;font-size:12px;border-radius:2px;transform:rotate(-3deg);opacity:.92;
+      box-shadow:inset 0 0 0 1px rgba(193,137,47,.25)}
+    .stamp.red{color:var(--blood-hi);border-color:var(--blood-hi);box-shadow:inset 0 0 0 1px rgba(143,68,56,.3)}
+
+    /* ---- section scaffolding ---- */
+    section{padding:64px 0;position:relative}
+    .op-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:30px;
+      border-bottom:2px solid var(--line-strong);padding-bottom:14px;flex-wrap:wrap}
+    .op-head .lft{display:flex;flex-direction:column;gap:8px}
+    .op-tag{font-family:var(--head);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--khaki);
+      display:flex;align-items:center;gap:9px}
+    .op-tag .no{background:var(--khaki);color:var(--ink);font-weight:700;padding:1px 8px;border-radius:2px;letter-spacing:.1em}
+    .op-title{font-family:var(--stencil);font-weight:700;font-size:clamp(26px,4.4vw,46px);line-height:1;
+      letter-spacing:.02em;color:var(--sand);margin:0;text-transform:uppercase}
+    .op-right{display:flex;align-items:center;gap:14px}
+    .op-mgrs{font-family:var(--head);font-size:11px;letter-spacing:.18em;color:var(--olive);text-transform:uppercase;white-space:nowrap;text-align:right}
+    .op-badge{height:46px;width:46px;flex:none;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45))}
+    @media(max-width:600px){.op-mgrs{display:none}.op-badge{height:40px;width:40px}}
+
+    /* ---- top bar ---- */
+    .topbar{position:sticky;top:0;z-index:50;
+      background:linear-gradient(180deg,rgba(23,26,16,.96),rgba(23,26,16,.7));
+      backdrop-filter:blur(6px);border-bottom:2px solid var(--khaki-dim)}
+    .topbar .row{display:flex;align-items:center;justify-content:flex-start;height:52px;gap:28px}
+    .tb-brand{font-family:var(--stencil);font-weight:700;font-size:18px;letter-spacing:.04em;color:var(--sand);
+      display:flex;align-items:center;gap:9px}
+    .tb-brand i{color:var(--khaki)}
+    .tb-nav{display:flex;gap:22px;font-family:var(--head);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sand-dim)}
+    .tb-nav a:hover{color:var(--khaki)}
+    @media(max-width:980px){.tb-nav{display:none}}
+
+    /* ---- HERO ---- */
+    .hero{padding:56px 0 44px}
+    .hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+    @media(max-width:940px){.hero-grid{grid-template-columns:1fr;gap:34px}}
+    .hero .kicker{display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+    .hero .greet{font-family:var(--head);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--khaki)}
+    .hero h1{font-family:var(--stencil);font-weight:700;font-size:clamp(46px,9vw,96px);line-height:.9;
+      letter-spacing:.01em;margin:0;color:var(--sand);text-transform:uppercase;
+      text-shadow:2px 2px 0 rgba(0,0,0,.3)}
+    .hero .head{font-family:var(--head);font-weight:400;font-size:clamp(18px,2.6vw,26px);color:var(--sand-dim);
+      margin:16px 0 0;max-width:24ch}
+    .hero .role{font-family:var(--head);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);
+      margin-top:12px}
+
+    /* rank insignia flash */
+    .rank-flash{display:inline-flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap;
+      background:var(--olive-darker);border:1px solid var(--line-strong);border-left:4px solid var(--khaki);
+      padding:10px 16px;border-radius:3px;max-width:100%;box-shadow:inset 0 1px 0 rgba(230,228,210,.05),0 6px 16px rgba(0,0,0,.3)}
+    .rk-chev{height:44px;width:auto}
+    .rk-bar{height:22px;width:auto}
+    .rk-meta{display:flex;flex-direction:column;line-height:1.15}
+    .rk-k{font-family:var(--head);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--olive)}
+    .rk-v{font-family:var(--stencil);font-size:16px;color:var(--khaki);letter-spacing:.03em}
+
+    .hero .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+    .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--head);font-size:14px;font-weight:600;
+      letter-spacing:.1em;text-transform:uppercase;padding:13px 22px;border-radius:3px;cursor:pointer;transition:.16s;
+      border:2px solid var(--khaki);background:var(--khaki);color:var(--ink)}
+    .btn:hover{background:#d69a3e;border-color:#d69a3e;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+    .btn.ghost{background:transparent;color:var(--sand);border-color:var(--line-strong)}
+    .btn.ghost:hover{border-color:var(--sand);background:rgba(230,228,210,.06);transform:translateY(-2px)}
+    .hero-readout{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-top:28px;
+      background:var(--line);border:1px solid var(--line)}
+    .hero-readout .r{background:var(--olive-darker);padding:11px 14px}
+    .hero-readout .r .k{font-family:var(--head);font-size:10px;letter-spacing:.16em;color:var(--olive);text-transform:uppercase}
+    .hero-readout .r .v{font-family:var(--head);font-size:16px;font-weight:600;color:var(--khaki);letter-spacing:.04em}
+
+    /* ---- shoulder patches / 臂章 ---- */
+    .patch-cluster{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:30px}
+    .patch{filter:drop-shadow(0 4px 9px rgba(0,0,0,.45));height:74px;width:auto}
+    .patch-round{height:82px}
+    .patch:nth-child(1){transform:rotate(-3deg)}
+    .patch:nth-child(2){transform:rotate(2deg)}
+    .patch:nth-child(4){transform:rotate(-2deg)}
+
+    /* dog tag */
+    .dogtags{position:relative;justify-self:center;display:flex;flex-direction:column;align-items:center;gap:16px;
+      width:min(320px,80vw)}
+    .chain{width:100%;height:auto;margin-bottom:-8px}
+    .tag{width:100%;background:linear-gradient(135deg,#8f9576,#6b7355);border-radius:36px;padding:18px;
+      color:var(--ink);position:relative;box-shadow:0 10px 30px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14)}
+    .tag::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:14px;height:14px;
+      border-radius:50%;background:#20241a;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+    .tag.two{transform:rotate(3deg) translateY(-6px);background:linear-gradient(135deg,#7d8468,#5c6349)}
+    .tag .avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;margin:14px auto 12px;
+      border:3px solid rgba(23,26,16,.5);filter:grayscale(.35) contrast(1.05)}
+    .tag .stencil{font-family:var(--stencil);font-weight:700;text-align:center;font-size:20px;line-height:1.1;
+      text-transform:uppercase;letter-spacing:.03em}
+    .tag .meta{font-family:var(--head);text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+      margin-top:6px;color:var(--olive-darker);border-top:1px dashed rgba(23,26,16,.4);padding-top:8px}
+    .tag.two .line{font-family:var(--head);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-align:center;
+      color:var(--olive-darker);line-height:1.7}
+    .tag.two .line b{color:var(--ink)}
+
+    /* ---- ABOUT ---- */
+    .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:26px;align-items:start}
+    @media(max-width:820px){.about-grid{grid-template-columns:1fr}}
+    .file-photo{position:relative}
+    .file-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:2px;filter:grayscale(.3) contrast(1.05);
+      border:1px solid var(--line)}
+    .file-photo .cap{font-family:var(--head);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--olive);
+      margin-top:10px;display:flex;justify-content:space-between}
+    .about-text{padding:22px}
+    .about-text .stamp{margin-bottom:14px}
+    .about-text p{font-size:15.5px;line-height:1.8;color:var(--sand);margin:0 0 16px}
+    .about-text .loc{font-family:var(--head);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--khaki)}
+
+    /* ---- log rows (education / mission) ---- */
+    .log{display:grid;gap:14px}
+    .log-item{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:20px}
+    .log-item .badge{width:46px;height:46px;border-radius:50%;background:var(--olive-dark);border:2px solid var(--khaki);
+      display:grid;place-items:center;color:var(--khaki);font-size:18px}
+    .log-item h3{font-family:var(--head);margin:0 0 5px;font-size:20px;font-weight:600;color:var(--sand);letter-spacing:.01em}
+    .log-item .when{font-family:var(--head);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--khaki);margin-bottom:4px}
+    .log-item .sub{color:var(--sand-dim);font-size:14.5px}
+    .log-item .bul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:9px}
+    .log-item .bul li{position:relative;padding-left:22px;font-size:14.5px;color:var(--sand);line-height:1.6}
+    .log-item .bul li::before{content:"▸";position:absolute;left:0;color:var(--khaki)}
+    @media(max-width:560px){.log-item{grid-template-columns:1fr}.log-item .badge{display:none}}
+
+    /* ---- skills / equipment ---- */
+    .equip{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    @media(max-width:680px){.equip{grid-template-columns:1fr}}
+    .eq{display:flex;align-items:center;gap:14px;padding:15px 18px}
+    .eq .n{font-family:var(--stencil);font-size:15px;color:var(--khaki);min-width:34px}
+    .eq .t{flex:1;font-family:var(--head);font-size:15.5px;color:var(--sand);letter-spacing:.02em}
+    .eq .chk{color:var(--olive);font-size:14px}
+    .patches{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+    .patches span{font-family:var(--head);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--sand);background:var(--olive-dark);border:1px solid var(--line-strong);padding:7px 13px;border-radius:20px}
+    .patches span:hover{border-color:var(--khaki);color:var(--khaki)}
+
+    /* ---- courses ---- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.courses{grid-template-columns:1fr}}
+    .course{padding:20px;transition:.16s}
+    .course:hover{transform:translateY(-3px)}
+    .course .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .course .ic{width:42px;height:42px;border-radius:3px;background:var(--olive-dark);border:1px solid var(--line-strong);
+      display:grid;place-items:center;color:var(--khaki);font-size:20px}
+    .course .cn{font-family:var(--head);font-size:11px;letter-spacing:.14em;color:var(--olive);text-transform:uppercase}
+    .course h4{font-family:var(--head);margin:0 0 8px;font-size:17px;font-weight:600;color:var(--sand);line-height:1.25}
+    .course p{margin:0;color:var(--sand-dim);font-size:13.5px;line-height:1.6}
+
+    /* ---- cards (projects/articles) = operation files ---- */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .card{display:flex;flex-direction:column;overflow:hidden;transition:.16s}
+    .card:hover{transform:translateY(-4px)}
+    .card .cover{aspect-ratio:16/10;overflow:hidden;background:var(--olive-darker);position:relative;
+      border-bottom:2px solid var(--khaki-dim)}
+    .card .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.05) brightness(.92);transition:.3s}
+    .card:hover .cover img{filter:grayscale(.05) contrast(1.05);transform:scale(1.03)}
+    .card .cover .fileno{position:absolute;top:8px;left:8px;font-family:var(--head);font-size:10px;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--ink);background:var(--khaki);padding:3px 8px;border-radius:2px;font-weight:600}
+    .card .cbody{padding:16px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .card .meta{display:flex;justify-content:space-between;font-family:var(--head);font-size:11px;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--olive)}
+    .card .meta .cat{color:var(--khaki)}
+    .card h4{font-family:var(--head);margin:0;font-size:17px;font-weight:600;color:var(--sand);line-height:1.3}
+    .card .tech{font-family:var(--head);font-size:12px;letter-spacing:.04em;color:var(--sand-dim)}
+    .card p{margin:0;color:var(--sand-dim);font-size:13.5px;line-height:1.6;flex:1}
+    .card .more{font-family:var(--head);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--khaki);font-weight:600}
+
+    /* filters */
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px}
+    .filters button{font-family:var(--head);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+      background:var(--olive-dark);border:1px solid var(--line-strong);color:var(--sand-dim);padding:8px 14px;border-radius:3px;cursor:pointer;transition:.15s}
+    .filters button:hover{color:var(--sand);border-color:var(--olive)}
+    .filters button.active{background:var(--khaki);border-color:var(--khaki);color:var(--ink)}
+
+    /* certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:700px){.certs{grid-template-columns:1fr}}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden}
+    .cert img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3) contrast(1.05);border-right:2px solid var(--khaki-dim)}
+    .cert .ct{padding:16px}
+    .cert .ct .m{display:flex;justify-content:space-between;font-family:var(--head);font-size:11px;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--khaki)}
+    .cert .ct h4{font-family:var(--head);margin:9px 0 7px;font-size:16px;font-weight:600;color:var(--sand);line-height:1.3}
+    .cert .ct p{margin:0;color:var(--sand-dim);font-size:13px;line-height:1.55}
+    @media(max-width:420px){.cert{grid-template-columns:96px 1fr}}
+
+    /* contact */
+    .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px}
+    @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+    .contact-info{padding:6px 20px}
+    .contact-info a{display:flex;justify-content:space-between;gap:14px;padding:15px 0;border-bottom:1px solid var(--line);
+      font-family:var(--head);font-size:14px;letter-spacing:.03em}
+    .contact-info a:last-child{border-bottom:0}
+    .contact-info a .k{color:var(--olive);text-transform:uppercase;letter-spacing:.1em;font-size:12px;align-self:center}
+    .contact-info a .v{color:var(--sand)}
+    .contact-info a:hover .v{color:var(--khaki)}
+    .contact-form{padding:24px}
+    .contact-form label{font-family:var(--head);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--olive);display:block;margin-bottom:6px}
+    .contact-form input,.contact-form textarea{width:100%;background:var(--olive-darker);border:1px solid var(--line-strong);
+      color:var(--sand);font-family:var(--body);font-size:15px;padding:12px 13px;margin-bottom:16px;border-radius:3px;transition:.15s}
+    .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--khaki);box-shadow:0 0 0 1px rgba(193,137,47,.4)}
+    .contact-form textarea{min-height:120px;resize:vertical}
+    #cf-status{font-family:var(--head);font-size:13px;letter-spacing:.04em;margin-top:6px}
+
+    footer{border-top:2px solid var(--khaki-dim);padding:40px 0 60px;margin-top:20px}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+    .foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--head);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--sand-dim)}
+    .foot .fl a:hover{color:var(--khaki)}
+    .foot-note{font-family:var(--head);font-size:12px;letter-spacing:.06em;color:var(--olive);margin-top:16px;display:flex;
+      justify-content:space-between;flex-wrap:wrap;gap:10px;text-transform:uppercase}
+    .foot-note a:hover{color:var(--sand)}
+    .load-note{grid-column:1/-1;font-family:var(--head);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--sand-dim);padding:20px 0}
+
+    :focus-visible{outline:2px solid var(--khaki);outline-offset:2px}
+
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto;transition:none!important;animation:none!important}
+    }
+  </style>
+</head>
+<body>
+  <!-- ======= reusable insignia / patch definitions ======= -->
+  <svg class="master-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- 5-point star (plain group, reused everywhere) -->
+      <g id="star-mini">
+        <path d="M0 -9 L2.12 -2.91 L8.56 -2.78 L3.42 1.11 L5.29 7.28 L0 3.6 L-5.29 7.28 L-3.42 1.11 L-8.56 -2.78 L-2.12 -2.91 Z"/>
+      </g>
+      <!-- unit emblem (section marker + hero patch) -->
+      <symbol id="sym-emblem" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="47" fill="#333a26" stroke="#171a10" stroke-width="4"/>
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#b6b59a" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#c1892f" stroke-width="2.4"/>
+        <use href="#star-mini" transform="translate(50 48) scale(2.7)" fill="#c1892f"/>
+      </symbol>
+      <!-- sergeant chevrons -->
+      <symbol id="sym-chevron" viewBox="0 0 100 90">
+        <g fill="none" stroke="#c1892f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 36 L50 12 L86 36"/>
+          <path d="M14 55 L50 31 L86 55"/>
+          <path d="M14 74 L50 50 L86 74"/>
+        </g>
+      </symbol>
+      <!-- officer star bar -->
+      <symbol id="sym-starbar" viewBox="0 0 120 34">
+        <rect x="2" y="5" width="116" height="24" rx="5" fill="#b9962f" stroke="#171a10" stroke-width="2"/>
+        <rect x="6" y="9" width="108" height="16" rx="3" fill="none" stroke="#e6e4d2" stroke-width="1" opacity=".45"/>
+        <use href="#star-mini" transform="translate(36 17) scale(.82)" fill="#20241a"/>
+        <use href="#star-mini" transform="translate(84 17) scale(.82)" fill="#20241a"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ======= camouflage field ======= -->
+  <svg class="camo-field" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="camoRough" x="-15%" y="-15%" width="130%" height="130%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="11" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="58" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+    <g filter="url(#camoRough)">
+      <g fill="#5a613f">
+        <ellipse cx="160" cy="120" rx="140" ry="95"/><ellipse cx="520" cy="90" rx="120" ry="80"/>
+        <ellipse cx="940" cy="160" rx="150" ry="100"/><ellipse cx="300" cy="470" rx="130" ry="90"/>
+        <ellipse cx="760" cy="520" rx="150" ry="100"/><ellipse cx="1080" cy="640" rx="120" ry="90"/>
+        <ellipse cx="120" cy="760" rx="120" ry="80"/>
+      </g>
+      <g fill="#3f4a30">
+        <ellipse cx="380" cy="220" rx="110" ry="80"/><ellipse cx="720" cy="150" rx="120" ry="80"/>
+        <ellipse cx="1080" cy="340" rx="130" ry="90"/><ellipse cx="180" cy="380" rx="120" ry="80"/>
+        <ellipse cx="560" cy="600" rx="140" ry="95"/><ellipse cx="900" cy="760" rx="140" ry="90"/>
+        <ellipse cx="1120" cy="120" rx="90" ry="70"/>
+      </g>
+      <g fill="#1c2015">
+        <ellipse cx="260" cy="300" rx="80" ry="60"/><ellipse cx="640" cy="340" rx="90" ry="60"/>
+        <ellipse cx="980" cy="470" rx="90" ry="65"/><ellipse cx="420" cy="700" rx="90" ry="60"/>
+        <ellipse cx="820" cy="660" rx="80" ry="55"/><ellipse cx="1140" cy="540" rx="80" ry="60"/>
+        <ellipse cx="60" cy="540" rx="70" ry="50"/>
+      </g>
+      <g fill="#4a3f28">
+        <ellipse cx="500" cy="420" rx="90" ry="60"/><ellipse cx="860" cy="250" rx="80" ry="55"/>
+        <ellipse cx="340" cy="120" rx="70" ry="50"/><ellipse cx="700" cy="780" rx="90" ry="60"/>
+        <ellipse cx="1000" cy="600" rx="85" ry="55"/><ellipse cx="200" cy="640" rx="80" ry="55"/>
+        <ellipse cx="1180" cy="760" rx="70" ry="50"/>
+      </g>
+    </g>
+    <!-- faded topographic map underlay -->
+    <g fill="none" stroke="#c9c3a4" stroke-width="1" opacity="0.09">
+      <path d="M-20 180 C 200 120, 420 240, 640 170 S 1040 90, 1240 200"/>
+      <path d="M-20 380 C 220 320, 460 440, 700 370 S 1060 300, 1240 400"/>
+      <path d="M-20 600 C 180 540, 500 660, 760 580 S 1080 520, 1240 620"/>
+      <path d="M-20 780 C 260 720, 520 820, 800 760 S 1080 700, 1240 800"/>
+    </g>
+  </svg>
+
+  <!-- ======= grit / film-grain wear ======= -->
+  <svg class="grit" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#grain)"/>
+  </svg>
+
+  <div class="topbar">
+    <div class="wrap row">
+      <a class="tb-brand" href="#top"><i class="fa fa-shield"></i><span id="tb-brand-name">CAIJIECHAO</span></a>
+      <nav class="tb-nav" id="nav"></nav>
+    </div>
+  </div>
+
+  <div id="top"></div>
+
+  <!-- HERO -->
+  <header class="hero"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="kicker">
+          <span class="stamp">OPERATOR FILE</span>
+          <span class="greet" id="greet"></span>
+        </div>
+        <h1 id="name"></h1>
+        <p class="head" id="headline"></p>
+        <div class="role" id="role"></div>
+
+        <!-- RANK INSIGNIA / 军衔 -->
+        <div class="rank-flash">
+          <svg class="rk-chev" viewBox="0 0 100 90" aria-hidden="true"><use href="#sym-chevron"/></svg>
+          <div class="rk-meta"><span class="rk-k">Rank · 军衔</span><span class="rk-v">SFC · E-7</span></div>
+          <svg class="rk-bar" viewBox="0 0 120 34" aria-hidden="true"><use href="#sym-starbar"/></svg>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn" id="cvBtn" href="#" download></a>
+          <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="hero-readout" id="hero-readout"></div>
+
+        <!-- SHOULDER PATCHES / 臂章 -->
+        <div class="patch-cluster" aria-label="Unit patches">
+          <!-- subdued field-colors flag patch -->
+          <svg class="patch patch-flag" viewBox="0 0 130 84" role="img" aria-label="Field colors patch">
+            <rect x="3" y="3" width="124" height="78" rx="9" fill="#3a4030" stroke="#171a10" stroke-width="3.5"/>
+            <rect x="7" y="7" width="116" height="70" rx="6" fill="none" stroke="#b6b59a" stroke-width="1.3" stroke-dasharray="4 3.5"/>
+            <clipPath id="fclip"><rect x="11" y="11" width="108" height="62" rx="4"/></clipPath>
+            <g clip-path="url(#fclip)">
+              <rect x="11" y="11" width="108" height="62" fill="#55603f"/>
+              <rect x="11" y="31.7" width="108" height="20.6" fill="#3f4a30"/>
+              <rect x="11" y="11" width="46" height="31" fill="#23281a"/>
+              <use href="#star-mini" transform="translate(34 26) scale(1.15)" fill="#c1892f"/>
+            </g>
+          </svg>
+          <!-- round unit emblem patch -->
+          <svg class="patch patch-round" viewBox="0 0 100 100" role="img" aria-label="Task force emblem"><use href="#sym-emblem"/></svg>
+          <!-- blood-type patch -->
+          <svg class="patch patch-blood" viewBox="0 0 128 74" role="img" aria-label="Blood type patch">
+            <rect x="3" y="3" width="122" height="68" rx="10" fill="#cfc9aa" stroke="#171a10" stroke-width="3.5"/>
+            <rect x="7" y="7" width="114" height="60" rx="7" fill="none" stroke="#6b5836" stroke-width="1.3" stroke-dasharray="4 3"/>
+            <text x="16" y="52" font-family="Stardos Stencil,Impact,sans-serif" font-size="36" fill="#7a3b32">O+</text>
+            <text x="72" y="32" font-family="Oswald,sans-serif" font-weight="600" font-size="12" letter-spacing="1.5" fill="#3a4030">BLOOD</text>
+            <text x="72" y="49" font-family="Oswald,sans-serif" font-weight="600" font-size="12" letter-spacing="1.5" fill="#3a4030">TYPE</text>
+          </svg>
+          <!-- SPEC OPS rocker -->
+          <svg class="patch patch-rocker" viewBox="0 0 170 74" role="img" aria-label="Spec Ops rocker">
+            <path d="M12 22 Q85 42 158 22 L158 44 Q85 64 12 44 Z" fill="#3a4030" stroke="#171a10" stroke-width="3.5"/>
+            <path d="M18 26 Q85 44 152 26" fill="none" stroke="#c1892f" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <text x="85" y="48" text-anchor="middle" font-family="Stardos Stencil,Impact,sans-serif" font-size="19" letter-spacing="3" fill="#e6e4d2">SPEC OPS</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="dogtags">
+        <!-- paracord / ball-chain -->
+        <svg class="chain" viewBox="0 0 320 58" aria-hidden="true">
+          <path d="M40 54 C 92 6, 228 6, 280 54" fill="none" stroke="#9aa07f" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="0.5 7"/>
+        </svg>
+        <div class="tag">
+          <img class="avatar" id="dt-avatar" alt="" />
+          <div class="stencil" id="dt-name"></div>
+          <div class="meta" id="dt-role"></div>
+        </div>
+        <div class="tag two">
+          <div class="line"><b id="dt-svc">SVC · CS-2026</b></div>
+          <div class="line" id="dt-loc"></div>
+          <div class="line">BLOOD TYPE · O+ · NO ALLERGIES</div>
+        </div>
+      </div>
+    </div>
+  </div></header>
+
+  <!-- ABOUT -->
+  <section id="about"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">01</span><span id="tag-about"></span></div>
+      <h2 class="op-title" id="l-about"></h2></div>
+      <div class="op-right"><div class="op-mgrs">GRID 51R UP 8462 4573</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="about-grid">
+      <div class="file-photo panel riv"><span class="rv1"></span><span class="rv2"></span>
+        <div class="tape">TOP SECRET // EYES ONLY</div>
+        <img id="portrait" alt="" />
+        <div class="cap"><span>ID PHOTO</span><span id="fp-name"></span></div>
+      </div>
+      <div class="about-text panel">
+        <span class="stamp red">TOP SECRET</span>
+        <div id="about-text"></div>
+        <div class="loc" id="about-loc"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- EDUCATION -->
+  <section id="education"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">02</span><span id="tag-edu"></span></div>
+      <h2 class="op-title" id="l-edu"></h2></div>
+      <div class="op-right"><div class="op-mgrs">TRAINING DOSSIER</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="log" id="edu-list"></div>
+  </div></section>
+
+  <!-- SKILLS / EQUIPMENT -->
+  <section id="skills"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">03</span><span id="tag-skills"></span></div>
+      <h2 class="op-title" id="l-skills"></h2></div>
+      <div class="op-right"><div class="op-mgrs">LOADOUT MANIFEST</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="panel riv crate"><span class="rv1"></span><span class="rv2"></span>
+      <div class="crate-band">
+        <span class="cb-l">◤ CRATE CJC-42 · LOADOUT MANIFEST</span>
+        <span class="cb-r">NET WT 6.5KG · ↑ THIS SIDE UP</span>
+      </div>
+      <div class="equip" id="skills-list"></div>
+    </div>
+    <div class="patches" id="patches"></div>
+  </div></section>
+
+  <!-- COURSES -->
+  <section id="courses"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">04</span><span id="tag-courses"></span></div>
+      <h2 class="op-title" id="l-courses"></h2></div>
+      <div class="op-right"><div class="op-mgrs">FIELD MANUAL</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">05</span><span id="tag-exp"></span></div>
+      <h2 class="op-title" id="l-exp"></h2></div>
+      <div class="op-right"><div class="op-mgrs">MISSION LOG</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="log" id="exp-list"></div>
+  </div></section>
+
+  <!-- PROJECTS -->
+  <section id="projects"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">06</span><span id="tag-proj"></span></div>
+      <h2 class="op-title" id="l-projects"></h2></div>
+      <div class="op-right"><div class="op-mgrs">OPERATION FILES</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load">◌ Decrypting files…</div></div>
+  </div></section>
+
+  <!-- ARTICLES -->
+  <section id="articles"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">07</span><span id="tag-art"></span></div>
+      <h2 class="op-title" id="l-articles"></h2></div>
+      <div class="op-right"><div class="op-mgrs">FIELD REPORTS</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load">◌ Decrypting reports…</div></div>
+  </div></section>
+
+  <!-- CERTIFICATES -->
+  <section id="certificates"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">08</span><span id="tag-certs"></span></div>
+      <h2 class="op-title" id="l-certs"></h2></div>
+      <div class="op-right"><div class="op-mgrs">COMMENDATIONS</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <!-- CONTACT -->
+  <section id="contact"><div class="wrap">
+    <div class="op-head">
+      <div class="lft"><div class="op-tag"><span class="no">09</span><span id="tag-contact"></span></div>
+      <h2 class="op-title" id="l-contact"></h2></div>
+      <div class="op-right"><div class="op-mgrs">SECURE CHANNEL</div>
+        <svg class="op-badge" viewBox="0 0 100 100" aria-hidden="true"><use href="#sym-emblem"/></svg></div>
+    </div>
+    <div class="contact-grid">
+      <div class="panel contact-info" id="contact-info"></div>
+      <div class="panel riv contact-form"><span class="rv1"></span><span class="rv2"></span>
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <label for="cf-name" id="lbl-name">Callsign</label>
+          <input type="text" name="name" id="cf-name" required>
+          <label for="cf-email" id="lbl-email">Contact Freq</label>
+          <input type="email" name="email" id="cf-email" required>
+          <label for="cf-msg" id="lbl-msg">Message</label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn" id="cf-send" style="width:100%;justify-content:center"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="foot">
+      <a class="tb-brand" href="#top"><i class="fa fa-shield"></i><span>CAIJIECHAO</span></a>
+      <span class="stamp red" style="transform:rotate(-2deg)">// CLASSIFIED — EYES ONLY</span>
+      <div class="fl" id="foot-social"></div>
+    </div>
+    <div class="foot-note">
+      <span id="foot-desc"></span>
+      <a id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "42-military";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      document.title = "Cai Jiechao — Spec-Ops";
+      const nav = [
+        ['about','nav_about'],['skills','core_tech'],['courses','nav_courses'],
+        ['projects','nav_portfolio'],['articles','nav_article'],['contact','nav_contact']
+      ];
+      document.getElementById('nav').innerHTML = nav.map(([id,k])=>
+        `<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      document.getElementById('tb-brand-name').textContent = P.brand;
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('role').textContent = t(P.role)+' · '+t(P.title);
+
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = '<i class="fa fa-download"></i> '+esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn');
+      gh.innerHTML = '<i class="fa fa-github"></i> GitHub'; gh.href = P.contact.github;
+
+      document.getElementById('hero-readout').innerHTML = [
+        ['Rank', CJCData.lang()==='zh'?'研发实习生':'R&D Operator'],
+        ['Clearance','LEVEL 5'],
+        ['Unit','AGENT / LLM'],
+        ['Status', CJCData.lang()==='zh'?'现役':'ACTIVE'],
+      ].map(([k,v])=>`<div class="r"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+
+      // dog tags
+      document.getElementById('dt-avatar').src = P.avatar;
+      document.getElementById('dt-avatar').alt = t(P.name);
+      document.getElementById('dt-name').textContent = t(P.name);
+      document.getElementById('dt-role').textContent = t(P.role);
+      document.getElementById('dt-loc').innerHTML = 'LOC · <b>'+esc(t(P.location))+'</b>';
+
+      // section tags/titles
+      const setT=(id,txt)=>{const e=document.getElementById(id);if(e)e.textContent=txt;};
+      setT('tag-about','Operator Profile'); setT('l-about',t(P.ui.about_me));
+      setT('tag-edu','Training Record'); setT('l-edu',t(P.ui.education_bg));
+      setT('tag-skills','Equipment'); setT('l-skills',t(P.ui.core_tech));
+      setT('tag-courses','Field Manual'); setT('l-courses',t(P.ui.core_courses));
+      setT('tag-exp','Deployment'); setT('l-exp',t(P.ui.internship_exp));
+      setT('tag-proj','Operations'); setT('l-projects',t(P.ui.latest_projects));
+      setT('tag-art','Field Reports'); setT('l-articles',t(P.ui.latest_articles));
+      setT('tag-certs','Medals'); setT('l-certs',t(P.ui.certificates));
+      setT('tag-contact','Comms'); setT('l-contact',t(P.ui.get_in_touch));
+
+      // about
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('fp-name').textContent = t(P.name);
+      document.getElementById('about-text').innerHTML = P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+      document.getElementById('about-loc').innerHTML = '<i class="fa fa-map-marker"></i> '+esc(t(P.location));
+
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="panel riv log-item"><span class="rv1"></span><span class="rv2"></span>
+          <div class="badge"><i class="fa fa-graduation-cap"></i></div>
+          <div><div class="when">${esc(e.period)}</div>
+            <h3>${esc(t(e.school))}</h3>
+            <div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+
+      // skills / equipment
+      document.getElementById('skills-list').innerHTML = P.skills.map((s,i)=>`
+        <div class="eq"><span class="n">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(s)}</span><span class="chk"><i class="fa fa-check-circle"></i></span></div>`).join('');
+      document.getElementById('patches').innerHTML = P.skillTags.map(x=>`<span>${esc(x)}</span>`).join('');
+
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="panel course">
+          <div class="top"><span class="ic"><i class="fa ${esc(c.icon)}"></i></span>
+          <span class="cn">FM-${String(i+1).padStart(2,'0')}</span></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="panel riv log-item"><span class="rv1"></span><span class="rv2"></span>
+          <div class="badge"><i class="fa fa-crosshairs"></i></div>
+          <div><div class="when">${esc(x.period)}</div>
+            <h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+            <div class="sub">${esc(t(x.summary))}</div>
+            <ul class="bul">${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="panel cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+          <div class="ct"><div class="m"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}" ${h.startsWith('http')?'target="_blank" rel="noopener"':''}><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('lbl-name').textContent = CJCData.lang()==='zh'?'呼号 Callsign':'Callsign';
+      document.getElementById('lbl-email').textContent = CJCData.lang()==='zh'?'联络频率 Freq':'Contact Freq';
+      document.getElementById('lbl-msg').textContent = CJCData.lang()==='zh'?'讯息 Message':'Message';
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '<i class="fa fa-paper-plane"></i> '+esc(t(P.ui.get_in_touch));
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k;
+        document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.k===filterKey));
+        renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="panel card" href="${esc(p.href)}">
+          <div class="cbody">
+            <div class="meta"><span class="cat">OP-${String(i+1).padStart(3,'0')}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map((a,i)=>`
+        <a class="panel card" href="${esc(a.href)}">
+          <div class="cover"><span class="fileno">FR-${String(i+1).padStart(3,'0')}</span>
+            <img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cbody">
+            <div class="meta"><span class="cat">${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ ${CJCData.lang()==='zh'?'报告加载失败':'Failed to load reports.'}</div>`; }
+    }
+
+    // Contact submit
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--olive)'; s.textContent = '◌ '+t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--khaki)'; s.textContent = '✔ '+(r.message||'Sent.'); f.reset(); }
+      catch(err){ s.style.color='#c34b3a'; s.textContent = '✖ '+err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#c1892f' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

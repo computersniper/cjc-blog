@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — 娱乐城 GRAND</title>
+  <meta name="description" content="CAIJIECHAO 娱乐城 GRAND — a campy Macau-neon casino parody homepage (no real gambling)." />
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&family=Oswald:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --gold:#ffd23f; --gold-2:#ffb300; --gold-deep:#c8902a;
+      --red:#7a0f12; --red-2:#3a0b0b; --red-lit:#c11419;
+      --neon-pink:#ff3ea5; --neon-cyan:#31e6ff; --neon-green:#39ff88;
+      --cream:#ffe9b0; --ink:#1a0507;
+      --card-bg:#490d10;
+      --panel:rgba(60,10,12,.72);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--cream);
+      background:
+        radial-gradient(1200px 700px at 50% -8%, rgba(255,178,0,.16), transparent 60%),
+        radial-gradient(900px 600px at 8% 30%, rgba(255,62,165,.10), transparent 55%),
+        radial-gradient(900px 600px at 92% 70%, rgba(49,230,255,.08), transparent 55%),
+        linear-gradient(160deg,#3a0b0b 0%, #560c0f 45%, #7a0f12 100%);
+      background-attachment:fixed;
+      font-family:'Noto Sans SC','Oswald',system-ui,sans-serif;
+      line-height:1.55;overflow-x:hidden;
+    }
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 22px}
+    h1,h2,h3,.disp{font-family:'ZCOOL KuaiLe','Noto Sans SC',cursive}
+    .cn-brush{font-family:'Ma Shan Zheng',cursive}
+    .os{font-family:'Oswald',sans-serif;letter-spacing:.04em}
+
+    /* ---------- LED ticker ---------- */
+    .ledbar{position:sticky;top:0;z-index:850;background:#120203;border-bottom:2px solid var(--gold);
+      box-shadow:0 4px 22px rgba(0,0,0,.6);overflow:hidden;height:38px}
+    .led{display:inline-block;white-space:nowrap;padding-left:100%;
+      font-family:'Oswald';font-weight:600;letter-spacing:.12em;font-size:14px;line-height:38px;
+      color:var(--neon-green);text-shadow:0 0 6px rgba(57,255,136,.8);
+      animation:ledscroll 26s linear infinite}
+    .led b{color:var(--gold);text-shadow:0 0 6px rgba(255,210,63,.9)}
+    .led i{color:var(--neon-pink);font-style:normal;text-shadow:0 0 6px rgba(255,62,165,.9)}
+    @keyframes ledscroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+    /* ---------- Neon masthead ---------- */
+    .masthead{position:relative;padding:30px 22px 26px;text-align:center}
+    .signframe{position:relative;max-width:1040px;margin:0 auto;border-radius:20px;
+      padding:26px 30px;background:
+        radial-gradient(120% 140% at 50% 0%, rgba(255,178,0,.14), transparent 60%),
+        linear-gradient(180deg, rgba(20,2,3,.72), rgba(58,11,11,.55));
+      border:3px solid var(--gold);
+      box-shadow:0 0 0 6px rgba(122,15,18,.6), 0 0 34px rgba(255,178,0,.35), inset 0 0 40px rgba(0,0,0,.55)}
+    /* chasing bulb frame */
+    .bulbs::before,.bulbs::after{content:"";position:absolute;inset:-3px;border-radius:20px;pointer-events:none;
+      background-image:radial-gradient(circle, var(--gold) 0 3.2px, transparent 3.6px);
+      background-repeat:repeat-x, repeat-x, repeat-y, repeat-y;
+      background-size:26px 6px,26px 6px,6px 26px,6px 26px;
+      background-position:0 -1px,13px calc(100% + 1px),-1px 13px,calc(100% + 1px) 0;
+      -webkit-mask:linear-gradient(#000,#000);}
+    .bulbs::before{filter:drop-shadow(0 0 5px rgba(255,210,63,.95));animation:blinkA 1s steps(1) infinite}
+    .bulbs::after{background-image:radial-gradient(circle, var(--neon-pink) 0 3.2px, transparent 3.6px);
+      background-position:13px -1px,0 calc(100% + 1px),-1px 0,calc(100% + 1px) 13px;
+      filter:drop-shadow(0 0 5px rgba(255,62,165,.95));animation:blinkB 1s steps(1) infinite}
+    @keyframes blinkA{0%,49%{opacity:1}50%,100%{opacity:.12}}
+    @keyframes blinkB{0%,49%{opacity:.12}50%,100%{opacity:1}}
+
+    .sign-top{font-family:'Oswald';font-weight:700;letter-spacing:.34em;font-size:clamp(20px,5.4vw,46px);
+      color:#fff;margin:0;text-shadow:0 0 6px #fff,0 0 16px var(--neon-cyan),0 0 30px var(--neon-cyan)}
+    .sign-mid{font-family:'ZCOOL KuaiLe';font-size:clamp(46px,12vw,120px);line-height:1;margin:6px 0 2px;
+      color:var(--gold);
+      text-shadow:0 0 8px var(--gold),0 0 22px var(--gold-2),0 0 48px rgba(255,120,0,.7),0 3px 0 #7a4a00;
+      animation:neonpulse 2.4s ease-in-out infinite}
+    @keyframes neonpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+    .sign-bot{font-family:'Oswald';font-weight:700;letter-spacing:.5em;font-size:clamp(18px,5vw,40px);margin:0;
+      color:var(--neon-pink);text-shadow:0 0 6px var(--neon-pink),0 0 18px rgba(255,62,165,.8)}
+    .stars span{position:absolute;color:#fff;font-size:14px;animation:twk 1.8s ease-in-out infinite;
+      text-shadow:0 0 8px var(--gold)}
+    @keyframes twk{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+
+    /* ---------- Floating promo banners ---------- */
+    #promos{position:fixed;inset:0;z-index:800;pointer-events:none}
+    .promo{position:absolute;pointer-events:auto;max-width:190px;
+      background:linear-gradient(160deg,#fff3cf,#ffd23f);color:#5a0d0f;
+      border:2px solid #fff;border-radius:14px;padding:11px 30px 11px 13px;
+      font-weight:700;font-size:13px;line-height:1.35;
+      box-shadow:0 10px 26px rgba(0,0,0,.5),0 0 0 3px rgba(122,15,18,.9);
+      transform:rotate(var(--rot,-4deg));animation:floaty 4s ease-in-out infinite}
+    .promo .emj{font-size:20px;display:block;margin-bottom:2px}
+    .promo .x{position:absolute;top:4px;right:6px;border:none;background:#7a0f12;color:#ffd23f;
+      width:20px;height:20px;border-radius:50%;font-size:12px;line-height:1;cursor:pointer;font-weight:900}
+    .promo .x:hover{background:#c11419}
+    .promo.p-tl{top:120px;left:12px;--rot:-5deg;animation-delay:.1s}
+    .promo.p-tr{top:150px;right:12px;--rot:5deg;animation-delay:.9s}
+    .promo.p-bl{bottom:26px;left:14px;--rot:4deg;animation-delay:1.6s}
+    .promo.p-br{bottom:96px;right:14px;--rot:-4deg;animation-delay:2.3s}
+    @keyframes floaty{0%,100%{transform:rotate(var(--rot,-4deg)) translateY(0)}50%{transform:rotate(var(--rot,-4deg)) translateY(-9px)}}
+    @media(max-width:900px){.promo.p-tl,.promo.p-bl{display:none}}
+    @media(max-width:560px){#promos{display:none}}
+
+    /* ---------- Section frame ---------- */
+    section{padding:52px 0}
+    .sec-head{display:flex;align-items:center;justify-content:center;gap:14px;flex-direction:column;text-align:center;margin-bottom:30px}
+    .sec-badge{font-family:'Oswald';font-weight:700;letter-spacing:.28em;font-size:12px;color:var(--neon-cyan);
+      text-transform:uppercase;text-shadow:0 0 8px rgba(49,230,255,.6)}
+    .sec-title{font-size:clamp(30px,6vw,52px);margin:0;color:var(--gold);
+      text-shadow:0 0 10px rgba(255,210,63,.6),0 2px 0 #7a4a00}
+    .sec-sub{color:var(--cream);opacity:.85;font-size:14px}
+    .panel{background:var(--panel);border:2px solid var(--gold-deep);border-radius:16px;
+      box-shadow:inset 0 0 30px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);backdrop-filter:blur(3px)}
+
+    /* ---------- Hero ---------- */
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;padding:26px 0 20px}
+    .greet{font-family:'Oswald';font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--neon-pink);
+      font-size:14px;text-shadow:0 0 8px rgba(255,62,165,.6)}
+    .hero h1{font-size:clamp(48px,10vw,104px);line-height:.92;margin:6px 0 4px;color:#fff;
+      text-shadow:0 0 10px var(--gold),0 0 26px var(--gold-2),0 4px 0 #7a4a00}
+    .hero .role{font-family:'Oswald';font-weight:600;font-size:clamp(18px,3.4vw,26px);color:var(--gold);letter-spacing:.06em}
+    .hero .head{font-size:clamp(16px,2.4vw,20px);margin:14px 0;max-width:26ch;color:var(--cream)}
+    .hero .loc{display:inline-flex;gap:8px;align-items:center;color:var(--cream);opacity:.9;font-weight:600}
+    .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+    .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-family:'Oswald';font-weight:700;
+      letter-spacing:.06em;text-transform:uppercase;font-size:14px;padding:14px 22px;border-radius:999px;cursor:pointer;
+      border:2px solid var(--gold);transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+    .btn.gold{background:linear-gradient(180deg,#ffe27a,#ffb300);color:#5a0d0f;
+      box-shadow:0 0 18px rgba(255,178,0,.5),inset 0 -3px 0 rgba(122,74,0,.4)}
+    .btn.gold:hover{transform:translateY(-2px);box-shadow:0 6px 26px rgba(255,178,0,.75)}
+    .btn.ghost{background:transparent;color:var(--gold)}
+    .btn.ghost:hover{background:var(--gold);color:#5a0d0f;transform:translateY(-2px)}
+
+    /* dealer + slot cluster */
+    .stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
+    .dealer-wrap{position:relative;width:min(340px,80vw);filter:drop-shadow(0 12px 30px rgba(0,0,0,.55))}
+    .dealer-wrap svg{width:100%;height:auto;display:block}
+    .halo{position:absolute;inset:-6% -6% 8% -6%;z-index:-1;border-radius:50% 50% 46% 46%;
+      background:radial-gradient(60% 60% at 50% 40%, rgba(255,210,63,.35), transparent 70%);
+      animation:haloPulse 3s ease-in-out infinite}
+    @keyframes haloPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+    .slot{display:flex;gap:10px;padding:14px 16px;border-radius:16px;
+      background:linear-gradient(180deg,#2a0507,#490d10);border:3px solid var(--gold);
+      box-shadow:0 0 24px rgba(255,178,0,.4),inset 0 0 20px rgba(0,0,0,.6)}
+    .reel{width:64px;height:74px;overflow:hidden;border-radius:9px;background:#120203;
+      border:2px solid var(--gold-deep);position:relative;box-shadow:inset 0 0 14px #000}
+    .reel .strip{display:flex;flex-direction:column;animation:spin 2.4s cubic-bezier(.2,.7,.2,1) infinite}
+    .reel:nth-child(2) .strip{animation-duration:2.9s}
+    .reel:nth-child(3) .strip{animation-duration:3.4s}
+    .reel .sym{height:74px;display:flex;align-items:center;justify-content:center;font-size:38px}
+    @keyframes spin{0%{transform:translateY(0)}100%{transform:translateY(-370px)}}
+    .slot-lever{align-self:center;color:var(--gold);font-weight:700;font-family:'Oswald';letter-spacing:.1em;
+      font-size:12px;text-align:center}
+
+    @media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center}
+      .btns,.loc{justify-content:center}.hero .head{margin-left:auto;margin-right:auto}}
+
+    /* ---------- About / VIP card ---------- */
+    .about{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:center}
+    .vipcard{position:relative;border-radius:18px;overflow:hidden;border:3px solid var(--gold);
+      box-shadow:0 0 26px rgba(255,178,0,.4)}
+    .vipcard img{width:100%;height:360px;object-fit:cover;filter:saturate(1.05)}
+    .vipcard .vlabel{position:absolute;top:10px;left:10px;background:var(--red);color:var(--gold);
+      font-family:'Oswald';font-weight:700;letter-spacing:.16em;font-size:11px;padding:5px 11px;border-radius:999px;
+      border:1px solid var(--gold)}
+    .vipcard .suit{position:absolute;bottom:10px;right:12px;font-size:30px;color:var(--gold);opacity:.9}
+    .about p{font-size:16px;margin:0 0 14px}
+    .about .loc2{color:var(--gold);font-weight:700}
+    @media(max-width:760px){.about{grid-template-columns:1fr}.vipcard img{height:300px}}
+
+    /* ---------- Education / experience rows ---------- */
+    .rows{display:flex;flex-direction:column;gap:16px}
+    .rowitem{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:18px 20px}
+    .rowitem .when{font-family:'Oswald';font-weight:700;color:var(--gold);font-size:15px;letter-spacing:.03em}
+    .rowitem h3{margin:0 0 4px;font-size:20px;color:#fff}
+    .rowitem .sub{color:var(--cream);opacity:.9;font-size:15px}
+    .rowitem ul{margin:10px 0 0;padding-left:18px;color:var(--cream);opacity:.92;line-height:1.7;font-size:14.5px}
+    .rowitem ul li::marker{color:var(--neon-pink)}
+    @media(max-width:600px){.rowitem{grid-template-columns:1fr;gap:6px}}
+
+    /* ---------- Chips (skills) ---------- */
+    .chips{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+    .chip{position:relative;width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      text-align:center;font-family:'Oswald';font-weight:700;font-size:13px;color:#fff;padding:8px;
+      background:radial-gradient(circle at 50% 42%, #b41419 0 46%, #7a0f12 47% 100%);
+      border:3px dashed var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.5),inset 0 0 10px rgba(0,0,0,.5);
+      transition:transform .2s}
+    .chip:nth-child(3n){background:radial-gradient(circle at 50% 42%, #1f7d3a 0 46%, #0f4a22 47% 100%)}
+    .chip:nth-child(3n+1){background:radial-gradient(circle at 50% 42%, #21506b 0 46%, #123245 47% 100%)}
+    .chip:hover{transform:translateY(-5px) rotate(6deg)}
+    .chip::after{content:"";position:absolute;inset:12px;border-radius:50%;border:2px dotted rgba(255,255,255,.4)}
+    .skill-lines{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+    .skill-lines .sl{display:flex;gap:12px;align-items:center;padding:12px 16px}
+    .skill-lines .sl .ic{color:var(--gold);font-size:20px}
+    .skill-lines .sl span{color:var(--cream);font-weight:600}
+    @media(max-width:600px){.skill-lines{grid-template-columns:1fr}.chip{width:80px;height:80px;font-size:12px}}
+
+    /* ---------- Courses (dice cards) ---------- */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .course{padding:22px 20px;position:relative;transition:transform .2s}
+    .course:hover{transform:translateY(-6px)}
+    .course .die{position:absolute;top:-14px;right:-10px;font-size:38px;color:var(--gold);
+      filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+    .course .ci{font-size:26px;color:var(--gold);margin-bottom:10px}
+    .course h4{margin:0 0 8px;font-size:18px;color:#fff}
+    .course p{margin:0;color:var(--cream);opacity:.88;font-size:14px;line-height:1.6}
+    @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.courses{grid-template-columns:1fr}}
+
+    /* ---------- Game hall cards (projects/articles) ---------- */
+    .filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
+    .filters button{font-family:'Oswald';font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:12px;
+      padding:9px 16px;border-radius:999px;cursor:pointer;color:var(--gold);background:transparent;
+      border:2px solid var(--gold-deep);transition:.15s}
+    .filters button:hover,.filters button.active{background:linear-gradient(180deg,#ffe27a,#ffb300);color:#5a0d0f;border-color:var(--gold);
+      box-shadow:0 0 14px rgba(255,178,0,.6)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .gcard{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;
+      background:linear-gradient(180deg,#560c0f,#3a0b0b);border:2px solid var(--gold-deep);
+      box-shadow:0 10px 26px rgba(0,0,0,.45);transition:transform .18s,box-shadow .18s,border-color .18s}
+    .gcard:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 0 26px rgba(255,178,0,.5)}
+    .gcard .felt{height:150px;position:relative;overflow:hidden;border-bottom:2px solid var(--gold-deep);
+      background:radial-gradient(circle at 50% 40%, #1f7d3a, #0f4a22)}
+    .gcard .felt img{width:100%;height:100%;object-fit:cover;opacity:.96}
+    .gcard .tbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;color:rgba(255,210,63,.5)}
+    .gcard .ribbon{position:absolute;top:10px;left:10px;background:var(--red);color:var(--gold);font-family:'Oswald';
+      font-weight:700;font-size:11px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;border:1px solid var(--gold)}
+    .gcard .gbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .gcard .meta{display:flex;justify-content:space-between;font-family:'Oswald';font-size:11px;letter-spacing:.06em;
+      text-transform:uppercase;color:var(--neon-cyan)}
+    .gcard h4{margin:0;font-size:17px;color:#fff;line-height:1.25}
+    .gcard .tech{color:var(--gold);font-weight:600;font-size:13px}
+    .gcard p{margin:0;color:var(--cream);opacity:.85;font-size:13.5px;line-height:1.55;flex:1}
+    .gcard .more{font-family:'Oswald';font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;color:var(--gold)}
+    @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;text-align:center;color:var(--cream);opacity:.85;padding:20px;font-size:15px}
+
+    /* ---------- Certificates (VIP honours) ---------- */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden;border-radius:16px}
+    .cert img{width:100%;height:100%;object-fit:cover;border-right:2px solid var(--gold-deep)}
+    .cert .ct{padding:18px}
+    .cert .meta{display:flex;justify-content:space-between;font-family:'Oswald';font-size:11px;letter-spacing:.06em;
+      text-transform:uppercase;color:var(--gold)}
+    .cert h4{margin:8px 0 6px;font-size:18px;color:#fff}
+    .cert p{margin:0;color:var(--cream);opacity:.86;font-size:13.5px;line-height:1.55}
+    .cert .crown{color:var(--gold)}
+    @media(max-width:620px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:96px 1fr}}
+
+    /* ---------- Roulette divider ---------- */
+    .roulette{width:120px;height:120px;margin:8px auto 0;border-radius:50%;position:relative;
+      background:conic-gradient(#7a0f12 0 30deg,#120203 30deg 60deg,#7a0f12 60deg 90deg,#120203 90deg 120deg,
+        #7a0f12 120deg 150deg,#120203 150deg 180deg,#7a0f12 180deg 210deg,#120203 210deg 240deg,
+        #7a0f12 240deg 270deg,#120203 270deg 300deg,#7a0f12 300deg 330deg,#120203 330deg 360deg);
+      border:5px solid var(--gold);box-shadow:0 0 22px rgba(255,178,0,.5);animation:roll 8s linear infinite}
+    .roulette::after{content:"";position:absolute;inset:38%;border-radius:50%;background:radial-gradient(#ffe27a,#ffb300);
+      box-shadow:0 0 10px rgba(0,0,0,.5)}
+    @keyframes roll{to{transform:rotate(360deg)}}
+
+    /* ---------- Contact / 客服中心 ---------- */
+    .contact{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px}
+    .cinfo a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;padding:14px 18px;margin-bottom:12px;
+      border-radius:12px;font-weight:600;transition:.15s}
+    .cinfo a:hover{transform:translateX(4px);border-color:var(--gold)}
+    .cinfo a .k{color:var(--cream)}
+    .cinfo a .v{color:var(--gold);font-family:'Oswald';font-weight:700}
+    .cform{padding:22px}
+    .cform label{display:block;font-family:'Oswald';font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--gold);margin:0 0 6px}
+    .cform input,.cform textarea{width:100%;background:#2a0507;border:2px solid var(--gold-deep);border-radius:10px;
+      color:var(--cream);font-family:inherit;font-size:15px;padding:12px 14px;margin-bottom:14px}
+    .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 12px rgba(255,178,0,.4)}
+    .cform textarea{min-height:120px;resize:vertical}
+    #cf-status{font-weight:700;font-size:14px;margin:8px 0 0}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* ---------- Footer ---------- */
+    footer{border-top:3px solid var(--gold);margin-top:30px;padding:34px 0 60px;background:rgba(18,2,3,.6)}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+    .foot .fbrand{font-family:'ZCOOL KuaiLe';font-size:26px;color:var(--gold);text-shadow:0 0 10px rgba(255,210,63,.5)}
+    .foot .flinks{display:flex;flex-wrap:wrap;gap:18px}
+    .foot a{color:var(--cream);text-decoration:none;font-weight:600;font-size:14px}
+    .foot a:hover{color:var(--gold)}
+    .foot-note{margin-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;
+      color:var(--cream);opacity:.75;font-size:12.5px}
+    .foot-note a{color:var(--cream);opacity:.8;text-decoration:none}
+    .parody{margin-top:14px;text-align:center;font-size:12px;color:var(--cream);opacity:.6}
+
+    :focus-visible{outline:3px solid var(--neon-cyan);outline-offset:2px;border-radius:6px}
+
+    /* ---------- Reduced motion: kill the flashing / marquee / floaty ---------- */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;scroll-behavior:auto !important}
+      .led{padding-left:0;white-space:normal}
+      .ledbar{height:auto;overflow:visible}
+      .reel .strip{transform:none}
+      #promos{position:static}
+      .promo{position:relative;display:inline-block;margin:6px;transform:none;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important}
+      #promos{display:flex;flex-wrap:wrap;justify-content:center;padding:10px 22px 0}
+      @media(max-width:900px){.promo.p-tl,.promo.p-bl{display:inline-block}}
+    }
+  </style>
+</head>
+<body>
+  <!-- LED ticker -->
+  <div class="ledbar" role="marquee" aria-label="Casino ticker">
+    <div class="led" id="led"></div>
+  </div>
+
+  <!-- Neon masthead -->
+  <div class="masthead">
+    <div class="signframe bulbs">
+      <div class="stars" aria-hidden="true">
+        <span style="top:8px;left:6%">✦</span><span style="top:14px;right:8%">✦</span>
+        <span style="bottom:12px;left:12%">✧</span><span style="bottom:8px;right:14%">✧</span>
+        <span style="top:40%;left:3%">✦</span><span style="top:44%;right:3%">✦</span>
+      </div>
+      <p class="sign-top">CAIJIECHAO</p>
+      <div class="sign-mid" id="sign-mid">娱乐城</div>
+      <p class="sign-bot">GRAND</p>
+    </div>
+  </div>
+
+  <!-- Floating promo banners -->
+  <div id="promos" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <!-- Hero -->
+    <header class="hero" id="top">
+      <div>
+        <div class="greet" id="greet"></div>
+        <h1 id="name"></h1>
+        <div class="role" id="role"></div>
+        <p class="head" id="headline"></p>
+        <div class="loc"><span aria-hidden="true">📍</span><span id="loc"></span></div>
+        <div class="btns">
+          <a class="btn gold" id="cvBtn" href="#" download><i class="fa fa-download" aria-hidden="true"></i><span id="cvLabel"></span></a>
+          <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub</a>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="dealer-wrap" role="img" aria-label="Elegant vector silhouette of a casino dealer">
+          <div class="halo" aria-hidden="true"></div>
+          <!-- Tasteful elegant vector silhouette (no photo) -->
+          <svg viewBox="0 0 300 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#c8902a"/>
+              </linearGradient>
+              <linearGradient id="gDark" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2a0507"/><stop offset="1" stop-color="#120203"/>
+              </linearGradient>
+            </defs>
+            <!-- hair -->
+            <path fill="url(#gDark)" d="M150 24c-40 0-70 30-70 74 0 28 8 44 8 66l-16 10c0 0 22 6 30 2 0-10 2-18 6-26-8-16-10-30-10-46 0-30 22-52 52-52s52 22 52 52c0 16-2 30-10 46 4 8 6 16 6 26 8 4 30-2 30-2l-16-10c0-22 8-38 8-66 0-44-30-74-70-74z"/>
+            <!-- face -->
+            <path fill="url(#gGold)" d="M150 60c-26 0-42 20-42 50 0 34 20 58 42 58s42-24 42-58c0-30-16-50-42-50z"/>
+            <!-- neck -->
+            <path fill="url(#gGold)" d="M134 162h32v26c0 8-32 8-32 0z"/>
+            <!-- shoulders / gown -->
+            <path fill="url(#gDark)" d="M150 186c-40 0-92 26-104 84-4 20-6 90-6 90h220s-2-70-6-90c-12-58-64-84-104-84z"/>
+            <!-- gown gold trim -->
+            <path fill="none" stroke="url(#gGold)" stroke-width="4" d="M150 186c-40 0-92 26-104 84"/>
+            <path fill="none" stroke="url(#gGold)" stroke-width="4" d="M150 186c40 0 92 26 104 84"/>
+            <!-- fan of cards in hand -->
+            <g transform="translate(196 250) rotate(8)">
+              <rect x="0" y="0" width="34" height="50" rx="5" fill="#fff" stroke="#c8902a" stroke-width="2" transform="rotate(-24)"/>
+              <rect x="0" y="0" width="34" height="50" rx="5" fill="#fff" stroke="#c8902a" stroke-width="2" transform="rotate(-8)"/>
+              <rect x="0" y="0" width="34" height="50" rx="5" fill="#fff" stroke="#c8902a" stroke-width="2" transform="rotate(8)"/>
+              <text x="6" y="26" font-size="18" fill="#c11419" font-family="Oswald,sans-serif" transform="rotate(-24)">A♥</text>
+            </g>
+            <!-- earring sparkle -->
+            <circle cx="112" cy="120" r="3" fill="url(#gGold)"/>
+            <circle cx="188" cy="120" r="3" fill="url(#gGold)"/>
+          </svg>
+        </div>
+        <!-- slot reel -->
+        <div class="slot" role="img" aria-label="Slot machine reels">
+          <div class="reel"><div class="strip">
+            <span class="sym">🎰</span><span class="sym">7️⃣</span><span class="sym">🍒</span><span class="sym">💎</span><span class="sym">🔔</span><span class="sym">🎰</span>
+          </div></div>
+          <div class="reel"><div class="strip">
+            <span class="sym">7️⃣</span><span class="sym">💎</span><span class="sym">🍀</span><span class="sym">🎰</span><span class="sym">🍒</span><span class="sym">7️⃣</span>
+          </div></div>
+          <div class="reel"><div class="strip">
+            <span class="sym">💎</span><span class="sym">🍒</span><span class="sym">7️⃣</span><span class="sym">🔔</span><span class="sym">🍀</span><span class="sym">💎</span>
+          </div></div>
+        </div>
+        <div class="slot-lever">🎲 手气爆棚 · JACKPOT 🎲</div>
+      </div>
+    </header>
+
+    <!-- About -->
+    <section id="about">
+      <div class="sec-head"><span class="sec-badge" id="b-about">VIP LOUNGE</span><h2 class="sec-title" id="l-about"></h2></div>
+      <div class="about panel" style="padding:22px">
+        <div class="vipcard">
+          <span class="vlabel">VIP · 至尊会员</span>
+          <img id="portrait" alt="" />
+          <span class="suit" aria-hidden="true">♠♥♦♣</span>
+        </div>
+        <div id="about-text"></div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+      <div class="sec-head"><span class="sec-badge">MEMBER HISTORY</span><h2 class="sec-title" id="l-edu"></h2></div>
+      <div class="rows" id="edu-list"></div>
+    </section>
+
+    <!-- Skills as chips -->
+    <section id="skills">
+      <div class="sec-head"><span class="sec-badge">HIGH-ROLLER CHIPS</span><h2 class="sec-title" id="l-skills"></h2></div>
+      <div class="chips" id="chips"></div>
+      <div class="skill-lines" id="skill-lines"></div>
+    </section>
+
+    <!-- Courses -->
+    <section id="courses">
+      <div class="sec-head"><span class="sec-badge">TRAINING PIT</span><h2 class="sec-title" id="l-courses"></h2></div>
+      <div class="courses" id="courses-list"></div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+      <div class="sec-head"><span class="sec-badge">THE FLOOR</span><h2 class="sec-title" id="l-exp"></h2></div>
+      <div class="rows" id="exp-list"></div>
+    </section>
+
+    <!-- Projects: game hall -->
+    <section id="projects">
+      <div class="sec-head"><span class="sec-badge">游戏大厅 · GAME HALL</span><h2 class="sec-title" id="l-projects"></h2></div>
+      <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+    </section>
+
+    <!-- Articles: dispatches -->
+    <section id="articles">
+      <div class="sec-head"><span class="sec-badge">中奖播报 · WINNERS' TABLE</span><h2 class="sec-title" id="l-articles"></h2></div>
+      <div class="filters" id="filters"></div>
+      <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+    </section>
+
+    <!-- Certificates: VIP honours -->
+    <section id="certificates">
+      <div class="sec-head"><span class="sec-badge">VIP 荣誉 · HONOURS</span><h2 class="sec-title" id="l-certs"></h2></div>
+      <div class="certs" id="certs-list"></div>
+      <div class="roulette" aria-hidden="true"></div>
+    </section>
+
+    <!-- Contact: 客服中心 -->
+    <section id="contact">
+      <div class="sec-head"><span class="sec-badge">客服中心 · CONCIERGE</span><h2 class="sec-title" id="l-contact"></h2>
+        <p class="sec-sub" id="c-sub"></p></div>
+      <div class="contact">
+        <div class="cinfo panel" id="contact-info" style="padding:16px"></div>
+        <form class="cform panel" id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <label for="cf-name" id="lb-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label for="cf-email" id="lb-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label for="cf-msg" id="lb-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn gold" id="cf-send" style="width:100%;justify-content:center"></button>
+          <p id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <a class="fbrand" href="#top">CaiJiechao 娱乐城</a>
+        <div class="flinks" id="foot-social"></div>
+      </div>
+      <div class="foot-note">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+      <p class="parody" id="parody"></p>
+    </div>
+  </footer>
+
+  <script>window.THEME_ID = "49-casino";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+    const DICE = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+    const TABLE = ["🃏","🎴","♠","♣","♥","♦","🎲","🎰"];
+
+    const LED = {
+      en: "🎰 JACKPOT! Player <b>DevOps_Ninja</b> just shipped <i>888 lines</i> · 🔥 <b>手气爆棚</b> · 在线荷官发牌中 · 首存送 888 行代码 · VIP 通道畅通 · 恭喜 <i>@computersniper</i> 中奖 · 🎲 GRAND OPENING 🎲 · ",
+      zh: "🎰 头奖降临！玩家 <b>DevOps_Ninja</b> 刚刚提交 <i>888 行代码</i> · 🔥 <b>手气爆棚</b> · 在线荷官发牌中 · 首存送 888 行代码 · VIP 通道畅通 · 恭喜 <i>@computersniper</i> 喜提合并 · 🎲 盛大开业 🎲 · ",
+    };
+    const PROMOS = [
+      { cls:"p-tl", emj:"💰", en:"First deposit bonus: 888 lines of code!", zh:"首存送 888 行代码！" },
+      { cls:"p-tr", emj:"🃏", en:"VIP fast-track open now", zh:"VIP 通道畅通中" },
+      { cls:"p-bl", emj:"🎴", en:"Live dealer is dealing now", zh:"在线荷官发牌中" },
+      { cls:"p-br", emj:"🎰", en:"Feeling lucky? JACKPOT!", zh:"手气爆棚 · JACKPOT！" },
+    ];
+
+    function renderPromos(){
+      const box = document.getElementById('promos'); if(!box) return;
+      box.innerHTML = PROMOS.map((p,i)=>
+        `<div class="promo ${p.cls}"><button class="x" data-i="${i}" aria-label="close">×</button>`+
+        `<span class="emj" aria-hidden="true">${p.emj}</span>${esc(t(p))}</div>`).join('');
+      box.querySelectorAll('.x').forEach(b=>b.addEventListener('click',e=>{
+        e.target.closest('.promo').remove();
+      }));
+    }
+
+    function renderStatic(){
+      document.title = "Cai Jiechao — 娱乐城 GRAND";
+      document.getElementById('led').innerHTML = (LED[CJCData.lang()]||LED.en).repeat(2);
+      document.getElementById('sign-mid').textContent = "娱乐城";
+      // hero
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('loc').textContent = t(P.location);
+      const cv = document.getElementById('cvBtn'); cv.href = t(P.cv);
+      document.getElementById('cvLabel').textContent = t(P.ui.download_cv);
+      document.getElementById('ghBtn').href = P.contact.github;
+      // section titles
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      document.getElementById('c-sub').textContent = t(P.ui.inbox_open);
+      // about
+      const por = document.getElementById('portrait'); por.src = P.avatar; por.alt = t(P.name);
+      document.getElementById('about-text').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<p class="loc2">🎰 ${esc(t(P.location))}</p>`;
+      // education
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="rowitem panel"><div class="when">${esc(e.period)}</div>
+        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
+      // skills — chips + lines
+      document.getElementById('chips').innerHTML = P.skillTags.map(s=>`<div class="chip">${esc(s)}</div>`).join('');
+      document.getElementById('skill-lines').innerHTML = P.skills.map(s=>
+        `<div class="sl panel"><span class="ic" aria-hidden="true">🂡</span><span>${esc(s)}</span></div>`).join('');
+      // courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="course panel"><span class="die" aria-hidden="true">${DICE[i%6]}</span>
+        <div class="ci"><i class="fa ${esc(c.icon)}" aria-hidden="true"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="rowitem panel"><div class="when">${esc(x.period)}</div>
+        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
+        <div class="sub">${esc(t(x.summary))}</div>
+        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
+      // certificates
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert panel"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>👑 ${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+      // contact info
+      document.getElementById('contact-info').innerHTML = [
+        ['📧 Email', P.contact.email, 'mailto:'+P.contact.email],
+        ['📞 Phone', P.contact.phone, P.contact.phoneHref],
+        ['💻 GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['💬 WeChat', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a class="panel" href="${esc(h)}" target="_blank" rel="noopener"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '<span>'+esc(t(P.ui.send))+' 🎲</span>';
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+      document.getElementById('parody').textContent = CJCData.lang()==='zh'
+        ? "* 纯属娱乐化的致敬式仿作，非真实博彩，无任何投注功能。"
+        : "* A tongue-in-cheek homage/parody. Not a real casino — no gambling, no betting, no wagers.";
+      // filters
+      const fb = document.getElementById('filters');
+      fb.innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      fb.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k;
+        fb.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.k===filterKey));
+        renderArticles();
+      }));
+      renderPromos();
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="gcard" href="${esc(p.href)}">
+          <div class="felt"><span class="ribbon">TABLE ${String(i+1).padStart(2,'0')}</span>
+            ${p.cover_image?`<img src="${esc(p.cover_image)}" alt="" onerror="this.style.display='none';this.parentNode.querySelector('.tbl').style.display='flex'">`:''}
+            <span class="tbl" aria-hidden="true" style="${p.cover_image?'display:none':''}">${TABLE[i%TABLE.length]}</span>
+          </div>
+          <div class="gbody">
+            <div class="meta"><span>${esc(t(P.ui.view_project))}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">下注 · Enter →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="gcard" href="${esc(a.href)}">
+          <div class="felt"><span class="ribbon">🎯 ${esc(a.category||'')}</span>
+            <img src="${esc(a.cover_image||'')}" alt="" onerror="this.src='/index_page/img/blogs/1.jpg'">
+          </div>
+          <div class="gbody">
+            <div class="meta"><span>${esc(t(P.ui.read_more))}</span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))} · 荷官暂时离席</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_articles))} · 内容加载失败</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--cream)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='var(--neon-green)'; s.textContent='🎉 '+(r.message||'Sent.'); f.reset(); }
+      catch(err){ s.style.color='#ff7a7a'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#ffb300' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

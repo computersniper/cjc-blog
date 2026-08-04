@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>蔡杰超 · 军统档案 — Spy Dossier</title>
+  <meta name="description" content="Cai Jiechao — a 1940s Republic-of-China espionage dossier: aged files, red seals, typewriter." />
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Noto+Serif+SC:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --folder:#2a2419;         /* dark file-folder */
+      --folder-2:#38301f;
+      --paper:#e6d5ac;          /* aged manila */
+      --paper-2:#d8c493;
+      --paper-edge:#c8b57f;
+      --ink:#2c2417;            /* typewriter ink */
+      --ink-soft:#6a5a3b;
+      --red:#a8322d;            /* seal red */
+      --red-deep:#7d2420;
+      --tape:rgba(226,210,150,.55);
+      --hair:rgba(44,36,23,.24);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--paper);
+      background:
+        radial-gradient(1100px 700px at 82% -10%, rgba(168,50,45,.10), transparent 60%),
+        linear-gradient(160deg,var(--folder),var(--folder-2));
+      background-attachment:fixed;
+      font-family:"Special Elite","Noto Serif SC",Georgia,serif;
+      line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+
+    /* morse / telegram strip */
+    .morse{font-family:"Special Elite",monospace;letter-spacing:.5em;color:rgba(230,213,172,.4);
+      font-size:12px;text-align:center;padding:8px 0;border-bottom:1px solid rgba(230,213,172,.14);
+      white-space:nowrap;overflow:hidden}
+
+    /* ---- topbar ---- */
+    .topbar{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,rgba(42,36,25,.96),rgba(42,36,25,.7));
+      border-bottom:1px solid rgba(230,213,172,.16);backdrop-filter:blur(3px)}
+    .topbar .in{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .brand{font-family:"Noto Serif SC",serif;font-weight:900;font-size:19px;letter-spacing:.06em;color:var(--paper)}
+    .brand b{color:var(--red)}
+    .nav{display:flex;gap:18px}
+    .nav a{font-size:14px;color:rgba(230,213,172,.72);letter-spacing:.04em}
+    .nav a:hover{color:var(--paper)}
+    @media(max-width:900px){.nav{display:none}}
+
+    section{padding:56px 0;position:relative}
+    .cover>*,.contact>*,.dossier,.train,.ev{min-width:0}
+    .dossier h4,.dossier p,.train p,.ev .c,.about-body p,.rec p,.exp li{overflow-wrap:anywhere}
+
+    /* ---- manila paper panel ---- */
+    .paper{position:relative;background:
+        radial-gradient(circle at 18% 12%, rgba(120,90,40,.10), transparent 30%),
+        radial-gradient(circle at 88% 82%, rgba(120,90,40,.10), transparent 34%),
+        linear-gradient(150deg,var(--paper),var(--paper-2));
+      color:var(--ink);border:1px solid var(--paper-edge);
+      box-shadow:0 18px 40px rgba(0,0,0,.4), inset 0 0 60px rgba(150,120,60,.12);
+      padding:34px 32px;border-radius:2px}
+    .paper.tilt{transform:rotate(-.5deg)}
+    .paper.tilt2{transform:rotate(.5deg)}
+    @media(max-width:1180px){.paper.tilt,.paper.tilt2{transform:none}}
+    @media(max-width:600px){.cover .classif,.photo{transform:none}}
+    /* coffee stain */
+    .paper::after{content:"";position:absolute;width:120px;height:120px;right:-14px;bottom:-10px;pointer-events:none;
+      background:
+        radial-gradient(circle, transparent 46%, rgba(96,60,20,.16) 48%, rgba(96,60,20,.05) 54%, transparent 60%),
+        radial-gradient(circle, rgba(96,60,20,.09), transparent 62%);
+      border-radius:50%;opacity:.8}
+    /* washi tape at a corner */
+    .tape{position:absolute;top:-12px;left:34px;width:96px;height:26px;background:var(--tape);
+      border-left:1px dashed rgba(120,90,40,.3);border-right:1px dashed rgba(120,90,40,.3);
+      transform:rotate(-4deg);box-shadow:0 2px 5px rgba(0,0,0,.15);opacity:.9}
+    .tape.r{left:auto;right:34px;transform:rotate(3deg)}
+
+    /* file tab header */
+    .file-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+    .tab{background:var(--red);color:var(--paper);font-family:"Noto Serif SC",serif;font-weight:700;
+      padding:7px 16px;letter-spacing:.08em;box-shadow:2px 2px 0 rgba(0,0,0,.25);border-radius:2px 2px 0 0}
+    .file-no{font-size:13px;color:var(--ink-soft);letter-spacing:.14em;border:1.5px solid var(--ink-soft);
+      padding:3px 10px;transform:rotate(-2deg)}
+    .file-en{font-size:12px;letter-spacing:.28em;color:var(--ink-soft);text-transform:uppercase}
+
+    /* seals / stamps */
+    .seal{position:absolute;font-family:"Noto Serif SC",serif;color:var(--red);border:3px double var(--red);
+      border-radius:50%;width:104px;height:104px;display:grid;place-items:center;text-align:center;
+      font-weight:900;line-height:1.15;font-size:14px;opacity:.8;transform:rotate(-15deg);
+      box-shadow:inset 0 0 0 2px rgba(168,50,45,.35);pointer-events:none;z-index:5;
+      text-shadow:0 0 1px rgba(168,50,45,.4)}
+    .seal small{display:block;font-size:9px;letter-spacing:.12em;font-weight:600;margin-top:2px}
+    .stamp-rect{position:absolute;font-family:"Noto Serif SC",serif;color:var(--red);border:2.5px solid var(--red);
+      padding:5px 12px;font-weight:900;letter-spacing:.14em;opacity:.78;transform:rotate(-8deg);
+      box-shadow:inset 0 0 0 1px rgba(168,50,45,.35);pointer-events:none;z-index:5;font-size:15px}
+    .redacted{display:inline-block;background:#1c160c;color:transparent;border-radius:1px;
+      user-select:none;height:1em;vertical-align:middle}
+
+    /* ---- hero / dossier cover ---- */
+    .hero{padding:44px 0 30px}
+    .cover{position:relative;display:grid;grid-template-columns:1fr 220px;gap:28px;align-items:start}
+    .cover .agency{font-family:"Noto Serif SC",serif;color:var(--red);font-weight:700;letter-spacing:.3em;font-size:14px}
+    .cover .classif{display:inline-block;margin:10px 0 6px;border:2.5px solid var(--red);color:var(--red);
+      font-family:"Noto Serif SC",serif;font-weight:900;letter-spacing:.14em;padding:5px 14px;transform:rotate(-2deg);font-size:15px}
+    .cover h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(42px,9vw,86px);line-height:1;
+      margin:12px 0 0;color:var(--ink);letter-spacing:.04em}
+    .cover .codename{font-size:14px;color:var(--ink-soft);letter-spacing:.22em;margin-top:6px;text-transform:uppercase}
+    .cover .role{font-size:clamp(17px,2.4vw,22px);color:var(--red);margin-top:14px;font-family:"Noto Serif SC",serif;font-weight:600}
+    .cover .title{color:var(--ink-soft);margin-top:8px;max-width:44ch;font-size:15px}
+    .cover .datastrip{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:18px;font-size:13.5px;color:var(--ink-soft);letter-spacing:.04em}
+    .cover .datastrip b{color:var(--ink)}
+    .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .btn{font-family:"Noto Serif SC",serif;font-weight:700;font-size:15px;letter-spacing:.06em;padding:11px 22px;cursor:pointer;
+      background:var(--red);color:var(--paper);border:2px solid var(--red-deep);box-shadow:3px 3px 0 rgba(0,0,0,.25);
+      display:inline-flex;align-items:center;gap:8px;transition:transform .12s,box-shadow .12s}
+    .btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 rgba(0,0,0,.28)}
+    .btn.ghost{background:transparent;color:var(--red);box-shadow:none}
+    .btn.ghost:hover{background:rgba(168,50,45,.08)}
+
+    /* dossier ID photo */
+    .photo{position:relative;background:#f3ecda;padding:12px 12px 34px;transform:rotate(2.5deg);
+      box-shadow:0 12px 26px rgba(0,0,0,.4);border:1px solid #cbbd97;justify-self:end;width:200px;max-width:100%}
+    .photo img{width:100%;height:230px;object-fit:cover;filter:grayscale(1) contrast(1.12) sepia(.28);border:1px solid #9a8c66}
+    .photo figcaption{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:"Noto Serif SC",serif;
+      color:#4a3f28;font-size:13px;letter-spacing:.2em}
+    .clip{position:absolute;top:-16px;left:50%;transform:translateX(-40px) rotate(8deg);width:26px;height:58px;z-index:6}
+    .stamp-date{position:absolute;right:-6px;bottom:26px;color:var(--red);border:2px solid var(--red);border-radius:4px;
+      font-family:"Special Elite",monospace;font-size:11px;padding:3px 7px;transform:rotate(-9deg);opacity:.82;letter-spacing:.06em;
+      background:rgba(243,236,218,.4)}
+    @media(max-width:760px){.cover{grid-template-columns:1fr}.photo{justify-self:start;margin-top:6px}}
+
+    /* ---- about ---- */
+    .about-body p{font-size:16px;margin:0 0 14px;max-width:64ch}
+    .about-body .redline{margin:6px 0 16px}
+    .loc{color:var(--red);font-family:"Noto Serif SC",serif;font-weight:600;display:inline-flex;gap:8px;align-items:center}
+
+    /* ---- record rows (education / experience) ---- */
+    .rec{border-left:3px solid var(--red);padding:12px 0 12px 18px;margin:0 0 16px;position:relative}
+    .rec .yr{font-size:13px;color:var(--red);letter-spacing:.12em}
+    .rec h3{font-family:"Noto Serif SC",serif;margin:3px 0 3px;font-size:19px;font-weight:700;color:var(--ink)}
+    .rec p{margin:0;color:var(--ink-soft);font-size:15px}
+    .exp{margin-top:26px;border:1px dashed var(--hair);padding:20px;position:relative;background:rgba(255,255,255,.14)}
+    .exp .h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+    .exp .h h3{font-family:"Noto Serif SC",serif;margin:0;font-size:20px;color:var(--ink);font-weight:700}
+    .exp .h .co{color:var(--red)}
+    .exp .h .yr{margin-left:auto;font-size:14px;color:var(--red);letter-spacing:.08em}
+    .exp .sum{color:var(--ink-soft);font-size:15px;font-style:italic;margin:8px 0 10px}
+    .exp ul{margin:0;padding-left:0;list-style:none;display:grid;gap:7px}
+    .exp li{padding-left:26px;position:relative;font-size:15px}
+    .exp li::before{content:"▸";position:absolute;left:2px;color:var(--red)}
+
+    /* ---- skills assessment ---- */
+    .assess{display:grid;gap:10px}
+    .arow{display:flex;align-items:center;gap:14px;border-bottom:1px dashed var(--hair);padding:9px 0}
+    .arow .k{font-size:16px;flex:1}
+    .arow .grade{font-family:"Noto Serif SC",serif;color:var(--red);border:1.5px solid var(--red);font-size:12px;
+      font-weight:700;padding:2px 9px;letter-spacing:.08em;transform:rotate(-2deg);white-space:nowrap}
+    .clearance{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .ctag{font-size:13px;letter-spacing:.04em;padding:4px 11px;border:1.5px solid var(--ink-soft);color:var(--ink);
+      background:rgba(255,255,255,.2)}
+    .ctag:nth-child(4n){color:var(--red);border-color:var(--red)}
+
+    /* ---- training (courses) ---- */
+    .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .train{border:1px solid var(--hair);padding:18px;background:rgba(255,255,255,.16);position:relative}
+    .train .no{position:absolute;top:10px;right:12px;font-size:12px;color:var(--ink-soft);letter-spacing:.14em}
+    .train .ico{color:var(--red);font-size:22px;margin-bottom:8px}
+    .train h4{font-family:"Noto Serif SC",serif;margin:0 0 6px;font-size:17px;color:var(--ink);font-weight:700}
+    .train p{margin:0;color:var(--ink-soft);font-size:14px;line-height:1.55}
+    @media(max-width:820px){.cards3{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.cards3{grid-template-columns:1fr}}
+
+    /* ---- missions: projects & articles ---- */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 22px}
+    .filters button{font-family:"Special Elite","Noto Serif SC",serif;background:transparent;border:1.5px solid var(--ink-soft);
+      color:var(--ink);font-size:13.5px;padding:6px 14px;cursor:pointer;transition:.14s;letter-spacing:.04em}
+    .filters button:hover{border-color:var(--red);color:var(--red)}
+    .filters button.active{background:var(--red);border-color:var(--red);color:var(--paper)}
+    .dossiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .dossier{border:1px solid var(--paper-edge);background:linear-gradient(150deg,#efe0bc,#e2d09f);color:var(--ink);
+      display:flex;flex-direction:column;overflow:hidden;position:relative;transition:transform .14s, box-shadow .14s;
+      box-shadow:0 6px 16px rgba(0,0,0,.25)}
+    .dossier:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+    .dossier .cover{height:140px;background:#cdbb8c;overflow:hidden;border-bottom:1px solid var(--paper-edge)}
+    .dossier .cover img{width:100%;height:100%;object-fit:cover;filter:grayscale(.55) sepia(.35) contrast(1.02)}
+    .dossier .b{padding:15px;display:flex;flex-direction:column;gap:7px;flex:1}
+    .dossier .code{font-family:"Noto Serif SC",serif;color:var(--red);font-weight:700;font-size:13px;letter-spacing:.1em}
+    .dossier .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);letter-spacing:.03em}
+    .dossier h4{font-family:"Noto Serif SC",serif;margin:0;font-size:16.5px;line-height:1.3;font-weight:700}
+    .dossier .tech{color:var(--red);font-size:12.5px}
+    .dossier p{margin:0;color:var(--ink-soft);font-size:13.5px;line-height:1.5;flex:1}
+    .dossier .more{color:var(--red);font-size:13px;letter-spacing:.06em}
+    @media(max-width:860px){.dossiers{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.dossiers{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;color:var(--ink-soft);padding:16px 0;font-size:14px}
+    .sub-label{font-family:"Noto Serif SC",serif;color:var(--ink);font-weight:700;font-size:17px;letter-spacing:.06em;
+      margin:6px 0 14px;display:flex;align-items:center;gap:10px}
+    .sub-label::before{content:"";width:16px;height:16px;background:var(--red);display:inline-block;transform:rotate(45deg)}
+
+    /* ---- evidence (certificates) ---- */
+    .evid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .ev{border:1px solid var(--hair);background:rgba(255,255,255,.18);display:grid;grid-template-columns:118px 1fr;overflow:hidden;position:relative}
+    .ev img{height:100%;width:100%;object-fit:cover;filter:grayscale(.4) sepia(.3);border-right:1px solid var(--hair)}
+    .ev .c{padding:15px}
+    .ev .c .m{display:flex;justify-content:space-between;font-size:12px;color:var(--red);letter-spacing:.06em}
+    .ev .c h4{font-family:"Noto Serif SC",serif;margin:7px 0 6px;font-size:16px;color:var(--ink);font-weight:700}
+    .ev .c p{margin:0;color:var(--ink-soft);font-size:13.5px;line-height:1.5}
+    @media(max-width:620px){.evid{grid-template-columns:1fr}.ev{grid-template-columns:88px 1fr}}
+
+    /* ---- contact / rendezvous ---- */
+    .contact{display:grid;grid-template-columns:1fr 1.1fr;gap:30px;align-items:start}
+    .cinfo a{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--hair);padding:12px 0;color:var(--ink)}
+    .cinfo a span:first-child{color:var(--ink-soft);letter-spacing:.04em}
+    .cinfo a span:last-child{color:var(--red)}
+    .cform label{color:var(--ink);font-size:14px;display:block;margin:0 0 5px;letter-spacing:.04em}
+    .cform input,.cform textarea{width:100%;background:rgba(255,255,255,.42);border:1.5px solid var(--ink-soft);
+      color:var(--ink);font-family:"Special Elite","Noto Serif SC",serif;font-size:15px;padding:11px;margin-bottom:13px;border-radius:1px}
+    .cform input:focus,.cform textarea:focus{outline:2px solid var(--red);outline-offset:1px;border-color:var(--red)}
+    .cform textarea{min-height:120px;resize:vertical}
+    #cf-status{margin-top:6px;font-size:14px;color:var(--ink)}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* wax seal near contact */
+    .wax{position:absolute;right:24px;top:-26px;width:66px;height:66px;border-radius:50%;z-index:6;
+      background:radial-gradient(circle at 38% 34%, #c8433c, #7d1f1b 70%);box-shadow:0 6px 14px rgba(0,0,0,.4), inset 0 0 8px rgba(0,0,0,.4);
+      display:grid;place-items:center;color:rgba(255,220,210,.85);font-family:"Noto Serif SC",serif;font-weight:900;font-size:22px;
+      transform:rotate(-8deg)}
+
+    /* ---- footer ---- */
+    footer{padding:40px 0 56px;border-top:1px solid rgba(230,213,172,.16);margin-top:14px}
+    .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center}
+    .foot .soc{display:flex;gap:16px;flex-wrap:wrap}
+    .foot a{color:rgba(230,213,172,.72);font-size:14px}
+    .foot a:hover{color:var(--paper)}
+    .foot-meta{margin-top:14px;color:rgba(230,213,172,.55);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .foot-meta a{color:rgba(230,213,172,.55)}
+    .foot-meta a:hover{color:var(--paper)}
+
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto !important}
+      .btn:hover,.dossier:hover,.train:hover{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="morse" aria-hidden="true">·-·· ·· ·-· · ·-·· ·· ·-·   —  蔡 杰 超  —  ·-· · ·-·· ·· ·- —</div>
+
+  <div class="topbar"><div class="wrap in">
+    <a class="brand" href="#top">蔡杰超 <b>· 档案</b></a>
+    <nav class="nav" id="nav"></nav>
+  </div></div>
+
+  <div id="top"></div>
+
+  <header class="hero"><div class="wrap">
+    <div class="paper cover">
+      <span class="stamp-rect" style="right:24px;top:20px">机密 · CONFIDENTIAL</span>
+      <div class="cinfo-block">
+        <div class="agency" id="agency"></div>
+        <div class="classif" id="classif"></div>
+        <div class="greet" id="greet" style="color:var(--ink-soft);font-size:14px;letter-spacing:.1em"></div>
+        <h1 id="name"></h1>
+        <div class="codename" id="codename"></div>
+        <div class="role" id="role"></div>
+        <p class="title" id="title"></p>
+        <div class="about-body"><div class="redline"><span class="redacted" style="width:62%"></span> <span class="redacted" style="width:26%"></span></div></div>
+        <div class="datastrip" id="datastrip"></div>
+        <div class="cta-row">
+          <a class="btn" id="cvBtn" href="#" download></a>
+          <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <figure class="photo">
+        <svg class="clip" viewBox="0 0 26 58" aria-hidden="true"><path d="M13 4 C6 4 4 9 4 16 L4 42 C4 50 10 54 15 54 C21 54 23 49 23 43 L23 15 C23 10 20 8 16 8 C12 8 10 11 10 15 L10 40" fill="none" stroke="#8a8a8a" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <img id="photo" alt="ID photo of Cai Jiechao" />
+        <figcaption id="photo-cap">证件照</figcaption>
+        <span class="stamp-date" id="stampdate"></span>
+      </figure>
+    </div>
+  </div></header>
+
+  <section id="about"><div class="wrap">
+    <div class="paper tilt">
+      <span class="tape"></span>
+      <div class="seal" style="right:26px;top:-22px">绝密<small>TOP SECRET</small></div>
+      <div class="file-head"><span class="tab" id="tab-about"></span><span class="file-no">档案 No. 04-A</span><span class="file-en">Dossier</span></div>
+      <div class="about-body" id="about-body"></div>
+    </div>
+  </div></section>
+
+  <section id="record"><div class="wrap">
+    <div class="paper tilt2">
+      <span class="tape r"></span>
+      <div class="file-head"><span class="tab" id="tab-record"></span><span class="file-no">档案 No. 04-B</span><span class="file-en">Service Record</span></div>
+      <div class="sub-label" id="sl-edu"></div>
+      <div id="edu-list"></div>
+      <div class="sub-label" id="sl-exp" style="margin-top:24px"></div>
+      <div id="exp-list"></div>
+    </div>
+  </div></section>
+
+  <section id="skills"><div class="wrap">
+    <div class="paper tilt">
+      <div class="stamp-rect" style="right:30px;top:16px">合格 · PASS</div>
+      <div class="file-head"><span class="tab" id="tab-skills"></span><span class="file-no">档案 No. 04-C</span><span class="file-en">Skill Assessment</span></div>
+      <div class="assess" id="skills-list"></div>
+      <div class="clearance" id="chip-list"></div>
+    </div>
+  </div></section>
+
+  <section id="training"><div class="wrap">
+    <div class="paper tilt2">
+      <div class="file-head"><span class="tab" id="tab-train"></span><span class="file-no">档案 No. 04-D</span><span class="file-en">Training</span></div>
+      <div class="cards3" id="courses-list"></div>
+    </div>
+  </div></section>
+
+  <section id="missions"><div class="wrap">
+    <div class="paper tilt">
+      <div class="seal" style="right:28px;top:-24px">档案<small>ARCHIVE</small></div>
+      <div class="file-head"><span class="tab" id="tab-missions"></span><span class="file-no">档案 No. 04-E</span><span class="file-en">Mission Log</span></div>
+      <div class="sub-label" id="sl-ops"></div>
+      <div class="dossiers" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+      <div class="sub-label" id="sl-intel" style="margin-top:30px"></div>
+      <div class="filters" id="filters"></div>
+      <div class="dossiers" id="articles-list"><div class="load-note" id="art-load"></div></div>
+    </div>
+  </div></section>
+
+  <section id="evidence"><div class="wrap">
+    <div class="paper tilt2">
+      <span class="tape"></span>
+      <div class="file-head"><span class="tab" id="tab-evid"></span><span class="file-no">档案 No. 04-F</span><span class="file-en">Evidence</span></div>
+      <div class="evid" id="certs-list"></div>
+    </div>
+  </div></section>
+
+  <section id="contact"><div class="wrap">
+    <div class="paper tilt">
+      <div class="wax">印</div>
+      <div class="file-head"><span class="tab" id="tab-contact"></span><span class="file-no">档案 No. 04-G</span><span class="file-en">Rendezvous</span></div>
+      <div class="contact">
+        <div class="cinfo" id="contact-info"></div>
+        <form class="cform" id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <label for="cf-name" id="lb-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label for="cf-email" id="lb-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label for="cf-msg" id="lb-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn" id="cf-send"></button>
+          <p id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <div class="foot">
+      <a class="brand" href="#top">蔡杰超 <b>· 档案</b></a>
+      <div class="soc" id="foot-social"></div>
+    </div>
+    <div class="foot-meta">
+      <span id="foot-desc"></span>
+      <a id="foot-icp" target="_blank" rel="noopener"></a>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "48-spy";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+    const S = {
+      agency:{en:"BUREAU OF INVESTIGATION & STATISTICS · 军事委员会调查统计局",zh:"军事委员会调查统计局 · 绝密档案"},
+      classif:{en:"绝密 · TOP SECRET",zh:"绝密 · 头等机密"},
+      codename:{en:"Codename: The Software Developer",zh:"代号：软件开发者"},
+      tabAbout:{en:"档案 Dossier",zh:"档案"},
+      tabRecord:{en:"履历 Service Record",zh:"履历"},
+      tabSkills:{en:"技能评估 Assessment",zh:"技能评估"},
+      tabTrain:{en:"受训 Training",zh:"受训科目"},
+      tabMissions:{en:"任务记录 Missions",zh:"任务记录"},
+      tabEvid:{en:"证物 Evidence",zh:"证物"},
+      tabContact:{en:"接头 Contact",zh:"接头"},
+      slEdu:{en:"Education Record 学历",zh:"学历记录"},
+      slExp:{en:"Field Service 实务",zh:"实务经历"},
+      slOps:{en:"Operations 行动记录",zh:"行动记录（项目）"},
+      slIntel:{en:"Intelligence 情报简报",zh:"情报简报（文章）"},
+      grade:{en:"QUALIFIED",zh:"合格"},
+      opCode:{en:"OP.",zh:"行动"},
+      intelCode:{en:"INTEL.",zh:"情报"},
+      clearance:{en:"CLEARANCE",zh:"权限"},
+    };
+
+    function stampDate(){
+      const d = new Date();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return "归档 "+d.getFullYear()+"."+mm+"."+dd;
+    }
+
+    function renderStatic(){
+      document.title = CJCData.lang()==="zh" ? "蔡杰超 · 军统档案" : "Cai Jiechao — Spy Dossier";
+      document.getElementById('nav').innerHTML = [
+        ['about','tabAbout'],['record','tabRecord'],['skills','tabSkills'],
+        ['missions','tabMissions'],['evidence','tabEvid'],['contact','tabContact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(S[k]))}</a>`).join('');
+
+      // hero cover
+      document.getElementById('agency').textContent = t(S.agency);
+      document.getElementById('classif').textContent = t(S.classif);
+      document.getElementById('greet').textContent = t(P.greeting);
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('codename').textContent = t(S.codename);
+      document.getElementById('role').textContent = t(P.role);
+      document.getElementById('title').textContent = t(P.title);
+      document.getElementById('photo').src = P.avatar;
+      document.getElementById('photo-cap').textContent = CJCData.lang()==="zh" ? "证件照" : "证件照 · ID PHOTO";
+      document.getElementById('stampdate').textContent = stampDate();
+      document.getElementById('datastrip').innerHTML =
+        `<span>驻地 STATION: <b>${esc(t(P.location))}</b></span>`+
+        `<span>身份 STATUS: <b>${esc(t(P.role))}</b></span>`;
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = '<i class="fa fa-folder-open" aria-hidden="true"></i> '+esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      document.getElementById('ghBtn').href = P.contact.github;
+
+      // tabs
+      document.getElementById('tab-about').textContent = t(S.tabAbout);
+      document.getElementById('tab-record').textContent = t(S.tabRecord);
+      document.getElementById('tab-skills').textContent = t(S.tabSkills);
+      document.getElementById('tab-train').textContent = t(S.tabTrain);
+      document.getElementById('tab-missions').textContent = t(S.tabMissions);
+      document.getElementById('tab-evid').textContent = t(S.tabEvid);
+      document.getElementById('tab-contact').textContent = t(S.tabContact);
+      document.getElementById('sl-edu').textContent = t(S.slEdu);
+      document.getElementById('sl-exp').textContent = t(S.slExp);
+      document.getElementById('sl-ops').textContent = t(S.slOps);
+      document.getElementById('sl-intel').textContent = t(S.slIntel);
+
+      // about
+      document.getElementById('about-body').innerHTML =
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
+        `<div class="redline"><span class="redacted" style="width:40%"></span> <span class="redacted" style="width:20%"></span></div>` +
+        `<div class="loc"><i class="fa fa-map-marker" aria-hidden="true"></i> ${esc(t(P.location))}</div>`;
+
+      // education records
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="rec"><div class="yr">${esc(e.period)}</div>
+          <h3>${esc(t(e.school))}</h3>
+          <p>${esc(t(e.degree))} — ${esc(t(e.note))}</p></div>`).join('');
+
+      // experience
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="exp">
+          <div class="h"><h3>${esc(t(x.role))} <span class="co">· ${esc(t(x.company))}</span></h3><span class="yr">${esc(x.period)}</span></div>
+          <p class="sum">${esc(t(x.summary))}</p>
+          <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div>`).join('');
+
+      // skills assessment
+      document.getElementById('skills-list').innerHTML = P.skills.map(s=>`
+        <div class="arow"><span class="k">${esc(s)}</span><span class="grade">${esc(t(S.grade))}</span></div>`).join('');
+      document.getElementById('chip-list').innerHTML =
+        `<span class="ctag" style="border-style:double;font-weight:700">${esc(t(S.clearance))}:</span>` +
+        P.skillTags.map(s=>`<span class="ctag">${esc(s)}</span>`).join('');
+
+      // training / courses
+      document.getElementById('courses-list').innerHTML = P.courses.map((c,i)=>`
+        <div class="train"><span class="no">科目 ${String(i+1).padStart(2,'0')}</span>
+          <div class="ico"><i class="fa ${esc(c.icon)}" aria-hidden="true"></i></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      // certificates / evidence
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="ev"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+          <div class="c"><div class="m"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+          <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      // contact
+      document.getElementById('contact-info').innerHTML = [
+        ['Email 电邮', P.contact.email, 'mailto:'+P.contact.email],
+        ['Phone 电话', P.contact.phone, P.contact.phoneHref],
+        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
+        ['WeChat 微信', 'QR ↗', P.contact.wechatQrPage],
+      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').innerHTML = '<i class="fa fa-paper-plane" aria-hidden="true"></i> '+esc(t(P.ui.send));
+
+      // footer
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      // filters
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map((p,i)=>`
+        <a class="dossier" href="${esc(p.href)}">
+          <div class="b">
+            <div class="code">${esc(t(S.opCode))} ${String(i+1).padStart(3,'0')}</div>
+            <div class="meta"><span>${esc(p.tech_stack? t(P.ui.tech_stack):'')}</span><span>${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="tech">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} →</span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map((a,i)=>`
+        <a class="dossier" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
+          <div class="b">
+            <div class="code">${esc(t(S.intelCode))} ${String(i+1).padStart(3,'0')} · ${esc(a.category||'')}</div>
+            <div class="meta"><span></span><span>${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} →</span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ 内容加载失败 / Failed to load.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      s.style.color='var(--ink-soft)'; s.textContent = t(P.ui.sending);
+      try{
+        const r = await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});
+        s.style.color='#3f7d3a'; s.textContent = (r.message||'Sent.')+' ✓'; f.reset();
+      }catch(err){ s.style.color='var(--red)'; s.textContent = err.message; }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#a8322d' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>

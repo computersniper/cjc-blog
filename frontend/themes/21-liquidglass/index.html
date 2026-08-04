@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cai Jiechao — Liquid Glass</title>
+  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    :root{
+      --accent:#0a84ff;
+      --ink:#0b1120;
+      --ink-soft:rgba(11,17,32,.62);
+      --ink-faint:rgba(11,17,32,.42);
+      --glass:rgba(255,255,255,.42);
+      --glass-strong:rgba(255,255,255,.60);
+      --edge:rgba(255,255,255,.75);
+      --edge-dark:rgba(255,255,255,.28);
+      --radius:26px;
+      --radius-lg:32px;
+      --shadow:0 20px 50px -18px rgba(31,45,90,.35), 0 4px 16px -8px rgba(31,45,90,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      line-height:1.55;-webkit-font-smoothing:antialiased;
+      background:linear-gradient(150deg,#8ec5fc 0%,#c3d4fc 40%,#e0c3fc 100%);
+      min-height:100vh;overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{font-family:inherit}
+
+    /* ---- Background orbs (parallax) ---- */
+    .bg-orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+    .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.75;will-change:transform}
+    .orb.o1{width:520px;height:520px;background:radial-gradient(circle at 30% 30%,#ff9ecb,#ff3d81 70%);top:-120px;left:-100px}
+    .orb.o2{width:600px;height:600px;background:radial-gradient(circle at 30% 30%,#7ee8fa,#0a84ff 75%);top:22%;right:-180px}
+    .orb.o3{width:480px;height:480px;background:radial-gradient(circle at 40% 40%,#c3f0c8,#25c47a 75%);bottom:-140px;left:12%}
+    .orb.o4{width:400px;height:400px;background:radial-gradient(circle at 40% 40%,#fbd786,#f7797d 75%);bottom:6%;right:8%}
+
+    .container{max-width:1120px;margin:0 auto;padding:0 22px}
+
+    /* ---- Glass primitive ---- */
+    .glass{
+      position:relative;background:var(--glass);
+      -webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+      border-radius:var(--radius);
+      border:1px solid var(--edge);
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.14);
+      overflow:hidden;
+    }
+    /* specular sheen sweeping the top edge */
+    .glass::before{
+      content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+      background:linear-gradient(160deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.06) 26%,rgba(255,255,255,0) 52%);
+      opacity:.9;
+    }
+    .glass>*{position:relative;z-index:1}
+
+    /* ---- Nav ---- */
+    .nav{position:sticky;top:14px;z-index:800;margin:14px auto 0;max-width:1120px;padding:0 22px}
+    .nav-inner{display:flex;align-items:center;gap:18px;padding:10px 12px 10px 20px;border-radius:999px}
+    .brand{font-weight:800;font-size:17px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+    .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(10,132,255,.22)}
+    .navlinks{display:flex;gap:6px;margin-left:auto;margin-right:210px}
+    .navlinks a{font-size:13.5px;font-weight:500;color:var(--ink-soft);padding:8px 14px;border-radius:999px;transition:.2s}
+    .navlinks a:hover{color:var(--ink);background:rgba(255,255,255,.55)}
+    @media(max-width:1000px){.navlinks{margin-right:150px}}
+    @media(max-width:860px){.navlinks{display:none}}
+
+    /* ---- Hero ---- */
+    .hero{padding:66px 0 22px}
+    .hero-card{padding:46px 44px 48px;border-radius:var(--radius-lg)}
+    .greet{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--accent);
+      background:rgba(10,132,255,.12);padding:7px 15px;border-radius:999px;border:1px solid rgba(10,132,255,.25)}
+    .hero h1{font-size:clamp(40px,7vw,78px);font-weight:800;letter-spacing:-.035em;line-height:1;margin:20px 0 0;
+      background:linear-gradient(120deg,#0b1120,#2b5cff 60%,#8b3dff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero .headline{font-size:clamp(19px,2.6vw,28px);font-weight:600;margin:16px 0 0;max-width:20ch;color:var(--ink)}
+    .hero .sub{font-size:16px;color:var(--ink-soft);margin:14px 0 0;max-width:52ch}
+    .hero .loc{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-size:14px;font-weight:600;color:var(--ink-soft)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+    .pill{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15px;
+      transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;cursor:pointer;border:1px solid transparent}
+    .pill.primary{background:linear-gradient(180deg,#3a9bff,var(--accent));color:#fff;
+      box-shadow:0 10px 26px -8px rgba(10,132,255,.7),inset 0 1px 0 rgba(255,255,255,.5)}
+    .pill.primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 36px -10px rgba(10,132,255,.75),inset 0 1px 0 rgba(255,255,255,.5)}
+    .pill.ghost{background:rgba(255,255,255,.55);color:var(--ink);border-color:var(--edge);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+    .pill.ghost:hover{transform:translateY(-3px) scale(1.03);background:rgba(255,255,255,.75)}
+    @media(max-width:560px){.hero-card{padding:32px 24px 36px}}
+
+    /* ---- Sections ---- */
+    section{padding:34px 0}
+    .sec-head{display:flex;align-items:center;gap:14px;margin:0 0 22px;padding:0 6px}
+    .sec-kicker{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+    .sec-title{font-size:clamp(24px,3.6vw,38px);font-weight:800;letter-spacing:-.03em;margin:0}
+    .sec-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.8),rgba(255,255,255,0))}
+
+    /* About */
+    .about{display:grid;grid-template-columns:300px 1fr;gap:26px}
+    .about .portrait{padding:12px;border-radius:var(--radius-lg)}
+    .about .portrait img{border-radius:22px;width:100%;aspect-ratio:1/1;object-fit:cover}
+    .about .txt{padding:34px 34px}
+    .about .txt p{margin:0 0 15px;color:var(--ink-soft);font-size:16px}
+    .about .txt p:last-child{margin:0}
+    @media(max-width:760px){.about{grid-template-columns:1fr}}
+
+    /* Education */
+    .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .edu{padding:26px 28px}
+    .edu .when{display:inline-block;font-size:12.5px;font-weight:700;color:var(--accent);background:rgba(10,132,255,.12);
+      padding:5px 12px;border-radius:999px;margin-bottom:12px}
+    .edu h3{margin:0 0 6px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+    .edu .deg{font-size:14.5px;color:var(--ink-soft);font-weight:600}
+    .edu .note{font-size:14px;color:var(--ink-faint);margin-top:6px}
+    @media(max-width:680px){.edu-grid{grid-template-columns:1fr}}
+
+    /* Skills */
+    .skills-wrap{padding:30px 30px}
+    .chips{display:flex;flex-wrap:wrap;gap:11px}
+    .chip{padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;color:var(--ink);
+      background:rgba(255,255,255,.5);border:1px solid var(--edge);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s}
+    .chip:hover{transform:translateY(-3px) scale(1.06);background:rgba(255,255,255,.8)}
+    .chip i{color:var(--accent);margin-right:7px}
+
+    /* Courses */
+    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .course{padding:26px 24px;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+    .course:hover{transform:translateY(-6px) scale(1.02)}
+    .course .ci{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+      font-size:22px;color:#fff;margin-bottom:16px;
+      background:linear-gradient(180deg,#3a9bff,var(--accent));box-shadow:0 8px 18px -6px rgba(10,132,255,.6),inset 0 1px 0 rgba(255,255,255,.5)}
+    .course h4{margin:0 0 8px;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
+    .course p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6}
+    @media(max-width:860px){.courses{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.courses{grid-template-columns:1fr}}
+
+    /* Experience */
+    .exp{padding:32px 34px}
+    .exp .top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin-bottom:8px}
+    .exp .top h3{margin:0;font-size:20px;font-weight:800;letter-spacing:-.01em}
+    .exp .top .co{color:var(--accent);font-weight:700}
+    .exp .when{margin-left:auto;font-size:13px;font-weight:700;color:var(--ink-faint)}
+    .exp .summary{color:var(--ink-soft);font-size:15px;margin:0 0 16px}
+    .exp ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+    .exp li{position:relative;padding-left:26px;font-size:14.5px;color:var(--ink-soft)}
+    .exp li::before{content:"\f00c";font-family:FontAwesome;position:absolute;left:0;top:1px;color:var(--accent);font-size:12px}
+
+    /* Cards (projects/articles) */
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px;padding:0 6px}
+    .filters button{padding:9px 17px;border-radius:999px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--ink-soft);
+      background:rgba(255,255,255,.4);border:1px solid var(--edge);transition:.2s}
+    .filters button:hover{background:rgba(255,255,255,.7);color:var(--ink)}
+    .filters button.active{background:linear-gradient(180deg,#3a9bff,var(--accent));color:#fff;border-color:transparent;
+      box-shadow:0 8px 18px -8px rgba(10,132,255,.6)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .card{display:flex;flex-direction:column;border-radius:var(--radius);transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+    .card:hover{transform:translateY(-8px) scale(1.02)}
+    .card .cover{height:172px;overflow:hidden;border-radius:var(--radius) var(--radius) 0 0}
+    .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .card:hover .cover img{transform:scale(1.08)}
+    .card .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .card .meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.06em}
+    .card .meta .tag{color:var(--accent);background:rgba(10,132,255,.12);padding:4px 11px;border-radius:999px}
+    .card .meta .date{color:var(--ink-faint)}
+    .card h4{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+    .card p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55;flex:1}
+    .card .stack{font-size:12.5px;font-weight:600;color:var(--accent)}
+    .card .more{font-weight:700;font-size:13px;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+    @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.cards{grid-template-columns:1fr}}
+    .load-note{grid-column:1/-1;padding:26px;text-align:center;color:var(--ink-soft);font-size:15px}
+
+    /* Certificates */
+    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+    .cert:hover{transform:translateY(-5px) scale(1.02)}
+    .cert img{width:100%;height:100%;object-fit:cover;min-height:150px}
+    .cert .ct{padding:20px 22px}
+    .cert .ct .meta{display:flex;justify-content:space-between;font-size:11px;font-weight:700;text-transform:uppercase;
+      letter-spacing:.06em;color:var(--accent);margin-bottom:8px}
+    .cert .ct h4{margin:0 0 7px;font-size:16px;font-weight:700;line-height:1.25}
+    .cert .ct p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.5}
+    @media(max-width:680px){.certs{grid-template-columns:1fr}.cert{grid-template-columns:100px 1fr}}
+
+    /* Contact */
+    .contact{display:grid;grid-template-columns:1fr 1.15fr;gap:22px}
+    .contact-info{padding:30px 30px}
+    .contact-info .lead{color:var(--ink-soft);font-size:15px;margin:0 0 20px}
+    .contact-info a{display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid rgba(255,255,255,.55)}
+    .contact-info a:first-of-type{border-top:none}
+    .contact-info a .ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background:rgba(10,132,255,.12);color:var(--accent);font-size:16px;flex-shrink:0}
+    .contact-info a .k{font-size:12px;color:var(--ink-faint);font-weight:600}
+    .contact-info a .v{font-size:14.5px;font-weight:600}
+    .contact-form{padding:30px 30px}
+    .contact-form label{font-size:12.5px;font-weight:600;color:var(--ink-soft);display:block;margin:0 0 6px}
+    .contact-form input,.contact-form textarea{width:100%;padding:13px 16px;border-radius:16px;font-family:inherit;font-size:15px;
+      color:var(--ink);background:rgba(255,255,255,.6);border:1px solid var(--edge);margin-bottom:15px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9);transition:.2s;outline:none}
+    .contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(10,132,255,.18)}
+    .contact-form textarea{min-height:120px;resize:vertical}
+    #cf-status{margin:12px 0 0;font-weight:600;font-size:14px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr}}
+
+    /* Footer */
+    footer{margin:30px 0 40px}
+    .foot{padding:30px 34px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+    .foot .fsoc{display:flex;flex-wrap:wrap;gap:10px}
+    .foot .fsoc a{padding:9px 15px;border-radius:999px;font-size:13px;font-weight:600;color:var(--ink-soft);
+      background:rgba(255,255,255,.5);border:1px solid var(--edge);transition:.2s}
+    .foot .fsoc a:hover{background:rgba(255,255,255,.8);color:var(--ink)}
+    .foot .fmeta{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;
+      border-top:1px solid rgba(255,255,255,.55);padding-top:16px;font-size:12.5px;color:var(--ink-faint)}
+    .foot .fmeta a{color:var(--ink-soft)}
+
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
+      .orb{transform:none!important}
+      .pill,.chip,.course,.card,.cert{transition:none}
+      .card:hover,.chip:hover,.course:hover,.pill:hover,.cert:hover{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb o1" data-depth="0.20"></div>
+    <div class="orb o2" data-depth="0.12"></div>
+    <div class="orb o3" data-depth="0.16"></div>
+    <div class="orb o4" data-depth="0.09"></div>
+  </div>
+
+  <nav class="nav"><div class="nav-inner glass">
+    <a class="brand" href="#top"><span class="dot"></span><span>Cai Jiechao</span></a>
+    <div class="navlinks" id="nav"></div>
+  </div></nav>
+
+  <div id="top"></div>
+  <header class="hero"><div class="container">
+    <div class="hero-card glass">
+      <span class="greet" id="greet"></span>
+      <h1 id="name"></h1>
+      <div class="headline" id="headline"></div>
+      <p class="sub" id="sub"></p>
+      <div class="loc"><i class="fa fa-map-marker"></i><span id="loc"></span></div>
+      <div class="hero-actions">
+        <a class="pill primary" id="cvBtn" href="#" download></a>
+        <a class="pill ghost" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i><span></span></a>
+      </div>
+    </div>
+  </div></header>
+
+  <main>
+  <section id="about"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">01</span><h2 class="sec-title" id="l-about"></h2><span class="sec-line"></span></div>
+    <div class="about">
+      <div class="portrait glass"><img id="portrait" alt="" /></div>
+      <div class="txt glass" id="about-text"></div>
+    </div>
+  </div></section>
+
+  <section id="education"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">02</span><h2 class="sec-title" id="l-edu"></h2><span class="sec-line"></span></div>
+    <div class="edu-grid" id="edu-list"></div>
+  </div></section>
+
+  <section id="skills"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">03</span><h2 class="sec-title" id="l-skills"></h2><span class="sec-line"></span></div>
+    <div class="skills-wrap glass"><div class="chips" id="skills-list"></div></div>
+  </div></section>
+
+  <section id="courses"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">04</span><h2 class="sec-title" id="l-courses"></h2><span class="sec-line"></span></div>
+    <div class="courses" id="courses-list"></div>
+  </div></section>
+
+  <section id="experience"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">05</span><h2 class="sec-title" id="l-exp"></h2><span class="sec-line"></span></div>
+    <div id="exp-list"></div>
+  </div></section>
+
+  <section id="projects"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">06</span><h2 class="sec-title" id="l-projects"></h2><span class="sec-line"></span></div>
+    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
+  </div></section>
+
+  <section id="articles"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">07</span><h2 class="sec-title" id="l-articles"></h2><span class="sec-line"></span></div>
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
+  </div></section>
+
+  <section id="certificates"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">08</span><h2 class="sec-title" id="l-certs"></h2><span class="sec-line"></span></div>
+    <div class="certs" id="certs-list"></div>
+  </div></section>
+
+  <section id="contact"><div class="container">
+    <div class="sec-head"><span class="sec-kicker">09</span><h2 class="sec-title" id="l-contact"></h2><span class="sec-line"></span></div>
+    <div class="contact">
+      <div class="contact-info glass">
+        <p class="lead" id="contact-lead"></p>
+        <div id="contact-links"></div>
+      </div>
+      <div class="contact-form glass">
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+          <label id="lb-name" for="cf-name"></label>
+          <input type="text" name="name" id="cf-name" required>
+          <label id="lb-email" for="cf-email"></label>
+          <input type="email" name="email" id="cf-email" required>
+          <label id="lb-msg" for="cf-msg"></label>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="pill primary" id="cf-send" style="width:100%;justify-content:center"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div>
+  </div></section>
+  </main>
+
+  <footer><div class="container">
+    <div class="foot glass">
+      <a class="brand" href="#top"><span class="dot"></span><span>Cai Jiechao</span></a>
+      <div class="fsoc" id="foot-social"></div>
+      <div class="fmeta">
+        <span id="foot-desc"></span>
+        <a id="foot-icp" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </div></footer>
+
+  <script>window.THEME_ID = "21-liquidglass";</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script>
+  (function(){
+    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    let articles = [], projects = [], filterKey = "all";
+
+    function renderStatic(){
+      document.getElementById('nav').innerHTML = [
+        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
+        ['articles','nav_article'],['contact','nav_contact']
+      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
+
+      document.getElementById('greet').innerHTML = `<i class="fa fa-hand-o-right"></i>${esc(t(P.greeting))}`;
+      document.getElementById('name').textContent = t(P.name);
+      document.getElementById('headline').textContent = t(P.headline);
+      document.getElementById('sub').textContent = t(P.title);
+      document.getElementById('loc').textContent = t(P.location);
+      const cv = document.getElementById('cvBtn');
+      cv.innerHTML = `<i class="fa fa-download"></i><span>${esc(t(P.ui.download_cv))}</span>`; cv.href = t(P.cv);
+      document.querySelector('#ghBtn span').textContent = "GitHub";
+      document.getElementById('ghBtn').href = P.contact.github;
+
+      document.getElementById('l-about').textContent = t(P.ui.about_me);
+      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
+      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
+      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
+      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
+      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
+      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
+      document.getElementById('l-certs').textContent = t(P.ui.certificates);
+      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+
+      document.getElementById('portrait').src = P.avatar;
+      document.getElementById('portrait').alt = t(P.name);
+      document.getElementById('about-text').innerHTML = P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('');
+
+      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
+        <div class="edu glass"><span class="when">${esc(e.period)}</span>
+        <h3>${esc(t(e.school))}</h3><div class="deg">${esc(t(e.degree))}</div>
+        <div class="note">${esc(t(e.note))}</div></div>`).join('');
+
+      document.getElementById('skills-list').innerHTML = P.skillTags.map(s=>
+        `<span class="chip"><i class="fa fa-code"></i>${esc(s)}</span>`).join('');
+
+      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
+        <div class="course glass"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
+
+      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
+        <div class="exp glass">
+          <div class="top"><h3>${esc(t(x.role))} <span class="co">· ${esc(t(x.company))}</span></h3>
+          <span class="when">${esc(x.period)}</span></div>
+          <p class="summary">${esc(t(x.summary))}</p>
+          <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul>
+        </div>`).join('');
+
+      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
+        <div class="cert glass"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
+        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
+
+      document.getElementById('contact-lead').textContent = t(P.ui.inbox_open);
+      document.getElementById('contact-links').innerHTML = [
+        ['fa-envelope','Email',P.contact.email,'mailto:'+P.contact.email],
+        ['fa-phone','Phone',P.contact.phone,P.contact.phoneHref],
+        ['fa-github','GitHub','@'+P.contact.githubUser,P.contact.github],
+        ['fa-weixin','WeChat','QR',P.contact.wechatQrPage],
+      ].map(([i,k,v,h])=>`<a href="${esc(h)}" target="_blank" rel="noopener">
+        <span class="ico"><i class="fa ${i}"></i></span>
+        <span><span class="k">${esc(k)}</span><br><span class="v">${esc(v)}</span></span></a>`).join('');
+
+      document.getElementById('lb-name').textContent = t(P.ui.name_placeholder);
+      document.getElementById('lb-email').textContent = t(P.ui.email_placeholder);
+      document.getElementById('lb-msg').textContent = t(P.ui.msg_placeholder);
+      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
+      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
+      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
+      document.getElementById('cf-send').textContent = t(P.ui.send);
+
+      document.getElementById('foot-social').innerHTML =
+        `<a href="${P.contact.github}" target="_blank" rel="noopener">GitHub</a>
+         <a href="mailto:${P.contact.email}">Email</a>
+         <a href="${P.contact.wechatQrPage}">WeChat</a>
+         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
+      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
+      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
+
+      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
+        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
+      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+        filterKey=b.dataset.k; renderStatic(); renderArticles();
+      }));
+    }
+
+    function renderProjects(){
+      const box = document.getElementById('projects-list');
+      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
+      box.innerHTML = projects.map(p=>`
+        <a class="card glass" href="${esc(p.href)}">
+          <div class="body">
+            <div class="meta"><span class="tag">${esc(t(P.ui.tech_stack))}</span><span class="date">${esc(p.dateText())}</span></div>
+            <h4>${esc(p.localTitle())}</h4>
+            <div class="stack">${esc(p.tech_stack||'')}</div>
+            <p>${esc(p.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.view_project))} <i class="fa fa-arrow-right"></i></span>
+          </div></a>`).join('');
+    }
+
+    function renderArticles(){
+      const box = document.getElementById('articles-list');
+      const list = CJCData.filterArticles(articles, filterKey);
+      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
+      box.innerHTML = list.map(a=>`
+        <a class="card glass" href="${esc(a.href)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="body">
+            <div class="meta"><span class="tag">${esc(a.category||'')}</span><span class="date">${esc(a.dateText())}</span></div>
+            <h4>${esc(a.localTitle())}</h4>
+            <p>${esc(a.localSummary()||'')}</p>
+            <span class="more">${esc(t(P.ui.read_more))} <i class="fa fa-arrow-right"></i></span>
+          </div></a>`).join('');
+    }
+
+    async function loadDynamic(){
+      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
+      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
+      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+    }
+
+    document.getElementById('cf').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target, s = document.getElementById('cf-status');
+      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
+      s.style.color='var(--ink-soft)'; s.textContent = t(P.ui.sending);
+      try{ const r = await CJCData.sendContact(payload); s.style.color='#1f9d55'; s.textContent = r.message||'Sent.'; f.reset(); }
+      catch(err){ s.style.color='#e0245e'; s.textContent = err.message; }
+    });
+
+    // Parallax orbs (respects reduced motion)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduce){
+      const orbs = [].slice.call(document.querySelectorAll('.orb'));
+      let ticking = false;
+      window.addEventListener('scroll', ()=>{
+        if(ticking) return; ticking = true;
+        requestAnimationFrame(()=>{
+          const y = window.scrollY;
+          orbs.forEach(o=>{ const d = parseFloat(o.dataset.depth)||0.1; o.style.transform = `translate3d(0,${y*d}px,0)`; });
+          ticking = false;
+        });
+      }, {passive:true});
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      CJCData.setTheme(window.THEME_ID);
+      renderStatic();
+      CJCData.mountSwitcher({ accent:'#0a84ff' });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      loadDynamic();
+    });
+  })();
+  </script>
+</body>
+</html>
