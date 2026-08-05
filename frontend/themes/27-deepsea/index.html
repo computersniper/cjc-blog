@@ -4,93 +4,107 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cai Jiechao — Deep Sea</title>
+  <meta name="description" content="Descend from sunlit water into the black abyss. Scrolling dives deeper; aim your submarine flashlight to reveal each section hidden in the dark, ping the sonar, and find the whale at the bottom." />
   <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg0:#021b2e; --bg1:#053a4d; --bgDeep:#01131f;
       --accent:#25d0c0; --accent2:#3fe0ff; --glow:#2ff0d8;
       --ink:#e9fbff; --muted:#a3ccd6; --dim:#6f9aa6;
       --card:rgba(6,40,58,.55); --edge:rgba(37,208,192,.30); --hair:rgba(63,224,255,.16);
+      --f:'Nunito Sans',system-ui,sans-serif;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{
-      margin:0;color:var(--ink);
-      font-family:'Nunito Sans',system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;
-      background:
-        radial-gradient(1000px 520px at 70% -4%, rgba(63,224,255,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg0) 0%, #043245 40%, var(--bg1) 68%, var(--bgDeep) 100%);
-      background-attachment:fixed;min-height:100vh;overflow-x:hidden;
-    }
+    body{margin:0;color:var(--ink);font-family:var(--f);line-height:1.55;-webkit-font-smoothing:antialiased;
+      background:#01131f;min-height:100vh;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
     ::selection{background:rgba(37,208,192,.35)}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 
-    /* Fixed clipping layer for decorative backdrop */
-    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-    /* Caustic light ripples near the top */
-    .caustics{position:absolute;top:0;left:0;right:0;height:46vh;z-index:0;pointer-events:none;opacity:.5;
-      background:
-        radial-gradient(60% 40% at 20% 0%, rgba(120,240,255,.25), transparent 60%),
-        radial-gradient(50% 40% at 55% -6%, rgba(63,224,255,.22), transparent 60%),
-        radial-gradient(70% 46% at 85% 0%, rgba(37,208,192,.20), transparent 62%);
-      mix-blend-mode:screen;animation:sway 12s ease-in-out infinite alternate}
-    @keyframes sway{from{transform:translateX(-2%) scaleY(1)}to{transform:translateX(2%) scaleY(1.08)}}
+    /* ===== fixed ocean scene ===== */
+    #ocean{position:fixed;inset:0;z-index:0;display:block;width:100%;height:100%}
+    /* depth-darkening veil over the scene (not the content) */
+    .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:#00060d;opacity:0;transition:opacity .25s linear}
+    /* submarine flashlight — follows cursor, adds light (screen) */
+    .torch{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s ease;mix-blend-mode:screen;
+      background:radial-gradient(circle 230px at var(--mx,50%) var(--my,40%),
+        rgba(190,248,255,.30) 0%, rgba(90,220,235,.14) 34%, rgba(40,180,200,.05) 55%, transparent 72%)}
+    .sonar{position:fixed;left:0;top:0;z-index:3;pointer-events:none;width:20px;height:20px;border-radius:50%;
+      border:2px solid var(--accent2);opacity:0}
+    .sonar.ping{animation:sonar 1.2s ease-out}
+    @keyframes sonar{0%{opacity:.9;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(14)}}
 
-    /* Drifting silhouettes */
-    .silhouette{position:absolute;z-index:0;pointer-events:none;opacity:.16;color:var(--accent2)}
-    .silhouette.jelly{width:120px;top:30%;left:-140px;animation:drift-r 46s linear infinite}
-    .silhouette.jelly2{width:90px;top:62%;left:-120px;animation:drift-r 62s linear infinite;animation-delay:-20s;opacity:.12}
-    .silhouette.fish{width:150px;top:48%;right:-180px;animation:drift-l 54s linear infinite;opacity:.13}
-    @keyframes drift-r{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 200px))}}
-    @keyframes drift-l{from{transform:translateX(0)}to{transform:translateX(calc(-100vw - 240px))}}
+    /* ===== dive HUD / porthole ===== */
+    .porthole{position:fixed;inset:0;z-index:15;pointer-events:none;
+      box-shadow:inset 0 0 160px 30px rgba(0,10,20,.72);}
+    .depthrail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:16;pointer-events:none;
+      display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-family:var(--f);font-weight:800}
+    .depthrail .big{font-size:26px;color:var(--accent2);text-shadow:0 0 16px rgba(63,224,255,.6);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+    .depthrail .zone{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}
+    .depthrail .tube{width:8px;height:40vh;border-radius:6px;background:linear-gradient(180deg,#39c8e6,#0b3f52 40%,#01131f);
+      border:1px solid var(--hair);position:relative;overflow:hidden;margin-top:6px}
+    .depthrail .tube i{position:absolute;left:-3px;width:14px;height:3px;background:var(--accent2);box-shadow:0 0 10px var(--glow);border-radius:3px;transition:top .1s linear}
+    .depthrail .gauges{font-size:10.5px;color:var(--muted);font-weight:700;line-height:1.7;letter-spacing:.04em;text-transform:uppercase}
+    .depthrail .gauges b{color:var(--accent2);font-weight:800}
+    @media(max-width:720px){.depthrail .tube{height:30vh}.depthrail .big{font-size:20px}.depthrail .gauges{display:none}}
+    @media(max-width:420px){.depthrail{left:8px}.depthrail .tube{display:none}}
 
-    /* Rising bubbles */
-    #bubbles{position:fixed;inset:0;z-index:0;pointer-events:none}
+    /* ===== content ===== */
+    .wrap{position:relative;z-index:10}
+    .container{max-width:1120px;margin:0 auto;padding:0 24px 0 60px}
+    @media(max-width:420px){.container{padding:0 18px}}
 
-    .wrap{position:relative;z-index:2}
-    .container{max-width:1160px;margin:0 auto;padding:0 24px}
-
-    .topbar{position:sticky;top:0;z-index:50;background:rgba(2,27,46,.82);
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(2,20,34,.6);
       backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
-    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:58px;padding-left:52px}
     .brand{font-weight:900;font-size:19px;display:flex;align-items:center;gap:9px}
     .brand .drop{width:11px;height:11px;border-radius:50% 50% 50% 0;transform:rotate(45deg);
       background:radial-gradient(circle at 35% 30%,#fff,var(--accent) 60%);box-shadow:0 0 14px var(--glow)}
     .brand b{color:var(--accent)}
-    .navlinks{display:flex;gap:22px}
+    .navlinks{display:flex;gap:20px}
     .navlinks a{font-size:13px;font-weight:700;color:var(--muted)}
     .navlinks a:hover{color:var(--accent)}
     @media(min-width:861px){.topbar .inner{padding-right:220px}}
     @media(max-width:860px){.navlinks{display:none}}
 
-    section{padding:74px 0;position:relative}
-    .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:34px}
-    .sec-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--glow),0 0 28px var(--glow)}
+    section{padding:70px 0;position:relative}
+    .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:30px}
+    .sec-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--glow),0 0 28px var(--glow);flex:none}
     .sec-kicker{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);font-weight:800}
     .sec-title{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-.01em;margin:0;
       background:linear-gradient(90deg,#eafcff,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
 
     .glass{background:var(--card);border:1px solid var(--hair);border-radius:22px;
       backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      box-shadow:0 18px 50px rgba(1,16,28,.55), 0 0 0 1px rgba(37,208,192,.05), inset 0 1px 0 rgba(255,255,255,.05)}
-    .glow-edge{position:relative}
-    .glow-edge::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
-      background:linear-gradient(140deg,var(--edge),transparent 45%,transparent 60%,rgba(63,224,255,.28));
-      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.7}
+      box-shadow:0 18px 50px rgba(1,16,28,.55),inset 0 1px 0 rgba(255,255,255,.05)}
 
-    .hero{padding:88px 0 40px;overflow-x:clip}
+    /* dive panel: hidden in the dark until surfaced by the flashlight/scroll */
+    .dive{position:relative;transition:opacity .6s ease,filter .6s ease,transform .6s ease}
+    .dive.dark{opacity:.06;filter:blur(6px);transform:translateY(14px)}
+    .dive.dark .sec-head{opacity:.5}
+    .dive.surfaced{opacity:1;filter:none;transform:none}
+    /* a soft glow blooms behind text once surfaced (adaptive readability) */
+    .dive.surfaced::before{content:"";position:absolute;inset:-14px -8px;z-index:-1;border-radius:26px;
+      background:radial-gradient(70% 60% at 30% 20%, rgba(37,208,192,.10), transparent 70%);pointer-events:none}
+    /* hint shown over a dark panel */
+    .reveal-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+      font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);
+      text-shadow:0 0 14px rgba(63,224,255,.7);opacity:0;transition:opacity .4s}
+    .dive.dark .reveal-hint{opacity:.85;animation:hintpulse 2.4s ease-in-out infinite}
+    @keyframes hintpulse{0%,100%{opacity:.4}50%{opacity:.9}}
+
+    /* HERO */
+    .hero{padding:78px 0 30px;overflow-x:clip}
     .hero-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:40px;align-items:center}
     @media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:28px}}
     .greet{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.05em;color:var(--accent);
       font-weight:800;padding:8px 15px;border:1px solid var(--edge);border-radius:999px;background:rgba(37,208,192,.08);
       box-shadow:0 0 18px rgba(37,208,192,.18)}
-    .hero h1{font-size:clamp(44px,8vw,86px);line-height:1.02;letter-spacing:-.03em;margin:20px 0 0;font-weight:900;
-      text-shadow:0 0 40px rgba(63,224,255,.3)}
+    .hero h1{font-size:clamp(44px,8vw,86px);line-height:1.02;letter-spacing:-.03em;margin:20px 0 0;font-weight:900;text-shadow:0 0 40px rgba(63,224,255,.3)}
     .hero .role{font-size:clamp(17px,2.4vw,24px);color:var(--accent);font-weight:800;margin-top:12px}
     .hero .head{font-size:clamp(16px,2vw,20px);color:var(--muted);margin-top:18px;max-width:30ch}
     .hero .meta{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:20px;font-size:14px;color:var(--dim)}
@@ -98,18 +112,18 @@
     .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
     .btn{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:14px;padding:13px 24px;border-radius:999px;
       border:1px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s}
-    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#032027;
-      box-shadow:0 10px 30px rgba(37,208,192,.4)}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#032027;box-shadow:0 10px 30px rgba(37,208,192,.4)}
     .btn.primary:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(63,224,255,.55)}
     .btn.ghost{background:rgba(37,208,192,.06);border-color:var(--edge);color:var(--ink)}
     .btn.ghost:hover{background:rgba(37,208,192,.14);transform:translateY(-2px)}
+    .divehint{margin-top:34px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:10px}
+    .divehint .a{color:var(--accent2);animation:bob 1.8s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-    /* Hero portrait bubble */
-    .diver{position:relative;max-width:360px;margin:0 auto;width:100%}
-    .diver .halo{position:absolute;inset:-8%;border-radius:50%;
-      background:radial-gradient(circle,rgba(37,208,192,.25),transparent 62%);filter:blur(14px);animation:pulse 6s ease-in-out infinite}
+    .diver{position:relative;max-width:340px;margin:0 auto;width:100%}
+    .diver .halo{position:absolute;inset:-8%;border-radius:50%;background:radial-gradient(circle,rgba(37,208,192,.25),transparent 62%);filter:blur(14px);animation:pulse 6s ease-in-out infinite}
     .diver .frame{position:relative;aspect-ratio:1;border-radius:50%;overflow:hidden;border:2px solid var(--edge);
-      box-shadow:0 0 55px rgba(37,208,192,.35), inset 0 0 30px rgba(1,16,28,.6)}
+      box-shadow:0 0 55px rgba(37,208,192,.35),inset 0 0 30px rgba(1,16,28,.6)}
     .diver .frame img{width:100%;height:100%;object-fit:cover}
     .diver .tag{position:absolute;bottom:6px;right:6px;font-size:32px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
     @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
@@ -128,12 +142,10 @@
     @media(max-width:640px){.rowcard{grid-template-columns:1fr;gap:8px}}
 
     .chips{display:flex;flex-wrap:wrap;gap:10px}
-    .chip{padding:9px 16px;border-radius:999px;border:1px solid var(--hair);background:rgba(37,208,192,.06);
-      font-size:14px;font-weight:700;color:var(--ink);transition:.18s}
+    .chip{padding:9px 16px;border-radius:999px;border:1px solid var(--hair);background:rgba(37,208,192,.06);font-size:14px;font-weight:700;color:var(--ink);transition:.18s}
     .chip:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 18px rgba(37,208,192,.3);transform:translateY(-2px)}
     .skill-lines{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
-    .skill-lines .sl{display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:14px;
-      background:rgba(37,208,192,.05);border:1px solid var(--hair);font-size:14.5px;color:var(--muted)}
+    .skill-lines .sl{display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:14px;background:rgba(37,208,192,.05);border:1px solid var(--hair);font-size:14.5px;color:var(--muted)}
     .skill-lines .sl i{color:var(--accent);font-style:normal}
     @media(max-width:640px){.skill-lines{grid-template-columns:1fr}}
 
@@ -155,26 +167,22 @@
     .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
     .card:hover .cover img{transform:scale(1.06)}
     .card .cbody{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
-    .card .ctag{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;letter-spacing:.04em;
-      text-transform:uppercase;color:var(--accent)}
+    .card .ctag{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
     .card h4{margin:0;font-size:16.5px;font-weight:800;line-height:1.3}
     .card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.55;flex:1}
     .card .tech{color:var(--accent2);font-weight:700;font-size:12.5px}
     .card .more{font-weight:800;font-size:12.5px;color:var(--accent)}
 
     .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
-    .filters button{background:rgba(37,208,192,.05);border:1px solid var(--hair);color:var(--muted);font-family:inherit;
-      font-weight:800;font-size:13px;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.18s}
-    .filters button.active,.filters button:hover{background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#032027;border-color:transparent;box-shadow:0 6px 20px rgba(37,208,192,.4)}
+    .filters button{background:rgba(37,208,192,.05);border:1px solid var(--hair);color:var(--muted);font-family:inherit;font-weight:800;font-size:13px;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.18s}
+    .filters button.active,.filters button:hover{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#032027;border-color:transparent;box-shadow:0 6px 20px rgba(37,208,192,.4)}
 
     .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     @media(max-width:640px){.certs{grid-template-columns:1fr}}
     .cert{display:grid;grid-template-columns:130px 1fr;overflow:hidden}
     .cert img{height:100%;width:100%;object-fit:cover;border-right:1px solid var(--hair)}
     .cert .ct{padding:20px}
-    .cert .ct .meta{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;font-weight:800;
-      text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
+    .cert .ct .meta{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
     .cert .ct h4{margin:10px 0 7px;font-size:16px;font-weight:800}
     .cert .ct p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
     @media(max-width:400px){.cert{grid-template-columns:90px 1fr}}
@@ -188,13 +196,12 @@
     .contact-info a span:last-child{color:var(--accent);font-weight:800}
     .contact-form{padding:26px}
     .contact-form label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 6px;font-weight:800}
-    .contact-form input,.contact-form textarea{width:100%;background:rgba(1,16,28,.55);border:1px solid var(--hair);
-      border-radius:14px;font-family:inherit;font-size:15px;padding:13px 15px;margin-bottom:16px;color:var(--ink);transition:.18s}
+    .contact-form input,.contact-form textarea{width:100%;background:rgba(1,16,28,.55);border:1px solid var(--hair);border-radius:14px;font-family:inherit;font-size:15px;padding:13px 15px;margin-bottom:16px;color:var(--ink);transition:.18s}
     .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,208,192,.2)}
     .contact-form textarea{min-height:130px;resize:vertical}
     #cf-status{margin:12px 0 0;font-weight:700;font-size:14px}
 
-    footer{border-top:1px solid var(--hair);padding:44px 0 60px;margin-top:20px;background:linear-gradient(180deg,transparent,rgba(1,19,31,.6))}
+    footer{border-top:1px solid var(--hair);padding:44px 0 90px;margin-top:20px;background:linear-gradient(180deg,transparent,rgba(1,19,31,.6))}
     .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
     .foot-social{display:flex;gap:18px;flex-wrap:wrap}
     .foot-social a{color:var(--muted);font-weight:600;font-size:14px}
@@ -204,30 +211,45 @@
     .muted a{color:var(--dim)}.muted a:hover{color:var(--accent)}
     .load-note{color:var(--muted);font-size:14px;grid-column:1/-1;padding:20px;text-align:center;border:1px dashed var(--hair);border-radius:14px}
 
-    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+    /* sonar ping button */
+    .pingbtn{position:fixed;right:14px;bottom:16px;z-index:24;font-family:var(--f);font-weight:800;font-size:12px;letter-spacing:.12em;
+      text-transform:uppercase;cursor:pointer;color:#032027;border:none;border-radius:999px;padding:12px 18px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 26px rgba(37,208,192,.5);transition:.16s}
+    .pingbtn:hover{transform:translateY(-2px)}
+    .pingbtn:active{transform:scale(.96)}
+    @media(max-width:640px){.pingbtn{right:10px;bottom:12px;font-size:11px;padding:10px 14px}}
+
+    /* whale easter-egg toast */
+    .whaletoast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%) translateY(10px);z-index:40;
+      font-weight:800;font-size:14px;color:#032027;background:linear-gradient(135deg,var(--accent),var(--accent2));
+      border-radius:999px;padding:9px 18px;box-shadow:0 10px 26px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.3s}
+    .whaletoast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
     @media (prefers-reduced-motion: reduce){
-      *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+      *{animation:none !important;scroll-behavior:auto !important}
+      .torch{display:none}.veil{display:none}
+      .dive.dark{opacity:1;filter:none;transform:none}
+      .dive.dark .reveal-hint{display:none}
     }
   </style>
 </head>
 <body>
-  <canvas id="bubbles" aria-hidden="true"></canvas>
-  <div class="bg" aria-hidden="true">
-  <div class="caustics"></div>
-  <svg class="silhouette jelly" viewBox="0 0 100 140" fill="currentColor">
-    <path d="M50 6C26 6 12 24 12 44c0 8 4 12 8 12 4 0 6-4 6-9 0-6 3-11 6-11 0 6-1 14 2 20 2 4 6 4 8 0 2-5 2-13 2-19 0 6 0 14 2 19 2 4 6 4 8 0 3-6 2-14 2-20 3 0 6 5 6 11 0 5 2 9 6 9 4 0 8-4 8-12C88 24 74 6 50 6z"/>
-    <path d="M30 58c-1 24-3 44-5 64M42 60c0 26-2 48-4 70M58 60c0 22 2 44 4 70M70 58c1 24 3 44 5 64" stroke="currentColor" stroke-width="2" fill="none" opacity=".7"/>
-  </svg>
-  <svg class="silhouette jelly2" viewBox="0 0 100 140" aria-hidden="true" fill="currentColor">
-    <path d="M50 6C26 6 12 24 12 44c0 8 4 12 8 12 4 0 6-4 6-9 0-6 3-11 6-11 0 6-1 14 2 20 2 4 6 4 8 0 2-5 2-13 2-19 0 6 0 14 2 19 2 4 6 4 8 0 3-6 2-14 2-20 3 0 6 5 6 11 0 5 2 9 6 9 4 0 8-4 8-12C88 24 74 6 50 6z"/>
-    <path d="M34 58c-1 22-3 40-5 60M50 60c0 24-1 44-3 64M66 58c1 22 3 40 5 60" stroke="currentColor" stroke-width="2" fill="none" opacity=".7"/>
-  </svg>
-  <svg class="silhouette fish" viewBox="0 0 160 80" aria-hidden="true" fill="currentColor">
-    <path d="M20 40c18-26 60-30 96-24 14 2 30 12 40 24-10 12-26 22-40 24-36 6-78 2-96-24z"/>
-    <path d="M116 40c14-10 30-6 40 0-10 6-26 10-40 0z"/>
-    <circle cx="44" cy="34" r="3" fill="#021b2e"/>
-  </svg>
+  <canvas id="ocean" aria-hidden="true"></canvas>
+  <div class="veil" id="veil" aria-hidden="true"></div>
+  <div class="torch" id="torch" aria-hidden="true"></div>
+  <div class="sonar" id="sonar" aria-hidden="true"></div>
+  <div class="porthole" aria-hidden="true"></div>
+
+  <!-- dive HUD -->
+  <div class="depthrail" aria-hidden="true">
+    <div class="big"><span id="depth-val">0</span> m</div>
+    <div class="zone" id="depth-zone">SUNLIGHT</div>
+    <div class="tube"><i id="tube-marker" style="top:0"></i></div>
+    <div class="gauges">
+      P <b id="g-press">1.0</b> atm<br>
+      T <b id="g-temp">21</b>°C<br>
+      O₂ <b id="g-o2">100</b>%
+    </div>
   </div>
 
   <div class="wrap">
@@ -237,7 +259,7 @@
     </div></div>
 
     <div id="top"></div>
-    <header class="hero"><div class="container">
+    <header class="hero" id="hero-sec"><div class="container">
       <div class="hero-grid">
         <div>
           <div class="greet" id="greet"></div>
@@ -249,63 +271,64 @@
             <a class="btn primary" id="cvBtn" href="#" download></a>
             <a class="btn ghost" id="ghBtn" target="_blank" rel="noopener"></a>
           </div>
+          <div class="divehint"><span class="a">▼</span><span id="divehint-txt"></span></div>
         </div>
         <div class="diver">
           <div class="halo"></div>
-          <div class="frame"><img id="portrait" alt="" /><span class="tag" aria-hidden="true">🐬</span></div>
+          <div class="frame"><img id="portrait" alt="" /><span class="tag" aria-hidden="true">🤿</span></div>
         </div>
       </div>
     </div></header>
 
     <div class="container">
 
-      <section id="about">
+      <section id="about" class="dive"><span class="reveal-hint" data-hint></span>
         <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="l-about-k"></div><h2 class="sec-title" id="l-about"></h2></div></div>
-        <div class="about"><div class="glass glow-edge card" id="about-text"></div></div>
+        <div class="about"><div class="glass card" id="about-text"></div></div>
       </section>
 
-      <section id="education">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Depth Log</div><h2 class="sec-title" id="l-edu"></h2></div></div>
+      <section id="education" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-edu">Depth Log</div><h2 class="sec-title" id="l-edu"></h2></div></div>
         <div class="rows" id="edu-list"></div>
       </section>
 
-      <section id="skills">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Reef of Tools</div><h2 class="sec-title" id="l-skills"></h2></div></div>
+      <section id="skills" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-skills">Reef of Tools</div><h2 class="sec-title" id="l-skills"></h2></div></div>
         <div class="chips" id="skill-tags"></div>
         <div class="skill-lines" id="skills-list"></div>
       </section>
 
-      <section id="courses">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Foundations</div><h2 class="sec-title" id="l-courses"></h2></div></div>
+      <section id="courses" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-courses">Foundations</div><h2 class="sec-title" id="l-courses"></h2></div></div>
         <div class="grid3" id="courses-list"></div>
       </section>
 
-      <section id="experience">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Dive Record</div><h2 class="sec-title" id="l-exp"></h2></div></div>
+      <section id="experience" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-exp">Dive Record</div><h2 class="sec-title" id="l-exp"></h2></div></div>
         <div class="rows" id="exp-list"></div>
       </section>
 
-      <section id="projects">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Surfaced</div><h2 class="sec-title" id="l-projects"></h2></div></div>
+      <section id="projects" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-proj">Surfaced</div><h2 class="sec-title" id="l-projects"></h2></div></div>
         <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
       </section>
 
-      <section id="articles">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Currents</div><h2 class="sec-title" id="l-articles"></h2></div></div>
+      <section id="articles" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-art">Currents</div><h2 class="sec-title" id="l-articles"></h2></div></div>
         <div class="filters" id="filters"></div>
         <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
       </section>
 
-      <section id="certificates">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Treasures</div><h2 class="sec-title" id="l-certs"></h2></div></div>
+      <section id="certificates" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-cert">Treasures</div><h2 class="sec-title" id="l-certs"></h2></div></div>
         <div class="certs" id="certs-list"></div>
       </section>
 
-      <section id="contact">
-        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker">Sonar</div><h2 class="sec-title" id="l-contact"></h2></div></div>
+      <section id="contact" class="dive"><span class="reveal-hint" data-hint></span>
+        <div class="sec-head"><span class="sec-dot"></span><div><div class="sec-kicker" id="k-contact">Sonar</div><h2 class="sec-title" id="l-contact"></h2></div></div>
         <div class="contact-grid">
-          <div class="glass glow-edge contact-info" id="contact-info"></div>
-          <div class="glass glow-edge contact-form">
+          <div class="glass contact-info" id="contact-info"></div>
+          <div class="glass contact-form">
             <form id="cf">
               <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
               <label for="cf-name" id="lb-name"></label>
@@ -335,16 +358,42 @@
     </div></footer>
   </div>
 
+  <button class="pingbtn" id="pingbtn" type="button">◉ SONAR PING</button>
+  <div class="whaletoast" id="whaletoast" role="status" aria-live="polite"></div>
+
   <script>window.THEME_ID = "27-deepsea";</script>
   <script src="/shared/profile.js"></script>
   <script src="/shared/site-data.js"></script>
   <script>
   (function(){
+    "use strict";
     const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
+    const L = ()=>CJCData.lang();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia('(hover:none)').matches;
     let articles = [], projects = [], filterKey = "all";
 
+    const TR = {
+      diveHint:{en:"SCROLL TO DIVE DEEPER",zh:"向下滚动，潜入深海"},
+      revealHint:{en:"◄ sweep the light here ►",zh:"◄ 用光扫过这里 ►"},
+      whaleHi:{en:"🐋 A blue whale glides past. Hello, deep traveler.",zh:"🐋 一头蓝鲸缓缓游过。你好，深海旅人。"},
+      creature:{en:"✦ bioluminescence pulses.",zh:"✦ 生物光闪烁。"},
+      surfaced:{en:"section surfaced",zh:"板块已浮现"},
+    };
+    const tr = (o)=> o[L()] || o.en;
+    const ZONES = [
+      {max:200,  name:{en:'SUNLIGHT',zh:'透光层'}, col:['#0a6f8c','#0d94ad']},
+      {max:1000, name:{en:'TWILIGHT',zh:'弱光层'}, col:['#053a52','#04202f']},
+      {max:4000, name:{en:'MIDNIGHT',zh:'无光层'}, col:['#021a2a','#01101a']},
+      {max:6000, name:{en:'ABYSS',zh:'深渊层'},    col:['#010c15','#01070d']},
+      {max:99000,name:{en:'HADAL TRENCH',zh:'海沟'},col:['#01060c','#000306']},
+    ];
+    const MAXDEPTH = 10924; // Challenger Deep
+    function zoneFor(depth){ for(const z of ZONES){ if(depth<=z.max) return z; } return ZONES[ZONES.length-1]; }
+
+    /* ---------------- data render (proven contract) ---------------- */
     function renderStatic(){
-      document.title = (CJCData.lang()==='zh' ? '蔡杰超' : 'Cai Jiechao') + ' — Deep Sea';
+      document.title = (L()==='zh'?'蔡杰超':'Cai Jiechao') + ' — Deep Sea';
       document.getElementById('nav').innerHTML = [
         ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
         ['articles','nav_article'],['contact','nav_contact']
@@ -354,12 +403,10 @@
       document.getElementById('name').textContent = t(P.name);
       document.getElementById('role').textContent = t(P.role);
       document.getElementById('headline').textContent = t(P.headline);
-      document.getElementById('meta').innerHTML =
-        `<span>${esc(t(P.title))}</span><span>≈ <b>${esc(t(P.location))}</b></span>`;
-      const cv = document.getElementById('cvBtn');
-      cv.innerHTML = '↓ ' + esc(t(P.ui.download_cv)); cv.href = t(P.cv);
-      const gh = document.getElementById('ghBtn');
-      gh.innerHTML = 'GitHub ↗'; gh.href = P.contact.github;
+      document.getElementById('meta').innerHTML = `<span>${esc(t(P.title))}</span><span>≈ <b>${esc(t(P.location))}</b></span>`;
+      document.getElementById('divehint-txt').textContent = tr(TR.diveHint);
+      const cv = document.getElementById('cvBtn'); cv.innerHTML = '↓ ' + esc(t(P.ui.download_cv)); cv.href = t(P.cv);
+      const gh = document.getElementById('ghBtn'); gh.innerHTML = 'GitHub ↗'; gh.href = P.contact.github;
 
       document.getElementById('l-about-k').textContent = t(P.ui.about_desc);
       document.getElementById('l-about').textContent = t(P.ui.about_me);
@@ -371,33 +418,32 @@
       document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
       document.getElementById('l-certs').textContent = t(P.ui.certificates);
       document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
+      document.querySelectorAll('.reveal-hint[data-hint]').forEach(h=>h.textContent = tr(TR.revealHint));
 
-      const port = document.getElementById('portrait');
-      port.src = P.avatar; port.alt = t(P.name);
+      const port = document.getElementById('portrait'); port.src = P.avatar; port.alt = t(P.name);
 
       document.getElementById('about-text').innerHTML =
-        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
-        `<span class="loc">≈ ${esc(t(P.location))}</span>`;
+        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') + `<span class="loc">≈ ${esc(t(P.location))}</span>`;
 
       document.getElementById('edu-list').innerHTML = P.education.map(e=>`
-        <div class="glass glow-edge rowcard"><div class="when">${esc(e.period)}</div>
+        <div class="glass rowcard"><div class="when">${esc(e.period)}</div>
         <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
 
       document.getElementById('skill-tags').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
       document.getElementById('skills-list').innerHTML = P.skills.map(s=>`<div class="sl"><i>◆</i><span>${esc(s)}</span></div>`).join('');
 
       document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
-        <div class="glass glow-edge course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
+        <div class="glass course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
         <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
 
       document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
-        <div class="glass glow-edge rowcard"><div class="when">${esc(x.period)}</div>
+        <div class="glass rowcard"><div class="when">${esc(x.period)}</div>
         <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
         <div class="sub">${esc(t(x.summary))}</div>
         <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
 
       document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
-        <div class="glass glow-edge cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+        <div class="glass cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
         <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
         <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
 
@@ -426,7 +472,7 @@
       document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
         `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
       document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
-        filterKey=b.dataset.k; renderStatic(); renderArticles();
+        filterKey=b.dataset.k; renderStatic(); renderArticles(); refreshDark();
       }));
     }
 
@@ -434,7 +480,7 @@
       const box = document.getElementById('projects-list');
       if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
       box.innerHTML = projects.map(p=>`
-        <a class="glass glow-edge card" href="${esc(p.href)}">
+        <a class="glass card" href="${esc(p.href)}">
           <div class="cbody">
             <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
             <h4>${esc(p.localTitle())}</h4>
@@ -449,7 +495,7 @@
       const list = CJCData.filterArticles(articles, filterKey);
       if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
       box.innerHTML = list.map(a=>`
-        <a class="glass glow-edge card" href="${esc(a.href)}">
+        <a class="glass card" href="${esc(a.href)}">
           <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt="${esc(a.localTitle())}"></div>
           <div class="cbody">
             <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
@@ -463,7 +509,7 @@
       try{ projects = await CJCData.fetchProjects(); renderProjects(); }
       catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
       try{ articles = await CJCData.fetchArticles(); renderArticles(); }
-      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles.</div>`; }
+      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ Failed to load articles / 内容加载失败</div>`; }
     }
 
     document.getElementById('cf').addEventListener('submit', async (e)=>{
@@ -479,51 +525,186 @@
     fa.rel='stylesheet'; fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
     document.head.appendChild(fa);
 
-    // ---- Rising bubbles ----
-    (function bubbles(){
-      const canvas = document.getElementById('bubbles');
-      const ctx = canvas.getContext('2d');
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let W,H,list=[],raf;
+    /* ---------------- dive / darkness / reveal ---------------- */
+    const dives = Array.prototype.slice.call(document.querySelectorAll('.dive'));
+    // sections beyond this index start dark (need the light) — surface & twilight stay lit
+    const DARK_FROM = 2; // skills onward begin in darkness
+    function markDark(){
+      dives.forEach((el,i)=>{ if(!reduce && i>=DARK_FROM && !el.classList.contains('surfaced')) el.classList.add('dark'); });
+    }
+    function surface(el){ if(el && !el.classList.contains('surfaced')){ el.classList.add('surfaced'); el.classList.remove('dark'); } }
+    function refreshDark(){ markDark(); }
+
+    // IntersectionObserver = scrolling still reveals (accessible fallback)
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver((ents)=>{ ents.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>0.42) surface(e.target); }); },{threshold:[0,0.42,0.7]});
+      dives.forEach(el=>io.observe(el));
+    } else { dives.forEach(surface); }
+
+    // torch follows pointer; surfaces a dark panel it sweeps over
+    const torch=document.getElementById('torch');
+    let torchOn=false;
+    function setTorchIntensity(depth){
+      // torch fades in as we lose sunlight
+      const z = depth;
+      let op = z<200?0 : Math.min(1,(z-200)/900);
+      if(reduce||isTouch) op=0;
+      torch.style.opacity = op.toFixed(2);
+      torchOn = op>0.15;
+    }
+    window.addEventListener('mousemove', (e)=>{
+      torch.style.setProperty('--mx', e.clientX+'px');
+      torch.style.setProperty('--my', e.clientY+'px');
+      if(!torchOn) return;
+      const el=document.elementFromPoint(e.clientX,e.clientY);
+      if(el){ const sec=el.closest('.dive.dark'); if(sec) surface(sec); }
+      // bioluminescence toward cursor
+      pointer.x=e.clientX; pointer.y=e.clientY; pointer.on=true;
+    }, {passive:true});
+    window.addEventListener('mouseleave', ()=>{ pointer.on=false; });
+
+    // HUD depth update on scroll
+    const depthVal=document.getElementById('depth-val'), depthZone=document.getElementById('depth-zone'),
+          tubeMk=document.getElementById('tube-marker'), gPress=document.getElementById('g-press'),
+          gTemp=document.getElementById('g-temp'), gO2=document.getElementById('g-o2');
+    let curDepth=0;
+    function onScroll(){
+      const max=Math.max(1, document.body.scrollHeight-window.innerHeight);
+      const frac=Math.min(1, window.scrollY/max);
+      curDepth = Math.round(frac*MAXDEPTH);
+      depthVal.textContent = curDepth.toLocaleString();
+      const z=zoneFor(curDepth);
+      depthZone.textContent = tr(z.name);
+      tubeMk.style.top = (frac*100)+'%';
+      gPress.textContent = (1+curDepth/10).toFixed(0);
+      gTemp.textContent = Math.max(1, Math.round(21 - frac*19));
+      gO2.textContent = Math.max(0, Math.round(100 - frac*100));
+      // veil darkens with depth
+      const veilOp = Math.min(0.86, Math.max(0,(curDepth-150)/2600));
+      document.getElementById('veil').style.opacity = reduce?0:veilOp.toFixed(2);
+      setTorchIntensity(curDepth);
+      // whale near the very bottom
+      if(frac>0.9) spawnWhale();
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+
+    /* ---------------- sonar ping ---------------- */
+    const sonar=document.getElementById('sonar');
+    function ping(x,y){
+      if(reduce){ dives.forEach(surface); return; }
+      sonar.style.left=x+'px'; sonar.style.top=y+'px';
+      sonar.classList.remove('ping'); void sonar.offsetWidth; sonar.classList.add('ping');
+      // reveal all panels currently in viewport
+      dives.forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top<window.innerHeight && r.bottom>0) surface(el); });
+      pinging=true; setTimeout(()=>pinging=false,1200);
+    }
+    document.getElementById('pingbtn').addEventListener('click', ()=> ping(window.innerWidth-40, window.innerHeight-40));
+    // tap anywhere on touch reveals + pings
+    window.addEventListener('touchstart',(e)=>{ if(e.target.closest('a,button,input,textarea,label,#cjc-switcher')) return;
+      const tt=e.touches[0]; if(tt){ ping(tt.clientX,tt.clientY); const el=document.elementFromPoint(tt.clientX,tt.clientY); const sec=el&&el.closest('.dive'); if(sec) surface(sec);} }, {passive:true});
+
+    /* ---------------- whale easter egg ---------------- */
+    let whaleShown=false;
+    function spawnWhale(){
+      if(whaleShown||reduce) return; whaleShown=true;
+      whale.active=true; whale.x=-160; whale.y=window.innerHeight*0.6;
+      const tt=document.getElementById('whaletoast'); tt.textContent=tr(TR.whaleHi); tt.classList.add('show');
+      setTimeout(()=>tt.classList.remove('show'),3600);
+    }
+
+    /* ---------------- ocean canvas: creatures + bubbles + whale ---------------- */
+    const pointer={x:-999,y:-999,on:false}; let pinging=false;
+    const whale={active:false,x:-200,y:0,clicked:0};
+    (function ocean(){
+      const cv=document.getElementById('ocean'), ctx=cv.getContext('2d');
+      const DPR=Math.min(2,window.devicePixelRatio||1);
+      let W=0,H=0, bubbles=[], creatures=[];
+      const CREA_BY_ZONE=[ ['🐠','🐟','🐡'], ['🎐','🪼','🐙'], ['🐟','🪼','🦑'], ['🪼','🦑','✨'], ['🦑','✨','🐙'] ];
       function size(){
-        W=canvas.width=Math.floor(innerWidth*devicePixelRatio);
-        H=canvas.height=Math.floor(innerHeight*devicePixelRatio);
-        canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px';
-        const n=Math.min(60,Math.floor(innerWidth/22)); list=[];
-        for(let i=0;i<n;i++) list.push(mk(Math.random()*H));
+        W=cv.width=Math.floor(innerWidth*DPR); H=cv.height=Math.floor(innerHeight*DPR);
+        cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+        bubbles=[]; const nb=Math.min(50,Math.floor(innerWidth/26));
+        for(let i=0;i<nb;i++) bubbles.push(mkB(Math.random()*H));
+        creatures=[]; const nc=Math.min(14,Math.floor(innerWidth/90));
+        for(let i=0;i<nc;i++) creatures.push(mkC());
       }
-      function mk(y){
-        return {x:Math.random()*W,y:y,r:(Math.random()*3+1)*devicePixelRatio,
-          v:(Math.random()*0.6+0.25)*devicePixelRatio,drift:Math.random()*0.4-0.2,
-          a:Math.random()*0.35+0.12,ph:Math.random()*6.28};
+      function mkB(y){ return {x:Math.random()*W,y:y,r:(Math.random()*3+1)*DPR,v:(Math.random()*.6+.25)*DPR,drift:Math.random()*.4-.2,a:Math.random()*.35+.12,ph:Math.random()*6.28}; }
+      function mkC(){ return {x:Math.random()*W,y:Math.random()*H,vx:(Math.random()*.5+.15)*(Math.random()<.5?-1:1)*DPR,
+        size:(20+Math.random()*20)*DPR, glyph:'🐟', bob:Math.random()*6.28, glow:0, pulse:0}; }
+      function currentZoneIdx(){ let i=0; for(;i<ZONES.length;i++){ if(curDepth<=ZONES[i].max) break; } return Math.min(i,ZONES.length-1); }
+      function drawCreature(c){
+        c.x+=c.vx; c.bob+=0.01; if(c.vx>0 && c.x-c.size>W) c.x=-c.size; if(c.vx<0 && c.x+c.size<0) c.x=W+c.size;
+        const y=c.y+Math.sin(c.bob)*8*DPR;
+        // proximity glow toward cursor
+        let near=0;
+        if(pointer.on){ const dx=c.x-pointer.x*DPR, dy=y-pointer.y*DPR; const d=Math.hypot(dx,dy); near=Math.max(0,1-d/(190*DPR)); }
+        if(pinging) near=Math.max(near,0.5);
+        c.pulse*=0.94;
+        const glow = Math.min(1, near + c.pulse);
+        ctx.save();
+        ctx.globalAlpha = 0.28 + glow*0.72;
+        ctx.shadowColor='rgba(63,224,255,'+(0.4+glow*0.6)+')'; ctx.shadowBlur=(6+glow*26)*DPR;
+        ctx.font=c.size+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        if(c.vx>0){ ctx.translate(c.x,y); ctx.scale(-1,1); ctx.fillText(c.glyph,0,0); }
+        else ctx.fillText(c.glyph,c.x,y);
+        ctx.restore();
       }
-      function drawOne(b){
+      function drawBubble(b){
         ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.283);
-        ctx.strokeStyle='rgba(120,240,255,'+b.a.toFixed(3)+')';ctx.lineWidth=1*devicePixelRatio;ctx.stroke();
-        ctx.beginPath();ctx.arc(b.x-b.r*0.3,b.y-b.r*0.3,b.r*0.3,0,6.283);
-        ctx.fillStyle='rgba(200,250,255,'+(b.a*0.8).toFixed(3)+')';ctx.fill();
+        ctx.strokeStyle='rgba(120,240,255,'+b.a.toFixed(3)+')';ctx.lineWidth=1*DPR;ctx.stroke();
+      }
+      function drawWhale(){
+        if(!whale.active) return;
+        whale.x += 1.3*DPR;
+        const y=whale.y*DPR + Math.sin(whale.x*0.004)*18*DPR;
+        ctx.save();
+        ctx.globalAlpha=0.9; ctx.shadowColor='rgba(63,224,255,.6)'; ctx.shadowBlur=30*DPR;
+        ctx.font=(96*DPR)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('🐋', whale.x, y);
+        ctx.restore();
+        whale._sx=whale.x/DPR; whale._sy=y/DPR;
+        if(whale.x> W+200*DPR){ whale.active=false; }
       }
       function frame(){
-        ctx.clearRect(0,0,W,H);
-        for(const b of list){
-          b.y-=b.v; b.ph+=0.02; b.x+=Math.sin(b.ph)*b.drift;
-          if(b.y+b.r<0){ Object.assign(b, mk(H+10)); b.y=H+10; }
-          drawOne(b);
+        // depth gradient background
+        const z=ZONES[currentZoneIdx()];
+        const g=ctx.createLinearGradient(0,0,0,H);
+        g.addColorStop(0,z.col[0]); g.addColorStop(1,z.col[1]);
+        ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+        // caustic light near surface (only shallow)
+        if(curDepth<600){
+          const a=Math.max(0,1-curDepth/600)*0.5;
+          const cg=ctx.createRadialGradient(W*0.4,-H*0.1,10,W*0.4,-H*0.1,W*0.8);
+          cg.addColorStop(0,'rgba(150,240,255,'+a+')'); cg.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.fillStyle=cg; ctx.fillRect(0,0,W,H*0.5);
         }
-        raf=requestAnimationFrame(frame);
+        // creatures adopt current zone glyphs
+        const set=CREA_BY_ZONE[currentZoneIdx()];
+        creatures.forEach((c,i)=>{ c.glyph=set[i%set.length]; drawCreature(c); });
+        drawWhale();
+        for(const b of bubbles){ b.y-=b.v; b.ph+=0.02; b.x+=Math.sin(b.ph)*b.drift; if(b.y+b.r<0){ Object.assign(b,mkB(H+10)); b.y=H+10; } drawBubble(b); }
+        if(!reduce) raf=requestAnimationFrame(frame);
       }
-      function drawStatic(){ ctx.clearRect(0,0,W,H); for(const b of list) drawOne(b); }
-      function start(){ size(); if(reduce) drawStatic(); else {cancelAnimationFrame(raf);frame();} }
-      let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(start,200)});
-      start();
+      // click a creature/whale to make it glow / react
+      cv.addEventListener('click',(e)=>{
+        const x=e.clientX*DPR,y=e.clientY*DPR;
+        if(whale.active && whale._sx!=null){ const d=Math.hypot(e.clientX-whale._sx,e.clientY-whale._sy); if(d<70){ whale.clicked++; const tt=document.getElementById('whaletoast'); tt.textContent='🐋 '+(L()==='zh'?'鲸鱼发出低鸣…':'the whale sings a low note…'); tt.classList.add('show'); setTimeout(()=>tt.classList.remove('show'),2600); return; } }
+        let best=null,bd=60*DPR; creatures.forEach(c=>{ const d=Math.hypot(c.x-x,c.y-y); if(d<bd){bd=d;best=c;} });
+        if(best){ best.pulse=1.2; const tt=document.getElementById('whaletoast'); tt.textContent=tr(TR.creature); tt.classList.add('show'); setTimeout(()=>tt.classList.remove('show'),1500); }
+      });
+      let raf,rt;
+      addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ size(); if(reduce){ cancelAnimationFrame(raf); frame(); } },200); });
+      size(); frame();
     })();
 
     document.addEventListener('DOMContentLoaded', ()=>{
       CJCData.setTheme(window.THEME_ID);
       renderStatic();
       CJCData.mountSwitcher({ accent:'#25d0c0' });
-      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); refreshDark(); onScroll(); });
       loadDynamic();
+      markDark();
+      onScroll();
     });
   })();
   </script>
