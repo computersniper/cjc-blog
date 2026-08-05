@@ -3,90 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cai Jiechao — Scenic Vista</title>
+  <title>Cai Jiechao — Living Vista</title>
   <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <style>
-    :root{ --acc:#4aa3df; --ink:#f3f7fb; --mut:#c2d2de;
-      --glass:rgba(16,26,38,.42); --line:rgba(255,255,255,.18); }
+    :root{ --acc:#4aa3df; --ink:#f4f8fc; --mut:#c6d5e2;
+      --glass:rgba(9,17,28,.46); --line:rgba(255,255,255,.20); --scrim:.4; }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;background:#0a1420}
+    body{margin:0;color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;background:#060c15}
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
     h1,h2,h3,.disp{font-family:'Fraunces',Georgia,serif}
-    .wrap{max-width:1080px;margin:0 auto;padding:0 22px;position:relative;z-index:3}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 22px;position:relative}
 
-    /* ===== layered scenery (fixed) ===== */
+    /* ===== fixed living vista ===== */
     .vista{position:fixed;inset:0;z-index:0;overflow:hidden}
-    .sky{position:absolute;inset:0;opacity:0;transition:opacity 2.6s ease}
-    .sky.on{opacity:1}
-    .sky.dawn{background:linear-gradient(180deg,#243b6b 0%,#7d6ba8 34%,#e9a06e 60%,#f4c58a 74%,#c9d4e0 100%)}
-    .sky.day{background:linear-gradient(180deg,#3f8fd6 0%,#78bbe8 40%,#bfe1f4 70%,#e9f4fb 100%)}
-    .sky.sunset{background:linear-gradient(180deg,#3a2a5e 0%,#a34e73 42%,#e57a4e 66%,#f3b566 82%,#f6d59a 100%)}
-    .sky.night{background:linear-gradient(180deg,#05070f 0%,#0d1630 42%,#1b2b4d 72%,#33456b 100%)}
-    .stars{position:absolute;inset:0;opacity:0;transition:opacity 2.6s ease;
-      background-image:radial-gradient(1.4px 1.4px at 20% 30%,#fff,transparent),
-        radial-gradient(1.2px 1.2px at 60% 18%,#fff,transparent),
-        radial-gradient(1.6px 1.6px at 80% 40%,#fff,transparent),
-        radial-gradient(1px 1px at 35% 12%,#fff,transparent),
-        radial-gradient(1.3px 1.3px at 48% 44%,#dbe6ff,transparent),
-        radial-gradient(1px 1px at 12% 22%,#fff,transparent)}
-    .stars.on{opacity:.9}
-    /* sun / moon disc */
-    .orb{position:absolute;width:120px;height:120px;border-radius:50%;left:50%;transform:translateX(-50%);
-      transition:top 2.6s ease,background 2.6s ease,box-shadow 2.6s ease;background:#fff;top:26%}
-    /* mountain silhouettes */
-    .mtn{position:absolute;left:-5%;right:-5%;bottom:0;height:70%}
-    .mtn svg{width:110%;height:100%;display:block}
-    .m-far{opacity:.55}.m-mid{opacity:.75}.m-near{opacity:1}
-    .water{position:absolute;left:0;right:0;bottom:0;height:26%;
-      background:linear-gradient(180deg,rgba(20,40,70,.2),rgba(8,18,34,.75));
-      box-shadow:inset 0 20px 40px rgba(255,255,255,.06)}
-    .water::after{content:"";position:absolute;inset:0;opacity:.25;
-      background:repeating-linear-gradient(180deg,rgba(255,255,255,.14) 0 1px,transparent 1px 8px)}
-    .haze{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 60%,transparent 55%,rgba(0,0,0,.35))}
+    #sky{position:absolute;inset:0}
+    #stars{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;
+      background-image:radial-gradient(1.5px 1.5px at 12% 22%,#fff,transparent),
+        radial-gradient(1.3px 1.3px at 26% 14%,#fff,transparent),
+        radial-gradient(1.7px 1.7px at 42% 30%,#eaf,transparent),
+        radial-gradient(1.2px 1.2px at 58% 12%,#fff,transparent),
+        radial-gradient(1.5px 1.5px at 68% 26%,#fff,transparent),
+        radial-gradient(1.3px 1.3px at 78% 16%,#dff,transparent),
+        radial-gradient(1.1px 1.1px at 88% 34%,#fff,transparent),
+        radial-gradient(1.4px 1.4px at 34% 8%,#fff,transparent),
+        radial-gradient(1.2px 1.2px at 50% 40%,#fff,transparent),
+        radial-gradient(1.6px 1.6px at 8% 40%,#cdf,transparent)}
+    #stars.on{opacity:1}
+    .twinkle{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;
+      box-shadow:0 0 6px 1px rgba(255,255,255,.9);opacity:0;transition:opacity 1.1s ease}
+    #stars.on .twinkle{animation:tw 3.4s ease-in-out infinite}
+    @keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+
+    .disc{position:absolute;border-radius:50%;transform:translate(-50%,-50%);will-change:top,left,background}
+    #sun{width:118px;height:118px;pointer-events:auto;cursor:grab;touch-action:none;z-index:3}
+    #sun.grab{cursor:grabbing}
+    #moon{width:86px;height:86px;pointer-events:auto;cursor:grab;touch-action:none;background:
+      radial-gradient(circle at 38% 38%,#fdfdff,#dfe6f4 58%,#b9c6df 100%);
+      box-shadow:0 0 46px 10px rgba(200,216,255,.42);z-index:2}
+    #moon::after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+      background:rgba(150,165,200,.35);top:28%;left:52%;box-shadow:14px 16px 0 -6px rgba(150,165,200,.3),-6px 20px 0 -8px rgba(150,165,200,.25)}
+    .draghint{position:absolute;inset:-16px;border-radius:50%;border:2px dashed rgba(255,255,255,.7);
+      animation:hpulse 2.2s ease-in-out infinite}
+    @keyframes hpulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:.25}}
+
+    #reflect{position:absolute;width:180px;height:26%;transform:translateX(-50%);z-index:1;opacity:0;
+      background:radial-gradient(60% 100% at 50% 0,rgba(255,238,196,.5),transparent 70%);filter:blur(3px)}
+
+    .range{position:absolute;left:-6%;right:-6%;bottom:0;will-change:transform;transition:filter .8s ease}
+    .range svg{width:112%;height:100%;display:block}
+    #mfar{height:52%}#mmid{height:44%}#mnear{height:36%}
+    #water{position:absolute;left:0;right:0;bottom:0;height:34%;overflow:hidden;transition:background .8s ease}
+    #water::after{content:"";position:absolute;inset:0;opacity:.22;
+      background:repeating-linear-gradient(180deg,rgba(255,255,255,.16) 0 1px,transparent 1px 9px)}
+    #water .shimmer{position:absolute;inset:0;opacity:.5;
+      background:repeating-linear-gradient(180deg,rgba(255,255,255,.10) 0 2px,transparent 2px 22px);
+      animation:shim 9s linear infinite}
+    @keyframes shim{to{transform:translateY(22px)}}
+    #fore{position:absolute;left:-4%;right:-4%;bottom:0;height:20%;z-index:2;transition:filter .8s ease}
+    #fore svg{width:108%;height:100%;display:block}
+
+    #fog{position:absolute;inset:0;z-index:2;opacity:0;transition:opacity 1s ease;pointer-events:none;
+      background:
+        linear-gradient(180deg,rgba(210,216,224,.0) 30%,rgba(206,214,224,.55) 66%,rgba(196,206,218,.78) 100%),
+        repeating-linear-gradient(180deg,rgba(220,226,234,.10) 0 40px,rgba(200,208,220,.16) 40px 90px);
+      background-size:100% 100%,140% 200%;animation:fogdrift 26s linear infinite}
+    #fog.on{opacity:1}
+    @keyframes fogdrift{to{background-position:0 0,60% 200px}}
+
+    /* bird + boat */
+    #bird{position:absolute;top:22%;left:-8%;width:46px;z-index:2;opacity:0}
+    #bird.fly{animation:flyby 26s linear;opacity:.9}
+    #bird svg{width:100%;display:block}
+    #bird .wg{transform-origin:center;animation:flap .7s ease-in-out infinite}
+    @keyframes flap{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}
+    @keyframes flyby{0%{left:-8%;top:24%}50%{top:16%}100%{left:108%;top:22%}}
+    #boat{position:absolute;bottom:14%;left:-12%;width:64px;z-index:2;opacity:0}
+    #boat.sail{animation:sailby 60s linear;opacity:.85}
+    #boat svg{width:100%;display:block}
+    @keyframes sailby{0%{left:-12%}100%{left:112%}}
+
+    #fx{position:fixed;inset:0;z-index:9;pointer-events:none}
+    #scrimLayer{position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:linear-gradient(180deg,rgba(4,8,16,.55) 0%,rgba(4,8,16,0) 34%),
+        radial-gradient(120% 70% at 50% 0,rgba(0,0,0,.4),transparent 60%);
+      opacity:var(--scrim);transition:opacity .8s ease}
 
     /* ===== content ===== */
-    .topbar{position:sticky;top:0;z-index:20;background:rgba(8,16,26,.4);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:58px}
-    .brand{font-family:'Fraunces';font-weight:700;font-size:21px}
+    .page{position:relative;z-index:3}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(6,12,22,.42);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;height:58px;gap:12px}
+    .brand{font-family:'Fraunces';font-weight:700;font-size:21px;white-space:nowrap}
     .brand b{color:var(--acc)}
     .nav{display:flex;gap:18px}
     .nav a{font-size:14px;color:var(--mut);font-weight:500}
     .nav a:hover{color:#fff}
-    @media(max-width:880px){.nav{display:none}}
-    .timechip{font-size:12px;color:var(--mut);letter-spacing:.14em;text-transform:uppercase;display:flex;gap:8px;align-items:center}
-    .timechip i{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
+    @media(max-width:940px){.nav{display:none}}
+    .timechip{font-size:12px;color:#eaf3fb;letter-spacing:.12em;text-transform:uppercase;display:flex;gap:8px;align-items:center;
+      font-variant-numeric:tabular-nums;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+    .timechip i{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc)}
 
-    section{padding:60px 0}
-    .glass{background:var(--glass);backdrop-filter:blur(16px) saturate(1.1);border:1px solid var(--line);
-      border-radius:20px;padding:30px;box-shadow:0 24px 50px rgba(0,0,0,.35)}
+    section{padding:54px 0}
+    .viewpoint{background:var(--glass);backdrop-filter:blur(18px) saturate(1.15);border:1px solid var(--line);
+      border-radius:22px;padding:30px;box-shadow:0 26px 60px rgba(0,0,0,.42);position:relative}
+    .viewpoint::before{content:"";position:absolute;left:26px;top:-9px;width:18px;height:18px;background:var(--acc);
+      border-radius:50%;box-shadow:0 0 0 6px rgba(74,163,223,.22),0 6px 18px rgba(0,0,0,.4)}
     .sec-head{margin-bottom:22px}
     .sec-head .k{color:var(--acc);letter-spacing:.2em;text-transform:uppercase;font-size:12px;font-weight:600}
     .sec-head h2{font-size:clamp(26px,4.4vw,44px);margin:6px 0 0;font-weight:600}
 
-    .hero{padding:76px 0 40px;text-align:center}
-    .greet{color:#dff0fb;letter-spacing:.24em;text-transform:uppercase;font-size:13px;font-weight:600}
-    .hero h1{font-size:clamp(50px,12vw,128px);line-height:.94;margin:12px 0 8px;font-weight:600;
-      text-shadow:0 4px 30px rgba(0,0,0,.4)}
-    .hero .role{font-size:clamp(20px,3vw,30px);color:#fff;font-style:italic;font-family:'Fraunces'}
-    .hero .tag{color:var(--mut);max-width:46ch;margin:14px auto 24px;font-size:17px}
+    .hero{padding:12vh 0 40px;text-align:center;position:relative;pointer-events:none}
+    .hero a,.hero .btn,.hero button{pointer-events:auto}
+    .greet{color:#eaf6ff;letter-spacing:.24em;text-transform:uppercase;font-size:13px;font-weight:600;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+    .hero h1{font-size:clamp(50px,12vw,130px);line-height:.94;margin:12px 0 8px;font-weight:600;
+      text-shadow:0 6px 40px rgba(0,0,0,.5),0 2px 10px rgba(0,0,0,.5)}
+    .hero .role{font-size:clamp(20px,3vw,30px);color:#fff;font-style:italic;font-family:'Fraunces';text-shadow:0 3px 16px rgba(0,0,0,.55)}
+    .hero .tag{color:#eef6fd;max-width:46ch;margin:14px auto 24px;font-size:17px;text-shadow:0 2px 12px rgba(0,0,0,.55)}
     .btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
     .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:13px 24px;border-radius:14px;
       cursor:pointer;transition:.16s;border:1px solid transparent}
     .btn.pri{background:var(--acc);color:#06263d}
     .btn.pri:hover{background:#6cbaf0;transform:translateY(-2px)}
-    .btn.gho{border-color:var(--line);color:#fff;background:rgba(255,255,255,.08)}
-    .btn.gho:hover{background:rgba(255,255,255,.16)}
+    .btn.gho{border-color:var(--line);color:#fff;background:rgba(255,255,255,.12);backdrop-filter:blur(6px)}
+    .btn.gho:hover{background:rgba(255,255,255,.22)}
+    .scrollcue{margin-top:30px;color:#dcecf8;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.85;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+    .scrollcue .ar{display:block;margin:8px auto 0;width:20px;height:20px;border-right:2px solid #dcecf8;border-bottom:2px solid #dcecf8;
+      transform:rotate(45deg);animation:bob 1.8s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(4px,4px)}}
 
     .about{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start}
     @media(max-width:760px){.about{grid-template-columns:1fr}}
     .about img{width:100%;border-radius:16px;border:1px solid var(--line);aspect-ratio:1;object-fit:cover}
-    .about p{color:#e2edf4;margin:0 0 13px;font-size:16.5px;max-width:60ch}
+    .about p{color:#e7f1f8;margin:0 0 13px;font-size:16.5px;max-width:60ch}
     .loc{display:inline-flex;gap:8px;align-items:center;color:#06263d;background:var(--acc);border-radius:10px;padding:8px 14px;font-weight:600}
 
     .rows{display:flex;flex-direction:column;gap:16px}
@@ -94,22 +147,22 @@
     .rowi .p{color:var(--acc);font-weight:600}
     .rowi h3{font-size:21px;margin:2px 0 4px;font-weight:600}
     .rowi .s{color:var(--mut)}
-    .rowi ul{margin:9px 0 0;padding-left:18px;color:#e2edf4;line-height:1.7}
+    .rowi ul{margin:9px 0 0;padding-left:18px;color:#e7f1f8;line-height:1.7}
 
     .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
     @media(max-width:760px){.skills{grid-template-columns:1fr 1fr}}
     @media(max-width:460px){.skills{grid-template-columns:1fr}}
-    .sk{border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.06)}
+    .sk{border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.07)}
     .sk .n{color:var(--acc);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
     .sk .v{margin-top:5px;font-size:15px}
     .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-    .tags span{font-size:13px;padding:7px 14px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid var(--line)}
+    .tags span{font-size:13px;padding:7px 14px;border-radius:20px;background:rgba(255,255,255,.11);border:1px solid var(--line)}
 
     .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     @media(max-width:820px){.courses{grid-template-columns:1fr 1fr}}
     @media(max-width:500px){.courses{grid-template-columns:1fr}}
-    .course{border:1px solid var(--line);border-radius:16px;padding:20px;background:rgba(255,255,255,.06);transition:.16s}
-    .course:hover{transform:translateY(-3px);background:rgba(255,255,255,.12)}
+    .course{border:1px solid var(--line);border-radius:16px;padding:20px;background:rgba(255,255,255,.07);transition:.16s}
+    .course:hover{transform:translateY(-3px);background:rgba(255,255,255,.13)}
     .course i.fa{color:var(--acc);font-size:22px}
     .course h4{font-family:'Fraunces';margin:12px 0 8px;font-size:18px;font-weight:600}
     .course p{margin:0;color:var(--mut);font-size:14.5px}
@@ -118,8 +171,8 @@
     @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
     @media(max-width:560px){.cards{grid-template-columns:1fr}}
     .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
-      background:rgba(255,255,255,.06);transition:.16s}
-    .card:hover{transform:translateY(-4px);background:rgba(255,255,255,.12)}
+      background:rgba(255,255,255,.07);transition:.16s}
+    .card:hover{transform:translateY(-4px);background:rgba(255,255,255,.13)}
     .card .cover{height:158px;overflow:hidden;background:#12283c}
     .card .cover img{width:100%;height:100%;object-fit:cover;transition:.4s}
     .card:hover .cover img{transform:scale(1.06)}
@@ -131,13 +184,13 @@
     .more{color:var(--acc);font-weight:600;font-size:13px}
 
     .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px}
-    .filters button{font-family:inherit;font-weight:600;font-size:13px;background:rgba(255,255,255,.08);border:1px solid var(--line);
+    .filters button{font-family:inherit;font-weight:600;font-size:13px;background:rgba(255,255,255,.09);border:1px solid var(--line);
       color:var(--mut);padding:8px 15px;border-radius:20px;cursor:pointer;transition:.15s}
     .filters button.active,.filters button:hover{background:var(--acc);border-color:var(--acc);color:#06263d}
 
     .certs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     @media(max-width:640px){.certs{grid-template-columns:1fr}}
-    .cert{display:grid;grid-template-columns:120px 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.06)}
+    .cert{display:grid;grid-template-columns:120px 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.07)}
     .cert img{width:100%;height:100%;object-fit:cover;min-height:140px}
     .cert .ct{padding:16px}
     .cert .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
@@ -149,118 +202,171 @@
     @media(max-width:800px){.contact{grid-template-columns:1fr}}
     .cinfo a{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-weight:600}
     .cinfo a span:last-child{color:var(--acc)}
-    form input,form textarea{width:100%;background:rgba(8,16,26,.5);border:1px solid var(--line);border-radius:12px;
+    form input,form textarea{width:100%;background:rgba(6,14,24,.55);border:1px solid var(--line);border-radius:12px;
       color:var(--ink);font-family:inherit;font-size:15px;padding:14px;margin-bottom:13px}
     form input:focus,form textarea:focus{outline:none;border-color:var(--acc)}
     form textarea{min-height:120px;resize:vertical}
     #cf-status{font-weight:600;margin-top:4px;font-size:14px}
 
-    footer{padding:40px 0 60px;text-align:center}
+    footer{padding:40px 0 130px;text-align:center}
     .fsoc{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
     .fsoc a{color:var(--mut);font-weight:600;font-size:13px}
     .fsoc a:hover{color:#fff}
-    .muted{color:#9db0bd;font-size:13px;margin-top:12px}
+    .muted{color:#a9bccb;font-size:13px;margin-top:12px}
     .load-note{grid-column:1/-1;color:var(--mut);text-align:center;padding:18px;border:1px dashed var(--line);border-radius:12px}
 
-    @media(prefers-reduced-motion:reduce){ .sky,.stars,.orb{transition:none} *{scroll-behavior:auto} }
+    /* ===== control deck ===== */
+    .deck{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30;width:min(680px,calc(100% - 24px));
+      background:rgba(8,15,25,.6);backdrop-filter:blur(16px) saturate(1.1);border:1px solid var(--line);
+      border-radius:16px;padding:12px 16px;box-shadow:0 18px 44px rgba(0,0,0,.45)}
+    .deck .drow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .deck .tlabel{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#dfeefa;
+      display:flex;align-items:baseline;gap:8px;white-space:nowrap;min-width:150px}
+    .deck .tlabel b{font-family:'Fraunces';font-size:19px;letter-spacing:0;color:#fff;font-variant-numeric:tabular-nums}
+    .deck .slider{flex:1;min-width:120px}
+    .deck input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;
+      background:linear-gradient(90deg,#0b1226,#3a4e78 25%,#8fbfe6 50%,#e08a4a 74%,#1b2140);outline:none}
+    .deck input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+      background:radial-gradient(circle at 35% 35%,#fff,#ffd98a 60%,#e08a4a);border:2px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+    .deck input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;
+      background:radial-gradient(circle at 35% 35%,#fff,#ffd98a 60%,#e08a4a);border:2px solid #fff;cursor:pointer}
+    .weather{display:flex;gap:6px}
+    .weather button{width:38px;height:34px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.08);
+      color:#eaf3fb;font-size:16px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;justify-content:center}
+    .weather button:hover{background:rgba(255,255,255,.18)}
+    .weather button.active{background:var(--acc);border-color:var(--acc);color:#06263d}
+    .deck .hint{font-size:11px;color:#bcd0e0;margin-top:7px;letter-spacing:.02em;text-align:center}
+    @media(max-width:560px){
+      .deck .tlabel{min-width:0}
+      .deck .drow{gap:10px}
+    }
+
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+    @media(prefers-reduced-motion:reduce){
+      #sky,#stars,#water,.range,#fore,#scrimLayer{transition:none}
+      #stars .twinkle,#water .shimmer,#fog,#bird,#boat,.draghint,.scrollcue .ar{animation:none!important}
+      html{scroll-behavior:auto}
+    }
   </style>
 </head>
 <body>
-  <div class="vista" aria-hidden="true">
-    <div class="sky dawn" data-t="dawn"></div>
-    <div class="sky day on" data-t="day"></div>
-    <div class="sky sunset" data-t="sunset"></div>
-    <div class="sky night" data-t="night"></div>
-    <div class="stars" id="stars"></div>
-    <div class="orb" id="orb"></div>
-    <div class="mtn m-far" id="mfar" style="height:64%"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 240 L180 150 L360 220 L560 120 L760 210 L980 130 L1200 210 L1200 400 Z" fill="#3a5673"/></svg></div>
-    <div class="mtn m-mid" id="mmid" style="height:56%"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 280 L220 180 L440 280 L640 170 L860 270 L1080 190 L1200 260 L1200 400 Z" fill="#25384f"/></svg></div>
-    <div class="mtn m-near" id="mnear" style="height:46%"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 320 L260 230 L520 330 L760 240 L1000 330 L1200 260 L1200 400 Z" fill="#0f1c2c"/></svg></div>
-    <div class="water"></div>
-    <div class="haze"></div>
+  <div class="vista" id="vista" aria-hidden="true">
+    <div id="sky"></div>
+    <div id="stars"></div>
+    <div id="reflect"></div>
+    <div class="disc" id="sun"><span class="draghint" id="draghint"></span></div>
+    <div class="disc" id="moon"></div>
+    <div class="range" id="mfar"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 250 Q120 210 220 235 T430 175 Q560 130 690 200 T940 150 Q1080 120 1200 190 L1200 400 Z" fill="#3f5c7c"/></svg></div>
+    <div class="range" id="mmid"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 300 Q160 230 300 285 T560 210 Q720 165 880 260 T1120 210 L1200 250 L1200 400 Z" fill="#28405a"/></svg></div>
+    <div class="range" id="mnear"><svg viewBox="0 0 1200 400" preserveAspectRatio="none"><path d="M0 400 L0 330 Q220 260 420 320 T760 260 Q980 220 1200 300 L1200 400 Z" fill="#122234"/></svg></div>
+    <div id="water"><div class="shimmer"></div></div>
+    <div id="boat"><svg viewBox="0 0 120 80"><path d="M18 52 L102 52 L88 68 L32 68 Z" fill="#0c1826"/><rect x="57" y="18" width="4" height="34" fill="#0c1826"/><path d="M61 20 L92 46 L61 46 Z" fill="#1a2f45"/><path d="M59 20 L30 46 L59 46 Z" fill="#132638"/></svg></div>
+    <div id="fore"><svg viewBox="0 0 1200 240" preserveAspectRatio="none"><path d="M0 240 L0 120 Q90 90 180 130 Q240 60 300 128 Q380 84 470 132 Q560 70 660 128 Q760 88 880 130 Q980 96 1090 132 Q1150 108 1200 132 L1200 240 Z" fill="#0a151f"/></svg></div>
+    <div id="fog"></div>
+    <div id="bird"><svg viewBox="0 0 60 26"><path class="wg" d="M2 14 Q16 2 30 13 Q44 2 58 14 Q44 10 30 18 Q16 10 2 14 Z" fill="#0b1622"/></svg></div>
+  </div>
+  <div id="scrimLayer" aria-hidden="true"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="page">
+    <div class="topbar"><div class="wrap row">
+      <a class="brand" href="#top">Cai<b>Jiechao</b></a>
+      <nav class="nav" id="nav"></nav>
+      <div class="timechip"><i></i><span id="timechip">—</span></div>
+    </div></div>
+
+    <div id="top"></div>
+    <header class="hero"><div class="wrap">
+      <div class="greet" id="greet"></div>
+      <h1 id="name"></h1>
+      <div class="role" id="role"></div>
+      <p class="tag" id="tag"></p>
+      <div class="btns">
+        <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
+        <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+      </div>
+      <div class="scrollcue" id="scrollcue"><span></span><span class="ar"></span></div>
+    </div></header>
+
+    <section id="about"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k" id="k-about">01 · Overlook</div><h2 id="l-about"></h2></div>
+      <div class="about"><img id="portrait" alt="Cai Jiechao portrait" />
+        <div><div id="bio"></div><span class="loc" id="loc"></span></div></div>
+    </div></div></section>
+
+    <section id="education"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">02 · Ridgeline</div><h2 id="l-edu"></h2></div>
+      <div class="rows" id="edu"></div>
+    </div></div></section>
+
+    <section id="skills"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">03 · Terrain</div><h2 id="l-skills"></h2></div>
+      <div class="skills" id="skills-box"></div>
+      <div class="tags" id="tags"></div>
+    </div></div></section>
+
+    <section id="courses"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">04 · Trailhead</div><h2 id="l-courses"></h2></div>
+      <div class="courses" id="courses-box"></div>
+    </div></div></section>
+
+    <section id="experience"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">05 · Expedition</div><h2 id="l-exp"></h2></div>
+      <div class="rows" id="exp"></div>
+    </div></div></section>
+
+    <section id="projects"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">06 · Summits</div><h2 id="l-projects"></h2></div>
+      <div class="cards" id="projects-box"><div class="load-note" id="proj-load"></div></div>
+    </div></div></section>
+
+    <section id="articles"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">07 · Field Notes</div><h2 id="l-articles"></h2></div>
+      <div class="filters" id="filters"></div>
+      <div class="cards" id="articles-box"><div class="load-note" id="art-load"></div></div>
+    </div></div></section>
+
+    <section id="certificates"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">08 · Landmarks</div><h2 id="l-certs"></h2></div>
+      <div class="certs" id="certs"></div>
+    </div></div></section>
+
+    <section id="contact"><div class="wrap"><div class="viewpoint">
+      <div class="sec-head"><div class="k">09 · Signal Fire</div><h2 id="l-contact"></h2></div>
+      <div class="contact">
+        <div class="cinfo" id="cinfo"></div>
+        <form id="cf">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <input type="text" name="name" id="cf-name" required>
+          <input type="email" name="email" id="cf-email" required>
+          <textarea name="message" id="cf-msg" required></textarea>
+          <button type="submit" class="btn pri" id="cf-send"></button>
+          <p id="cf-status"></p>
+        </form>
+      </div>
+    </div></div></section>
+
+    <footer><div class="wrap">
+      <div class="fsoc" id="fsoc"></div>
+      <div class="muted" id="foot-desc"></div>
+      <a class="muted" id="foot-icp" target="_blank" rel="noopener" style="display:inline-block"></a>
+    </div></footer>
   </div>
 
-  <div class="topbar"><div class="wrap row">
-    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
-    <nav class="nav" id="nav"></nav>
-    <div class="timechip"><i></i><span id="timechip">DAY</span></div>
-  </div></div>
-
-  <div id="top"></div>
-  <header class="hero"><div class="wrap">
-    <div class="greet" id="greet"></div>
-    <h1 id="name"></h1>
-    <div class="role" id="role"></div>
-    <p class="tag" id="tag"></p>
-    <div class="btns">
-      <a class="btn pri" id="cvBtn" download><i class="fa fa-download"></i><span></span></a>
-      <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i>GitHub</a>
+  <div class="deck" id="deck">
+    <div class="drow">
+      <div class="tlabel"><span id="tof">—</span><b id="tclock">--:--</b></div>
+      <div class="slider"><input type="range" id="tslider" min="0" max="1000" value="500" aria-label="Time of day"></div>
+      <div class="weather" id="weather" role="group" aria-label="Weather">
+        <button data-w="clear" title="Clear" aria-label="Clear">☀</button>
+        <button data-w="rain" title="Rain" aria-label="Rain">🌧</button>
+        <button data-w="snow" title="Snow" aria-label="Snow">❄</button>
+        <button data-w="fog" title="Fog" aria-label="Fog">🌫</button>
+      </div>
     </div>
-  </div></header>
-
-  <section id="about"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k" id="k-about">01 · Portrait</div><h2 id="l-about"></h2></div>
-    <div class="about"><img id="portrait" alt="Cai Jiechao portrait" />
-      <div><div id="bio"></div><span class="loc" id="loc"></span></div></div>
-  </div></div></section>
-
-  <section id="education"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">02 · Path</div><h2 id="l-edu"></h2></div>
-    <div class="rows" id="edu"></div>
-  </div></div></section>
-
-  <section id="skills"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">03 · Craft</div><h2 id="l-skills"></h2></div>
-    <div class="skills" id="skills-box"></div>
-    <div class="tags" id="tags"></div>
-  </div></div></section>
-
-  <section id="courses"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">04 · Study</div><h2 id="l-courses"></h2></div>
-    <div class="courses" id="courses-box"></div>
-  </div></div></section>
-
-  <section id="experience"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">05 · Journey</div><h2 id="l-exp"></h2></div>
-    <div class="rows" id="exp"></div>
-  </div></div></section>
-
-  <section id="projects"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">06 · Works</div><h2 id="l-projects"></h2></div>
-    <div class="cards" id="projects-box"><div class="load-note" id="proj-load"></div></div>
-  </div></div></section>
-
-  <section id="articles"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">07 · Words</div><h2 id="l-articles"></h2></div>
-    <div class="filters" id="filters"></div>
-    <div class="cards" id="articles-box"><div class="load-note" id="art-load"></div></div>
-  </div></div></section>
-
-  <section id="certificates"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">08 · Marks</div><h2 id="l-certs"></h2></div>
-    <div class="certs" id="certs"></div>
-  </div></div></section>
-
-  <section id="contact"><div class="wrap"><div class="glass">
-    <div class="sec-head"><div class="k">09 · Reach</div><h2 id="l-contact"></h2></div>
-    <div class="contact">
-      <div class="cinfo" id="cinfo"></div>
-      <form id="cf">
-        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
-        <input type="text" name="name" id="cf-name" required>
-        <input type="email" name="email" id="cf-email" required>
-        <textarea name="message" id="cf-msg" required></textarea>
-        <button type="submit" class="btn pri" id="cf-send"></button>
-        <p id="cf-status"></p>
-      </form>
-    </div>
-  </div></div></section>
-
-  <footer><div class="wrap">
-    <div class="fsoc" id="fsoc"></div>
-    <div class="muted" id="foot-desc"></div>
-    <a class="muted" id="foot-icp" target="_blank" rel="noopener" style="display:inline-block"></a>
-  </div></footer>
+    <div class="hint" id="deckhint"></div>
+  </div>
 
   <script>window.THEME_ID = "58-realistic";</script>
   <script src="/shared/profile.js"></script>
@@ -268,8 +374,18 @@
   <script>
   (function(){
     const P=CJCData.profile,t=CJCData.t.bind(CJCData),esc=CJCData.escapeHtml;
+    const RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     let articles=[],projects=[],filterKey="all";
 
+    const S={
+      dragHint:{en:"Drag the sun to scrub time · toggle weather · tap the night sky",zh:"拖动太阳可调节时间 · 切换天气 · 夜里点击星空"},
+      scroll:{en:"scroll to explore",zh:"向下滚动探索"},
+      tof:{ night:{en:"NIGHT",zh:"夜晚"},dawn:{en:"DAWN",zh:"黎明"},morning:{en:"MORNING",zh:"清晨"},
+        midday:{en:"MIDDAY",zh:"正午"},afternoon:{en:"AFTERNOON",zh:"午后"},golden:{en:"GOLDEN HOUR",zh:"黄金时刻"},dusk:{en:"DUSK",zh:"黄昏"} }
+    };
+    const tr=o=>o[CJCData.lang()]||o.en;
+
+    /* ---------- content rendering (data contract) ---------- */
     function renderStatic(){
       document.getElementById('nav').innerHTML=[
         ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
@@ -281,7 +397,9 @@
       document.getElementById('tag').textContent=t(P.title);
       const cv=document.getElementById('cvBtn'); cv.href=t(P.cv); cv.querySelector('span').textContent=t(P.ui.download_cv);
       document.getElementById('ghBtn').href=P.contact.github;
-      document.getElementById('portrait').src=P.avatar;
+      const por=document.getElementById('portrait'); por.src=P.avatar; por.alt=t(P.name);
+      document.getElementById('scrollcue').querySelector('span').textContent=tr(S.scroll);
+      document.getElementById('deckhint').textContent=tr(S.dragHint);
 
       document.getElementById('l-about').textContent=t(P.ui.about_me);
       document.getElementById('l-edu').textContent=t(P.ui.education_bg);
@@ -343,7 +461,6 @@
         filterKey=b.dataset.k; renderStatic(); renderArticles();
       }));
     }
-
     function renderProjects(){
       const box=document.getElementById('projects-box');
       if(!projects.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
@@ -375,9 +492,8 @@
       try{ projects=await CJCData.fetchProjects(); renderProjects(); }
       catch(e){ document.getElementById('projects-box').innerHTML=`<div class="load-note">⚠ ${esc(t(P.ui.no_projects))}</div>`; }
       try{ articles=await CJCData.fetchArticles(); renderArticles(); }
-      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load articles.</div>`; }
+      catch(e){ document.getElementById('articles-box').innerHTML=`<div class="load-note">⚠ Failed to load / 内容加载失败</div>`; }
     }
-
     document.getElementById('cf').addEventListener('submit',async(e)=>{
       e.preventDefault();
       const f=e.target,s=document.getElementById('cf-status');
@@ -387,44 +503,259 @@
       catch(err){ s.style.color='#ff8a8a'; s.textContent=err.message; }
     });
 
-    // ---- day/night cycle ----
-    const RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    const orb=document.getElementById('orb'), stars=document.getElementById('stars'), chip=document.getElementById('timechip');
-    const states=[
-      {t:'dawn', label:'DAWN',   top:'40%', bg:'radial-gradient(circle,#fff2d0,#ffb56a 60%,transparent 72%)', sh:'0 0 60px 20px rgba(255,180,110,.5)', stars:0},
-      {t:'day',  label:'MIDDAY', top:'20%', bg:'radial-gradient(circle,#ffffff,#fff2c0 55%,transparent 72%)', sh:'0 0 80px 26px rgba(255,240,180,.6)', stars:0},
-      {t:'sunset',label:'SUNSET',top:'52%', bg:'radial-gradient(circle,#ffd9a0,#ff7a3c 60%,transparent 72%)', sh:'0 0 70px 24px rgba(255,120,60,.55)', stars:0},
-      {t:'night',label:'NIGHT',  top:'22%', bg:'radial-gradient(circle,#eef3ff,#c9d6f0 55%,transparent 72%)', sh:'0 0 40px 12px rgba(200,220,255,.5)', stars:1}
-    ];
-    let si=1;
-    function applyState(i){
-      const s=states[i];
-      document.querySelectorAll('.sky').forEach(el=>el.classList.toggle('on',el.dataset.t===s.t));
-      orb.style.top=s.top; orb.style.background=s.bg; orb.style.boxShadow=s.sh;
-      stars.classList.toggle('on',!!s.stars);
-      chip.textContent=s.label;
-    }
-    applyState(si);
-    if(!RM){ setInterval(()=>{ si=(si+1)%states.length; applyState(si); },6000); }
+    /* ======================= LIVING VISTA ENGINE ======================= */
+    const sky=document.getElementById('sky'),stars=document.getElementById('stars'),
+      sun=document.getElementById('sun'),moon=document.getElementById('moon'),
+      reflect=document.getElementById('reflect'),water=document.getElementById('water'),
+      mfar=document.getElementById('mfar'),mmid=document.getElementById('mmid'),mnear=document.getElementById('mnear'),
+      fore=document.getElementById('fore'),chip=document.getElementById('timechip'),
+      tclock=document.getElementById('tclock'),tof=document.getElementById('tof'),slider=document.getElementById('tslider');
+    const HORIZON=0.66;
 
-    // ---- parallax ----
-    if(!RM){
-      const far=document.getElementById('mfar'),mid=document.getElementById('mmid'),near=document.getElementById('mnear');
-      window.addEventListener('scroll',()=>{ const y=window.scrollY;
-        far.style.transform=`translateY(${y*0.06}px)`; mid.style.transform=`translateY(${y*0.11}px)`; near.style.transform=`translateY(${y*0.17}px)`;
-        orb.style.marginTop=(y*0.04)+'px';
-      },{passive:true});
-      window.addEventListener('mousemove',(e)=>{ const cx=e.clientX/window.innerWidth-.5;
-        far.style.marginLeft=(cx*14)+'px'; mid.style.marginLeft=(cx*24)+'px'; near.style.marginLeft=(cx*36)+'px';
-      });
+    // twinkle stars
+    (function(){ let h=''; const pts=[[16,18],[30,10],[46,24],[62,9],[74,20],[85,30],[22,32],[54,15],[90,12],[8,26]];
+      pts.forEach(([x,y])=>{ h+=`<span class="twinkle" style="left:${x}%;top:${y}%;animation-delay:${(x%5)*.4}s"></span>`; });
+      stars.insertAdjacentHTML('beforeend',h);
+    })();
+
+    // sky keyframes: p, four gradient stops (rgb), star opacity, water rgb, land brightness, scrim
+    const K=[
+      {p:0.00, sky:[[6,9,20],[12,18,40],[24,32,62],[42,54,88]],    star:1.0, water:[10,16,34],  gs:0.20, scrim:0.02},
+      {p:0.20, sky:[[16,20,52],[46,58,110],[112,96,150],[168,120,140]], star:0.45, water:[30,36,66], gs:0.34, scrim:0.14},
+      {p:0.26, sky:[[42,44,96],[120,92,150],[212,120,110],[240,168,120]], star:0.12, water:[70,60,90], gs:0.52, scrim:0.34},
+      {p:0.34, sky:[[70,120,190],[140,182,224],[214,198,172],[244,216,182]], star:0.0, water:[92,122,150], gs:0.86, scrim:0.62},
+      {p:0.50, sky:[[40,122,208],[92,170,226],[174,216,240],[226,242,251]], star:0.0, water:[74,142,182], gs:1.0, scrim:0.9},
+      {p:0.68, sky:[[46,110,182],[132,152,198],[226,170,112],[246,198,122]], star:0.0, water:[92,122,150], gs:0.9, scrim:0.6},
+      {p:0.76, sky:[[42,44,110],[140,80,128],[224,104,62],[244,152,92]], star:0.10, water:[82,56,74], gs:0.56, scrim:0.4},
+      {p:0.82, sky:[[20,24,72],[64,52,104],[150,74,94],[190,98,92]], star:0.34, water:[42,38,66], gs:0.36, scrim:0.2},
+      {p:0.90, sky:[[8,12,34],[24,32,72],[52,52,98],[88,74,112]],  star:0.7, water:[20,24,50], gs:0.24, scrim:0.06},
+      {p:1.00, sky:[[6,9,20],[12,18,40],[24,32,62],[42,54,88]],    star:1.0, water:[10,16,34], gs:0.20, scrim:0.02}
+    ];
+    const lerp=(a,b,f)=>a+(b-a)*f;
+    const mix=(a,b,f)=>[Math.round(lerp(a[0],b[0],f)),Math.round(lerp(a[1],b[1],f)),Math.round(lerp(a[2],b[2],f))];
+    const rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
+    function stateAt(p){
+      let i=0; for(;i<K.length-1;i++){ if(p>=K[i].p && p<=K[i+1].p) break; }
+      const a=K[i],b=K[i+1],f=(p-a.p)/((b.p-a.p)||1);
+      return {
+        sky:[0,1,2,3].map(j=>mix(a.sky[j],b.sky[j],f)),
+        star:lerp(a.star,b.star,f), water:mix(a.water,b.water,f),
+        gs:lerp(a.gs,b.gs,f), scrim:lerp(a.scrim,b.scrim,f)
+      };
     }
+    function tName(hrs){
+      if(hrs<5||hrs>=20)return 'night'; if(hrs<7)return 'dawn'; if(hrs<11)return 'morning';
+      if(hrs<14)return 'midday'; if(hrs<17)return 'afternoon'; if(hrs<18.75)return 'golden'; return 'dusk';
+    }
+    let phase=0.5;
+    function applyPhase(p){
+      phase=((p%1)+1)%1;
+      const st=stateAt(phase);
+      sky.style.background=`linear-gradient(180deg,${rgb(st.sky[0])} 0%,${rgb(st.sky[1])} 36%,${rgb(st.sky[2])} 62%,${rgb(st.sky[3])} 80%)`;
+      stars.classList.toggle('on',st.star>0.05); stars.style.opacity=st.star;
+      const wc=st.water; water.style.background=`linear-gradient(180deg,rgba(${wc[0]},${wc[1]},${wc[2]},.55),rgba(${Math.round(wc[0]*.5)},${Math.round(wc[1]*.5)},${Math.round(wc[2]*.6)},.9))`;
+      const fl=`brightness(${st.gs})`; mfar.style.filter=fl; mmid.style.filter=fl; mnear.style.filter=fl; fore.style.filter=`brightness(${Math.max(st.gs*0.85,0.14)})`;
+      document.documentElement.style.setProperty('--scrim',st.scrim.toFixed(3));
+
+      // celestial arc
+      const ang=2*Math.PI*(phase-0.25);
+      const sunElev=Math.sin(ang), sunX=0.5-0.42*Math.cos(ang);
+      const moonElev=-sunElev, moonX=0.5+0.42*Math.cos(ang);
+      placeBody(sun,sunElev,sunX,'sun'); placeBody(moon,moonElev,moonX,'moon');
+      // reflection under whichever body is up
+      const up = sunElev>moonElev ? {e:sunElev,x:sunX,warm:true} : {e:moonElev,x:moonX,warm:false};
+      if(up.e>0.02){
+        reflect.style.opacity=Math.min(up.e*0.8,0.6);
+        reflect.style.left=(up.x*100)+'%'; reflect.style.top=(HORIZON*100)+'%';
+        reflect.style.background=up.warm
+          ? 'radial-gradient(60% 100% at 50% 0,rgba(255,224,150,.55),transparent 72%)'
+          : 'radial-gradient(60% 100% at 50% 0,rgba(200,216,255,.4),transparent 72%)';
+      } else reflect.style.opacity=0;
+
+      // clock + labels
+      const hrs=phase*24, hh=Math.floor(hrs), mm=Math.floor((hrs-hh)*60);
+      const clockStr=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+      tclock.textContent=clockStr; const nm=tName(hrs);
+      tof.textContent=tr(S.tof[nm]); chip.textContent=clockStr+' · '+tr(S.tof[nm]);
+      slider.value=Math.round(phase*1000);
+      atNight = (sunElev < -0.04);
+    }
+    function placeBody(el,elev,x,kind){
+      if(elev<-0.06){ el.style.display='none'; return; }
+      el.style.display='block';
+      const topP=(HORIZON-elev*0.56)*100;
+      el.style.top=topP+'%'; el.style.left=(x*100)+'%';
+      if(kind==='sun'){
+        const e=Math.max(0,Math.min(1,elev));
+        const col=mix([255,150,72],[255,248,214],e);
+        const glow=mix([255,120,50],[255,238,170],e);
+        el.style.background=`radial-gradient(circle at 42% 40%,#fff 0%,${rgb(col)} 46%,rgba(${col[0]},${col[1]},${col[2]},.55) 66%,rgba(${col[0]},${col[1]},${col[2]},0) 80%)`;
+        el.style.boxShadow=`0 0 ${68+e*46}px ${20+e*20}px rgba(${glow[0]},${glow[1]},${glow[2]},${(0.5+e*0.16).toFixed(2)})`;
+      }
+    }
+
+    // FontAwesome already linked. Init time from real clock.
+    let atNight=false;
+    (function initTime(){
+      if(RM){ applyPhase(0.72); return; }   // reduced motion => static golden scene
+      const now=new Date();
+      applyPhase((now.getHours()+now.getMinutes()/60)/24);
+    })();
+
+    // ----- drag the sun / moon to scrub -----
+    let dragging=false, hintDismissed=false;
+    function scrubFromClientX(cx){
+      const p=Math.max(0,Math.min(1,cx/window.innerWidth));
+      applyPhase(p);
+    }
+    function startDrag(e){
+      dragging=true; sun.classList.add('grab');
+      if(!hintDismissed){ document.getElementById('draghint').style.display='none'; hintDismissed=true; }
+      scrubFromClientX(e.clientX!=null?e.clientX:(e.touches&&e.touches[0].clientX));
+      e.preventDefault();
+    }
+    function moveDrag(e){ if(!dragging)return; const cx=e.clientX!=null?e.clientX:(e.touches&&e.touches[0].clientX); if(cx!=null){scrubFromClientX(cx); e.preventDefault();} }
+    function endDrag(){ dragging=false; sun.classList.remove('grab'); }
+    sun.addEventListener('pointerdown',startDrag);
+    moon.addEventListener('pointerdown',e=>{ moon.style.cursor='grabbing'; startDrag(e); });
+    window.addEventListener('pointermove',moveDrag,{passive:false});
+    window.addEventListener('pointerup',()=>{ endDrag(); moon.style.cursor=''; });
+    sun.style.pointerEvents='auto'; moon.style.pointerEvents='auto'; moon.style.cursor='grab';
+    // slider (accessible / mobile)
+    slider.addEventListener('input',()=>{ if(!hintDismissed){document.getElementById('draghint').style.display='none';hintDismissed=true;} applyPhase(slider.value/1000); });
+
+    /* ---------------- parallax ---------------- */
+    if(!RM){
+      let mx=0,my=0;
+      window.addEventListener('scroll',()=>{ const y=window.scrollY;
+        mfar.style.transform=`translate(${mx*8}px,${y*0.05}px)`;
+        mmid.style.transform=`translate(${mx*16}px,${y*0.09}px)`;
+        mnear.style.transform=`translate(${mx*26}px,${y*0.14}px)`;
+        fore.style.transform=`translate(${mx*38}px,${y*0.02}px)`;
+      },{passive:true});
+      window.addEventListener('mousemove',e=>{ mx=(e.clientX/window.innerWidth-0.5); my=(e.clientY/window.innerHeight-0.5);
+        const y=window.scrollY;
+        mfar.style.transform=`translate(${mx*8}px,${y*0.05}px)`;
+        mmid.style.transform=`translate(${mx*16}px,${y*0.09}px)`;
+        mnear.style.transform=`translate(${mx*26}px,${y*0.14}px)`;
+        fore.style.transform=`translate(${mx*38}px,${y*0.02}px)`;
+      },{passive:true});
+    }
+
+    /* ---------------- weather + fx canvas ---------------- */
+    const fx=document.getElementById('fx'),fxc=fx.getContext('2d'),fogEl=document.getElementById('fog');
+    let W,H,parts=[],effects=[],weather='clear';
+    function fxsize(){ W=fx.width=window.innerWidth*devicePixelRatio; H=fx.height=window.innerHeight*devicePixelRatio;
+      fx.style.width=window.innerWidth+'px'; fx.style.height=window.innerHeight+'px'; }
+    fxsize(); window.addEventListener('resize',()=>{ fxsize(); });
+    function seedWeather(){
+      parts=[];
+      if(weather==='rain'){ for(let i=0;i<160;i++) parts.push({x:Math.random()*W,y:Math.random()*H,v:(9+Math.random()*8)*devicePixelRatio,len:(12+Math.random()*16)*devicePixelRatio,o:0.14+Math.random()*0.22}); }
+      else if(weather==='snow'){ for(let i=0;i<130;i++) parts.push({x:Math.random()*W,y:Math.random()*H,v:(0.7+Math.random()*1.6)*devicePixelRatio,r:(1.2+Math.random()*2.4)*devicePixelRatio,sw:Math.random()*6.28,o:0.5+Math.random()*0.5}); }
+    }
+    function setWeather(w){
+      weather=w; fogEl.classList.toggle('on',w==='fog');
+      document.querySelectorAll('#weather button').forEach(b=>b.classList.toggle('active',b.dataset.w===w));
+      if(!RM) seedWeather();
+    }
+    document.querySelectorAll('#weather button').forEach(b=>b.addEventListener('click',()=>setWeather(b.dataset.w)));
+
+    // shooting star + constellation (night easter egg)
+    function shootingStar(){
+      const x0=(0.1+Math.random()*0.5)*W, y0=(0.05+Math.random()*0.25)*H;
+      effects.push({type:'shoot',x:x0,y:y0,vx:(6+Math.random()*4)*devicePixelRatio,vy:(3+Math.random()*2)*devicePixelRatio,life:1});
+    }
+    function constellation(){
+      // block-letter "CJC" drawn as connected stars, centered upper area
+      const L={
+        C:[[0.82,0.08],[0.28,0.14],[0.06,0.5],[0.28,0.86],[0.82,0.92]],
+        J:[[0.2,0.1],[0.8,0.1],[0.62,0.1],[0.62,0.72],[0.44,0.92],[0.16,0.76]]
+      };
+      const letters=[L.C,L.J,L.C]; const lw=0.09*W, gap=0.03*W, lh=0.16*H;
+      const totalW=letters.length*lw+(letters.length-1)*gap;
+      let ox=W*0.5-totalW/2, oy=H*0.14;
+      const nodes=[]; const segs=[];
+      letters.forEach(pts=>{
+        const mapped=pts.map(([px,py])=>[ox+px*lw,oy+py*lh]);
+        mapped.forEach(pt=>nodes.push(pt));
+        for(let i=0;i<mapped.length-1;i++) segs.push([mapped[i],mapped[i+1]]);
+        ox+=lw+gap;
+      });
+      effects.push({type:'const',nodes,segs,life:1});
+      const lb=document.getElementById('constlabel');
+      if(lb){ lb.textContent=t(P.name); lb.style.opacity='1'; setTimeout(()=>lb.style.opacity='0',3400); }
+    }
+    function drawFx(){
+      fxc.clearRect(0,0,W,H);
+      // weather
+      if(weather==='rain'){ fxc.lineCap='round';
+        for(const p of parts){ fxc.strokeStyle=`rgba(190,214,238,${p.o})`; fxc.lineWidth=1.3*devicePixelRatio;
+          fxc.beginPath(); fxc.moveTo(p.x,p.y); fxc.lineTo(p.x-p.len*0.25,p.y+p.len); fxc.stroke();
+          p.y+=p.v; p.x-=p.v*0.22; if(p.y>H){ p.y=-10; p.x=Math.random()*W; } }
+      } else if(weather==='snow'){
+        for(const p of parts){ fxc.fillStyle=`rgba(255,255,255,${p.o})`; fxc.beginPath(); fxc.arc(p.x,p.y,p.r,0,6.283); fxc.fill();
+          p.y+=p.v; p.sw+=0.02; p.x+=Math.sin(p.sw)*0.6*devicePixelRatio; if(p.y>H){ p.y=-10; p.x=Math.random()*W; } }
+      }
+      // transient effects
+      effects=effects.filter(fxo=>{
+        if(fxo.type==='shoot'){
+          const tail=90*devicePixelRatio;
+          const g=fxc.createLinearGradient(fxo.x,fxo.y,fxo.x-fxo.vx/Math.hypot(fxo.vx,fxo.vy)*tail,fxo.y-fxo.vy/Math.hypot(fxo.vx,fxo.vy)*tail);
+          g.addColorStop(0,`rgba(255,255,255,${fxo.life})`); g.addColorStop(1,'rgba(255,255,255,0)');
+          fxc.strokeStyle=g; fxc.lineWidth=2.2*devicePixelRatio; fxc.beginPath();
+          fxc.moveTo(fxo.x,fxo.y); fxc.lineTo(fxo.x-fxo.vx/Math.hypot(fxo.vx,fxo.vy)*tail,fxo.y-fxo.vy/Math.hypot(fxo.vx,fxo.vy)*tail); fxc.stroke();
+          fxo.x+=fxo.vx; fxo.y+=fxo.vy; fxo.life-=0.012; return fxo.life>0 && fxo.x<W+tail;
+        }
+        if(fxo.type==='const'){
+          const a=Math.min(1,fxo.life*1.4);
+          fxc.strokeStyle=`rgba(150,200,255,${a*0.5})`; fxc.lineWidth=1.2*devicePixelRatio;
+          fxo.segs.forEach(([p1,p2])=>{ fxc.beginPath(); fxc.moveTo(p1[0],p1[1]); fxc.lineTo(p2[0],p2[1]); fxc.stroke(); });
+          fxo.nodes.forEach(n=>{ fxc.fillStyle=`rgba(255,255,255,${a})`; fxc.beginPath(); fxc.arc(n[0],n[1],2.4*devicePixelRatio,0,6.283); fxc.fill();
+            fxc.fillStyle=`rgba(180,220,255,${a*0.4})`; fxc.beginPath(); fxc.arc(n[0],n[1],5.5*devicePixelRatio,0,6.283); fxc.fill(); });
+          fxo.life-=0.006; return fxo.life>0;
+        }
+        return false;
+      });
+      raf=requestAnimationFrame(drawFx);
+    }
+    let raf=null;
+    if(!RM){ raf=requestAnimationFrame(drawFx); }
+
+    // constellation label element
+    (function(){ const lb=document.createElement('div'); lb.id='constlabel';
+      lb.style.cssText='position:fixed;top:34%;left:0;right:0;text-align:center;z-index:10;pointer-events:none;'+
+        "font-family:'Fraunces',serif;font-size:clamp(20px,4vw,34px);color:#eaf3ff;letter-spacing:.12em;opacity:0;"+
+        'transition:opacity 1s ease;text-shadow:0 2px 20px rgba(120,170,255,.7)';
+      document.body.appendChild(lb);
+    })();
+
+    // click the sky at night -> shooting star + constellation
+    document.addEventListener('click',e=>{
+      if(RM) return;
+      if(e.target.closest('a,button,input,textarea,form,.viewpoint,.deck,.topbar,#cjc-switcher,label,select')) return;
+      if(!atNight) return;
+      shootingStar(); constellation();
+    });
+
+    // hidden bird (day) / boat drifting by
+    const bird=document.getElementById('bird'),boat=document.getElementById('boat');
+    function scheduleBird(){ if(RM)return; setTimeout(()=>{
+      if(!atNight){ bird.classList.remove('fly'); void bird.offsetWidth; bird.classList.add('fly'); }
+      scheduleBird();
+    }, 24000+Math.random()*22000); }
+    function scheduleBoat(){ if(RM)return; setTimeout(()=>{
+      boat.classList.remove('sail'); void boat.offsetWidth; boat.classList.add('sail');
+      scheduleBoat();
+    }, 40000+Math.random()*30000); }
 
     document.addEventListener('DOMContentLoaded',()=>{
       CJCData.setTheme(window.THEME_ID);
       renderStatic();
       CJCData.mountSwitcher({accent:'#4aa3df'});
-      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); applyPhase(phase); });
       loadDynamic();
+      if(RM){ document.getElementById('draghint').style.display='none'; }
+      else { setWeather('clear'); scheduleBird(); scheduleBoat(); setTimeout(()=>{ bird.classList.add('fly'); },6000); }
     });
   })();
   </script>

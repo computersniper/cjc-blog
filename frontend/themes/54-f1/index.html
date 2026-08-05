@@ -202,9 +202,113 @@
     .muted{color:#5a6475;font-size:12.5px}
     .load-note{color:var(--mut);font-size:14px;grid-column:1/-1;padding:18px;border:1px dashed var(--line);border-radius:8px;text-align:center}
 
+    /* ===== Live HUD extras ===== */
+    .hud-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .lap-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Oswald';font-size:11px;
+      letter-spacing:.16em;color:#ff6b64;text-transform:uppercase}
+    .lap-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);
+      animation:pulse 1.1s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+    .lap-count{margin-left:auto;font-family:'Oswald';font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--ink)}
+    .trophy{background:none;border:0;cursor:pointer;font-size:17px;line-height:1;padding:2px 4px;
+      filter:grayscale(.65);opacity:.5;transition:.2s}
+    .trophy:hover,.trophy:focus-visible{filter:none;opacity:1;transform:scale(1.18) rotate(-8deg);outline:none}
+    .laptime{-webkit-appearance:none;appearance:none;background:none;border:0;color:var(--ink);cursor:pointer;
+      text-align:left;padding:0;display:block;width:100%;font-family:'Oswald';transition:color .2s,text-shadow .2s}
+    .laptime.purple{color:var(--purple);text-shadow:0 0 20px rgba(176,107,255,.75)}
+    .fastest-flag{font-family:'Oswald';font-size:12px;letter-spacing:.12em;color:var(--purple);
+      max-height:0;overflow:hidden;opacity:0;transition:.25s}
+    .fastest-flag.show{max-height:30px;opacity:1;margin:-4px 0 8px;animation:flap .5s ease}
+    @keyframes flap{0%{transform:translateX(-10px)}100%{transform:translateX(0)}}
+    .sectors b{transition:background .3s}
+    .sector-times{display:flex;gap:6px;margin:-4px 0 12px;font-size:11px;color:var(--mut);letter-spacing:.02em}
+    .sector-times span{flex:1;text-align:center;white-space:nowrap}
+    .sector-times span.g{color:var(--green)}.sector-times span.p{color:var(--purple)}.sector-times span.y{color:var(--amber)}
+    .gauges{display:flex;gap:8px;margin-bottom:12px}
+    .gauge{flex:1;border:1px solid var(--line);border-radius:7px;padding:7px 8px;min-width:0}
+    .gauge .k{font-family:'Oswald';font-size:10px;letter-spacing:.12em;color:var(--mut)}
+    .gauge .v{font-family:'Oswald';font-weight:700;font-size:18px;line-height:1.1;white-space:nowrap}
+    .gauge .v small{font-size:10px;color:var(--mut);margin-left:3px;font-weight:400}
+    .gauge .v.gear{font-size:24px;color:var(--cyan)}
+    .rpmbar{height:4px;border-radius:2px;background:#1c232d;overflow:hidden;margin-top:5px}
+    .rpmbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));transition:width .12s linear}
+    .rpmbar.rev i{background:var(--red);animation:revflash .18s steps(2) infinite}
+    @keyframes revflash{50%{opacity:.35}}
+    .indics .ind.drs{-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.02);color:inherit;
+      font:inherit;border:1px solid var(--line);cursor:pointer;transition:.15s}
+    .indics .ind.drs:hover,.indics .ind.drs:focus-visible{border-color:var(--green);outline:none}
+    .ind.drs .v.closed{color:var(--mut)}
+    .tyres{display:flex;gap:8px;margin-top:10px}
+    .tyre-chip{flex:1;font-family:'Oswald';font-weight:700;font-size:13px;border-radius:6px;cursor:pointer;
+      padding:8px 0;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--mut);transition:.15s}
+    .tyre-chip:hover{color:var(--ink)}
+    .tyre-chip.soft.active{background:rgba(225,6,0,.16);border-color:var(--red);color:#ff7a75}
+    .tyre-chip.med.active{background:rgba(255,179,0,.16);border-color:var(--amber);color:var(--amber)}
+    .tyre-chip.hard.active{background:rgba(255,255,255,.1);border-color:#fff;color:#fff}
+    .radio{display:flex;align-items:center;gap:10px;margin-top:12px;padding:9px 11px;border-radius:8px;
+      background:rgba(0,0,0,.35);border:1px solid var(--line);overflow:hidden}
+    .radio-ico{width:26px;height:26px;flex-shrink:0;border-radius:50%;background:var(--red);
+      display:grid;place-items:center;color:#fff;font-size:12px}
+    .radio.live .radio-ico{animation:pulse 1s ease-in-out infinite}
+    .radio-txt{font-size:13px;color:#d7dde6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+
+    /* ===== Lights-out start sequence ===== */
+    .grid-start{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 32%,#14181f,#05070a 76%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:1;transition:opacity .8s ease}
+    .grid-start.hide{opacity:0;pointer-events:none}
+    .gs-lights{display:flex;gap:14px}
+    .gl{width:clamp(38px,11vw,64px);height:clamp(80px,22vw,132px);border-radius:12px;
+      background:linear-gradient(#0c0f14,#07090d);border:2px solid #1a1f27;display:flex;flex-direction:column;
+      align-items:center;justify-content:space-around;padding:9px 0;box-shadow:inset 0 0 12px #000}
+    .gl b{width:58%;aspect-ratio:1;border-radius:50%;background:#2a0806;box-shadow:inset 0 0 6px #000;transition:none}
+    .gl.on b{background:radial-gradient(circle at 40% 35%,#ff6b64,var(--red));
+      box-shadow:0 0 18px var(--red),0 0 42px rgba(225,6,0,.5),inset 0 0 6px rgba(255,255,255,.5)}
+    .gs-go{font-family:'Oswald';font-weight:900;text-transform:uppercase;letter-spacing:.03em;text-align:center;
+      font-size:clamp(26px,7vw,58px);line-height:1.02;color:#fff;opacity:0;transform:scale(.72)}
+    .gs-go.go{animation:goPop .55s cubic-bezier(.2,1.4,.4,1) forwards}
+    .gs-go small{display:block;font-size:.42em;color:var(--red);letter-spacing:.28em;margin-top:10px}
+    @keyframes goPop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+    .gs-skip{position:absolute;bottom:24px;font-family:'Oswald';font-size:11px;letter-spacing:.14em;color:var(--mut);opacity:.7}
+
+    /* ===== Chequered flag / P1 celebration ===== */
+    .checkered{position:fixed;inset:-20px;z-index:9200;pointer-events:none;opacity:0;transition:opacity .5s;
+      background-image:conic-gradient(#000 90deg,#fff 0 180deg,#000 0 270deg,#fff 0);background-size:46px 46px}
+    .checkered.wave{opacity:.16;animation:cwave 1.5s ease-in-out}
+    @keyframes cwave{0%{transform:translateX(-34px) skewX(-6deg)}50%{transform:translateX(34px) skewX(6deg)}100%{transform:translateX(0)}}
+    .celebrate{position:fixed;inset:0;z-index:9300;pointer-events:none;display:grid;place-items:center;opacity:0;transition:opacity .3s;text-align:center}
+    .celebrate.show{opacity:1}
+    .celebrate .p1{font-family:'Oswald';font-weight:900;font-size:clamp(78px,26vw,240px);line-height:.9;
+      color:#fff;text-shadow:0 0 44px rgba(225,6,0,.85);transform:scale(.6)}
+    .celebrate.show .p1{animation:goPop .6s cubic-bezier(.2,1.4,.4,1) forwards}
+    .celebrate .p1sub{position:absolute;bottom:22%;left:0;right:0;font-family:'Oswald';letter-spacing:.18em;
+      color:var(--amber);font-size:clamp(13px,3vw,22px)}
+    .confetti{position:fixed;inset:0;z-index:9250;pointer-events:none;overflow:hidden}
+    .confetti i{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+    @keyframes fall{to{transform:translateY(108vh) rotate(760deg)}}
+
+    /* ===== Pit stop ===== */
+    .pit{position:fixed;inset:0;z-index:9300;display:grid;place-items:center;background:rgba(4,6,9,.88);
+      opacity:0;pointer-events:none;transition:opacity .25s}
+    .pit.show{opacity:1;pointer-events:auto}
+    .pit-box{text-align:center;font-family:'Oswald';padding:0 16px}
+    .pit-title{font-size:clamp(20px,5vw,34px);font-weight:900;letter-spacing:.05em;color:var(--amber)}
+    .pit-car{position:relative;width:min(280px,74vw);height:118px;margin:22px auto;display:grid;place-items:center}
+    .pit-car .body{width:min(180px,50vw);height:44px;border-radius:22px;background:linear-gradient(90deg,var(--red),#7a0400);
+      box-shadow:0 0 30px rgba(225,6,0,.4)}
+    .pit-wheel{position:absolute;width:26px;height:26px;border-radius:50%;background:#111;border:4px solid #555;transition:border-color .2s}
+    .pit-wheel.spin{animation:spin .38s linear infinite}
+    .pit-wheel.changed{border-color:var(--green);box-shadow:0 0 10px rgba(0,214,143,.6)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .pit-clock{font-size:clamp(30px,9vw,56px);font-weight:900;color:#fff}
+    .pit-go{margin-top:8px;font-size:clamp(13px,3.4vw,18px);letter-spacing:.24em;color:var(--green);opacity:0}
+    .pit-go.on{animation:goPop .45s ease forwards}
+
     @media(prefers-reduced-motion:reduce){
       .speed span{animation:none;display:none}
       *{scroll-behavior:auto}
+      .lap-badge .dot,.radio.live .radio-ico,.rpmbar.rev i,.pit-wheel.spin{animation:none!important}
+      .grid-start,.confetti,.checkered{display:none!important}
+      .gs-go,.celebrate .p1,.pit-go{animation:none!important;opacity:1;transform:none}
     }
   </style>
 </head>
@@ -231,17 +335,35 @@
           <a class="btn gho" id="ghBtn" target="_blank" rel="noopener"><i class="fa fa-github"></i><span>GitHub</span></a>
         </div>
       </div>
-      <div class="hud">
-        <div class="lbl">Fastest Lap · Sector Times</div>
-        <div class="big mono">1:18<small>.204</small></div>
-        <div class="sectors"><b class="g"></b><b class="p"></b><b class="y"></b></div>
+      <div class="hud" id="hud">
+        <div class="hud-top">
+          <span class="lap-badge"><span class="dot"></span>LIVE</span>
+          <span class="lap-count mono" id="lapCount">LAP 1/58</span>
+          <button class="trophy" id="trophyBtn" type="button" title="Podium? 🏆">🏆</button>
+        </div>
+        <div class="lbl">Current Lap · Tap for fastest</div>
+        <button class="big mono laptime" id="lapTime" type="button" title="Trigger fastest lap 🟪">0:00<small>.000</small></button>
+        <div class="fastest-flag" id="fastestFlag">FASTEST LAP 🟪</div>
+        <div class="sectors" id="sectors"><b id="s1"></b><b id="s2"></b><b id="s3"></b></div>
+        <div class="sector-times mono" id="sectorTimes"><span>S1 --.---</span><span>S2 --.---</span><span>S3 --.---</span></div>
+        <div class="gauges">
+          <div class="gauge"><div class="k">SPEED</div><div class="v mono"><b id="speed">0</b><small>km/h</small></div></div>
+          <div class="gauge"><div class="k">RPM</div><div class="v mono"><b id="rpm">0.0k</b></div><div class="rpmbar"><i id="rpmbar"></i></div></div>
+          <div class="gauge"><div class="k">GEAR</div><div class="v mono gear" id="gear">N</div></div>
+        </div>
         <div class="lbl">Speed Trace</div>
         <div class="grph" id="trace"></div>
         <div class="indics">
-          <div class="ind drs"><div class="k">DRS</div><div class="v">OPEN</div></div>
+          <button class="ind drs" id="drsBtn" type="button"><div class="k">DRS</div><div class="v closed" id="drsVal">CLOSED</div></button>
           <div class="ind ers"><div class="k">ERS</div><div class="v">DEPLOY</div></div>
-          <div class="ind tyre"><div class="k">TYRE</div><div class="v">SOFT</div></div>
+          <div class="ind tyre"><div class="k">TYRE</div><div class="v" id="tyreVal">SOFT</div></div>
         </div>
+        <div class="tyres" id="tyreChips">
+          <button data-c="S" class="tyre-chip soft active" type="button" title="Soft">S</button>
+          <button data-c="M" class="tyre-chip med" type="button" title="Medium">M</button>
+          <button data-c="H" class="tyre-chip hard" type="button" title="Hard">H</button>
+        </div>
+        <div class="radio" id="radio"><span class="radio-ico"><i class="fa fa-microphone"></i></span><span class="radio-txt" id="radioTxt">Radio check.</span></div>
       </div>
     </div>
   </div></header>
@@ -320,6 +442,38 @@
     </div>
   </div></footer>
 
+  <!-- ===== Immersion overlays ===== -->
+  <div class="grid-start" id="gridStart" aria-hidden="true">
+    <div class="gs-lights">
+      <div class="gl"><b></b><b></b></div>
+      <div class="gl"><b></b><b></b></div>
+      <div class="gl"><b></b><b></b></div>
+      <div class="gl"><b></b><b></b></div>
+      <div class="gl"><b></b><b></b></div>
+    </div>
+    <div class="gs-go">LIGHTS OUT<br>AND AWAY WE GO<small>起步！GO GO GO</small></div>
+    <div class="gs-skip">CLICK / ESC TO SKIP · 点击跳过</div>
+  </div>
+
+  <div class="checkered" id="checkered" aria-hidden="true"></div>
+  <div class="celebrate" id="celebrate" aria-hidden="true">
+    <div class="p1">P1 🏆</div>
+    <div class="p1sub">🏁 CHEQUERED FLAG · 冲线夺冠 🏁</div>
+  </div>
+
+  <div class="pit" id="pit" aria-hidden="true"><div class="pit-box">
+    <div class="pit-title">🔧 PIT STOP · 进站</div>
+    <div class="pit-car">
+      <div class="body"></div>
+      <div class="pit-wheel" style="left:20px;top:14px"></div>
+      <div class="pit-wheel" style="right:20px;top:14px"></div>
+      <div class="pit-wheel" style="left:20px;bottom:14px"></div>
+      <div class="pit-wheel" style="right:20px;bottom:14px"></div>
+    </div>
+    <div class="pit-clock mono" id="pitClock">0.0</div>
+    <div class="pit-go" id="pitGo">GREEN GREEN GREEN · 出站</div>
+  </div></div>
+
   <script>window.THEME_ID = "54-f1";</script>
   <script src="/shared/profile.js"></script>
   <script src="/shared/site-data.js"></script>
@@ -329,10 +483,208 @@
     let articles = [], projects = [], filterKey = "all";
     const podium = ["🏆 WIN","🥈 P2","🥉 P3"];
 
-    // speed trace bars
-    (function(){ const el=document.getElementById('trace'); let h='';
-      for(let i=0;i<28;i++){ h+=`<i style="height:${20+Math.round(60*Math.abs(Math.sin(i*.7)))}%"></i>`; }
-      el.innerHTML=h; })();
+    // =========================================================
+    //  LIVE RACE SESSION ENGINE — the telemetry "comes alive"
+    // =========================================================
+    const RM = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const TOTAL_LAPS = 58;
+    const $ = id => document.getElementById(id);
+    const S = {
+      lap:1, lapMs:0, last:0, best:0, running:false, started:false, raf:0, t0:0,
+      speed:0, rpm:9200, gear:0, phase:0,
+      drs:false, drsHold:0, tyre:'SOFT',
+      secIdx:0, secStart:0, secTimes:[0,0,0], bestSec:[0,0,0],
+      target:81000, samples:new Array(28).fill(24), lastTrace:0
+    };
+
+    function fmtLap(ms){
+      const m=Math.floor(ms/60000), s=Math.floor(ms%60000/1000), x=Math.floor(ms%1000);
+      return `${m}:${String(s).padStart(2,'0')}<small>.${String(x).padStart(3,'0')}</small>`;
+    }
+
+    // ---- team radio (bilingual, follows the language toggle) ----
+    const RADIO=[
+      {en:"Box, box.",zh:"进站，进站。"},
+      {en:"Gap to leader 1.2s.",zh:"与领跑差距 1.2 秒。"},
+      {en:"Purple sector! Great job.",zh:"紫色分段！非常好。"},
+      {en:"Push now, push now.",zh:"现在全力推进！"},
+      {en:"Tyres are feeling good.",zh:"轮胎手感不错。"},
+      {en:"DRS enabled on the straight.",zh:"直道 DRS 已开启。"},
+      {en:"You're P1 — bring it home.",zh:"你是第一名，稳稳带回。"},
+      {en:"Mode push, mode push.",zh:"切到推进模式。"},
+      {en:"Fuel and tyres are fine.",zh:"油量与轮胎正常。"}
+    ];
+    let radioCur=RADIO[3], radioTimer=0;
+    function paintRadio(){ const el=$('radioTxt'); if(el) el.textContent=t(radioCur); }
+    function radio(msg){ radioCur=msg||RADIO[Math.floor(Math.random()*RADIO.length)]; paintRadio(); }
+    function radioLoop(){ if(RM) return; clearInterval(radioTimer); radioTimer=setInterval(()=>radio(),4600); }
+
+    function telemetry(dt){
+      S.phase += dt*0.001;
+      const p=S.lapMs/S.target;
+      const corners=Math.sin(p*Math.PI*7)*0.5+Math.sin(p*Math.PI*3.3)*0.5;
+      const base=250+corners*72;
+      const jit=Math.sin(S.phase*9)*6+(Math.random()-.5)*5;
+      S.speed=Math.max(74,Math.round(base+jit));
+      S.gear=Math.min(8,Math.max(1,Math.round(S.speed/40)));
+      S.rpm=Math.round(9200+((S.speed%40)/40)*6200+Math.sin(S.phase*12)*260);
+      if(S.drsHold>0){ S.drsHold-=dt; } else { S.drs=S.speed>300; }
+    }
+
+    function paintTrace(now){
+      if(now-S.lastTrace<110) return; S.lastTrace=now;
+      S.samples.push(Math.max(8,Math.min(100,Math.round((S.speed-70)/2.7)))); S.samples.shift();
+      const el=$('trace'); if(el) el.innerHTML=S.samples.map(h=>`<i style="height:${h}%"></i>`).join('');
+    }
+
+    function paintHud(){
+      const lt=$('lapTime'); if(lt) lt.innerHTML=fmtLap(S.lapMs);
+      const lc=$('lapCount'); if(lc) lc.textContent=`LAP ${S.lap}/${TOTAL_LAPS}`;
+      const sp=$('speed'); if(sp) sp.textContent=S.speed;
+      const rp=$('rpm'); if(rp) rp.textContent=(S.rpm/1000).toFixed(1)+'k';
+      const gr=$('gear'); if(gr) gr.textContent=S.gear;
+      const rb=$('rpmbar'); if(rb){ const pct=Math.min(100,(S.rpm/15400)*100); rb.style.width=pct+'%'; rb.parentElement.classList.toggle('rev',pct>92); }
+      const dv=$('drsVal'); if(dv){ dv.textContent=S.drs?'OPEN':'CLOSED'; dv.classList.toggle('closed',!S.drs); }
+    }
+
+    function completeSector(i){
+      const tms=S.lapMs-S.secStart; S.secStart=S.lapMs; S.secTimes[i]=tms;
+      let cls='y';
+      if(!S.bestSec[i]||tms<S.bestSec[i]){ S.bestSec[i]=tms; cls=Math.random()<.5?'p':'g'; }
+      else if(Math.random()<.4){ cls='g'; }
+      const bar=$('s'+(i+1)); if(bar){ bar.className=''; bar.classList.add(cls); }
+      const st=$('sectorTimes'); if(st&&st.children[i]){ st.children[i].textContent=`S${i+1} ${(tms/1000).toFixed(3)}`; st.children[i].className=cls; }
+      if(cls==='p') radio(RADIO[2]);
+    }
+
+    function completeLap(){
+      completeSector(2);
+      S.last=S.lapMs;
+      if(!S.best||S.last<S.best){ S.best=S.last; showFastest(); }
+      S.lap++;
+      if(S.lap>TOTAL_LAPS){ S.lap=TOTAL_LAPS; flag(); return; }
+      S.lapMs=0; S.secIdx=0; S.secStart=0; S.target=79000+Math.random()*7000;
+      if(Math.random()<.35) radio();
+    }
+
+    function frame(now){
+      if(!S.running) return;
+      if(!S.t0) S.t0=now;
+      const dt=Math.min(60,now-S.t0); S.t0=now;
+      S.lapMs+=dt;
+      telemetry(dt);
+      const secLen=S.target/3, sec=Math.min(2,Math.floor(S.lapMs/secLen));
+      if(sec>S.secIdx){ completeSector(S.secIdx); S.secIdx=sec; }
+      if(S.lapMs>=S.target){ completeLap(); }
+      paintHud(); paintTrace(now);
+      S.raf=requestAnimationFrame(frame);
+    }
+
+    // ---- EASTER EGG 1: fastest lap (auto, or tap the lap timer) ----
+    function showFastest(){
+      const lt=$('lapTime'), ff=$('fastestFlag');
+      if(lt) lt.classList.add('purple');
+      if(ff) ff.classList.add('show');
+      radio(RADIO[2]);
+      clearTimeout(showFastest._t);
+      showFastest._t=setTimeout(()=>{ if(lt) lt.classList.remove('purple'); if(ff) ff.classList.remove('show'); },4200);
+    }
+
+    // ---- EASTER EGG 2: chequered flag / P1 (trophy, or reach the last lap) ----
+    let confettiN=0;
+    function confetti(){
+      if(RM) return;
+      const wrap=document.createElement('div'); wrap.className='confetti';
+      const cols=['#e10600','#ffffff','#ffb300','#31e0ff','#00d68f','#b06bff'];
+      for(let i=0;i<70;i++){ const s=document.createElement('i');
+        s.style.left=(Math.random()*100)+'vw';
+        s.style.background=cols[i%cols.length];
+        s.style.animationDuration=(1.6+Math.random()*1.6)+'s';
+        s.style.animationDelay=(Math.random()*.5)+'s';
+        wrap.appendChild(s); }
+      document.body.appendChild(wrap);
+      setTimeout(()=>wrap.remove(),3800);
+    }
+    function flag(){
+      const ck=$('checkered'); if(ck&&!RM){ ck.classList.add('wave'); setTimeout(()=>ck.classList.remove('wave'),1700); }
+      const c=$('celebrate'); if(c){ c.classList.add('show'); clearTimeout(flag._t); flag._t=setTimeout(()=>c.classList.remove('show'),RM?1700:2600); }
+      confetti(); radio(RADIO[6]);
+    }
+
+    // ---- EASTER EGG 3: type "box" -> pit stop ----
+    function pitStop(){
+      const pit=$('pit'); if(!pit) return;
+      radio(RADIO[0]); pit.classList.add('show');
+      const wheels=[...pit.querySelectorAll('.pit-wheel')], clock=$('pitClock'), go=$('pitGo');
+      wheels.forEach(w=>{w.classList.add('spin');w.classList.remove('changed');});
+      if(go) go.classList.remove('on');
+      if(RM){
+        if(clock) clock.textContent='2.4';
+        wheels.forEach(w=>{w.classList.remove('spin');w.classList.add('changed');});
+        if(go) go.classList.add('on');
+        clearTimeout(pitStop._h); pitStop._h=setTimeout(()=>pit.classList.remove('show'),1600); return;
+      }
+      const t0=performance.now();
+      clearInterval(pitStop._t);
+      pitStop._t=setInterval(()=>{
+        const ms=performance.now()-t0, done=Math.floor(ms/520);
+        if(clock) clock.textContent=(ms/1000).toFixed(1);
+        wheels.forEach((w,i)=>{ if(i<done){ w.classList.remove('spin'); w.classList.add('changed'); } });
+        if(ms>=2400){ clearInterval(pitStop._t);
+          wheels.forEach(w=>{w.classList.remove('spin');w.classList.add('changed');});
+          if(clock) clock.textContent='2.4';
+          if(go) go.classList.add('on');
+          clearTimeout(pitStop._h); pitStop._h=setTimeout(()=>pit.classList.remove('show'),1200);
+        }
+      },60);
+    }
+
+    function wireInteractions(){
+      const lt=$('lapTime'); if(lt) lt.addEventListener('click',()=>{ S.best=Math.max(1,S.lapMs); showFastest(); });
+      const tr=$('trophyBtn'); if(tr) tr.addEventListener('click',flag);
+      const cl=$('celebrate'); if(cl) cl.style.pointerEvents='none';
+      const pit=$('pit'); if(pit) pit.addEventListener('click',()=>pit.classList.remove('show'));
+      const drs=$('drsBtn'); if(drs) drs.addEventListener('click',()=>{ S.drs=!S.drs; S.drsHold=6000; paintHud(); radio(S.drs?RADIO[5]:RADIO[3]); });
+      document.querySelectorAll('.tyre-chip').forEach(ch=>ch.addEventListener('click',()=>{
+        document.querySelectorAll('.tyre-chip').forEach(x=>x.classList.remove('active'));
+        ch.classList.add('active');
+        S.tyre=({S:'SOFT',M:'MEDIUM',H:'HARD'})[ch.dataset.c]||'SOFT';
+        const tv=$('tyreVal'); if(tv) tv.textContent=S.tyre; radio(RADIO[4]);
+      }));
+      let buf='';
+      document.addEventListener('keydown',e=>{
+        const tag=(e.target&&e.target.tagName||'').toLowerCase();
+        if(e.key==='Escape'){ skipIntro(); return; }
+        if(tag==='input'||tag==='textarea') return;
+        if(e.key&&e.key.length===1){ buf=(buf+e.key.toLowerCase()).slice(-8); if(buf.endsWith('box')) pitStop(); }
+      });
+      const gs=$('gridStart'); if(gs) gs.addEventListener('click',skipIntro);
+    }
+
+    function startSession(){
+      if(S.started) return; S.started=true;
+      const tv=$('tyreVal'); if(tv) tv.textContent=S.tyre;
+      radio(RADIO[3]);
+      const r=$('radio'); if(r&&!RM) r.classList.add('live');
+      if(RM){ // static, readable snapshot — lights already out, timers static
+        S.lap=12; S.lapMs=78204; S.speed=305; S.gear=7; S.rpm=13800; S.drs=true;
+        S.samples=S.samples.map((_,i)=>26+Math.round(52*Math.abs(Math.sin(i*.6))));
+        paintHud();
+        const el=$('trace'); if(el) el.innerHTML=S.samples.map(h=>`<i style="height:${h}%"></i>`).join('');
+        const cols=['g','p','g'], times=['S1 26.104','S2 28.552','S3 23.548'];
+        cols.forEach((c,i)=>{ const b=$('s'+(i+1)); if(b){ b.className=''; b.classList.add(c);} const st=$('sectorTimes'); if(st&&st.children[i]){ st.children[i].textContent=times[i]; st.children[i].className=c; } });
+        return;
+      }
+      S.running=true; S.t0=0; radioLoop(); S.raf=requestAnimationFrame(frame);
+    }
+
+    function skipIntro(){
+      const gs=$('gridStart');
+      if(gs&&!gs.classList.contains('hide')){
+        gs.classList.add('hide'); setTimeout(()=>{ if(gs) gs.style.display='none'; },900);
+      }
+      if(!S.started&&!RM) startSession();
+    }
 
     function renderStatic(){
       document.getElementById('nav').innerHTML = [
@@ -455,22 +807,32 @@
       catch(err){ s.style.color='var(--red)'; s.textContent=err.message; }
     });
 
-    // lights-out sequence (reduced-motion => static all on)
+    // ---- LIGHTS OUT start sequence: 5 lights on one-by-one, then out -> GO ----
     function lightsOut(){
-      const l=[...document.querySelectorAll('#lights .lgt')];
-      const rm=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-      if(rm){ l.forEach(x=>x.classList.add('on')); return; }
-      l.forEach(x=>x.classList.remove('on'));
-      l.forEach((x,i)=>setTimeout(()=>x.classList.add('on'),i*450+300));
-      setTimeout(()=>l.forEach(x=>x.classList.remove('on')),450*5+900); // lights out — GO!
+      const strip=[...document.querySelectorAll('#lights .lgt')];
+      const gs=$('gridStart');
+      if(RM){ // reduced motion: lights already out, telemetry static & readable
+        if(gs) gs.style.display='none';
+        strip.forEach(x=>x.classList.remove('on'));
+        startSession();
+        return;
+      }
+      const gl=gs?[...gs.querySelectorAll('.gl')]:[];
+      const go=gs?gs.querySelector('.gs-go'):null;
+      gl.forEach((x,i)=>setTimeout(()=>{ x.classList.add('on'); if(strip[i]) strip[i].classList.add('on'); },500+i*650));
+      const outAt=500+5*650+750;
+      setTimeout(()=>{ gl.forEach(x=>x.classList.remove('on')); strip.forEach(x=>x.classList.remove('on')); if(go) go.classList.add('go'); },outAt);
+      setTimeout(()=>startSession(),outAt+150);           // telemetry comes alive
+      setTimeout(()=>{ if(gs){ gs.classList.add('hide'); setTimeout(()=>{ if(gs) gs.style.display='none'; },900); } },outAt+1500);
     }
 
     document.addEventListener('DOMContentLoaded',()=>{
       CJCData.setTheme(window.THEME_ID);
       renderStatic();
       CJCData.mountSwitcher({accent:'#e10600'});
-      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); paintRadio(); });
       loadDynamic();
+      wireInteractions();
       lightsOut();
     });
   })();
