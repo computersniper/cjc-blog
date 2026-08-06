@@ -1,1393 +1,1005 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cai Jiechao — The Difference Engine</title>
-  <meta name="description" content="A Victorian brass machine you operate. Pull the lever, build pressure, wind the automaton — the engine prints the record of Cai Jiechao." />
-  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cinzel+Decorative:wght@700;900&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <style>
-    :root{
-      --bg:#170f07; --bg2:#20150b;
-      --wood:#2e1d10; --wood2:#3f2917; --wood3:#523620;
-      --leather:#241812; --leather2:#312017;
-      --brass:#c98a2b; --brass-lt:#f2d489; --brass-dk:#7a4e18; --brass-deep:#4a2f10; --copper:#b06a38;
-      --paper:#eee0bd; --paper2:#e4d3a8; --ink-solid:#33261a; --ink2:#5c4526; --ink3:#8a6f45;
-      --edge:rgba(201,138,43,.34);
-      --disp:'Cinzel',serif; --decor:'Cinzel Decorative',serif;
-      --body:'IM Fell English','Georgia',serif; --mono:'Special Elite','Courier New',monospace;
-      /* -- procedural textures (feTurbulence) -- */
-      --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-      --fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.16' numOctaves='4' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E");
-      --patina:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04 0.05' numOctaves='3' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23p)' opacity='0.6'/%3E%3C/svg%3E");
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
-    body{margin:0;color:var(--paper);font-family:var(--body);font-size:17px;line-height:1.65;overflow-x:hidden;
-      background:
-        radial-gradient(900px 520px at 18% -6%, rgba(255,182,84,.2), transparent 55%),
-        radial-gradient(1000px 720px at 108% 16%, rgba(206,112,48,.16), transparent 60%),
-        radial-gradient(1500px 1000px at 50% 122%, rgba(255,118,28,.26), transparent 60%),
-        linear-gradient(172deg,#180f07,#0c0703);
-      background-attachment:fixed;}
-    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-      background-image:var(--grain);background-size:140px 140px;mix-blend-mode:overlay}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    button{font-family:inherit}
-    .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative}
-    ::selection{background:var(--brass);color:#1a120a}
-    :focus-visible{outline:2px solid var(--brass-lt);outline-offset:3px}
-
-    .vig{position:fixed;inset:0;z-index:1;pointer-events:none;
-      background:radial-gradient(135% 120% at 50% 28%,transparent 52%,rgba(0,0,0,.62))}
-    header,footer{position:relative;z-index:3}
-    main{position:relative;z-index:3;overflow-x:clip}
-
-    /* =========================================================
-       METAL — the core material recipe (layered brass/copper)
-       base metallic gradient + specular streak + edge grime
-       + patina noise, embossed with inset/outset shadows
-       ========================================================= */
-    .metal{position:relative;
-      background:
-        var(--patina),
-        linear-gradient(108deg,transparent 22%,rgba(255,248,225,.55) 40%,rgba(255,248,225,.08) 50%,transparent 64%),
-        linear-gradient(180deg,rgba(255,238,200,.35),transparent 16%,transparent 78%,rgba(0,0,0,.42)),
-        linear-gradient(158deg,#e2b45c 0%,#c58c34 34%,#9a6524 60%,#6f451a 100%);
-      background-size:180px 180px,100% 100%,100% 100%,100% 100%;
-      background-blend-mode:overlay,screen,normal,normal;
-      box-shadow:inset 0 2px 3px rgba(255,244,210,.6),inset 0 -4px 8px rgba(60,32,8,.6),
-                 inset 3px 0 6px rgba(0,0,0,.28),inset -3px 0 6px rgba(0,0,0,.28),
-                 0 14px 34px rgba(0,0,0,.55);}
-    .metal.copper{background:
-        var(--patina),
-        linear-gradient(108deg,transparent 22%,rgba(255,236,210,.5) 40%,rgba(255,236,210,.06) 50%,transparent 64%),
-        linear-gradient(180deg,rgba(255,220,190,.3),transparent 16%,transparent 78%,rgba(0,0,0,.45)),
-        linear-gradient(158deg,#cf884f 0%,#b06a38 40%,#8a4d26 66%,#5e3016 100%);}
-    .metal.dark{background:
-        var(--grain),
-        linear-gradient(108deg,transparent 26%,rgba(210,160,90,.28) 42%,transparent 60%),
-        linear-gradient(180deg,rgba(120,84,44,.4),transparent 20%,transparent 74%,rgba(0,0,0,.6)),
-        linear-gradient(160deg,#3a2717,#241608 60%,#160d05);
-      background-size:140px 140px,100% 100%,100% 100%,100% 100%;
-      box-shadow:inset 0 1px 2px rgba(210,160,90,.35),inset 0 -4px 10px rgba(0,0,0,.7),0 12px 30px rgba(0,0,0,.6);}
-
-    /* rivets — studs with highlight + cast shadow */
-    .rivet{position:absolute;width:12px;height:12px;border-radius:50%;z-index:4;
-      background:radial-gradient(circle at 34% 30%,#ffe9b8,#c98a2b 46%,#6f451a 78%,#3a2408);
-      box-shadow:0 1px 2px rgba(0,0,0,.7),inset 0 1px 1px rgba(255,244,210,.7),inset 0 -2px 2px rgba(0,0,0,.4)}
-    .rivet.sm{width:9px;height:9px}
-
-    /* riveted plate helper (small, for brand etc.) */
-    .riveted{position:relative}
-    .riveted::before,.riveted::after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;top:8px;
-      background:radial-gradient(circle at 34% 30%,#ffe9b8,#8a5a1e);box-shadow:0 1px 2px rgba(0,0,0,.6)}
-    .riveted::before{left:8px}.riveted::after{right:8px}
-
-    /* engraved / embossed brass text plate */
-    .engrave{color:#2a1806;text-shadow:0 1px 0 rgba(255,244,210,.55),0 -1px 1px rgba(60,32,8,.5)}
-    .emboss-gold{
-      background:linear-gradient(180deg,#ffe9b0 0%,#e6b155 30%,#c98a2b 52%,#8a5a1e 78%,#f0cd7e 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      filter:drop-shadow(0 1px 0 rgba(255,240,200,.35)) drop-shadow(0 2px 3px rgba(0,0,0,.6));}
-
-    /* copper pipes (fixed decor, behind content) */
-    .pipes{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-    .pipe{position:absolute;border-radius:9px;
-      background:linear-gradient(90deg,#4a2a14,#b06a38 22%,#e6a878 42%,#b06a38 62%,#5e3016);
-      box-shadow:0 3px 10px rgba(0,0,0,.5)}
-    .pipe.v{width:18px;top:-40px;bottom:-40px;
-      background:linear-gradient(180deg,#4a2a14,#b06a38 22%,#e6a878 42%,#b06a38 62%,#5e3016)}
-    .pipe.h{height:16px;
-      background:linear-gradient(180deg,#4a2a14,#b06a38 22%,#e6a878 42%,#b06a38 62%,#5e3016)}
-    .pipe.h .coupling{left:auto;right:auto;top:-4px;bottom:-4px;height:auto;width:20px;
-      background:linear-gradient(180deg,#3a2010,#c98a2b 40%,#f0cd7e 50%,#8a5a1e 62%,#3a2010)}
-    .elbow{position:absolute;width:26px;height:26px;border-radius:6px 3px 3px 3px;
-      background:linear-gradient(135deg,#e6a878,#b06a38 55%,#5e3016);box-shadow:inset 0 1px 2px rgba(255,235,205,.4),0 2px 5px rgba(0,0,0,.4)}
-    .pipe .coupling{position:absolute;left:-4px;right:-4px;height:22px;border-radius:5px;
-      background:linear-gradient(90deg,#3a2010,#c98a2b 40%,#f0cd7e 50%,#8a5a1e 62%,#3a2010);
-      box-shadow:inset 0 2px 2px rgba(255,240,200,.4),inset 0 -2px 3px rgba(0,0,0,.5),0 2px 5px rgba(0,0,0,.4)}
-    .valve{position:absolute;width:52px;height:52px;border-radius:50%;
-      background:radial-gradient(circle at 38% 32%,#e6a878,#b06a38 55%,#5e3016);
-      box-shadow:0 4px 10px rgba(0,0,0,.5),inset 0 2px 3px rgba(255,235,205,.4)}
-    .valve::before{content:"";position:absolute;inset:9px;border-radius:50%;border:4px solid #3a2010;
-      box-shadow:inset 0 0 0 3px rgba(230,168,120,.5)}
-    .valve::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);
-      background:radial-gradient(circle at 35% 30%,#f0cd7e,#5e3016)}
-    @media(max-width:900px){.pipes{display:none}}
-
-    /* decorative meshing gears in margins — always turning */
-    .gear{position:absolute;pointer-events:none;z-index:2;filter:drop-shadow(0 4px 7px rgba(0,0,0,.55));animation:spin linear infinite}
-    .gear svg{display:block}
-    #g1{animation-duration:24s}#g2{animation-duration:13s;animation-direction:reverse}
-    #g3{animation-duration:30s}#g4{animation-duration:17s;animation-direction:reverse}
-    #g5{animation-duration:15s}#g6{animation-duration:21s;animation-direction:reverse}
-    @media(max-width:700px){.gear{opacity:.5}}
-
-    /* =========================================================
-       Control console (sticky top)
-       ========================================================= */
-    header.console{position:sticky;top:0;z-index:800;
-      border-bottom:3px solid var(--brass-deep);
-      box-shadow:0 8px 26px rgba(0,0,0,.6),inset 0 -2px 4px rgba(0,0,0,.4),inset 0 2px 2px rgba(210,160,90,.25)}
-    .console.metal.dark{background-size:140px,100%,100%,100%}
-    .console-in{display:flex;align-items:center;gap:16px;height:72px;max-width:1180px;margin:0 auto;padding:0 18px;position:relative}
-    @media(min-width:1041px){.console-in{padding-right:216px}}
-    .brand-plate{display:flex;align-items:center;gap:11px;padding:9px 16px;border-radius:9px;position:relative;
-      border:2px solid var(--brass-deep)}
-    .brand-plate .cog{width:30px;height:30px;flex:none}
-    .brand-plate b{font-family:var(--decor);font-weight:700;font-size:17px;letter-spacing:.02em;line-height:1}
-    .brand-plate small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;margin-top:3px;color:#3a2408}
-    @media(max-width:560px){.brand-plate small{display:none}.brand-plate b{font-size:14px}.brand-plate .cog{width:22px;height:22px}}
-    @media(max-width:480px){.console-in{padding-right:150px;gap:10px}}
-    @media(max-width:400px){.brand-plate b{font-size:12px;max-width:98px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-
-    .gauge-mini{margin-left:auto;display:flex;align-items:center;gap:16px}
-    .press-mini{display:flex;align-items:center;gap:9px;color:var(--brass-lt);font-family:var(--mono);font-size:11px;letter-spacing:.1em}
-    .press-mini svg{width:50px;height:50px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
-    .press-mini .val{min-width:46px}
-    @media(max-width:820px){.press-mini{display:none}}
-    .dial{position:relative;width:58px;height:58px;flex:none;cursor:pointer;border-radius:50%;
-      border:3px solid var(--brass-deep)}
-    .dial .knob{position:absolute;inset:0;border-radius:50%;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-    .dial .knob::after{content:"";position:absolute;left:50%;top:6px;width:5px;height:16px;border-radius:3px;
-      transform:translateX(-50%);background:linear-gradient(#3a2408,#1a1004);box-shadow:0 1px 1px rgba(255,240,200,.3)}
-    .dial-lbl{font-family:var(--mono);font-size:9px;color:var(--brass-lt);letter-spacing:.14em;text-align:center;margin-top:2px}
-    .dial-wrap{display:flex;flex-direction:column;align-items:center}
-    @media(max-width:480px){.dial-wrap{display:none}}
-
-    /* =========================================================
-       Section bay: parchment on a riveted brass frame
-       ========================================================= */
-    section.bay{padding:62px 0;position:relative}
-    .frame{position:relative;border-radius:16px;padding:9px;}
-    /* exposed bolt strips along the top & bottom of every frame */
-    .frame::before{content:"";position:absolute;left:16px;right:16px;top:-2px;bottom:-2px;pointer-events:none;z-index:4;
-      background:
-        radial-gradient(circle at 5px 5px,#ffe4a8 0 1.5px,#8a5a1e 2px 3px,rgba(0,0,0,.5) 3.2px 4px,transparent 4.3px) left top repeat-x,
-        radial-gradient(circle at 5px 5px,#ffe4a8 0 1.5px,#8a5a1e 2px 3px,rgba(0,0,0,.5) 3.2px 4px,transparent 4.3px) left bottom repeat-x;
-      background-size:26px 11px,26px 11px}
-    /* rust streaks + oil stain worked into the brass frame border */
-    .frame::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;z-index:1;opacity:.8;mix-blend-mode:multiply;
-      background:
-        linear-gradient(90deg,rgba(120,52,16,.34) 0,rgba(120,52,16,.14) 6%,transparent 13%),
-        linear-gradient(270deg,rgba(110,46,14,.3) 0,rgba(110,46,14,.12) 6%,transparent 13%),
-        radial-gradient(50% 26% at 26% 100%,rgba(50,26,8,.4),transparent 60%),
-        radial-gradient(40% 22% at 78% 0%,rgba(60,30,10,.34),transparent 60%)}
-    .paper{border-radius:9px;padding:42px 44px;position:relative;overflow:hidden;color:var(--ink-solid);
-      background:
-        var(--fiber),
-        radial-gradient(130% 120% at 0% 0%, rgba(150,108,54,.16), transparent 42%),
-        radial-gradient(130% 120% at 100% 100%, rgba(120,80,30,.2), transparent 44%),
-        linear-gradient(180deg,#f1e4c3,#e5d3a6);
-      background-size:220px 220px,100% 100%,100% 100%,100% 100%;
-      background-blend-mode:multiply,normal,normal,normal;
-      box-shadow:inset 0 0 70px rgba(120,80,30,.22),inset 0 2px 3px rgba(255,250,235,.7),
-                 inset 0 -3px 8px rgba(120,80,30,.25),0 2px 0 rgba(255,250,235,.15)}
-    .paper::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background:repeating-linear-gradient(0deg,transparent 0 27px,rgba(120,80,30,.06) 27px 28px)}
-    @media(max-width:600px){.paper{padding:30px 22px}}
-    /* filigree corners injected by JS get this class */
-    .fcorner{position:absolute;width:64px;height:64px;pointer-events:none;z-index:2;opacity:.62}
-    .fcorner.tl{top:12px;left:12px}
-    .fcorner.tr{top:12px;right:12px;transform:scaleX(-1)}
-    .fcorner.bl{bottom:12px;left:12px;transform:scaleY(-1)}
-    .fcorner.br{bottom:12px;right:12px;transform:scale(-1,-1)}
-    @media(max-width:600px){.fcorner{width:44px;height:44px}}
-
-    .bay-head{display:flex;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap;position:relative;z-index:3}
-    .bay-head .cogico{width:44px;height:44px;flex:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
-    .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--copper)}
-    .bay-title{font-family:var(--decor);font-weight:700;font-size:clamp(24px,4vw,40px);letter-spacing:.01em;margin:2px 0 0;line-height:1.04;
-      color:#3a2712;text-shadow:0 1px 0 rgba(255,250,235,.6),0 2px 3px rgba(120,80,30,.35)}
-    .bay-head .hr{flex:1;height:3px;min-width:30px;border-radius:2px;
-      background:linear-gradient(90deg,var(--brass-dk),rgba(122,78,24,0));position:relative}
-    .bay-head .hr::after{content:"";position:absolute;left:0;top:-2px;width:9px;height:9px;border-radius:50%;
-      background:radial-gradient(circle at 34% 30%,#ffe9b8,#8a5a1e)}
-    .paper p{max-width:74ch}
-
-    /* =========================================================
-       HERO / boiler-room scene
-       ========================================================= */
-    .boiler{min-height:86vh;display:grid;grid-template-columns:1fr 340px;gap:34px;align-items:center;padding:52px 0 28px}
-    @media(max-width:940px){.boiler{grid-template-columns:1fr;min-height:auto;padding:36px 0}}
-    /* dark tufted-leather console panel */
-    .nameplate{position:relative;padding:44px 46px 40px;border-radius:18px;color:var(--paper);
-      border:3px solid var(--brass-deep);
-      background:
-        var(--grain),
-        radial-gradient(120% 90% at 30% 0%,rgba(210,150,70,.16),transparent 55%),
-        repeating-linear-gradient(58deg,rgba(0,0,0,.12) 0 22px,transparent 22px 44px),
-        repeating-linear-gradient(-58deg,rgba(0,0,0,.1) 0 22px,transparent 22px 44px),
-        linear-gradient(160deg,#3a2418,#241610 60%,#1b110a);
-      background-size:140px 140px,100% 100%,100% 100%,100% 100%,100% 100%;
-      background-blend-mode:overlay,normal,normal,normal,normal;
-      box-shadow:0 26px 60px rgba(0,0,0,.6),inset 0 2px 3px rgba(210,160,90,.3),inset 0 -6px 16px rgba(0,0,0,.6)}
-    .brass-tab{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:7px;position:relative;
-      border:2px solid var(--brass-deep);font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-    .nameplate h1{font-family:var(--decor);font-weight:900;font-size:clamp(40px,7.4vw,78px);line-height:.98;margin:16px 0 0;letter-spacing:.005em}
-    .nameplate .role{font-family:var(--disp);font-size:clamp(17px,2.4vw,24px);font-weight:600;margin-top:16px;color:var(--brass-lt);
-      text-shadow:0 1px 2px rgba(0,0,0,.6)}
-    /* subtitle on an aged label */
-    .sublabel{margin-top:16px;display:inline-block;padding:12px 18px;border-radius:8px;position:relative;max-width:56ch;
-      color:#3a2a15;font-size:16px;line-height:1.5;border:2px solid var(--brass-dk);
-      background:linear-gradient(180deg,#efe1bf,#e0cc9c);box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,250,235,.6)}
-    .hero-cta{display:flex;gap:13px;flex-wrap:wrap;margin-top:26px}
-    .lvbtn{display:inline-flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:.02em;
-      padding:13px 22px;border-radius:10px;cursor:pointer;border:2px solid var(--brass-deep);transition:.16s;position:relative;
-      background:linear-gradient(180deg,#3a2413,#1c1005);color:var(--brass-lt);
-      box-shadow:0 5px 12px rgba(0,0,0,.5),inset 0 1px 1px rgba(210,160,90,.3)}
-    .lvbtn:hover{transform:translateY(-2px);color:#fff;box-shadow:0 10px 22px rgba(0,0,0,.55),inset 0 1px 1px rgba(210,160,90,.4)}
-    .lvbtn.solid{color:#2a1808;border-color:var(--brass-deep);
-      background:
-        linear-gradient(108deg,transparent 25%,rgba(255,248,225,.5) 42%,transparent 60%),
-        linear-gradient(180deg,#f0cd7e,#c98a2b 55%,#8a5a1e);
-      text-shadow:0 1px 0 rgba(255,244,210,.5)}
-
-    /* machine side: clock + gauge + lever, stacked */
-    .machine-side{display:flex;flex-direction:column;align-items:center;gap:24px}
-    .hero-clock{width:230px;height:230px;position:relative;filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
-    @media(max-width:940px){.hero-clock{width:200px;height:200px}}
-    .gauge-lever{display:flex;align-items:flex-end;gap:24px}
-    .biggauge{width:170px;height:170px;position:relative;filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
-    .biggauge .cap{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:#6a3f14;text-align:center}
-    .biggauge .cap b{display:block;font-family:var(--disp);font-size:22px;color:#3a2408}
-    /* power lever */
-    .lever-rig{position:relative;width:110px;height:150px}
-    .lever-rig .base{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:96px;height:38px;border-radius:9px;
-      border:2px solid var(--brass-deep)}
-    .lever-rig .slot{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:16px;height:110px;border-radius:9px;
-      background:linear-gradient(90deg,#0d0803,#241505 50%,#0d0803);box-shadow:inset 0 0 8px #000,0 1px 0 rgba(210,160,90,.2)}
-    .lever-rig .arm{position:absolute;left:50%;bottom:26px;width:18px;height:104px;transform-origin:bottom center;
-      transform:translateX(-50%) rotate(-34deg);transition:transform .5s cubic-bezier(.3,1.4,.5,1);cursor:grab;touch-action:none;z-index:3}
-    .lever-rig .arm .rod{position:absolute;left:0;bottom:0;width:100%;height:100%;border-radius:9px;
-      background:linear-gradient(90deg,#5e3a12,#f2d489 45%,#b3812f 60%,#5e3a12);
-      box-shadow:inset 0 0 4px rgba(0,0,0,.4)}
-    .lever-rig .arm .ball{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:38px;height:38px;border-radius:50%;
-      background:radial-gradient(circle at 34% 28%,#ffe9b8,#c98a2b 52%,#6f451a 82%,#3a2408);border:2px solid #3a2408;
-      box-shadow:0 4px 8px rgba(0,0,0,.55),inset 0 2px 2px rgba(255,244,210,.5)}
-    body.powered .lever-rig .arm{transform:translateX(-50%) rotate(34deg)}
-    .lever-hint{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--brass-lt);text-align:center;
-      animation:pulse 1.6s ease infinite}
-    body.powered .lever-hint{color:#a88a58;animation:none;opacity:.7}
-    @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-    /* steam puffs */
-    .steam{position:absolute;bottom:100%;left:50%;width:16px;height:16px;border-radius:50%;background:rgba(244,240,228,.55);
-      filter:blur(5px);opacity:0;pointer-events:none}
-    body.powered .steam{animation:puff 3s ease-in-out infinite}
-    .steam.s2{animation-delay:1s}.steam.s3{animation-delay:2s}
-    @keyframes puff{0%{opacity:0;transform:translate(-50%,0) scale(.6)}25%{opacity:.55}100%{opacity:0;transform:translate(-30%,-96px) scale(2.5)}}
-
-    /* =========================================================
-       About
-       ========================================================= */
-    .about-grid{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start;position:relative;z-index:3}
-    @media(max-width:640px){.about-grid{grid-template-columns:1fr}}
-    .tintype{border-radius:8px;padding:8px;position:relative;border:3px solid var(--brass-deep)}
-    .tintype .inner{border:4px solid #241610;border-radius:4px;overflow:hidden;position:relative;box-shadow:inset 0 0 40px rgba(40,26,10,.7)}
-    .tintype img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:sepia(.55) contrast(1.06) brightness(.94)}
-    .tintype .cap{position:absolute;left:8px;right:8px;bottom:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-      text-align:center;padding:5px;background:rgba(28,16,8,.72);color:var(--brass-lt)}
-    .about-body p{margin:0 0 16px;font-size:17px;color:var(--ink-solid)}
-    .loc-plate{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;letter-spacing:.06em;
-      padding:9px 16px;border-radius:8px;color:var(--brass-lt);border:2px solid var(--brass-deep);margin-top:6px}
-
-    /* Education ledger */
-    .ledger{display:grid;gap:16px;position:relative;z-index:3}
-    .lrow{display:grid;grid-template-columns:180px 1fr;gap:18px;padding:20px 22px;border-radius:11px;position:relative;
-      border:2px solid var(--brass-dk);
-      background:linear-gradient(180deg,rgba(150,108,54,.1),rgba(120,80,30,.03));
-      box-shadow:inset 0 1px 2px rgba(255,250,235,.5),0 3px 8px rgba(120,80,30,.12)}
-    @media(max-width:600px){.lrow{grid-template-columns:1fr;gap:6px}}
-    .lrow .when{font-family:var(--mono);font-size:13px;color:var(--copper);letter-spacing:.04em}
-    .lrow h3{font-family:var(--disp);font-weight:700;font-size:19px;margin:0 0 4px;color:var(--ink-solid)}
-    .lrow .sub{font-size:15px;color:var(--ink2)}
-
-    /* Skills as pressure meters */
-    .meters{display:grid;grid-template-columns:1fr 1fr;gap:22px 36px;position:relative;z-index:3}
-    @media(max-width:640px){.meters{grid-template-columns:1fr}}
-    .meter .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-    .meter .top .n{font-family:var(--disp);font-weight:600;font-size:15px;color:var(--ink-solid)}
-    .meter .top .psi{font-family:var(--mono);font-size:12px;color:var(--copper)}
-    .meter .tube{height:18px;border-radius:10px;border:2px solid var(--brass-deep);overflow:hidden;position:relative;
-      background:linear-gradient(180deg,#d4c093,#e7d6ab);
-      box-shadow:inset 0 2px 4px rgba(90,60,20,.5),inset 0 -1px 1px rgba(255,250,235,.5)}
-    .meter .tube::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background:repeating-linear-gradient(90deg,rgba(90,60,20,.18) 0 1px,transparent 1px 22px)}
-    .meter .fill{height:100%;width:0;border-radius:8px 4px 4px 8px;transition:width 1.3s cubic-bezier(.2,.8,.2,1);position:relative;
-      background:linear-gradient(180deg,#e6a878,#b06a38 40%,#8a4d26);
-      box-shadow:inset 0 2px 2px rgba(255,235,205,.5),inset 0 -2px 3px rgba(0,0,0,.35)}
-    .in .meter .fill{width:var(--w)}
-    .brass-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;position:relative;z-index:3}
-    .brass-tags span{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:7px 13px;border-radius:7px;color:#2a1808;
-      border:1px solid var(--brass-deep);
-      background:linear-gradient(180deg,#f0cd7e,#c98a2b 55%,#9a6524);
-      box-shadow:0 2px 5px rgba(0,0,0,.3),inset 0 1px 1px rgba(255,244,210,.6);text-shadow:0 1px 0 rgba(255,244,210,.4)}
-
-    /* Courses brass plates */
-    .plates{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:3}
-    @media(max-width:820px){.plates{grid-template-columns:1fr 1fr}}
-    @media(max-width:520px){.plates{grid-template-columns:1fr}}
-    .plate{padding:22px 20px;border-radius:12px;border:2px solid var(--brass-deep);position:relative;overflow:hidden;
-      color:var(--ink-solid);transition:transform .18s,box-shadow .18s;
-      background:linear-gradient(160deg,#ece0bb,#dcc793);
-      box-shadow:inset 0 1px 2px rgba(255,250,235,.6),0 4px 10px rgba(120,80,30,.18)}
-    .plate:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(0,0,0,.3)}
-    .plate .ic{width:48px;height:48px;display:grid;place-items:center;border-radius:10px;font-size:20px;margin-bottom:14px;color:#2a1808;
-      border:1px solid var(--brass-deep);
-      background:linear-gradient(180deg,#f0cd7e,#c98a2b 55%,#8a5a1e);
-      box-shadow:inset 0 1px 1px rgba(255,244,210,.6),0 3px 6px rgba(0,0,0,.35)}
-    .plate h4{font-family:var(--disp);font-weight:700;font-size:16px;margin:0 0 8px;line-height:1.25;color:var(--ink-solid)}
-    .plate p{margin:0;font-size:14px;color:var(--ink2);line-height:1.55}
-
-    /* Experience */
-    .exp{border:2px solid var(--brass-deep);border-radius:13px;padding:28px 30px;position:relative;z-index:3;
-      background:linear-gradient(180deg,rgba(150,108,54,.1),rgba(120,80,30,.03));
-      box-shadow:inset 0 1px 2px rgba(255,250,235,.5)}
-    .exp .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;align-items:baseline}
-    .exp h3{font-family:var(--disp);font-weight:700;font-size:22px;margin:0;color:var(--ink-solid)}
-    .exp h3 span{color:var(--copper)}
-    .exp .when{font-family:var(--mono);font-size:13px;color:var(--copper)}
-    .exp .sum{margin:12px 0 18px;font-size:15.5px;color:var(--ink2);font-style:italic}
-    .exp ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
-    .exp li{position:relative;padding-left:34px;font-size:15.5px;color:var(--ink-solid);line-height:1.5;min-height:22px}
-    .exp li .cg{position:absolute;left:0;top:1px;width:22px;height:22px}
-
-    /* Projects cards */
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;position:relative;z-index:3}
-    .card{border:2px solid var(--brass-deep);border-radius:12px;overflow:hidden;color:var(--ink-solid);display:flex;flex-direction:column;
-      transition:transform .2s,box-shadow .2s;position:relative;
-      background:linear-gradient(160deg,#ece0bb,#d9c58f);box-shadow:inset 0 1px 2px rgba(255,250,235,.5)}
-    .card::before{content:"";position:absolute;top:0;left:16px;right:16px;height:9px;z-index:2;
-      background:repeating-linear-gradient(90deg,#241610 0 7px,transparent 7px 15px);opacity:.5}
-    .card:hover{transform:translateY(-5px);box-shadow:0 16px 32px rgba(0,0,0,.4)}
-    .card .cov{aspect-ratio:16/10;overflow:hidden;background:#c9b487;border-bottom:2px solid var(--brass-deep)}
-    .card .cov img{width:100%;height:100%;object-fit:cover;filter:sepia(.32) contrast(1.04)}
-    .card .cb{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
-    .card .tech{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.03em}
-    .card h4{font-family:var(--disp);font-weight:700;font-size:18px;margin:7px 0 8px;line-height:1.25;color:var(--ink-solid)}
-    .card p{margin:0 0 14px;font-size:14px;color:var(--ink2);line-height:1.5;flex:1}
-    .card .go{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--brass-dk);text-transform:uppercase}
-
-    /* Articles */
-    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;position:relative;z-index:3}
-    .filters button{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink2);cursor:pointer;transition:.15s;
-      border:2px solid var(--brass-deep);border-radius:8px;padding:7px 14px;
-      background:linear-gradient(180deg,#ece0bb,#d6c088)}
-    .filters button:hover{color:var(--ink-solid)}
-    .filters button.active{color:#2a1808;background:linear-gradient(180deg,#f0cd7e,#c98a2b 55%,#8a5a1e);
-      box-shadow:inset 0 1px 1px rgba(255,244,210,.6)}
-    .alist{display:grid;gap:16px;position:relative;z-index:3}
-    .arow{display:grid;grid-template-columns:104px 1fr;gap:16px;border:2px solid var(--brass-deep);border-radius:11px;overflow:hidden;
-      background:linear-gradient(180deg,rgba(150,108,54,.08),rgba(120,80,30,.02));transition:transform .18s;
-      box-shadow:inset 0 1px 2px rgba(255,250,235,.4)}
-    .arow:hover{transform:translateX(5px)}
-    .arow .cov{overflow:hidden;background:#c9b487}
-    .arow .cov img{width:100%;height:100%;object-fit:cover;filter:sepia(.32)}
-    .arow .ab{padding:15px 17px}
-    .arow .m{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.03em;text-transform:uppercase}
-    .arow h4{font-family:var(--disp);font-weight:700;font-size:17px;margin:5px 0 6px;line-height:1.25;color:var(--ink-solid)}
-    .arow p{margin:0;font-size:14px;color:var(--ink2);line-height:1.5;
-      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    @media(max-width:460px){.arow{grid-template-columns:1fr}.arow .cov{height:130px}}
-    .note{font-family:var(--mono);color:var(--ink2);text-align:center;padding:26px;font-size:14px}
-
-    /* Certificates */
-    .certs{display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative;z-index:3}
-    @media(max-width:640px){.certs{grid-template-columns:1fr}}
-    .cert{border:2px solid var(--brass-deep);border-radius:12px;overflow:hidden;color:var(--ink-solid);display:flex;flex-direction:column;
-      background:linear-gradient(160deg,#ece0bb,#d9c58f);box-shadow:inset 0 1px 2px rgba(255,250,235,.5)}
-    .cert .ci{aspect-ratio:16/10;overflow:hidden;background:#c9b487;border-bottom:2px solid var(--brass-deep)}
-    .cert .ci img{width:100%;height:100%;object-fit:cover;filter:sepia(.3)}
-    .cert .cc{padding:20px}
-    .cert .tag{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.04em}
-    .cert h4{font-family:var(--disp);font-weight:700;font-size:17px;margin:6px 0 7px;color:var(--ink-solid)}
-    .cert p{margin:0;font-size:14px;color:var(--ink2);line-height:1.5}
-
-    /* Contact / telegraph */
-    .contact-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:32px;position:relative;z-index:3}
-    @media(max-width:760px){.contact-grid{grid-template-columns:1fr}}
-    .ci-list{display:grid;gap:12px;align-content:start}
-    .ci-list a{display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid var(--brass-deep);border-radius:10px;
-      background:linear-gradient(180deg,rgba(150,108,54,.1),rgba(120,80,30,.02));transition:.15s;color:var(--ink-solid);
-      box-shadow:inset 0 1px 2px rgba(255,250,235,.4)}
-    .ci-list a:hover{transform:translateX(5px);background:rgba(150,108,54,.18)}
-    .ci-list a i{width:40px;height:40px;display:grid;place-items:center;border-radius:9px;color:#2a1808;font-size:16px;flex:none;
-      border:1px solid var(--brass-deep);background:linear-gradient(180deg,#f0cd7e,#c98a2b 55%,#8a5a1e);
-      box-shadow:inset 0 1px 1px rgba(255,244,210,.6)}
-    .ci-list a .k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
-    .ci-list a .v{font-size:15px;color:var(--ink-solid);font-weight:600}
-    form.telegraph{border:2px solid var(--brass-deep);border-radius:13px;padding:26px;position:relative;
-      background:linear-gradient(180deg,rgba(150,108,54,.1),rgba(120,80,30,.02));box-shadow:inset 0 1px 2px rgba(255,250,235,.5)}
-    form label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 6px}
-    form input,form textarea{width:100%;color:var(--ink-solid);border:2px solid var(--brass-dk);border-radius:9px;
-      font-family:var(--body);font-size:16px;padding:12px 14px;margin-bottom:16px;transition:.15s;
-      background:linear-gradient(180deg,#f4e9cc,#ece0bb);box-shadow:inset 0 2px 4px rgba(90,60,20,.25)}
-    form input:focus,form textarea:focus{outline:none;border-color:var(--copper);box-shadow:0 0 0 3px rgba(176,106,56,.25),inset 0 2px 4px rgba(90,60,20,.25)}
-    form textarea{min-height:118px;resize:vertical}
-    form .lvbtn.solid{width:100%;justify-content:center}
-    #cf-status{margin:14px 0 0;font-family:var(--mono);font-size:13px;min-height:1.2em;text-align:center;color:var(--ink2)}
-    .telkey{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-      color:var(--brass-dk);cursor:pointer;background:none;border:0;padding:0}
-    .telkey .key{width:34px;height:18px;border-radius:5px;border:1px solid #3a2010;transition:transform .08s;
-      background:linear-gradient(180deg,#f0cd7e,#8a5a1e);box-shadow:inset 0 1px 1px rgba(255,244,210,.6),0 2px 3px rgba(0,0,0,.3)}
-    .telkey.tap .key{transform:translateY(2px)}
-
-    /* Footer */
-    footer{border-top:3px solid var(--brass-deep);padding:42px 0 62px;margin-top:44px;position:relative}
-    .footwood{background:linear-gradient(180deg,#2e1d10,#140c05)}
-    .foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
-    .foot-links{display:flex;flex-wrap:wrap;gap:20px}
-    .foot-links a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--brass-lt);transition:.15s}
-    .foot-links a:hover{color:#fff}
-    .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;margin-top:24px;padding-top:20px;
-      border-top:1px solid var(--edge);font-family:var(--mono);font-size:11px;color:#a88a58}
-    .foot-bottom a{color:var(--brass-lt)}
-
-    /* Automaton (easter egg) */
-    #automaton{position:fixed;left:16px;bottom:16px;z-index:820;width:74px;height:94px;cursor:pointer;
-      filter:drop-shadow(0 5px 8px rgba(0,0,0,.6));opacity:.9;transition:opacity .2s}
-    #automaton:hover{opacity:1}
-    #automaton .arm-l{transform-origin:22px 46px}
-    #automaton .arm-r{transform-origin:50px 46px}
-    #automaton .head{transform-origin:36px 24px}
-    #automaton .cog{transform-origin:36px 72px;animation:spin 6s linear infinite}
-    body.powered #automaton .arm-l{animation:wave 2.4s ease-in-out infinite}
-    body.powered #automaton .arm-r{animation:wave 2.4s ease-in-out .4s infinite reverse}
-    body.powered #automaton .head{animation:nod 3s ease-in-out infinite}
-    #automaton.wind .cog{animation:spin .5s linear 3}
-    @keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-24deg)}}
-    @keyframes nod{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:1040px){#automaton{width:56px;height:72px;bottom:10px;left:10px}}
-
-    body.shake{animation:shake .5s ease}
-    @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,3px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,-2px)}80%{transform:translate(5px,2px)}}
-
-    #release{position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:0;
-      background:radial-gradient(60% 55% at 50% 62%,rgba(244,242,234,.9),transparent 70%)}
-    #release.blow{animation:blow 1s ease}
-    @keyframes blow{0%{opacity:0}18%{opacity:.92}100%{opacity:0}}
-
-    .fu{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
-    .in .fu,.fu.in{opacity:1;transform:none}
-
-    /* =========================================================
-       ENGINE ROOM — fixed industrial backdrop, running machinery
-       ========================================================= */
-    #engineroom{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;contain:strict}
-    /* riveted steel plate texture + greasy oil stains on the sooty back wall
-       (::before paints behind the machinery so it doesn't dull the brass) */
-    #engineroom::before{content:"";position:absolute;inset:0;opacity:.6;
-      background:
-        radial-gradient(28% 18% at 12% 60%,rgba(8,4,1,.7),transparent 62%),
-        radial-gradient(22% 15% at 84% 38%,rgba(10,5,1,.6),transparent 62%),
-        radial-gradient(20% 13% at 58% 90%,rgba(16,8,2,.6),transparent 62%),
-        radial-gradient(circle at 6px 6px,rgba(210,170,110,.14) 0 1.4px,rgba(0,0,0,.4) 1.8px 2.6px,transparent 3px) 0 0/58px 58px,
-        linear-gradient(180deg,rgba(40,26,14,.4),rgba(10,6,2,.6))}
-    /* distant sky depth: airship + smokestacks behind machinery */
-    .er-sky{position:absolute;inset:0;opacity:.5}
-    .airship{position:absolute;top:9%;left:-280px;width:250px;height:110px;opacity:.6;
-      filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));animation:drift 70s linear infinite}
-    @keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(126vw)}}
-    .smokestack{position:absolute;bottom:34%;width:36px;height:130px;border-radius:6px 6px 0 0;opacity:.6;
-      background:linear-gradient(90deg,#1c1109,#523420 48%,#2a1810);box-shadow:0 0 20px rgba(0,0,0,.5)}
-    .smokestack.s1{left:5%}.smokestack.s2{left:10%;height:96px;bottom:34%}.smokestack.s3{right:14%;height:112px;bottom:36%}
-    .smokestack .smoke{position:absolute;bottom:100%;left:-14px;width:64px;height:64px;border-radius:50%;
-      background:radial-gradient(circle,rgba(150,140,130,.5),transparent 68%);filter:blur(9px);opacity:0;
-      animation:stacksmoke 8s ease-in infinite}
-    .smokestack.s2 .smoke{animation-delay:2.5s}.smokestack.s3 .smoke{animation-delay:4s}
-    @keyframes stacksmoke{0%{opacity:0;transform:translateY(20px) scale(.5)}25%{opacity:.6}100%{opacity:0;transform:translateY(-52vh) scale(2.6)}}
-    /* furnace glow + firebox flicker (hot amber lighting) */
-    .er-furnace{position:absolute;left:0;right:0;bottom:0;height:48%;mix-blend-mode:screen;
-      background:radial-gradient(120% 120% at 50% 138%,rgba(255,150,42,.6),rgba(255,84,12,.22) 40%,transparent 66%);
-      animation:furnace 3.6s ease-in-out infinite}
-    @keyframes furnace{0%,100%{opacity:.72}50%{opacity:1}}
-    .er-firebox{position:absolute;left:3%;bottom:5%;width:210px;height:150px;border-radius:14px;mix-blend-mode:screen;
-      background:radial-gradient(circle at 50% 62%,rgba(255,196,84,.95),rgba(255,96,16,.55) 44%,transparent 72%);
-      filter:blur(7px);animation:flick .42s steps(2,jump-none) infinite}
-    @keyframes flick{0%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}100%{opacity:.82;transform:scale(.98)}}
-    .er-embers{position:absolute;left:0;right:0;bottom:0;height:60%}
-    .ember{position:absolute;bottom:6%;width:4px;height:4px;border-radius:50%;background:#ffbe52;
-      box-shadow:0 0 6px 2px rgba(255,150,40,.8);opacity:0;animation:ember linear infinite}
-    @keyframes ember{0%{opacity:0;transform:translateY(0) scale(1)}12%{opacity:1}100%{opacity:0;transform:translateY(-52vh) translateX(30px) scale(.3)}}
-    /* continuously running gears in the margins */
-    .er-gear{position:absolute;filter:drop-shadow(0 5px 8px rgba(0,0,0,.6));animation:spin linear infinite}
-    .er-gear svg{display:block}
-    .g-a{left:-56px;top:16%;animation-duration:26s}
-    .g-b{left:34px;top:26%;animation-duration:16s;animation-direction:reverse}
-    .g-c{right:-64px;top:12%;animation-duration:32s}
-    .g-d{right:26px;top:23%;animation-duration:19s;animation-direction:reverse}
-    .g-e{right:-40px;bottom:20%;animation-duration:22s}
-    .g-f{left:-44px;bottom:16%;animation-duration:28s;animation-direction:reverse}
-    /* big spoked flywheel */
-    .er-flywheel{position:absolute;left:-70px;bottom:-70px;width:280px;height:280px;
-      filter:drop-shadow(0 8px 16px rgba(0,0,0,.6));animation:spin 9s linear infinite}
-    /* drive belt with two pulleys */
-    .er-belt{position:absolute;right:-30px;top:44%;width:230px;height:120px;opacity:.9;
-      filter:drop-shadow(0 5px 8px rgba(0,0,0,.5))}
-    /* pumping piston assembly (left) */
-    .er-piston{position:absolute;left:150px;bottom:120px;width:60px;height:150px;opacity:.92}
-    .er-piston .cyl{position:absolute;left:8px;bottom:0;width:44px;height:78px;border-radius:9px;
-      background:linear-gradient(90deg,#2a1a10,#8a5a1e 30%,#e2b45c 50%,#8a5a1e 70%,#2a1a10);
-      box-shadow:inset 0 2px 3px rgba(255,240,200,.4),0 4px 10px rgba(0,0,0,.5)}
-    .er-piston .rod{position:absolute;left:24px;bottom:64px;width:12px;height:78px;border-radius:6px;
-      background:linear-gradient(90deg,#5e3a12,#f2d489 45%,#8a5a1e);transform-origin:bottom center;
-      animation:pump 1.5s ease-in-out infinite}
-    .er-piston .rod .cross{position:absolute;left:50%;top:-10px;transform:translateX(-50%);width:26px;height:16px;border-radius:5px;
-      background:radial-gradient(circle at 40% 30%,#ffe9b8,#8a5a1e);box-shadow:0 2px 4px rgba(0,0,0,.5)}
-    @keyframes pump{0%,100%{transform:translateY(0)}50%{transform:translateY(34px)}}
-    .er-piston .crank{position:absolute;left:18px;bottom:-26px;width:56px;height:56px;border-radius:50%;
-      background:radial-gradient(circle at 38% 32%,#e2b45c,#8a5a1e 60%,#3a2408);
-      box-shadow:inset 0 2px 3px rgba(255,240,200,.4),0 4px 8px rgba(0,0,0,.5);animation:spin 1.5s linear infinite}
-    .er-piston .crank::after{content:"";position:absolute;left:50%;top:8px;width:8px;height:8px;border-radius:50%;transform:translateX(-50%);
-      background:radial-gradient(circle,#ffe9b8,#5e3a12)}
-    /* steam vents that puff a burst periodically */
-    .er-vent{position:absolute;width:30px;height:15px;border-radius:4px;
-      background:linear-gradient(90deg,#2a1810,#c98a2b 45%,#f0cd7e 55%,#5e3016);
-      box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,240,200,.5)}
-    .er-vent::before{content:"";position:absolute;left:-8px;top:2px;width:10px;height:11px;border-radius:3px;
-      background:linear-gradient(90deg,#2a1810,#8a5a1e)}
-    .er-vent::after{content:"";position:absolute;left:100%;top:50%;width:46px;height:46px;border-radius:50%;
-      background:radial-gradient(circle,rgba(242,238,228,.7),transparent 68%);opacity:0;
-      transform:translate(-10%,-50%) scale(.2);animation:ventpuff 4.6s ease-out infinite}
-    .er-vent.v1{left:214px;bottom:236px}
-    .er-vent.v2{right:120px;top:52%;transform:scaleX(-1)}
-    .er-vent.v2::after{animation-delay:2.3s}
-    @keyframes ventpuff{0%,66%{opacity:0;transform:translate(-10%,-50%) scale(.2)}72%{opacity:.75;transform:translate(30%,-58%) scale(1)}100%{opacity:0;transform:translate(120%,-95%) scale(2.4)}}
-    /* glowing vacuum tubes (right) */
-    .er-tubes{position:absolute;right:44px;top:30%;display:flex;gap:16px}
-    .tube{width:22px;height:64px;border-radius:11px 11px 5px 5px;position:relative;
-      background:linear-gradient(180deg,rgba(255,210,120,.35),rgba(120,70,20,.25));
-      border:1px solid rgba(255,220,150,.35);box-shadow:0 0 18px rgba(255,170,60,.6),inset 0 0 12px rgba(255,190,90,.7);
-      animation:tubepulse 2.2s ease-in-out infinite}
-    .tube::after{content:"";position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:3px;height:40px;border-radius:2px;
-      background:linear-gradient(180deg,#fff2c8,#ff9a30);box-shadow:0 0 10px rgba(255,170,60,.9)}
-    .tube.t2{height:52px;animation-delay:.5s}.tube.t3{height:70px;animation-delay:1s}
-    @keyframes tubepulse{0%,100%{filter:brightness(.8)}50%{filter:brightness(1.35)}}
-    /* tesla arc terminals */
-    .er-tesla{position:absolute;right:150px;top:24%;width:120px;height:90px}
-    .beltband{animation:beltmove .55s linear infinite}
-    @keyframes beltmove{to{stroke-dashoffset:-32}}
-    .arc{animation:teslaflick .16s steps(2) infinite}
-    @keyframes teslaflick{0%{opacity:.15}50%{opacity:.95}100%{opacity:.35}}
-    .arc2{animation:teslaflick2 .16s steps(2) infinite}
-    @keyframes teslaflick2{0%{opacity:.9}50%{opacity:.1}100%{opacity:.7}}
-    /* steam / fog atmosphere */
-    .steamlayer{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-    .wisp{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(232,226,214,.2),transparent 68%);
-      filter:blur(16px);opacity:0;animation:rise linear infinite}
-    @keyframes rise{0%{opacity:0;transform:translateY(60px) scale(.6)}18%{opacity:.55}100%{opacity:0;transform:translateY(-116vh) scale(2)}}
-    .fog{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;mix-blend-mode:screen;
-      background:
-        radial-gradient(60% 40% at 20% 80%,rgba(180,150,110,.16),transparent 60%),
-        radial-gradient(50% 40% at 85% 30%,rgba(150,130,110,.12),transparent 60%);
-      animation:fogdrift 30s ease-in-out infinite alternate}
-    @keyframes fogdrift{0%{transform:translateX(-3%)}100%{transform:translateX(3%)}}
-
-    /* ===== Power core (Steamboy steam-ball) in hero ===== */
-    .powercore{position:relative;width:196px;height:196px;filter:drop-shadow(0 0 34px rgba(255,150,40,.55))}
-    @media(max-width:940px){.powercore{width:168px;height:168px}}
-    .powercore .orb{position:absolute;inset:26px;border-radius:50%;
-      background:radial-gradient(circle at 40% 34%,#fff7e0,#ffd772 20%,#ff9e34 46%,#d1560f 70%,#5e2408);
-      box-shadow:0 0 42px rgba(255,140,40,.8),inset 0 0 30px rgba(255,224,150,.7),inset 0 -8px 20px rgba(120,40,4,.6);
-      animation:corepulse 2.4s ease-in-out infinite}
-    @keyframes corepulse{0%,100%{box-shadow:0 0 34px rgba(255,140,40,.68),inset 0 0 26px rgba(255,224,150,.55),inset 0 -8px 20px rgba(120,40,4,.6);filter:brightness(1)}
-      50%{box-shadow:0 0 60px rgba(255,176,66,1),inset 0 0 40px rgba(255,238,182,.85),inset 0 -8px 20px rgba(120,40,4,.6);filter:brightness(1.14)}}
-    .powercore .glass{position:absolute;inset:18px;border-radius:50%;pointer-events:none;
-      background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.65),transparent 42%),
-                 radial-gradient(circle at 70% 78%,rgba(255,180,90,.3),transparent 40%)}
-    .powercore .cage{position:absolute;inset:0}
-    .powercore .corelabel{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);font-family:var(--mono);
-      font-size:9px;letter-spacing:.2em;color:var(--brass-lt);white-space:nowrap;text-shadow:0 1px 2px #000}
-    .powercore .cv{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;
-      background:radial-gradient(circle,rgba(255,240,220,.85),transparent 70%);filter:blur(3px);opacity:0}
-    body.powered .powercore .cv{animation:corevent 3s ease-in-out infinite}
-    body.powered .powercore .cv2{animation-delay:1s}body.powered .powercore .cv3{animation-delay:2s}
-    @keyframes corevent{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:.6}100%{opacity:0;transform:translate(-50%,-190%) scale(2.4)}}
-
-    @media (prefers-reduced-motion: reduce){
-      html{scroll-behavior:auto}
-      *{animation:none!important;transition:none!important}
-      .fu{opacity:1;transform:none}
-      .meter .fill{width:var(--w)}
-      .lever-hint{opacity:.7}
-    }
-  </style>
-</head>
-<body class="powered">
-  <!-- ===== ENGINE ROOM: fixed industrial backdrop (working machinery) ===== -->
-  <div id="engineroom" aria-hidden="true">
-    <div class="er-sky">
-      <span class="airship" id="er-airship"></span>
-      <span class="smokestack s1"><span class="smoke"></span></span>
-      <span class="smokestack s2"><span class="smoke"></span></span>
-      <span class="smokestack s3"><span class="smoke"></span></span>
-    </div>
-    <div class="er-furnace"></div>
-    <div class="er-firebox"></div>
-    <div class="er-embers" id="er-embers"></div>
-    <div class="er-gear g-a"></div><div class="er-gear g-b"></div><div class="er-gear g-c"></div>
-    <div class="er-gear g-d"></div><div class="er-gear g-e"></div><div class="er-gear g-f"></div>
-    <div class="er-flywheel" id="er-flywheel"></div>
-    <div class="er-belt" id="er-belt"></div>
-    <div class="er-piston">
-      <span class="cyl"></span><span class="rod"><span class="cross"></span></span><span class="crank"></span>
-    </div>
-    <div class="er-tubes">
-      <span class="tube"></span><span class="tube t2"></span><span class="tube t3"></span>
-    </div>
-    <div class="er-tesla" id="er-tesla"></div>
-    <div class="er-vent v1"></div>
-    <div class="er-vent v2"></div>
-  </div>
-  <div class="steamlayer" aria-hidden="true" id="steamlayer"></div>
-  <div class="fog" aria-hidden="true"></div>
-  <div class="vig" aria-hidden="true"></div>
-  <div id="release" aria-hidden="true"></div>
-
-  <!-- copper pipes -->
-  <div class="pipes" aria-hidden="true">
-    <div class="pipe v" style="left:26px"><span class="coupling" style="top:18%"></span><span class="coupling" style="top:70%"></span></div>
-    <div class="pipe v" style="right:40px"><span class="coupling" style="top:34%"></span></div>
-    <div class="pipe h" style="left:-30px;width:230px;top:22%"><span class="coupling" style="left:60%"></span></div>
-    <div class="pipe h" style="right:-30px;width:210px;bottom:26%"><span class="coupling" style="left:40%"></span></div>
-    <div class="elbow" style="left:22px;top:22%"></div>
-    <div class="elbow" style="right:36px;bottom:26%"></div>
-    <div class="valve" style="left:12px;top:44%"></div>
-    <div class="valve" style="right:26px;top:66%"></div>
-  </div>
-
-  <!-- Console -->
-  <header class="console metal dark">
-    <div class="console-in">
-      <a class="brand-plate metal riveted" href="#top" aria-label="Home">
-        <span class="cog" id="brand-cog" aria-hidden="true"></span>
-        <span><b class="engrave" id="brand-name">The C. J. Engine</b><small id="brand-sub">DIFFERENCE ENGINE Nº 1</small></span>
-      </a>
-      <div class="gauge-mini">
-        <div class="press-mini" title="Boiler pressure">
-          <span id="press-gauge" aria-hidden="true"></span>
-          <span class="val" id="press-val">0 PSI</span>
-        </div>
-        <div class="dial-wrap">
-          <div class="dial metal" id="dial" role="slider" tabindex="0" aria-label="Section selector" aria-valuemin="1" aria-valuenow="1" aria-valuemax="9"><span class="knob"></span></div>
-          <span class="dial-lbl" id="dial-lbl">SELECT</span>
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Cai Jiechao — an engine room portfolio" />
+    <title>Cai Jiechao — The Engine Room</title>
+    <link rel="icon" href="/index_page/img/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      :root {
+        --coal: #10100e;
+        --iron: #24231e;
+        --smoke: #57564d;
+        --paper: #f0eadb;
+        --paper2: #ded3bc;
+        --ink: #1c1a15;
+        --red: #b74520;
+        --brass: #ba8534;
+        --line: rgba(28, 26, 21, 0.22);
+        --mono: "DM Mono", monospace;
+        --cond: "Oswald", Arial, sans-serif;
+        --serif: "DM Serif Display", Georgia, serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        overflow-x: hidden;
+        color: var(--ink);
+        background: var(--paper);
+        font: 16px/1.65 var(--serif);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--red);
+        outline-offset: 4px;
+      }
+      .skip {
+        position: absolute;
+        top: -70px;
+        left: 12px;
+        z-index: 2000;
+        padding: 10px 14px;
+        color: var(--paper);
+        background: var(--coal);
+      }
+      .skip:focus {
+        top: 12px;
+      }
+      .shell {
+        width: min(1260px, calc(100% - 40px));
+        margin: auto;
+      }
+      .rule {
+        height: 1px;
+        background: var(--line);
+      }
+      .mast {
+        background: var(--coal);
+        color: var(--paper);
+        padding: 20px 0 0;
+        isolation: isolate;
+      }
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 205px 18px 0;
+        font: 11px var(--mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .brand {
+        font: 600 23px/1 var(--cond);
+        letter-spacing: 0.08em;
+      }
+      .brand b {
+        color: #e2a84e;
+        font-weight: 500;
+      }
+      .nav {
+        display: flex;
+        gap: 22px;
+      }
+      .nav a {
+        color: #cdc4b2;
+      }
+      .nav a:hover {
+        color: #f3b14b;
+      }
+      .hero {
+        position: relative;
+        min-height: 740px;
+        display: grid;
+        grid-template-columns: 1fr 0.78fr;
+        grid-template-rows: auto 1fr;
+        align-items: end;
+        gap: 0;
+        padding: 44px 0 0;
+      }
+      .hero figure {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        margin: 0;
+        overflow: hidden;
+      }
+      .hero figure:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.42);
+      }
+      .hero figure img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.6) contrast(1.06);
+      }
+      .stamp {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+        justify-self: start;
+        border: 1px solid rgba(240, 234, 219, 0.55);
+        margin: 12px 0;
+        padding: 9px 12px;
+        color: #eee6d7;
+        font: 10px var(--mono);
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .hero-copy {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 40px 0 58px;
+        max-width: 780px;
+      }
+      .hero .issue {
+        color: #edb252;
+        font: 11px var(--mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        margin: 12px 0;
+        font: 500 clamp(68px, 10vw, 150px) / 0.78 var(--cond);
+        letter-spacing: -0.045em;
+        text-transform: uppercase;
+      }
+      .hero h1 em {
+        display: block;
+        color: #e7b052;
+        font: italic clamp(42px, 7vw, 100px) / 0.85 var(--serif);
+        letter-spacing: -0.05em;
+        text-transform: none;
+      }
+      .hero .lead {
+        max-width: 42ch;
+        margin: 20px 0;
+        color: #eee8db;
+        font-size: 20px;
+      }
+      .hero-rail {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        display: flex;
+        justify-content: flex-end;
+        align-items: end;
+        height: 100%;
+        padding-bottom: 60px;
+      }
+      .hero-id {
+        width: min(100%, 355px);
+        border-left: 1px solid rgba(240, 234, 219, 0.7);
+        padding: 18px 0 0 22px;
+        color: #eee8da;
+      }
+      .hero-id dl {
+        margin: 0;
+        display: grid;
+        gap: 15px;
+      }
+      .hero-id dt {
+        font: 10px var(--mono);
+        color: #ddad5c;
+        letter-spacing: 0.1em;
+      }
+      .hero-id dd {
+        margin: 3px 0 0;
+        font: 600 24px/1 var(--cond);
+        letter-spacing: 0.03em;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+      .button {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 18px;
+        border: 1px solid #e6c58a;
+        color: #f6ebd5;
+        background: transparent;
+        font: 500 14px var(--cond);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          transform 0.2s;
+      }
+      .button:hover {
+        background: #e6c58a;
+        color: #1a1610;
+        transform: translateY(-2px);
+      }
+      .button.red {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+      .button.red:hover {
+        background: #db6640;
+        color: #fff;
+      }
+      main {
+        background: var(--paper);
+      }
+      .section {
+        position: relative;
+        padding: 110px 0 0;
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 22px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--line);
+      }
+      .section-no {
+        color: var(--red);
+        font: 500 15px var(--cond);
+        letter-spacing: 0.15em;
+      }
+      .section-head h2 {
+        margin: 0;
+        font: 400 clamp(40px, 6vw, 80px) / 0.9 var(--serif);
+        letter-spacing: -0.045em;
+      }
+      .section-head p {
+        grid-column: 2;
+        max-width: 57ch;
+        margin: 11px 0 0;
+        color: #625d52;
+        font: 11px var(--mono);
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .intro {
+        display: grid;
+        grid-template-columns: 0.82fr 1.18fr;
+        gap: 60px;
+        padding: 46px 0;
+      }
+      .portrait-block {
+        position: relative;
+        padding-bottom: 42px;
+      }
+      .portrait-block img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        filter: grayscale(0.45) sepia(0.15);
+      }
+      .portrait-block .caption {
+        position: absolute;
+        right: -12px;
+        bottom: 0;
+        background: var(--red);
+        color: #fff;
+        padding: 10px 14px;
+        font: 11px var(--mono);
+        letter-spacing: 0.07em;
+      }
+      .bio {
+        font-size: clamp(21px, 2.4vw, 31px);
+        line-height: 1.35;
+      }
+      .bio p {
+        margin: 0 0 24px;
+      }
+      .bio .loc {
+        display: inline-flex;
+        gap: 8px;
+        color: var(--red);
+        font: 11px var(--mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .ledger {
+        margin-top: 30px;
+        border-top: 1px solid var(--line);
+      }
+      .ledger-line {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 22px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .ledger-line span {
+        color: #625d52;
+        font: 11px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .ledger-line strong {
+        font: 500 22px/1.15 var(--cond);
+        letter-spacing: 0.02em;
+      }
+      .black-section {
+        margin-top: 105px;
+        background: var(--coal);
+        color: var(--paper);
+        padding: 0 0 95px;
+      }
+      .black-section .section-head {
+        padding-top: 94px;
+        border-color: rgba(240, 234, 219, 0.22);
+      }
+      .black-section .section-head p {
+        color: #bcb4a5;
+      }
+      .education {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border-top: 1px solid rgba(240, 234, 219, 0.25);
+        margin-top: 38px;
+      }
+      .school {
+        padding: 30px 34px 34px;
+        border-bottom: 1px solid rgba(240, 234, 219, 0.25);
+      }
+      .school:nth-child(odd) {
+        border-right: 1px solid rgba(240, 234, 219, 0.25);
+      }
+      .school time {
+        color: #e3a94b;
+        font: 11px var(--mono);
+        letter-spacing: 0.1em;
+      }
+      .school h3 {
+        margin: 18px 0 5px;
+        font: 500 30px/1 var(--cond);
+        letter-spacing: 0.02em;
+      }
+      .school p {
+        margin: 0;
+        color: #c9c0b1;
+      }
+      .skill-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid rgba(240, 234, 219, 0.25);
+        margin-top: 38px;
+      }
+      .skill-grid article {
+        padding: 26px;
+        border-bottom: 1px solid rgba(240, 234, 219, 0.25);
+        border-right: 1px solid rgba(240, 234, 219, 0.25);
+      }
+      .skill-grid article:nth-child(3n) {
+        border-right: 0;
+      }
+      .skill-grid h3 {
+        margin: 0 0 16px;
+        color: #e3a94b;
+        font: 500 13px var(--cond);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .tag {
+        color: #e4ddd1;
+        font: 11px var(--mono);
+        padding: 6px 7px;
+        border: 1px solid rgba(240, 234, 219, 0.24);
+      }
+      .course-list {
+        margin-top: 40px;
+        border-top: 1px solid var(--line);
+      }
+      .course {
+        display: grid;
+        grid-template-columns: 75px 1fr 1.35fr;
+        gap: 22px;
+        align-items: start;
+        padding: 24px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .course i {
+        font-size: 25px;
+        color: var(--red);
+      }
+      .course h3 {
+        margin: 0;
+        font: 500 23px/1.1 var(--cond);
+        letter-spacing: 0.02em;
+      }
+      .course p {
+        margin: 0;
+        color: #625d52;
+      }
+      .experience {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        gap: 36px;
+        padding: 42px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .experience .when {
+        font: 11px var(--mono);
+        letter-spacing: 0.09em;
+        color: var(--red);
+      }
+      .experience h3 {
+        margin: 0;
+        font: 500 42px/1 var(--cond);
+        letter-spacing: 0.01em;
+      }
+      .experience p,
+      .experience ul {
+        color: #625d52;
+      }
+      .experience ul {
+        padding-left: 18px;
+      }
+      .experience li + li {
+        margin-top: 5px;
+      }
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin-top: 40px;
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+      .project {
+        min-height: 300px;
+        padding: 25px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .project:hover {
+        background: var(--red);
+        color: #fff;
+      }
+      .project .meta,
+      .article .meta {
+        font: 10px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #7d4d2d;
+      }
+      .project:hover .meta {
+        color: #f6d6be;
+      }
+      .project h3,
+      .article h3 {
+        margin: 35px 0 10px;
+        font: 400 35px/0.95 var(--serif);
+        letter-spacing: -0.03em;
+      }
+      .project p,
+      .article p {
+        color: #625d52;
+        margin: 0;
+      }
+      .project:hover p {
+        color: #f9e6d8;
+      }
+      .read {
+        display: block;
+        margin-top: 26px;
+        font: 12px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin: 38px 0 16px;
+      }
+      .filter {
+        border: 1px solid var(--line);
+        padding: 8px 11px;
+        background: transparent;
+        font: 11px var(--mono);
+        letter-spacing: 0.06em;
+      }
+      .filter.active,
+      .filter:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .articles {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr 0.9fr;
+        gap: 16px;
+      }
+      .article {
+        border-top: 3px solid var(--red);
+        padding-top: 12px;
+      }
+      .article:first-child {
+        grid-row: span 2;
+      }
+      .article img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 18px;
+        filter: grayscale(0.25);
+      }
+      .article:first-child img {
+        height: 278px;
+      }
+      .certs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 40px;
+      }
+      .cert {
+        display: grid;
+        grid-template-columns: 115px 1fr;
+        gap: 18px;
+        padding: 18px;
+        border: 1px solid var(--line);
+      }
+      .cert img {
+        width: 115px;
+        height: 84px;
+        object-fit: cover;
+      }
+      .cert small {
+        color: #7d4d2d;
+        font: 10px var(--mono);
+        letter-spacing: 0.08em;
+      }
+      .cert h3 {
+        margin: 6px 0;
+        font: 500 21px/1.1 var(--cond);
+      }
+      .cert p {
+        margin: 0;
+        color: #625d52;
+        font-size: 14px;
+      }
+      .contact-band {
+        margin-top: 112px;
+        background: var(--red);
+        color: #fff;
+        padding: 70px 0;
+      }
+      .contact-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 50px;
+      }
+      .contact-grid h2 {
+        margin: 12px 0;
+        font: 400 clamp(55px, 7vw, 96px) / 0.82 var(--serif);
+        letter-spacing: -0.06em;
+      }
+      .contact-grid .reach {
+        font: 500 20px var(--cond);
+        letter-spacing: 0.04em;
+      }
+      .contact-grid .reach a {
+        display: block;
+        margin-top: 8px;
+      }
+      .form {
+        display: grid;
+        gap: 14px;
+      }
+      .field {
+        display: grid;
+        gap: 5px;
+      }
+      .field label {
+        font: 11px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .field input,
+      .field textarea {
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        background: rgba(0, 0, 0, 0.08);
+        color: #fff;
+        padding: 12px;
+      }
+      .field textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .form .button {
+        align-self: start;
+        color: #1c1a15;
+        background: var(--paper);
+        border-color: var(--paper);
+      }
+      .status {
+        min-height: 24px;
+        margin: 0;
+        font: 12px var(--mono);
+      }
+      .footer {
+        padding: 35px 0 55px;
+        background: var(--coal);
+        color: #c8bda9;
+        font: 11px var(--mono);
+      }
+      .footer .shell {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .footer a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      @media (max-width: 900px) {
+        .topline {
+          padding-right: 180px;
+        }
+        .nav {
+          display: none;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: 670px;
+        }
+        .hero-rail {
+          display: none;
+        }
+        .intro,
+        .contact-grid {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .portrait-block {
+          max-width: 430px;
+        }
+        .skill-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .skill-grid article:nth-child(3n) {
+          border-right: 1px solid rgba(240, 234, 219, 0.25);
+        }
+        .skill-grid article:nth-child(2n) {
+          border-right: 0;
+        }
+        .projects {
+          grid-template-columns: 1fr 1fr;
+        }
+        .articles {
+          grid-template-columns: 1fr 1fr;
+        }
+        .article:first-child {
+          grid-row: auto;
+          grid-column: span 2;
+        }
+        .article:first-child img {
+          height: 230px;
+        }
+      }
+      @media (max-width: 600px) {
+        .shell {
+          width: min(100% - 24px, 1260px);
+        }
+        .topline {
+          padding: 18px 0;
+        }
+        .hero {
+          min-height: 570px;
+          padding-top: 20px;
+        }
+        .hero-copy {
+          padding-bottom: 35px;
+        }
+        .hero h1 {
+          font-size: 75px;
+        }
+        .hero .lead {
+          font-size: 17px;
+        }
+        .section {
+          padding-top: 75px;
+        }
+        .section-head {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .section-head p {
+          grid-column: auto;
+        }
+        .intro {
+          padding: 30px 0;
+        }
+        .bio {
+          font-size: 21px;
+        }
+        .ledger-line,
+        .experience {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .black-section {
+          margin-top: 75px;
+        }
+        .black-section .section-head {
+          padding-top: 68px;
+        }
+        .education,
+        .skill-grid,
+        .projects,
+        .certs {
+          grid-template-columns: 1fr;
+        }
+        .school:nth-child(odd),
+        .skill-grid article {
+          border-right: 0;
+        }
+        .course {
+          grid-template-columns: 45px 1fr;
+          gap: 12px;
+        }
+        .course p {
+          grid-column: 2;
+        }
+        .experience h3 {
+          font-size: 33px;
+        }
+        .articles {
+          grid-template-columns: 1fr;
+        }
+        .article:first-child {
+          grid-column: auto;
+        }
+        .article:first-child img {
+          height: 180px;
+        }
+        .contact-band {
+          margin-top: 76px;
+          padding: 58px 0;
+        }
+        .footer .shell {
+          flex-direction: column;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .button,
+        .project {
+          transition: none;
+        }
+        .button:hover {
+          transform: none;
+        }
+      }
+    </style>
+    <script>
+      window.THEME_ID = "30-steampunk";
+    </script>
+    <script src="/shared/profile.js"></script>
+    <script src="/shared/site-data.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <header class="mast" id="top">
+      <div class="shell topline">
+        <a href="#top" class="brand">CJC <b>ENGINE</b> ROOM</a>
+        <nav class="nav" aria-label="Primary">
+          <a href="#profile">Profile</a><a href="#work">Works</a
+          ><a href="#notes">Dispatches</a><a href="#contact">Telegram</a>
+        </nav>
+        <span>Issue No. 26.08</span>
       </div>
-    </div>
-  </header>
-
-  <main id="top">
-    <!-- decorative meshing gears -->
-    <div class="gear" id="g1" style="top:340px;left:-46px" aria-hidden="true"></div>
-    <div class="gear" id="g2" style="top:410px;left:62px" aria-hidden="true"></div>
-    <div class="gear" id="g3" style="top:1180px;right:-34px" aria-hidden="true"></div>
-    <div class="gear" id="g4" style="top:2050px;left:-52px" aria-hidden="true"></div>
-    <div class="gear" id="g5" style="top:2900px;right:-30px" aria-hidden="true"></div>
-    <div class="gear" id="g6" style="top:3700px;left:-40px" aria-hidden="true"></div>
-
-    <!-- HERO / boiler -->
-    <section class="bay" style="padding-top:22px">
-      <div class="wrap">
-        <div class="boiler">
-          <div class="nameplate">
-            <span class="rivet" style="top:14px;left:14px"></span><span class="rivet" style="top:14px;right:14px"></span>
-            <span class="rivet" style="bottom:14px;left:14px"></span><span class="rivet" style="bottom:14px;right:14px"></span>
-            <span class="brass-tab metal engrave"><i class="fa fa-cog" aria-hidden="true"></i> <span id="greet"></span></span>
-            <h1 class="emboss-gold" id="name"></h1>
-            <div class="role" id="role"></div>
-            <p class="sublabel" id="subtitle"></p>
-            <div class="hero-cta">
-              <a class="lvbtn solid" id="cv-btn" href="#" download></a>
-              <a class="lvbtn" id="gh-btn" target="_blank" rel="noopener"></a>
-            </div>
+      <div class="rule"></div>
+      <div class="shell hero">
+        <figure>
+          <img
+            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=2200&q=85"
+            alt="A real engineering workstation and mechanical equipment"
+            fetchpriority="high"
+            onerror="this.src='/index_page/img/portfolio/web.jpg'"
+          />
+        </figure>
+        <div class="stamp">Authenticated working record</div>
+        <div class="hero-copy">
+          <p class="issue" id="hero-greet"></p>
+          <h1 id="hero-name"></h1>
+          <p class="lead" id="hero-head"></p>
+          <div class="actions">
+            <a id="cv" class="button red" target="_blank" rel="noopener"
+              ><i class="fa fa-download" aria-hidden="true"></i
+              ><span data-l="cv"></span></a
+            ><a id="git" class="button" target="_blank" rel="noopener"
+              ><i class="fa fa-github" aria-hidden="true"></i>GitHub</a
+            >
           </div>
-          <div class="machine-side">
-            <div class="powercore" id="powercore" aria-hidden="true">
-              <div class="orb"></div><div class="glass"></div>
-              <div class="cage" id="core-cage"></div>
-              <span class="cv cv1"></span><span class="cv cv2"></span><span class="cv cv3"></span>
-              <span class="corelabel">STEAM CORE</span>
-            </div>
-            <div class="hero-clock" id="hero-clock" aria-hidden="true"></div>
-            <div class="gauge-lever">
-              <div class="biggauge" id="biggauge">
-                <div class="cap"><b id="bg-val">0</b>PSI · <span id="bg-lbl">BOILER</span></div>
+        </div>
+        <aside class="hero-rail">
+          <div class="hero-id">
+            <dl>
+              <div>
+                <dt>Function</dt>
+                <dd id="hero-role"></dd>
               </div>
-              <div class="lever-rig" id="lever-rig">
-                <span class="steam s1" aria-hidden="true"></span><span class="steam s2" aria-hidden="true"></span><span class="steam s3" aria-hidden="true"></span>
-                <div class="slot"></div>
-                <div class="arm" id="lever" role="button" tabindex="0" aria-label="Power lever">
-                  <span class="rod"></span><span class="ball"></span>
-                </div>
-                <div class="base metal"></div>
+              <div>
+                <dt>Station</dt>
+                <dd id="hero-location"></dd>
               </div>
-            </div>
-            <div class="lever-hint" id="lever-hint"></div>
+              <div>
+                <dt>System status</dt>
+                <dd>PRESSURE STABLE</dd>
+              </div>
+            </dl>
           </div>
-        </div>
+        </aside>
       </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section class="bay" id="about" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-about"></span><div><div class="kicker" id="k-about"></div><h2 class="bay-title" id="l-about"></h2></div><span class="hr"></span></div>
-          <div class="about-grid fu">
-            <div class="tintype metal"><div class="inner"><img id="portrait" alt=""><span class="cap" id="portrait-cap"></span></div></div>
-            <div class="about-body" id="about-body"></div>
-          </div>
-        </div></div></div>
-    </section>
-
-    <!-- EDUCATION -->
-    <section class="bay" id="education" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-edu"></span><div><div class="kicker" id="k-edu"></div><h2 class="bay-title" id="l-edu"></h2></div><span class="hr"></span></div>
-          <div class="ledger fu" id="edu-list"></div>
-        </div></div></div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="bay" id="skills" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-skills"></span><div><div class="kicker" id="k-skills"></div><h2 class="bay-title" id="l-skills"></h2></div><span class="hr"></span></div>
-          <div class="meters fu" id="meters"></div>
-          <div class="brass-tags" id="tags"></div>
-        </div></div></div>
-    </section>
-
-    <!-- COURSES -->
-    <section class="bay" id="courses" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-courses"></span><div><div class="kicker" id="k-courses"></div><h2 class="bay-title" id="l-courses"></h2></div><span class="hr"></span></div>
-          <div class="plates fu" id="plates"></div>
-        </div></div></div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section class="bay" id="experience" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-exp"></span><div><div class="kicker" id="k-exp"></div><h2 class="bay-title" id="l-exp"></h2></div><span class="hr"></span></div>
-          <div class="fu" id="exp-wrap"></div>
-        </div></div></div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section class="bay" id="projects" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-proj"></span><div><div class="kicker" id="k-proj"></div><h2 class="bay-title" id="l-proj"></h2></div><span class="hr"></span></div>
-          <div class="cards fu" id="cards"><div class="note" id="proj-load"></div></div>
-        </div></div></div>
-    </section>
-
-    <!-- ARTICLES -->
-    <section class="bay" id="articles" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-art"></span><div><div class="kicker" id="k-art"></div><h2 class="bay-title" id="l-art"></h2></div><span class="hr"></span></div>
-          <div class="filters" id="filters"></div>
-          <div class="alist fu" id="alist"><div class="note" id="art-load"></div></div>
-        </div></div></div>
-    </section>
-
-    <!-- CERTIFICATES -->
-    <section class="bay" id="certificates" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-cert"></span><div><div class="kicker" id="k-cert"></div><h2 class="bay-title" id="l-cert"></h2></div><span class="hr"></span></div>
-          <div class="certs fu" id="certs"></div>
-        </div></div></div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="bay" id="contact" data-bay>
-      <div class="wrap"><div class="frame metal">
-        <div class="paper">
-          <div class="bay-head"><span class="cogico" id="ci-contact"></span><div><div class="kicker" id="k-contact"></div><h2 class="bay-title" id="l-contact"></h2></div><span class="hr"></span></div>
-          <p class="fu" id="contact-lead" style="margin:0 0 22px;color:var(--ink2)"></p>
-          <div class="contact-grid fu">
-            <div class="ci-list" id="ci-list"></div>
-            <form class="telegraph" id="cf" novalidate>
-              <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-              <label for="cf-name" id="lb-name"></label>
-              <input type="text" name="name" id="cf-name" required autocomplete="name">
-              <label for="cf-email" id="lb-email"></label>
-              <input type="email" name="email" id="cf-email" required autocomplete="email">
-              <label for="cf-msg" id="lb-msg"></label>
-              <textarea name="message" id="cf-msg" required></textarea>
-              <button type="submit" class="lvbtn solid" id="cf-send"></button>
-              <p id="cf-status" role="status" aria-live="polite"></p>
-              <button type="button" class="telkey" id="telkey"><span class="key" aria-hidden="true"></span><span id="telkey-lbl"></span></button>
-            </form>
-          </div>
-        </div></div></div>
-    </section>
-  </main>
-
-  <footer class="footwood">
-    <div class="wrap">
-      <div class="foot-top">
-        <a class="brand-plate metal riveted" href="#top" aria-label="Home">
-          <span class="cog" id="foot-cog" aria-hidden="true"></span>
-          <span><b class="engrave" id="foot-brand">The C. J. Engine</b><small>EST. GUANGZHOU</small></span>
-        </a>
-        <nav class="foot-links" id="foot-links" aria-label="Links"></nav>
-      </div>
-      <div class="foot-bottom">
-        <span id="foot-desc"></span>
-        <span><a id="foot-icp" href="#" target="_blank" rel="noopener"></a> · <a id="foot-admin" href="/admin.html"></a></span>
-      </div>
-    </div>
-  </footer>
-
-  <span id="automaton" role="button" tabindex="0" aria-label="Wind the clockwork automaton"></span>
-
-  <script>window.THEME_ID = "30-steampunk";</script>
-  <script src="/shared/profile.js"></script>
-  <script src="/shared/site-data.js"></script>
-  <script>
-  (function(){
-    "use strict";
-    var CJC = window.CJCData, P = CJC.profile, esc = CJC.escapeHtml;
-    function t(f){ return CJC.t(f); }
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var articles=[], projects=[], filterKey="all";
-    var pressure=0, powered=false;
-    var _gid=0;
-
-    /* ---------- SVG builders (layered metallic) ---------- */
-    var TONES = {
-      brass:['#ffe9b0','#e2b45c','#c98a2b','#5c3a12'],
-      copper:['#f4c79b','#e0966a','#b06a38','#5e3016'],
-      steel:['#e5ddcc','#b3a68f','#7d715f','#372f24'],
-      dark:['#7a6142','#4a3826','#2e2113','#150f08']
-    };
-    function metalGear(teeth,R,hole,tone){
-      var id='mg'+(_gid++), p=TONES[tone||'brass'];
-      var cx=R+10, cy=R+10, size=(R+10)*2;
-      var rt=R, rb=R*0.82, rHub=R*0.5, rin=R*0.66, n=teeth;
-      function pt(a,r){ return (cx+Math.cos(a)*r).toFixed(1)+' '+(cy+Math.sin(a)*r).toFixed(1); }
-      var d='';
-      for(var i=0;i<n;i++){
-        var a0=(i/n)*Math.PI*2,a1=((i+0.28)/n)*Math.PI*2,a2=((i+0.5)/n)*Math.PI*2,a3=((i+0.78)/n)*Math.PI*2,a4=((i+1)/n)*Math.PI*2;
-        d+=(i===0?'M ':'L ')+pt(a0,rt)+' L '+pt(a1,rt)+' L '+pt(a2,rb)+' L '+pt(a3,rb)+' L '+pt(a4,rt)+' ';
-      }
-      d+='Z';
-      var bolts='', bn=Math.max(5,Math.round(teeth*0.6)), br=rHub*0.62;
-      for(var j=0;j<bn;j++){ var ba=(j/bn)*Math.PI*2; bolts+='<circle cx="'+(cx+Math.cos(ba)*br).toFixed(1)+'" cy="'+(cy+Math.sin(ba)*br).toFixed(1)+'" r="'+(R*0.07+1).toFixed(1)+'" fill="url(#'+id+'v)"/>'; }
-      return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'
-        +'<defs>'
-        +'<radialGradient id="'+id+'b" cx="38%" cy="30%" r="72%"><stop offset="0" stop-color="'+p[1]+'"/><stop offset=".55" stop-color="'+p[2]+'"/><stop offset="1" stop-color="'+p[3]+'"/></radialGradient>'
-        +'<radialGradient id="'+id+'h" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="'+p[0]+'"/><stop offset=".6" stop-color="'+p[2]+'"/><stop offset="1" stop-color="'+p[3]+'"/></radialGradient>'
-        +'<radialGradient id="'+id+'v" cx="35%" cy="30%"><stop offset="0" stop-color="'+p[0]+'"/><stop offset="1" stop-color="'+p[3]+'"/></radialGradient>'
-        +'<radialGradient id="'+id+'s" cx="34%" cy="26%" r="55%"><stop offset="0" stop-color="rgba(255,255,255,.6)"/><stop offset=".45" stop-color="rgba(255,255,255,0)"/></radialGradient>'
-        +'</defs>'
-        +'<path d="'+d+'" fill="url(#'+id+'b)" stroke="'+p[3]+'" stroke-width="1.2"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+rin.toFixed(1)+'" fill="rgba(0,0,0,.22)"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(rin-2).toFixed(1)+'" fill="url(#'+id+'h)" stroke="'+p[3]+'" stroke-width="1"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+rHub.toFixed(1)+'" fill="none" stroke="'+p[3]+'" stroke-width="1.2" opacity=".7"/>'
-        +bolts
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+hole.toFixed(1)+'" fill="#160d05"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(hole+2).toFixed(1)+'" fill="none" stroke="'+p[0]+'" stroke-width="1.4" opacity=".55"/>'
-        +'<path d="'+d+'" fill="url(#'+id+'s)"/>'
-        +'</svg>';
-    }
-    // pressure gauge with glass + danger arc + brass bezel
-    function gaugeSVG(id,size){
-      var r=size/2, cx=r, cy=r;
-      var ticks='';
-      for(var k=0;k<=10;k++){ var a=(-120+240*(k/10))*Math.PI/180;
-        var x1=cx+Math.cos(a-Math.PI/2)*(r-8),y1=cy+Math.sin(a-Math.PI/2)*(r-8),x2=cx+Math.cos(a-Math.PI/2)*(r-15),y2=cy+Math.sin(a-Math.PI/2)*(r-15);
-        ticks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+(k>7?'#a5241a':'#3a2408')+'" stroke-width="'+(k%5===0?2.6:1.3)+'"/>'; }
-      // danger arc (80-100%)
-      function arcpt(pct){ var aa=(-120+240*pct/100-90)*Math.PI/180; return (cx+Math.cos(aa)*(r-6)).toFixed(1)+' '+(cy+Math.sin(aa)*(r-6)).toFixed(1); }
-      var danger='<path d="M '+arcpt(80)+' A '+(r-6)+' '+(r-6)+' 0 0 1 '+arcpt(100)+'" fill="none" stroke="#a5241a" stroke-width="3" stroke-linecap="round" opacity=".8"/>';
-      // rivets around bezel
-      var rvt=''; var rn=12; for(var m=0;m<rn;m++){ var ra=(m/rn)*Math.PI*2; rvt+='<circle cx="'+(cx+Math.cos(ra)*(r-4.5)).toFixed(1)+'" cy="'+(cy+Math.sin(ra)*(r-4.5)).toFixed(1)+'" r="'+(size>120?2.4:1.6)+'" fill="url(#'+id+'rv)"/>'; }
-      return '<svg viewBox="0 0 '+size+' '+size+'" width="100%" height="100%">'
-        +'<defs>'
-        +'<radialGradient id="'+id+'bz" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#ffe9b0"/><stop offset=".5" stop-color="#c98a2b"/><stop offset="1" stop-color="#5c3a12"/></radialGradient>'
-        +'<radialGradient id="'+id+'rv" cx="35%" cy="30%"><stop offset="0" stop-color="#ffe9b8"/><stop offset="1" stop-color="#5c3a12"/></radialGradient>'
-        +'<radialGradient id="'+id+'fc" cx="42%" cy="38%" r="70%"><stop offset="0" stop-color="#f6ecd0"/><stop offset="1" stop-color="#d9c496"/></radialGradient>'
-        +'<radialGradient id="'+id+'gl" cx="35%" cy="26%" r="60%"><stop offset="0" stop-color="rgba(255,255,255,.55)"/><stop offset=".5" stop-color="rgba(255,255,255,.05)"/><stop offset="1" stop-color="rgba(60,40,15,.18)"/></radialGradient>'
-        +'</defs>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-1)+'" fill="url(#'+id+'bz)" stroke="#3a2408" stroke-width="2"/>'
-        +rvt
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-9)+'" fill="url(#'+id+'fc)" stroke="#5c3a12" stroke-width="1.5"/>'
-        +ticks+danger
-        +'<g id="'+id+'-needle" style="transform-origin:'+cx+'px '+cy+'px;transform:rotate(-120deg);transition:transform .9s cubic-bezier(.3,1.2,.4,1)">'
-        +'<line x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(r*0.26)+'" stroke="#8a1a10" stroke-width="'+(size>120?4:2.2)+'" stroke-linecap="round"/>'
-        +'<line x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(cy+r*0.16)+'" stroke="#8a1a10" stroke-width="'+(size>120?4:2.2)+'" stroke-linecap="round"/></g>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(size>120?8:4.5)+'" fill="#3a2408" stroke="#ffe9b0" stroke-width="1.6"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-9)+'" fill="url(#'+id+'gl)" opacity=".8"/>'
-        +'</svg>';
-    }
-    // ornate steampunk clock centerpiece
-    function clockSVG(){
-      var s=200, cx=100, cy=100;
-      var rvt=''; for(var m=0;m<16;m++){ var ra=(m/16)*Math.PI*2; rvt+='<circle cx="'+(cx+Math.cos(ra)*90).toFixed(1)+'" cy="'+(cy+Math.sin(ra)*90).toFixed(1)+'" r="3" fill="url(#ckrv)"/>'; }
-      var rom=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'], nums='';
-      for(var h=0;h<12;h++){ var ha=(h/12)*Math.PI*2-Math.PI/2; var nx=cx+Math.cos(ha)*62, ny=cy+Math.sin(ha)*62;
-        nums+='<text x="'+nx.toFixed(1)+'" y="'+(ny+4).toFixed(1)+'" text-anchor="middle" font-family="Cinzel,serif" font-size="12" font-weight="700" fill="#3a2712">'+rom[h]+'</text>'; }
-      var tk=''; for(var k=0;k<60;k++){ var ka=(k/60)*Math.PI*2; var big=k%5===0; var r1=76,r2=big?70:73;
-        tk+='<line x1="'+(cx+Math.cos(ka)*r1).toFixed(1)+'" y1="'+(cy+Math.sin(ka)*r1).toFixed(1)+'" x2="'+(cx+Math.cos(ka)*r2).toFixed(1)+'" y2="'+(cy+Math.sin(ka)*r2).toFixed(1)+'" stroke="#5c3a12" stroke-width="'+(big?1.6:0.8)+'"/>'; }
-      // small subdial gear
-      return '<svg viewBox="0 0 200 200" width="100%" height="100%">'
-        +'<defs>'
-        +'<radialGradient id="ckbz" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#ffe9b0"/><stop offset=".5" stop-color="#c98a2b"/><stop offset="1" stop-color="#5c3a12"/></radialGradient>'
-        +'<radialGradient id="ckrv" cx="35%" cy="30%"><stop offset="0" stop-color="#ffe9b8"/><stop offset="1" stop-color="#5c3a12"/></radialGradient>'
-        +'<radialGradient id="ckfc" cx="42%" cy="36%" r="72%"><stop offset="0" stop-color="#f4ead0"/><stop offset="1" stop-color="#dcc79a"/></radialGradient>'
-        +'<radialGradient id="ckgl" cx="34%" cy="24%" r="62%"><stop offset="0" stop-color="rgba(255,255,255,.5)"/><stop offset=".5" stop-color="rgba(255,255,255,.04)"/><stop offset="1" stop-color="rgba(60,40,15,.2)"/></radialGradient>'
-        +'</defs>'
-        +'<circle cx="100" cy="100" r="98" fill="url(#ckbz)" stroke="#3a2408" stroke-width="2.5"/>'
-        +'<circle cx="100" cy="100" r="83" fill="none" stroke="#3a2408" stroke-width="1.5"/>'
-        +rvt
-        +'<circle cx="100" cy="100" r="80" fill="url(#ckfc)" stroke="#5c3a12" stroke-width="1.5"/>'
-        +tk+nums
-        +'<g id="ck-hour" style="transform-origin:100px 100px;transition:transform .6s ease"><line x1="100" y1="100" x2="100" y2="54" stroke="#2e2113" stroke-width="5" stroke-linecap="round"/></g>'
-        +'<g id="ck-min" style="transform-origin:100px 100px;transition:transform .6s ease"><line x1="100" y1="100" x2="100" y2="36" stroke="#2e2113" stroke-width="3.5" stroke-linecap="round"/></g>'
-        +'<g id="ck-sec" style="transform-origin:100px 100px"><line x1="100" y1="108" x2="100" y2="32" stroke="#a5241a" stroke-width="1.6" stroke-linecap="round"/></g>'
-        +'<circle cx="100" cy="100" r="6" fill="#3a2408" stroke="#ffe9b0" stroke-width="1.6"/>'
-        +'<circle cx="100" cy="100" r="80" fill="url(#ckgl)" opacity=".85"/>'
-        +'</svg>';
-    }
-    // Victorian scroll filigree (top-left orientation)
-    function filigreeSVG(){
-      return '<svg viewBox="0 0 64 64" width="100%" height="100%" fill="none" stroke="#8a5a1e" stroke-width="2.2" stroke-linecap="round">'
-        +'<path d="M6 58 L6 20 Q6 6 20 6 L58 6"/>'
-        +'<path d="M20 6 Q34 6 34 20 Q34 30 24 30 Q17 30 17 23 Q17 18 22 18"/>'
-        +'<path d="M6 20 Q6 34 20 34 Q30 34 30 24 Q30 17 23 17"/>'
-        +'<circle cx="22" cy="22" r="2.4" fill="#8a5a1e" stroke="none"/>'
-        +'<path d="M6 40 q10 0 10 10" opacity=".7"/>'
-        +'<path d="M40 6 q0 10 10 10" opacity=".7"/>'
-        +'</svg>';
-    }
-    function autoSVG(){
-      return '<svg viewBox="0 0 72 94" width="100%" height="100%">'
-        +'<defs><linearGradient id="aub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b45c"/><stop offset="1" stop-color="#7a4e18"/></linearGradient></defs>'
-        +'<g class="head"><rect x="24" y="10" width="24" height="24" rx="5" fill="#3a2410" stroke="#c98a2b" stroke-width="1.5"/><circle cx="31" cy="22" r="2.4" fill="#f2d489"/><circle cx="41" cy="22" r="2.4" fill="#f2d489"/><line x1="36" y1="4" x2="36" y2="10" stroke="#c98a2b" stroke-width="2"/><circle cx="36" cy="3" r="2.4" fill="#f2d489"/></g>'
-        +'<rect x="22" y="34" width="28" height="30" rx="5" fill="url(#aub)" stroke="#5c3a12" stroke-width="1.5"/>'
-        +'<circle cx="36" cy="46" r="3.5" fill="#3a2408"/><circle cx="36" cy="55" r="2.5" fill="#3a2408"/>'
-        +'<line class="arm-l" x1="22" y1="40" x2="8" y2="54" stroke="#c98a2b" stroke-width="4" stroke-linecap="round"/>'
-        +'<line class="arm-r" x1="50" y1="40" x2="64" y2="54" stroke="#c98a2b" stroke-width="4" stroke-linecap="round"/>'
-        +'<circle cx="8" cy="54" r="3.5" fill="#f2d489"/><circle cx="64" cy="54" r="3.5" fill="#f2d489"/>'
-        +'<g class="cog"><circle cx="36" cy="72" r="10" fill="#c98a2b" stroke="#5c3a12" stroke-width="1.5"/><circle cx="36" cy="72" r="4" fill="#160d05"/></g>'
-        +'<line x1="30" y1="82" x2="27" y2="92" stroke="#c98a2b" stroke-width="4" stroke-linecap="round"/><line x1="42" y1="82" x2="45" y2="92" stroke="#c98a2b" stroke-width="4" stroke-linecap="round"/></svg>';
-    }
-
-    // heavy spoked flywheel
-    function flywheelSVG(){
-      var cx=140,cy=140, spokes='', i;
-      for(i=0;i<6;i++){ spokes+='<g transform="rotate('+(i*60)+' 140 140)"><rect x="132" y="40" width="16" height="102" rx="7" fill="url(#fwsp)" stroke="#3a2408" stroke-width="1"/></g>'; }
-      var bolts=''; for(i=0;i<16;i++){ var a=(i/16)*Math.PI*2; bolts+='<circle cx="'+(cx+Math.cos(a)*120).toFixed(1)+'" cy="'+(cy+Math.sin(a)*120).toFixed(1)+'" r="4" fill="url(#fwv)"/>'; }
-      return '<svg width="280" height="280" viewBox="0 0 280 280">'
-        +'<defs>'
-        +'<radialGradient id="fwr" cx="38%" cy="30%" r="72%"><stop offset="0" stop-color="#e2b45c"/><stop offset=".55" stop-color="#8a5a1e"/><stop offset="1" stop-color="#3a2408"/></radialGradient>'
-        +'<linearGradient id="fwsp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5c3a12"/><stop offset=".5" stop-color="#e2b45c"/><stop offset="1" stop-color="#5c3a12"/></linearGradient>'
-        +'<radialGradient id="fwv" cx="35%" cy="30%"><stop offset="0" stop-color="#ffe9b8"/><stop offset="1" stop-color="#3a2408"/></radialGradient>'
-        +'</defs>'
-        +'<circle cx="140" cy="140" r="132" fill="none" stroke="url(#fwr)" stroke-width="20"/>'
-        +'<circle cx="140" cy="140" r="132" fill="none" stroke="#3a2408" stroke-width="1.5" opacity=".7"/>'
-        +'<circle cx="140" cy="140" r="112" fill="none" stroke="#3a2408" stroke-width="1.5" opacity=".7"/>'
-        +bolts+spokes
-        +'<circle cx="140" cy="140" r="30" fill="url(#fwr)" stroke="#3a2408" stroke-width="2"/>'
-        +'<circle cx="140" cy="140" r="9" fill="#160d05"/>'
-        +'</svg>';
-    }
-    // drive belt with two pulleys + moving band
-    function beltSVG(){
-      return '<svg width="230" height="120" viewBox="0 0 230 120">'
-        +'<defs><radialGradient id="pl" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#e2b45c"/><stop offset=".6" stop-color="#8a5a1e"/><stop offset="1" stop-color="#3a2408"/></radialGradient></defs>'
-        +'<path class="beltband" d="M40 24 A6 6 0 0 1 40 12 L190 44 A6 6 0 0 1 190 76 L40 108 A6 6 0 0 1 40 96 Z" fill="none" stroke="#241610" stroke-width="12" stroke-dasharray="8 8"/>'
-        +'<g style="transform-origin:40px 60px;animation:spin 3s linear infinite"><circle cx="40" cy="60" r="34" fill="url(#pl)" stroke="#3a2408" stroke-width="2"/><circle cx="40" cy="60" r="8" fill="#160d05"/><rect x="37" y="30" width="6" height="60" fill="#3a2408" opacity=".5"/></g>'
-        +'<g style="transform-origin:190px 60px;animation:spin 2.1s linear infinite"><circle cx="190" cy="60" r="20" fill="url(#pl)" stroke="#3a2408" stroke-width="2"/><circle cx="190" cy="60" r="5" fill="#160d05"/></g>'
-        +'</svg>';
-    }
-    function airshipSVG(){
-      return '<svg width="250" height="110" viewBox="0 0 250 110">'
-        +'<defs><linearGradient id="asb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4a2a"/><stop offset="1" stop-color="#2e1c10"/></linearGradient></defs>'
-        +'<ellipse cx="120" cy="42" rx="118" ry="40" fill="url(#asb)" stroke="#8a5a1e" stroke-width="2"/>'
-        +'<path d="M2 42 h236" stroke="#3a2408" stroke-width="1.5" opacity=".5"/>'
-        +'<ellipse cx="120" cy="42" rx="118" ry="40" fill="none" stroke="#3a2408" stroke-width="1" opacity=".4"/>'
-        +'<path d="M226 30 l22 -8 v40 l-22 -8 Z" fill="#3a2408"/>'
-        +'<rect x="86" y="80" width="68" height="18" rx="5" fill="#3a2408" stroke="#8a5a1e" stroke-width="1.5"/>'
-        +'<line x1="96" y1="80" x2="100" y2="72" stroke="#8a5a1e" stroke-width="1.5"/><line x1="144" y1="80" x2="140" y2="72" stroke="#8a5a1e" stroke-width="1.5"/>'
-        +'<circle cx="104" cy="89" r="2.5" fill="#ffbe52"/><circle cx="124" cy="89" r="2.5" fill="#ffbe52"/><circle cx="144" cy="89" r="2.5" fill="#ffbe52"/>'
-        +'</svg>';
-    }
-    function teslaSVG(){
-      return '<svg width="120" height="90" viewBox="0 0 120 90">'
-        +'<defs><filter id="tglow"><feGaussianBlur stdDeviation="1.6"/></filter>'
-        +'<radialGradient id="term" cx="35%" cy="30%"><stop offset="0" stop-color="#ffe9b8"/><stop offset="1" stop-color="#5c3a12"/></radialGradient></defs>'
-        +'<circle cx="10" cy="20" r="8" fill="url(#term)" stroke="#3a2408" stroke-width="1.5"/>'
-        +'<circle cx="110" cy="70" r="8" fill="url(#term)" stroke="#3a2408" stroke-width="1.5"/>'
-        +'<polyline class="arc" points="10,20 34,10 52,34 74,18 92,50 110,70" fill="none" stroke="#bfe6ff" stroke-width="2" filter="url(#tglow)"/>'
-        +'<polyline class="arc2" points="10,20 30,32 50,14 70,44 88,26 110,70" fill="none" stroke="#eaf6ff" stroke-width="1.6" filter="url(#tglow)"/>'
-        +'</svg>';
-    }
-    function coreCageSVG(){
-      return '<svg viewBox="0 0 196 196" width="100%" height="100%">'
-        +'<defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d489"/><stop offset=".5" stop-color="#8a5a1e"/><stop offset="1" stop-color="#3a2408"/></linearGradient></defs>'
-        +'<g fill="none" stroke="url(#cg)" stroke-width="6" stroke-linecap="round">'
-        +'<ellipse cx="98" cy="98" rx="74" ry="74"/>'
-        +'<ellipse cx="98" cy="98" rx="34" ry="74"/><ellipse cx="98" cy="98" rx="74" ry="34"/>'
-        +'</g>'
-        +'<rect x="86" y="4" width="24" height="26" rx="5" fill="url(#cg)" stroke="#3a2408" stroke-width="1.5"/>'
-        +'<rect x="86" y="166" width="24" height="26" rx="5" fill="url(#cg)" stroke="#3a2408" stroke-width="1.5"/>'
-        +'<circle cx="98" cy="17" r="4" fill="#160d05"/><circle cx="98" cy="179" r="4" fill="#160d05"/>'
-        +'</svg>';
-    }
-    // build the fixed engine-room backdrop (once)
-    function buildEngineRoom(){
-      var q=function(s){return document.querySelector(s);};
-      q('.g-a').innerHTML=metalGear(16,60,20,'steel');
-      q('.g-b').innerHTML=metalGear(11,40,14,'copper');
-      q('.g-c').innerHTML=metalGear(18,68,24,'brass');
-      q('.g-d').innerHTML=metalGear(12,44,16,'steel');
-      q('.g-e').innerHTML=metalGear(14,54,18,'copper');
-      q('.g-f').innerHTML=metalGear(13,50,18,'brass');
-      q('.er-flywheel').innerHTML=flywheelSVG();
-      q('.er-belt').innerHTML=beltSVG();
-      q('#er-airship').innerHTML=airshipSVG();
-      q('#er-tesla').innerHTML=teslaSVG();
-      q('#core-cage').innerHTML=coreCageSVG();
-      // embers rising from the firebox
-      var emb=document.getElementById('er-embers'), eh='';
-      for(var i=0;i<14;i++){ var l=2+Math.random()*24, dur=(3+Math.random()*4).toFixed(1), del=(Math.random()*5).toFixed(1);
-        eh+='<span class="ember" style="left:'+l.toFixed(1)+'%;animation-duration:'+dur+'s;animation-delay:'+del+'s"></span>'; }
-      emb.innerHTML=eh;
-      // drifting steam wisps
-      var sl=document.getElementById('steamlayer'), sh='';
-      for(var j=0;j<6;j++){ var sz=140+Math.random()*160, ll=Math.random()*100, du=(12+Math.random()*10).toFixed(1), dl=(Math.random()*9).toFixed(1);
-        sh+='<span class="wisp" style="width:'+sz.toFixed(0)+'px;height:'+sz.toFixed(0)+'px;left:'+ll.toFixed(1)+'%;bottom:-10%;animation-duration:'+du+'s;animation-delay:'+dl+'s"></span>'; }
-      sl.innerHTML=sh;
-    }
-
-    /* ---------- Audio ---------- */
-    var ac=null;
-    function actx(){ try{ ac=ac||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} return ac; }
-    function hiss(dur){
-      if(reduce||!actx()) return; var a=ac, now=a.currentTime, d=dur||1.2;
-      var buf=a.createBuffer(1, a.sampleRate*d, a.sampleRate), ch=buf.getChannelData(0);
-      for(var i=0;i<ch.length;i++) ch[i]=(Math.random()*2-1)*(1-i/ch.length);
-      var src=a.createBufferSource(); src.buffer=buf;
-      var f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=1600; f.Q.value=.7;
-      var g=a.createGain(); g.gain.setValueAtTime(.0001,now); g.gain.linearRampToValueAtTime(.16,now+.05); g.gain.exponentialRampToValueAtTime(.0008,now+d);
-      src.connect(f); f.connect(g); g.connect(a.destination); src.start(now);
-    }
-    function whistle(){
-      if(reduce||!actx()) return; var a=ac, now=a.currentTime;
-      var o=a.createOscillator(), g=a.createGain(); o.type='sine';
-      o.frequency.setValueAtTime(700,now); o.frequency.exponentialRampToValueAtTime(1900,now+.5); o.frequency.exponentialRampToValueAtTime(600,now+1.1);
-      g.gain.setValueAtTime(.0001,now); g.gain.linearRampToValueAtTime(.2,now+.06); g.gain.exponentialRampToValueAtTime(.0008,now+1.2);
-      o.connect(g); g.connect(a.destination); o.start(now); o.stop(now+1.25); hiss(1.1);
-    }
-    function beep(freq,dur,when){
-      if(reduce||!actx()) return; var a=ac;
-      var o=a.createOscillator(), g=a.createGain(); o.type='square'; o.frequency.value=freq||620;
-      g.gain.setValueAtTime(.0001,when); g.gain.linearRampToValueAtTime(.12,when+.01); g.gain.setValueAtTime(.12,when+dur-.02); g.gain.exponentialRampToValueAtTime(.0006,when+dur);
-      o.connect(g); g.connect(a.destination); o.start(when); o.stop(when+dur+.02);
-    }
-    var MORSE={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..'};
-    function tapMorse(text){
-      if(reduce||!actx()){ return; }
-      var a=ac, t0=a.currentTime+.05, unit=.09, key=document.getElementById('telkey');
-      text.toUpperCase().split('').forEach(function(ch){
-        var code=MORSE[ch]; if(!code){ t0+=unit*3; return; }
-        code.split('').forEach(function(sym){
-          var d=(sym==='-'?3:1)*unit; beep(620,d,t0);
-          (function(when,dd){ setTimeout(function(){ key.classList.add('tap'); setTimeout(function(){key.classList.remove('tap');}, dd*1000); }, (when-a.currentTime)*1000); })(t0,d);
-          t0+=d+unit;
+    </header>
+    <main id="content"><div id="app"></div></main>
+    <script>
+      (() => {
+        "use strict";
+        const L = {
+          profile: { en: "Profile / operator", zh: "档案 / 操作员" },
+          education: { en: "Training log", zh: "训练记录" },
+          skills: { en: "Tools under pressure", zh: "高压工具组" },
+          courses: { en: "Course work", zh: "课程作业" },
+          experience: { en: "Service record", zh: "服务记录" },
+          projects: { en: "Built in the workshop", zh: "车间作品" },
+          articles: { en: "Dispatches & notes", zh: "调度与笔记" },
+          certs: { en: "Accreditation", zh: "资质证明" },
+          contact: { en: "Open a channel.", zh: "开启通信。" },
+          cv: { en: "Extract CV", zh: "导出简历" },
+          name: { en: "Name", zh: "姓名" },
+          email: { en: "Email", zh: "邮箱" },
+          message: { en: "Message", zh: "信息" },
+          send: { en: "Transmit", zh: "传送" },
+          sending: { en: "Transmitting…", zh: "传送中…" },
+          sent: { en: "Transmission received.", zh: "传送已接收。" },
+          offline: {
+            en: "The archive is temporarily unavailable.",
+            zh: "档案暂时无法使用。",
+          },
+          view: { en: "Inspect record", zh: "检查记录" },
+        };
+        let articles = [],
+          projects = [],
+          filter = "all";
+        const t = (x) => CJCData.t(x),
+          e = (x) => CJCData.escapeHtml(x || ""),
+          q = (s) => document.querySelector(s),
+          P = () => CJCData.profile;
+        function head(title, id, note) {
+          return `<section class="section" id="${id}"><div class="shell section-head"><span class="section-no">${note}</span><div><h2>${e(t(title))}</h2><p>${e(t(title))} / CJC LOGBOOK</p></div></div>`;
+        }
+        function tail() {
+          return "</section>";
+        }
+        function render() {
+          const p = P();
+          q("#hero-greet").textContent = t(p.greeting);
+          q("#hero-name").innerHTML = `${e(t(p.name))}<em>${e(t(p.role))}</em>`;
+          q("#hero-head").textContent = t(p.headline);
+          q("#hero-role").textContent = t(p.role);
+          q("#hero-location").textContent = t(p.location);
+          q("#cv").href = t(p.cv);
+          q("#cv span").textContent = t(L.cv);
+          q("#git").href = p.contact.github;
+          q("#app").innerHTML =
+            `${head(L.profile, "profile", "01")}<div class="shell intro"><figure class="portrait-block"><img src="${e(p.avatar)}" alt="${e(p.avatarAlt || t(p.name))}"><figcaption class="caption">${e(t(p.location))}</figcaption></figure><article class="bio"><p>${e(t(p.bio[0]))}</p><p>${e(t(p.bio[1]))}</p><span class="loc"><i class="fa fa-map-marker" aria-hidden="true"></i>${e(t(p.location))}</span><div class="ledger"><div class="ledger-line"><span>Role</span><strong>${e(t(p.role))}</strong></div><div class="ledger-line"><span>Contact</span><strong>${e(p.contact.email)}</strong></div></div></article></div>${tail()}<section class="black-section">${head(L.education, "education", "02")}<div class="shell education">${p.education.map((x) => `<article class="school"><time>${e(x.period)}</time><h3>${e(t(x.school))}</h3><p>${e(t(x.degree))}</p><p>${e(t(x.note))}</p></article>`).join("")}</div>${tail()}${head(L.skills, "skills", "03")}<div class="shell skill-grid">${p.skills
+              .map(
+                (x, i) =>
+                  `<article><h3>Assembly ${String(i + 1).padStart(2, "0")}</h3><div class="tags">${e(
+                    x,
+                  )
+                    .split(" / ")
+                    .map((y) => `<span class="tag">${y}</span>`)
+                    .join("")}</div></article>`,
+              )
+              .join(
+                "",
+              )}</div>${tail()}</section>${head(L.courses, "courses", "04")}<div class="shell course-list">${p.courses.map((x) => `<article class="course"><i class="fa ${e(x.icon)}" aria-hidden="true"></i><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></article>`).join("")}</div>${tail()}${head(L.experience, "experience", "05")}<div class="shell">${p.experience.map((x) => `<article class="experience"><span class="when">${e(x.period)}</span><div><h3>${e(t(x.company))}<br><small>${e(t(x.role))}</small></h3><p>${e(t(x.summary))}</p><ul>${x.bullets.map((b) => `<li>${e(t(b))}</li>`).join("")}</ul></div></article>`).join("")}</div>${tail()}${head(L.projects, "work", "06")}<div class="shell projects">${projects.length ? projects.map((x) => `<a class="project" href="${e(x.href)}"><span class="meta">${e(x.dateText())} / ${e(x.tech_stack || "PROJECT")}</span><h3>${e(x.localTitle())}</h3><p>${e(x.localSummary())}</p><span class="read">${e(t(L.view))} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></span></a>`).join("") : `<p>${e(t(L.offline))}</p>`}</div>${tail()}${head(L.articles, "notes", "07")}<div class="shell"><div class="filters">${p.articleFilters.map((x) => `<button class="filter ${filter === x.key ? "active" : ""}" type="button" data-filter="${e(x.key)}" onclick="window.CJCThemeFilter(this.dataset.filter)">${e(t(x.label))}</button>`).join("")}</div><div class="articles">${
+              articles.length
+                ? CJCData.filterArticles(articles, filter)
+                    .map(
+                      (x) =>
+                        `<a class="article" href="${e(x.href)}"><img src="${e(x.cover_image || "/index_page/img/blogs/1.jpg")}" alt="" loading="lazy" onerror="this.src='/index_page/img/blogs/1.jpg'"><span class="meta">${e(x.category || "NOTE")} / ${e(x.dateText())}</span><h3>${e(x.localTitle())}</h3><p>${e(x.localSummary())}</p><span class="read">${e(t(L.view))}</span></a>`,
+                    )
+                    .join("")
+                : `<p>${e(t(L.offline))}</p>`
+            }</div></div>${tail()}${head(L.certs, "certs", "08")}<div class="shell certs">${p.certificates.map((x) => `<article class="cert"><img src="${e(x.image)}" alt="${e(t(x.title))}" loading="lazy"><div><small>${e(t(x.date))} / ${e(t(x.tag))}</small><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></div></article>`).join("")}</div>${tail()}<section class="contact-band" id="contact"><div class="shell contact-grid"><article><span class="section-no">09 / CONTACT</span><h2>${e(t(L.contact))}</h2><p class="reach"><a href="${e(p.contact.emailTo)}">${e(p.contact.email)}</a><a href="${e(p.contact.phoneHref)}">${e(p.contact.phone)}</a><a href="${e(p.contact.github)}" target="_blank" rel="noopener">${e(p.contact.githubUser)}</a></p></article><form class="form" id="contact-form"><div class="field"><label for="name">${e(t(L.name))}</label><input id="name" name="name" autocomplete="name" required></div><div class="field"><label for="email">${e(t(L.email))}</label><input id="email" type="email" name="email" autocomplete="email" required></div><div class="field"><label for="message">${e(t(L.message))}</label><textarea id="message" name="message" required></textarea></div><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><button class="button" type="submit">${e(t(L.send))}<i class="fa fa-long-arrow-right" aria-hidden="true"></i></button><p class="status" id="status" aria-live="polite"></p></form></div></section><footer class="footer"><div class="shell"><span>${e(p.brand)} / ${e(t(p.ui.footer_desc))}</span><span><a href="${e(p.icpUrl)}" target="_blank" rel="noopener">${e(p.icp)}</a> · <a href="/admin.html">Admin Panel</a></span></div></footer>`;
+          bind();
+        }
+        function bind() {
+          q("#contact-form").addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+            const f = ev.currentTarget,
+              s = q("#status"),
+              b = f.querySelector("button");
+            b.disabled = true;
+            s.textContent = t(L.sending);
+            try {
+              await CJCData.sendContact({
+                name: f.name.value,
+                email: f.email.value,
+                message: f.message.value,
+                website: f.website.value,
+              });
+              f.reset();
+              s.textContent = t(L.sent);
+            } catch (err) {
+              s.textContent = err.message || t(L.offline);
+            } finally {
+              b.disabled = false;
+            }
+          });
+        }
+        window.CJCThemeFilter = (key) => {
+          filter = key || "all";
+          render();
+        };
+        document.addEventListener("DOMContentLoaded", async () => {
+          CJCData.setTheme(window.THEME_ID);
+          render();
+          CJCData.mountSwitcher({ accent: "#b74520" });
+          CJCData.onLang(render);
+          try {
+            [articles, projects] = await Promise.all([
+              CJCData.fetchArticles(),
+              CJCData.fetchProjects(),
+            ]);
+            render();
+          } catch (err) {
+            render();
+          }
         });
-        t0+=unit*2;
-      });
-    }
-
-    /* ---------- helpers ---------- */
-    function setText(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; }
-    function setHTML(id,v){ var el=document.getElementById(id); if(el) el.innerHTML=v; }
-    function setNeedle(id,pct){ var g=document.getElementById(id); if(g) g.style.transform='rotate('+(-120+240*Math.max(0,Math.min(100,pct))/100)+'deg)'; }
-
-    /* ---------- pressure ---------- */
-    function setPressure(v){
-      pressure=Math.max(0,Math.min(120,v));
-      var shown=Math.min(100,pressure);
-      setNeedle('pg-needle', shown); setNeedle('bg-needle', shown);
-      setText('press-val', Math.round(pressure)+' PSI'); setText('bg-val', Math.round(pressure));
-      if(pressure>=118){ overpressure(); }
-    }
-    function overpressure(){
-      whistle();
-      document.body.classList.add('shake');
-      var r=document.getElementById('release'); r.classList.add('blow');
-      setTimeout(function(){ document.body.classList.remove('shake'); r.classList.remove('blow'); setPressure(42); }, 900);
-    }
-
-    /* ---------- power on/off ---------- */
-    function powerOn(){
-      if(powered) return; powered=true; document.body.classList.add('powered');
-      hiss(1.4); setPressure(reduce?70:0);
-      if(!reduce){ var p=0; var iv=setInterval(function(){ p+=6; setPressure(p); if(p>=72){ clearInterval(iv); } }, 60); }
-      setText('lever-hint', CJC.lang()==='zh'?'引擎运转中':'ENGINE RUNNING');
-    }
-    function powerOff(){
-      powered=false; document.body.classList.remove('powered'); setPressure(0);
-      setText('lever-hint', CJC.lang()==='zh'?'拉下拉杆启动':'PULL LEVER TO START');
-    }
-
-    /* ---------- clock ---------- */
-    function updateClock(){
-      var now=new Date(), s=now.getSeconds(), mi=now.getMinutes(), h=now.getHours()%12;
-      var hg=document.getElementById('ck-hour'), mg=document.getElementById('ck-min'), sg=document.getElementById('ck-sec');
-      if(hg) hg.style.transform='rotate('+((h+mi/60)*30)+'deg)';
-      if(mg) mg.style.transform='rotate('+((mi+s/60)*6)+'deg)';
-      if(sg) sg.style.transform='rotate('+(s*6)+'deg)';
-    }
-
-    /* ---------- filigree corners injected into frames ---------- */
-    function injectFiligree(){
-      var fil=filigreeSVG();
-      document.querySelectorAll('.frame, .nameplate').forEach(function(f){
-        if(f.querySelector('.fcorner')) return;
-        ['tl','tr','bl','br'].forEach(function(c){
-          var s=document.createElement('span'); s.className='fcorner '+c; s.setAttribute('aria-hidden','true'); s.innerHTML=fil; f.appendChild(s);
-        });
-      });
-    }
-
-    /* ---------- render static ---------- */
-    var _gaugesBuilt=false, _clockBuilt=false, _decorBuilt=false;
-    function renderAll(){
-      var ui=P.ui, zh=CJC.lang()==='zh';
-      if(!_decorBuilt){
-        _decorBuilt=true;
-        document.getElementById('brand-cog').innerHTML=metalGear(9,13,4,'brass');
-        document.getElementById('foot-cog').innerHTML=metalGear(9,13,4,'brass');
-        document.getElementById('g1').innerHTML=metalGear(14,62,20,'brass');
-        document.getElementById('g2').innerHTML=metalGear(10,40,14,'copper');
-        document.getElementById('g3').innerHTML=metalGear(16,74,24,'steel');
-        document.getElementById('g4').innerHTML=metalGear(12,52,18,'copper');
-        document.getElementById('g5').innerHTML=metalGear(13,58,20,'brass');
-        document.getElementById('g6').innerHTML=metalGear(11,46,16,'steel');
-        ['ci-about','ci-edu','ci-skills','ci-courses','ci-exp','ci-proj','ci-art','ci-cert','ci-contact'].forEach(function(id,i){
-          var el=document.getElementById(id); if(el) el.innerHTML=metalGear(11,18,6, i%2?'copper':'brass');
-        });
-        document.getElementById('automaton').innerHTML=autoSVG();
-        injectFiligree();
-        buildEngineRoom();
-      }
-      if(!_gaugesBuilt){
-        _gaugesBuilt=true;
-        document.getElementById('press-gauge').innerHTML=gaugeSVG('pg',50);
-        document.getElementById('biggauge').insertAdjacentHTML('afterbegin','<div style="position:absolute;inset:0">'+gaugeSVG('bg',170)+'</div>');
-      }
-      if(!_clockBuilt){ _clockBuilt=true; document.getElementById('hero-clock').innerHTML=clockSVG(); updateClock(); }
-      document.getElementById('automaton').title = zh?'给发条上弦':'Wind the automaton';
-
-      // brand / hero
-      setText('brand-name', zh?'蔡氏引擎':'The C. J. Engine');
-      setText('foot-brand', zh?'蔡氏引擎':'The C. J. Engine');
-      setText('dial-lbl', zh?'选段':'SELECT');
-      setText('greet', t(P.greeting));
-      setText('name', t(P.name));
-      setText('role', t(P.role));
-      setText('subtitle', t(P.title));
-      var cv=document.getElementById('cv-btn'); cv.innerHTML='<i class="fa fa-download" aria-hidden="true"></i> '+esc(t(ui.download_cv)); cv.href=t(P.cv);
-      var gh=document.getElementById('gh-btn'); gh.innerHTML='<i class="fa fa-github" aria-hidden="true"></i> GitHub'; gh.href=P.contact.github;
-      setText('bg-lbl', zh?'锅炉':'BOILER');
-      setText('lever-hint', powered?(zh?'引擎运转中':'ENGINE RUNNING'):(zh?'拉下拉杆启动':'PULL LEVER TO START'));
-
-      // section heads
-      function head(k,kick,title){ setText('k-'+k, kick); setText('l-'+k, title); }
-      head('about', zh?'档案一':'PLATE I', t(ui.about_me));
-      head('edu', zh?'档案二':'PLATE II', t(ui.education_bg));
-      head('skills', zh?'压力表':'PRESSURE', t(ui.core_tech));
-      head('courses', zh?'黄铜铭牌':'BRASS PLATES', t(ui.core_courses));
-      head('exp', zh?'运行日志':'LOGBOOK', t(ui.internship_exp));
-      head('proj', zh?'穿孔卡片':'PUNCH CARDS', t(ui.latest_projects));
-      head('art', zh?'电报存档':'DISPATCHES', t(ui.latest_articles));
-      head('cert', zh?'嘉奖':'COMMENDATIONS', t(ui.certificates));
-      head('contact', zh?'电报机':'TELEGRAPH', t(ui.get_in_touch));
-
-      // about
-      var port=document.getElementById('portrait'); port.src=P.avatar; port.alt=t(P.name);
-      port.onerror=function(){ this.onerror=null; this.src=P.avatarAlt; };
-      setText('portrait-cap', zh?'铁版肖像':'TINTYPE');
-      setHTML('about-body', P.bio.map(function(b){return '<p>'+esc(t(b))+'</p>';}).join('')+
-        '<span class="loc-plate metal"><i class="fa fa-map-marker" aria-hidden="true"></i> '+esc(t(P.location))+'</span>');
-
-      // education
-      setHTML('edu-list', P.education.map(function(e){
-        return '<div class="lrow"><div class="when">'+esc(e.period)+'</div><div><h3>'+esc(t(e.school))+'</h3><div class="sub">'+esc(t(e.degree))+' — '+esc(t(e.note))+'</div></div></div>';
-      }).join(''));
-
-      // skills meters
-      var psis=[92,88,85,80,76,72];
-      setHTML('meters', P.skills.map(function(s,i){
-        var w=psis[i]||80;
-        return '<div class="meter"><div class="top"><span class="n">'+esc(s)+'</span><span class="psi">'+w+' PSI</span></div><div class="tube"><div class="fill" style="--w:'+w+'%"></div></div></div>';
-      }).join(''));
-      setHTML('tags', (P.skillTags||[]).map(function(x){return '<span>'+esc(x)+'</span>';}).join(''));
-
-      // courses
-      setHTML('plates', P.courses.map(function(c){
-        return '<div class="plate"><div class="ic"><i class="fa '+esc(c.icon)+'"></i></div><h4>'+esc(t(c.title))+'</h4><p>'+esc(t(c.desc))+'</p></div>';
-      }).join(''));
-
-      // experience
-      var cog22=metalGear(9,9,3,'brass');
-      setHTML('exp-wrap', P.experience.map(function(x){
-        return '<div class="exp"><div class="top"><h3>'+esc(t(x.role))+' <span>· '+esc(t(x.company))+'</span></h3><span class="when">'+esc(x.period)+'</span></div>'+
-          '<p class="sum">'+esc(t(x.summary))+'</p><ul>'+x.bullets.map(function(b){return '<li><span class="cg">'+cog22+'</span>'+esc(t(b))+'</li>';}).join('')+'</ul></div>';
-      }).join(''));
-
-      // certificates
-      setHTML('certs', P.certificates.map(function(c){
-        return '<div class="cert"><div class="ci"><img src="'+esc(c.image)+'" alt="'+esc(t(c.title))+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'"></div>'+
-          '<div class="cc"><div class="tag">'+esc(t(c.tag))+' · '+esc(t(c.date))+'</div><h4>'+esc(t(c.title))+'</h4><p>'+esc(t(c.desc))+'</p></div></div>';
-      }).join(''));
-
-      // contact
-      setText('contact-lead', t(ui.inbox_open));
-      var c=P.contact;
-      setHTML('ci-list', [
-        ['fa-envelope', t(ui.email_placeholder), c.email, 'mailto:'+c.emailTo],
-        ['fa-phone', zh?'电话':'Telephone', c.phone, c.phoneHref],
-        ['fa-github', 'GitHub', '@'+c.githubUser, c.github],
-        ['fa-weixin', 'WeChat', zh?'扫码':'Scan QR', c.wechatQrPage]
-      ].map(function(r){
-        return '<a href="'+esc(r[3])+'" target="_blank" rel="noopener"><i class="fa '+r[0]+'" aria-hidden="true"></i><span><span class="k">'+esc(r[1])+'</span><br><span class="v">'+esc(r[2])+'</span></span></a>';
-      }).join(''));
-      document.getElementById('lb-name').textContent=t(ui.name_placeholder);
-      document.getElementById('lb-email').textContent=t(ui.email_placeholder);
-      document.getElementById('lb-msg').textContent=t(ui.msg_placeholder);
-      document.getElementById('cf-send').innerHTML='<i class="fa fa-paper-plane" aria-hidden="true"></i> '+esc(t(ui.send));
-      setText('telkey-lbl', zh?'用摩斯电码敲出姓名 ↩':'TAP NAME IN MORSE ↩');
-
-      // footer
-      setHTML('foot-links', [
-        ['#about', t(ui.nav_about)],['#projects', t(ui.nav_portfolio)],['#articles', t(ui.nav_article)],
-        ['#contact', t(ui.nav_contact)],[P.contact.github,'GitHub']
-      ].map(function(l){return '<a href="'+esc(l[0])+'">'+esc(l[1])+'</a>';}).join(''));
-      setText('foot-desc', t(ui.footer_desc));
-      var icp=document.getElementById('foot-icp'); icp.textContent=P.icp; icp.href=P.icpUrl;
-      setText('foot-admin', t(ui.admin_panel));
-      setPressure(pressure);
-    }
-
-    function renderProjects(){
-      var box=document.getElementById('cards');
-      if(!projects.length){ box.innerHTML='<div class="note">'+esc(t(P.ui.no_projects))+'</div>'; return; }
-      box.innerHTML=projects.map(function(p){
-        var cov=p.cover_image||'/index_page/img/blogs/1.jpg';
-        return '<a class="card" href="'+esc(p.href)+'"><div class="cov"><img src="'+esc(cov)+'" alt="'+esc(p.localTitle())+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'"></div>'+
-          '<div class="cb"><div class="tech">'+esc(p.tech_stack||'')+'</div><h4>'+esc(p.localTitle())+'</h4><p>'+esc(p.localSummary()||'')+'</p>'+
-          '<span class="go">'+esc(t(P.ui.view_project))+' →</span></div></a>';
-      }).join('');
-    }
-    function renderArticles(){
-      var box=document.getElementById('alist');
-      var list=CJC.filterArticles(articles, filterKey);
-      var chips=document.getElementById('filters');
-      chips.innerHTML=P.articleFilters.map(function(f){
-        return '<button data-k="'+esc(f.key)+'" class="'+(f.key===filterKey?'active':'')+'">'+esc(t(f.label))+'</button>';
-      }).join('');
-      chips.querySelectorAll('button').forEach(function(b){ b.onclick=function(){ filterKey=b.dataset.k; renderArticles(); }; });
-      if(!articles.length){ box.innerHTML='<div class="note">'+esc(t(P.ui.loading_articles))+'</div>'; return; }
-      if(!list.length){ box.innerHTML='<div class="note">'+esc(t(P.ui.no_articles))+'</div>'; return; }
-      box.innerHTML=list.map(function(a){
-        var cov=a.cover_image||'/index_page/img/blogs/1.jpg';
-        return '<a class="arow" href="'+esc(a.href)+'"><div class="cov"><img src="'+esc(cov)+'" alt="'+esc(a.localTitle())+'" onerror="this.src=\'/index_page/img/blogs/1.jpg\'"></div>'+
-          '<div class="ab"><div class="m">'+esc(a.category||'')+' · '+esc(a.dateText())+'</div><h4>'+esc(a.localTitle())+'</h4><p>'+esc(a.localSummary()||'')+'</p></div></a>';
-      }).join('');
-    }
-
-    /* ---------- scroll: gears turn + section anim ---------- */
-    var bays=[];
-    function setupScroll(){
-      bays=Array.prototype.slice.call(document.querySelectorAll('[data-bay]'));
-      if(!reduce){
-        var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.14});
-        bays.forEach(function(b){ io.observe(b); });
-      } else { bays.forEach(function(b){ b.classList.add('in'); }); }
-      var raf=false;
-      function upd(){
-        raf=false;
-        var idx=0, best=1e9;
-        bays.forEach(function(b,i){ var d=Math.abs(b.getBoundingClientRect().top-90); if(d<best){best=d;idx=i;} });
-        var dial=document.getElementById('dial'); if(dial){ dial.setAttribute('aria-valuenow', idx+1);
-          var knob=dial.querySelector('.knob'); if(knob) knob.style.transform='rotate('+(idx*(300/(bays.length-1))-150)+'deg)'; }
-      }
-      window.addEventListener('scroll', function(){ if(!raf){ raf=true; requestAnimationFrame(upd); } }, {passive:true});
-      upd();
-    }
-
-    /* ---------- lever interactions ---------- */
-    function setupLever(){
-      var lever=document.getElementById('lever');
-      lever.addEventListener('click', function(){ powered?powerOff():powerOn(); });
-      lever.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); lever.click(); } });
-      document.getElementById('biggauge').addEventListener('click', function(){ if(!powered) powerOn(); setPressure(pressure+14); hiss(.4); });
-      var dial=document.getElementById('dial');
-      dial.addEventListener('click', function(){
-        var n=parseInt(dial.getAttribute('aria-valuenow')||'1',10)%bays.length; bays[n].scrollIntoView({behavior:reduce?'auto':'smooth'});
-      });
-      dial.addEventListener('keydown', function(e){
-        var n=parseInt(dial.getAttribute('aria-valuenow')||'1',10);
-        if(e.key==='ArrowRight'||e.key==='ArrowUp'){ e.preventDefault(); bays[Math.min(bays.length-1,n)]&&bays[Math.min(bays.length-1,n)].scrollIntoView({behavior:reduce?'auto':'smooth'}); }
-        if(e.key==='ArrowLeft'||e.key==='ArrowDown'){ e.preventDefault(); bays[Math.max(0,n-2)]&&bays[Math.max(0,n-2)].scrollIntoView({behavior:reduce?'auto':'smooth'}); }
-      });
-    }
-
-    /* ---------- easter eggs ---------- */
-    function setupEggs(){
-      var auto=document.getElementById('automaton');
-      auto.addEventListener('click', function(){ auto.classList.remove('wind'); void auto.offsetWidth; auto.classList.add('wind'); hiss(.35); if(!powered) powerOn(); });
-      auto.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); auto.click(); } });
-      document.getElementById('telkey').addEventListener('click', function(){ actx(); tapMorse((t(P.name)||'CAI JIECHAO').replace(/[^a-zA-Z ]/g,'')||'CAI JIECHAO'); });
-    }
-
-    function setupForm(){
-      var f=document.getElementById('cf');
-      f.addEventListener('submit', function(e){
-        e.preventDefault();
-        var s=document.getElementById('cf-status');
-        s.style.color='var(--copper)'; s.textContent='• '+t(P.ui.sending);
-        CJC.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value})
-          .then(function(r){ s.style.color='#2e7d32'; s.textContent='✓ '+(r.message||'Sent.'); f.reset(); })
-          .catch(function(err){ s.style.color='#b03020'; s.textContent='✗ '+err.message; });
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', function(){
-      CJC.setTheme(window.THEME_ID);
-      powered=true; pressure=72;
-      renderAll();
-      CJC.mountSwitcher({ accent:'#c98a2b' });
-      setupScroll();
-      setupLever();
-      setupEggs();
-      setupForm();
-      setPressure(pressure);
-      if(!reduce) setInterval(updateClock, 1000);
-      CJC.onLang(function(){ renderAll(); renderProjects(); renderArticles(); });
-      CJC.fetchProjects().then(function(list){ projects=list; renderProjects(); }).catch(function(){ document.getElementById('cards').innerHTML='<div class="note">'+esc(t(P.ui.no_projects))+'</div>'; });
-      CJC.fetchArticles().then(function(list){ articles=list; renderArticles(); }).catch(function(){ document.getElementById('alist').innerHTML='<div class="note">'+esc(t(P.ui.no_articles))+'</div>'; });
-    });
-  })();
-  </script>
-</body>
+      })();
+    </script>
+  </body>
 </html>

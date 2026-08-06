@@ -1,412 +1,868 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cai Jiechao — Neumorphism</title>
-  <link rel="icon" href="/index_page/img/favicon.ico" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root{
-      --bg:#e0e5ec; --light:#ffffff; --dark:#a3b1c6;
-      --accent:#6d5dfc; --accent-dk:#5646e0;
-      --text:#3b4252; --soft:#5b6572; --faint:#7a8496;
-      --r:20px;
-      --out:8px 8px 16px var(--dark), -8px -8px 16px var(--light);
-      --out-sm:5px 5px 10px var(--dark), -5px -5px 10px var(--light);
-      --in:inset 6px 6px 12px var(--dark), inset -6px -6px 12px var(--light);
-      --in-sm:inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light);
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--text);
-      font-family:'Nunito',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    .container{max-width:1120px;margin:0 auto;padding:0 24px}
-    section{padding:52px 0}
-
-    /* soft primitives */
-    .soft{background:var(--bg);border-radius:var(--r);box-shadow:var(--out)}
-    .soft-in{background:var(--bg);border-radius:var(--r);box-shadow:var(--in)}
-
-    .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:28px}
-    .sec-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
-      box-shadow:var(--out-sm);color:var(--accent);font-size:20px;flex:none}
-    .sec-title{margin:0;font-size:clamp(22px,3.4vw,32px);font-weight:900;color:#2f3542;letter-spacing:-.01em}
-    .sec-sub{margin:2px 0 0;color:var(--faint);font-size:14px;font-weight:600}
-
-    /* topbar */
-    .topbar{position:sticky;top:0;z-index:800;background:var(--bg)}
-    .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:70px;gap:16px}
-    .brand{font-weight:900;font-size:20px;color:#2f3542;padding:10px 18px;border-radius:14px;box-shadow:var(--out-sm)}
-    .brand b{color:var(--accent)}
-    .navlinks{display:flex;gap:10px;flex-wrap:wrap}
-    .navlinks a{font-size:13px;font-weight:700;color:var(--soft);padding:9px 15px;border-radius:12px;transition:box-shadow .18s,color .18s}
-    .navlinks a:hover{box-shadow:var(--out-sm);color:var(--accent)}
-    @media(max-width:880px){.navlinks{display:none}}
-
-    /* hero */
-    .hero{padding:60px 0 30px}
-    .hero-card{padding:44px;display:grid;grid-template-columns:1fr 240px;gap:36px;align-items:center}
-    .greet{display:inline-block;font-size:13px;font-weight:800;color:var(--accent);padding:8px 16px;border-radius:999px;box-shadow:var(--in-sm);letter-spacing:.04em;margin-bottom:18px}
-    .hero h1{margin:0;font-size:clamp(34px,6vw,58px);font-weight:900;color:#2b303a;line-height:1.05;letter-spacing:-.02em}
-    .hero .role{margin-top:10px;font-size:clamp(16px,2.4vw,22px);font-weight:800;color:var(--accent)}
-    .hero .head{margin-top:14px;font-size:17px;color:var(--soft);max-width:40ch;font-weight:600}
-    .hero .meta{margin-top:12px;color:var(--faint);font-weight:700;font-size:14px}
-    .hero-portrait{width:220px;height:220px;margin:0 auto;border-radius:50%;padding:14px;box-shadow:var(--out)}
-    .hero-portrait img{width:100%;height:100%;border-radius:50%;object-fit:cover;box-shadow:var(--in-sm)}
-    .btns{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
-    .btn{font-weight:800;font-size:14px;padding:14px 26px;border-radius:14px;box-shadow:var(--out-sm);
-      color:var(--accent);cursor:pointer;transition:box-shadow .12s,transform .12s;display:inline-flex;align-items:center;gap:8px}
-    .btn:hover{transform:translateY(-1px)}
-    .btn:active{box-shadow:var(--in-sm);transform:translateY(0)}
-    .btn.primary{background:var(--accent);color:#fff;
-      box-shadow:6px 6px 12px #b7bfce, -6px -6px 12px #ffffff}
-    .btn.primary:active{box-shadow:inset 4px 4px 8px var(--accent-dk), inset -3px -3px 8px #8a7bff}
-    @media(max-width:820px){.hero-card{grid-template-columns:1fr;text-align:center}.hero-portrait{order:-1}.btns{justify-content:center}.hero .head{margin-left:auto;margin-right:auto}}
-
-    /* about */
-    .about{padding:34px;display:grid;grid-template-columns:1fr;gap:16px}
-    .about p{margin:0 0 12px;font-size:16.5px;color:var(--text);font-weight:600}
-    .about .loc{display:inline-block;margin-top:6px;font-weight:800;color:var(--accent);padding:9px 16px;border-radius:999px;box-shadow:var(--in-sm)}
-
-    /* rows */
-    .rows{display:flex;flex-direction:column;gap:18px}
-    .rowitem{padding:26px 28px;display:grid;grid-template-columns:170px 1fr;gap:18px}
-    .rowitem .when{font-weight:800;color:var(--accent);font-size:14px;padding:8px 14px;border-radius:999px;box-shadow:var(--in-sm);align-self:start;text-align:center}
-    .rowitem h3{margin:0 0 6px;font-size:19px;font-weight:800;color:#2f3542}
-    .rowitem .sub{color:var(--soft);font-weight:600;font-size:15px}
-    .rowitem ul{margin:14px 0 0;padding-left:20px;color:var(--text);font-weight:600}
-    .rowitem li{margin:7px 0}
-    .rowitem li::marker{color:var(--accent)}
-    @media(max-width:640px){.rowitem{grid-template-columns:1fr;gap:10px}}
-
-    /* skills / chips */
-    .chips{display:flex;flex-wrap:wrap;gap:14px}
-    .chip{font-weight:800;font-size:14px;color:var(--soft);padding:11px 20px;border-radius:14px;box-shadow:var(--out-sm);transition:box-shadow .15s,color .15s}
-    .chip:hover{color:var(--accent);box-shadow:var(--in-sm)}
-
-    /* courses */
-    .courses{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    .course{padding:28px}
-    .course .ci{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;box-shadow:var(--in-sm);color:var(--accent);font-size:22px;margin-bottom:16px}
-    .course h4{margin:0 0 8px;font-size:17px;font-weight:800;color:#2f3542}
-    .course p{margin:0;color:var(--soft);font-size:14.5px;font-weight:600}
-    @media(max-width:880px){.courses{grid-template-columns:1fr 1fr}}
-    @media(max-width:560px){.courses{grid-template-columns:1fr}}
-
-    /* cards */
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    .card{overflow:hidden;display:flex;flex-direction:column;transition:transform .18s}
-    .card:hover{transform:translateY(-4px)}
-    .card .cover{height:160px;margin:14px 14px 0;border-radius:14px;overflow:hidden;box-shadow:var(--in-sm)}
-    .card .cover img{width:100%;height:100%;object-fit:cover}
-    .card .cbody{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
-    .card .ctag{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
-    .card h4{margin:0;font-size:17px;font-weight:800;color:#2f3542}
-    .card .tech{color:var(--accent);font-weight:800;font-size:13px}
-    .card p{margin:0;color:var(--soft);font-size:14px;font-weight:600;flex:1}
-    .card .more{font-weight:800;font-size:12.5px;color:var(--accent)}
-    @media(max-width:880px){.cards{grid-template-columns:1fr 1fr}}
-    @media(max-width:560px){.cards{grid-template-columns:1fr}}
-
-    .filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
-    .filters button{font-family:inherit;font-weight:800;font-size:13px;color:var(--soft);padding:10px 18px;border-radius:12px;
-      background:var(--bg);box-shadow:var(--out-sm);cursor:pointer;transition:box-shadow .12s,color .12s}
-    .filters button:hover{color:var(--accent)}
-    .filters button.active{box-shadow:var(--in-sm);color:var(--accent)}
-
-    /* certs */
-    .certs{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    .cert{padding:16px;display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center}
-    .cert .cimg{border-radius:14px;overflow:hidden;box-shadow:var(--in-sm);padding:6px}
-    .cert .cimg img{border-radius:10px;height:100px;width:100%;object-fit:cover}
-    .cert .meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;font-weight:800;text-transform:uppercase;color:var(--faint)}
-    .cert h4{margin:8px 0 6px;font-size:16px;font-weight:800;color:#2f3542}
-    .cert p{margin:0;color:var(--soft);font-size:13.5px;font-weight:600}
-    @media(max-width:640px){.certs{grid-template-columns:1fr}}
-
-    /* contact */
-    .contact{display:grid;grid-template-columns:5fr 7fr;gap:26px}
-    .cinfo{padding:30px}
-    .cinfo a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #cfd6e0;font-weight:700}
-    .cinfo a:last-child{border-bottom:none}
-    .cinfo a span:last-child{color:var(--accent);font-weight:800}
-    .cform{padding:30px}
-    .cform input,.cform textarea{width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--text);
-      padding:15px 18px;margin-bottom:16px;border:none;border-radius:14px;background:var(--bg);box-shadow:var(--in-sm)}
-    .cform input::placeholder,.cform textarea::placeholder{color:var(--faint)}
-    .cform input:focus,.cform textarea:focus{outline:none;box-shadow:var(--in)}
-    .cform textarea{min-height:130px;resize:vertical}
-    .cform button{font-family:inherit;font-weight:800;font-size:15px;padding:15px 32px;border:none;border-radius:14px;
-      background:var(--accent);color:#fff;cursor:pointer;box-shadow:6px 6px 12px #b7bfce, -6px -6px 12px #ffffff}
-    .cform button:active{box-shadow:inset 4px 4px 8px var(--accent-dk), inset -3px -3px 8px #8a7bff}
-    #cf-status{margin-top:12px;font-weight:800;font-size:14px}
-    @media(max-width:760px){.contact{grid-template-columns:1fr}}
-
-    footer{padding:44px 0 60px}
-    .foot-card{padding:30px 34px}
-    .frow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
-    .foot-social{display:flex;gap:12px;flex-wrap:wrap}
-    .foot-social a{font-weight:800;font-size:13px;color:var(--soft);padding:9px 15px;border-radius:12px;box-shadow:var(--out-sm)}
-    .foot-social a:hover{color:var(--accent)}
-    .muted{color:var(--faint);font-size:13px;font-weight:700}
-    #foot-icp{color:var(--faint)}
-    .load-note{color:var(--soft);font-weight:700;grid-column:1/-1;padding:10px 0}
-
-    @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.card,.btn{transition:none}}
-  </style>
-</head>
-<body>
-  <div class="topbar"><div class="container inner">
-    <a class="brand" href="#top">Cai<b>Jiechao</b></a>
-    <nav class="navlinks" id="nav"></nav>
-  </div></div>
-
-  <div id="top"></div>
-  <header class="hero"><div class="container">
-    <div class="soft hero-card">
-      <div>
-        <span class="greet" id="greet"></span>
-        <h1 id="name"></h1>
-        <div class="role" id="role"></div>
-        <div class="head" id="headline"></div>
-        <div class="meta" id="meta"></div>
-        <div class="btns">
-          <a class="btn primary" id="cvBtn" href="#" download></a>
-          <a class="btn" id="ghBtn" target="_blank" rel="noopener"></a>
-        </div>
-      </div>
-      <div class="hero-portrait"><img id="portrait-hero" alt="" /></div>
-    </div>
-  </div></header>
-
-  <section id="about"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-user"></i></div>
-      <div><h2 class="sec-title" id="l-about"></h2><p class="sec-sub" id="l-about-sub"></p></div></div>
-    <div class="soft about" id="about-text"></div>
-  </div></section>
-
-  <section id="education"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-graduation-cap"></i></div>
-      <h2 class="sec-title" id="l-edu"></h2></div>
-    <div class="rows" id="edu-list"></div>
-  </div></section>
-
-  <section id="skills"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-cubes"></i></div>
-      <h2 class="sec-title" id="l-skills"></h2></div>
-    <div class="chips" id="skills-list"></div>
-  </div></section>
-
-  <section id="courses"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-book"></i></div>
-      <h2 class="sec-title" id="l-courses"></h2></div>
-    <div class="courses" id="courses-list"></div>
-  </div></section>
-
-  <section id="experience"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-briefcase"></i></div>
-      <h2 class="sec-title" id="l-exp"></h2></div>
-    <div class="rows" id="exp-list"></div>
-  </div></section>
-
-  <section id="projects"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-folder-open"></i></div>
-      <h2 class="sec-title" id="l-projects"></h2></div>
-    <div class="cards" id="projects-list"><div class="load-note" id="proj-load"></div></div>
-  </div></section>
-
-  <section id="articles"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-pencil"></i></div>
-      <h2 class="sec-title" id="l-articles"></h2></div>
-    <div class="filters" id="filters"></div>
-    <div class="cards" id="articles-list"><div class="load-note" id="art-load"></div></div>
-  </div></section>
-
-  <section id="certificates"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-certificate"></i></div>
-      <h2 class="sec-title" id="l-certs"></h2></div>
-    <div class="certs" id="certs-list"></div>
-  </div></section>
-
-  <section id="contact"><div class="container">
-    <div class="sec-head"><div class="soft sec-icon"><i class="fa fa-paper-plane"></i></div>
-      <h2 class="sec-title" id="l-contact"></h2></div>
-    <div class="contact">
-      <div class="soft cinfo" id="contact-info"></div>
-      <div class="soft cform">
-        <form id="cf">
-          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
-          <input type="text" name="name" id="cf-name" required>
-          <input type="email" name="email" id="cf-email" required>
-          <textarea name="message" id="cf-msg" required></textarea>
-          <button type="submit" id="cf-send"></button>
-          <p id="cf-status"></p>
-        </form>
-      </div>
-    </div>
-  </div></section>
-
-  <footer><div class="container">
-    <div class="soft foot-card">
-      <div class="frow">
-        <a class="brand" href="#top">Cai<b>Jiechao</b></a>
-        <div class="foot-social" id="foot-social"></div>
-      </div>
-      <div class="frow" style="margin-top:18px">
-        <span class="muted" id="foot-desc"></span>
-        <a class="muted" id="foot-icp" target="_blank"></a>
-      </div>
-    </div>
-  </div></footer>
-
-  <script>window.THEME_ID = "12-neumorphism";</script>
-  <script src="/shared/profile.js"></script>
-  <script src="/shared/site-data.js"></script>
-  <script>
-  (function(){
-    const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
-    let articles = [], projects = [], filterKey = "all";
-
-    function renderStatic(){
-      document.title = "Cai Jiechao — Neumorphism";
-      document.getElementById('nav').innerHTML = [
-        ['about','nav_about'],['courses','nav_courses'],['projects','nav_portfolio'],
-        ['articles','nav_article'],['contact','nav_contact']
-      ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
-
-      document.getElementById('greet').textContent = t(P.greeting);
-      document.getElementById('name').textContent = t(P.name);
-      document.getElementById('role').textContent = t(P.role);
-      document.getElementById('headline').textContent = t(P.headline);
-      document.getElementById('meta').innerHTML = `📍 ${esc(t(P.title))} · ${esc(t(P.location))}`;
-      const cv = document.getElementById('cvBtn'); cv.innerHTML = `<i class="fa fa-download"></i> ${esc(t(P.ui.download_cv))}`; cv.href = t(P.cv);
-      const gh = document.getElementById('ghBtn'); gh.innerHTML = `<i class="fa fa-github"></i> GitHub`; gh.href = P.contact.github;
-      const ph = document.getElementById('portrait-hero'); ph.src = P.avatar; ph.alt = t(P.name);
-
-      document.getElementById('l-about').textContent = t(P.ui.about_me);
-      document.getElementById('l-about-sub').textContent = t(P.ui.about_desc);
-      document.getElementById('l-edu').textContent = t(P.ui.education_bg);
-      document.getElementById('l-skills').textContent = t(P.ui.core_tech);
-      document.getElementById('l-courses').textContent = t(P.ui.core_courses);
-      document.getElementById('l-exp').textContent = t(P.ui.internship_exp);
-      document.getElementById('l-projects').textContent = t(P.ui.latest_projects);
-      document.getElementById('l-articles').textContent = t(P.ui.latest_articles);
-      document.getElementById('l-certs').textContent = t(P.ui.certificates);
-      document.getElementById('l-contact').textContent = t(P.ui.get_in_touch);
-
-      document.getElementById('about-text').innerHTML =
-        P.bio.map(b=>`<p>${esc(t(b))}</p>`).join('') +
-        `<div><span class="loc">📍 ${esc(t(P.location))}</span></div>`;
-
-      document.getElementById('edu-list').innerHTML = P.education.map(e=>`
-        <div class="soft rowitem"><div class="when">${esc(e.period)}</div>
-        <div><h3>${esc(t(e.school))}</h3><div class="sub">${esc(t(e.degree))} — ${esc(t(e.note))}</div></div></div>`).join('');
-
-      document.getElementById('skills-list').innerHTML = P.skillTags.map(s=>`<span class="chip">${esc(s)}</span>`).join('');
-
-      document.getElementById('courses-list').innerHTML = P.courses.map(c=>`
-        <div class="soft course"><div class="ci"><i class="fa ${esc(c.icon)}"></i></div>
-        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div>`).join('');
-
-      document.getElementById('exp-list').innerHTML = P.experience.map(x=>`
-        <div class="soft rowitem"><div class="when">${esc(x.period)}</div>
-        <div><h3>${esc(t(x.role))} · ${esc(t(x.company))}</h3>
-        <div class="sub">${esc(t(x.summary))}</div>
-        <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
-
-      document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
-        <div class="soft cert"><div class="cimg"><img src="${esc(c.image)}" alt="${esc(t(c.title))}"></div>
-        <div><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
-        <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
-
-      document.getElementById('contact-info').innerHTML = [
-        ['Email', P.contact.email, 'mailto:'+P.contact.email],
-        ['Phone', P.contact.phone, P.contact.phoneHref],
-        ['GitHub', '@'+P.contact.githubUser, P.contact.github],
-        ['WeChat', 'QR ↗', P.contact.wechatQrPage],
-      ].map(([k,v,h])=>`<a href="${esc(h)}"><span>${esc(k)}</span><span>${esc(v)}</span></a>`).join('');
-      document.getElementById('cf-name').placeholder = t(P.ui.name_placeholder);
-      document.getElementById('cf-email').placeholder = t(P.ui.email_placeholder);
-      document.getElementById('cf-msg').placeholder = t(P.ui.msg_placeholder);
-      document.getElementById('cf-send').textContent = t(P.ui.send);
-
-      document.getElementById('foot-social').innerHTML =
-        `<a href="${P.contact.github}" target="_blank">GitHub</a>
-         <a href="mailto:${P.contact.email}">Email</a>
-         <a href="${P.contact.wechatQrPage}">WeChat</a>
-         <a href="/admin.html">${esc(t(P.ui.admin_panel))}</a>`;
-      document.getElementById('foot-desc').textContent = t(P.ui.footer_desc);
-      const icp = document.getElementById('foot-icp'); icp.textContent = P.icp; icp.href = P.icpUrl;
-
-      document.getElementById('filters').innerHTML = P.articleFilters.map(f=>
-        `<button data-k="${esc(f.key)}" class="${f.key===filterKey?'active':''}">${esc(t(f.label))}</button>`).join('');
-      document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
-        filterKey=b.dataset.k; renderStatic(); renderArticles();
-      }));
-    }
-
-    function renderProjects(){
-      const box = document.getElementById('projects-list');
-      if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
-      box.innerHTML = projects.map(p=>`
-        <a class="soft card" href="${esc(p.href)}">
-          <div class="cbody">
-            <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
-            <h4>${esc(p.localTitle())}</h4>
-            <div class="tech">${esc(p.tech_stack||'')}</div>
-            <p>${esc(p.localSummary()||'')}</p>
-            <span class="more">${esc(t(P.ui.view_project))} →</span>
-          </div></a>`).join('');
-    }
-
-    function renderArticles(){
-      const box = document.getElementById('articles-list');
-      const list = CJCData.filterArticles(articles, filterKey);
-      if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
-      box.innerHTML = list.map(a=>`
-        <a class="soft card" href="${esc(a.href)}">
-          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
-          <div class="cbody">
-            <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
-            <h4>${esc(a.localTitle())}</h4>
-            <p>${esc(a.localSummary()||'')}</p>
-            <span class="more">${esc(t(P.ui.read_more))} →</span>
-          </div></a>`).join('');
-    }
-
-    async function loadDynamic(){
-      try{ projects = await CJCData.fetchProjects(); renderProjects(); }
-      catch(e){ document.getElementById('projects-list').innerHTML = `<div class="load-note">⚠ 内容加载失败 / Failed to load</div>`; }
-      try{ articles = await CJCData.fetchArticles(); renderArticles(); }
-      catch(e){ document.getElementById('articles-list').innerHTML = `<div class="load-note">⚠ 内容加载失败 / Failed to load</div>`; }
-    }
-
-    document.getElementById('cf').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const f = e.target, s = document.getElementById('cf-status');
-      const payload = { name:f.name.value, email:f.email.value, message:f.message.value, website:f.website.value };
-      s.style.color='var(--accent)'; s.textContent = t(P.ui.sending);
-      try{ const r = await CJCData.sendContact(payload); s.style.color='#2e9e6b'; s.textContent = r.message||'Sent.'; f.reset(); }
-      catch(err){ s.style.color='#d64550'; s.textContent = err.message; }
-    });
-
-    const fa = document.createElement('link');
-    fa.rel='stylesheet'; fa.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-    document.head.appendChild(fa);
-
-    document.addEventListener('DOMContentLoaded', ()=>{
-      CJCData.setTheme(window.THEME_ID);
-      renderStatic();
-      CJCData.mountSwitcher({ accent:'#6d5dfc' });
-      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
-      loadDynamic();
-    });
-  })();
-  </script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Cai Jiechao — liquid material portfolio"
+    />
+    <title>Cai Jiechao — Liquid Material</title>
+    <link rel="icon" href="/index_page/img/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      :root {
+        --ink: #182033;
+        --muted: #5a6478;
+        --mist: #eef2f8;
+        --glass: rgba(246, 249, 255, 0.58);
+        --glass-strong: rgba(252, 253, 255, 0.76);
+        --line: rgba(255, 255, 255, 0.78);
+        --shadow:
+          0 24px 70px rgba(30, 43, 71, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        --blue: #365af8;
+        --violet: #765bda;
+        --pink: #cf658e;
+        --serif: "Playfair Display", Georgia, serif;
+        --sans: Manrope, Arial, sans-serif;
+        --mono: "DM Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        overflow-x: hidden;
+        color: var(--ink);
+        background: #dbe4f1;
+        font: 16px/1.65 var(--sans);
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: -7%;
+        z-index: -2;
+        background: url("https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=2200&q=84")
+          center/cover;
+        filter: blur(10px);
+        transform: scale(1.08);
+        opacity: 0.7;
+      }
+      body:after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: rgba(221, 229, 244, 0.56);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid #162c9a;
+        outline-offset: 4px;
+      }
+      .skip {
+        position: absolute;
+        left: 14px;
+        top: -80px;
+        z-index: 10001;
+        background: #101a49;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+      }
+      .skip:focus {
+        top: 14px;
+      }
+      .shell {
+        width: min(1240px, calc(100% - 32px));
+        margin: auto;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 24px 205px 20px 0;
+      }
+      .brand {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .brand i {
+        color: var(--violet);
+        font-style: normal;
+      }
+      .links {
+        display: flex;
+        gap: 20px;
+        font: 12px/1 var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .links a {
+        color: var(--muted);
+        transition: color 0.2s ease;
+      }
+      .links a:hover {
+        color: var(--blue);
+      }
+      .panel {
+        position: relative;
+        overflow: hidden;
+        background: var(--glass);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px) saturate(135%);
+        -webkit-backdrop-filter: blur(22px) saturate(135%);
+      }
+      .panel:before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.92);
+        pointer-events: none;
+      }
+      .hero {
+        position: relative;
+        min-height: 650px;
+        padding: 32px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+        gap: 24px;
+        isolation: isolate;
+      }
+      .hero-photo {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.5;
+      }
+      .hero-copy {
+        align-self: end;
+        padding: clamp(28px, 5vw, 68px);
+        border-radius: 32px;
+      }
+      .eyebrow,
+      .kicker {
+        font: 11px/1.35 var(--mono);
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: #344ed7;
+      }
+      .hero h1 {
+        margin: 18px 0 10px;
+        font: 600 clamp(54px, 9vw, 124px) / 0.85 var(--serif);
+        letter-spacing: -0.07em;
+      }
+      .hero h1 span {
+        display: block;
+        font-style: italic;
+        color: #2e4698;
+      }
+      .role {
+        font-weight: 700;
+        margin: 20px 0 0;
+        font-size: clamp(18px, 2.2vw, 25px);
+      }
+      .head {
+        max-width: 45ch;
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+      .button {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 18px;
+        border: 1px solid rgba(39, 55, 135, 0.2);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.62);
+        font-size: 13px;
+        font-weight: 800;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease;
+      }
+      .button:hover {
+        transform: translateY(-2px);
+        background: #fff;
+      }
+      .button.primary {
+        background: #2942cc;
+        color: #fff;
+        border-color: #2942cc;
+      }
+      .button.primary:hover {
+        background: #172b99;
+      }
+      .hero-side {
+        align-self: start;
+        display: grid;
+        gap: 16px;
+      }
+      .portrait {
+        border-radius: 32px;
+        padding: 12px;
+      }
+      .portrait img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        border-radius: 23px;
+      }
+      .spec {
+        border-radius: 24px;
+        padding: 22px;
+      }
+      .spec dl {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        margin: 14px 0 0;
+        font: 11px/1.4 var(--mono);
+        color: var(--muted);
+      }
+      .spec dd {
+        margin: 0;
+        color: var(--ink);
+        text-align: right;
+      }
+      .spec .dot {
+        color: var(--pink);
+      }
+      main {
+        padding: 24px 0 90px;
+      }
+      .section {
+        padding-top: 112px;
+      }
+      .section-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 0 0 24px;
+      }
+      .section-title h2 {
+        margin: 0;
+        font: 600 clamp(32px, 5vw, 62px) / 1 var(--serif);
+        letter-spacing: -0.055em;
+      }
+      .section-title p {
+        margin: 0;
+        color: var(--muted);
+        font: 11px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .about {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 24px;
+      }
+      .about-copy {
+        padding: clamp(28px, 4vw, 55px);
+        border-radius: 30px;
+      }
+      .about-copy p {
+        max-width: 59ch;
+        margin: 18px 0 0;
+        font-size: 17px;
+      }
+      .location {
+        display: inline-flex;
+        gap: 9px;
+        align-items: center;
+        margin-top: 28px;
+        color: #243fd1;
+        font: 12px var(--mono);
+        letter-spacing: 0.06em;
+      }
+      .location i {
+        font-size: 15px;
+      }
+      .image-card {
+        min-height: 340px;
+        border-radius: 30px;
+      }
+      .image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.88;
+      }
+      .data-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .timeline,
+      .stack,
+      .courses,
+      .experience,
+      .certs,
+      .work-grid,
+      .articles,
+      .contact-card {
+        border-radius: 30px;
+        padding: 30px;
+      }
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        gap: 17px;
+        padding: 20px 0;
+        border-top: 1px solid rgba(70, 84, 130, 0.13);
+      }
+      .timeline-item:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+      .date,
+      .mono {
+        font: 11px/1.55 var(--mono);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #586bc6;
+      }
+      .timeline h3,
+      .experience h3 {
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.25;
+      }
+      .timeline p,
+      .experience p {
+        margin: 7px 0 0;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 18px;
+      }
+      .chip {
+        padding: 8px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(50, 67, 134, 0.15);
+        background: rgba(255, 255, 255, 0.38);
+        font: 11px var(--mono);
+      }
+      .course-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .course {
+        padding: 16px;
+        border: 1px solid rgba(75, 88, 147, 0.16);
+        background: rgba(255, 255, 255, 0.35);
+        border-radius: 18px;
+      }
+      .course i {
+        color: #3e52dc;
+        font-size: 18px;
+      }
+      .course h3 {
+        margin: 10px 0 4px;
+        font-size: 14px;
+      }
+      .course p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .experience {
+        margin-top: 24px;
+      }
+      .experience ul {
+        margin: 16px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      .experience li + li {
+        margin-top: 6px;
+      }
+      .work-grid,
+      .articles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        padding: 14px;
+      }
+      .work,
+      .article {
+        display: flex;
+        flex-direction: column;
+        min-height: 260px;
+        padding: 21px;
+        border: 1px solid rgba(63, 76, 134, 0.14);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.34);
+        transition:
+          transform 0.25s ease,
+          background 0.25s ease;
+      }
+      .work:hover,
+      .article:hover {
+        transform: translateY(-6px);
+        background: rgba(255, 255, 255, 0.76);
+      }
+      .work .top,
+      .article .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: #485dc9;
+        font: 10px var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .work h3,
+      .article h3 {
+        margin: 18px 0 10px;
+        font-size: 21px;
+        line-height: 1.22;
+      }
+      .work p,
+      .article p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .go {
+        margin-top: auto;
+        padding-top: 17px;
+        color: #2d45c7;
+        font: 11px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 15px;
+      }
+      .filter {
+        border: 1px solid rgba(57, 75, 143, 0.2);
+        background: rgba(255, 255, 255, 0.44);
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: #36405b;
+        font: 11px var(--mono);
+      }
+      .filter.active,
+      .filter:hover {
+        background: #2a42c8;
+        border-color: #2a42c8;
+        color: #fff;
+      }
+      .article {
+        padding: 0;
+        overflow: hidden;
+      }
+      .article img {
+        width: 100%;
+        height: 138px;
+        object-fit: cover;
+      }
+      .article .article-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 18px;
+      }
+      .certs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .cert {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      .cert img {
+        width: 100px;
+        height: 76px;
+        object-fit: cover;
+        border-radius: 13px;
+      }
+      .cert h3 {
+        margin: 5px 0;
+        font-size: 16px;
+      }
+      .cert p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .contact {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 24px;
+      }
+      .contact-copy {
+        padding: clamp(28px, 5vw, 55px);
+        border-radius: 30px;
+      }
+      .contact-copy h2 {
+        margin: 12px 0;
+        font: 600 clamp(36px, 5vw, 67px) / 0.95 var(--serif);
+        letter-spacing: -0.06em;
+      }
+      .contact-copy p {
+        color: var(--muted);
+      }
+      .contact-copy a {
+        display: block;
+        margin-top: 16px;
+        font-weight: 700;
+      }
+      .contact-card form {
+        display: grid;
+        gap: 14px;
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      .field label {
+        font: 11px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .field input,
+      .field textarea {
+        width: 100%;
+        border: 1px solid rgba(64, 78, 139, 0.2);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.52);
+        padding: 13px;
+        color: var(--ink);
+      }
+      .field textarea {
+        min-height: 132px;
+        resize: vertical;
+      }
+      .status {
+        min-height: 24px;
+        margin: 0;
+        color: #2743c9;
+        font-size: 13px;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 32px 0 60px;
+        color: #526079;
+        font-size: 12px;
+      }
+      .footer a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      @media (max-width: 900px) {
+        .nav {
+          padding-right: 180px;
+        }
+        .links {
+          display: none;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: 0;
+        }
+        .hero-copy {
+          align-self: auto;
+        }
+        .hero-side {
+          grid-template-columns: 1fr 1fr;
+        }
+        .portrait img {
+          aspect-ratio: 1.25;
+        }
+        .data-grid,
+        .contact {
+          grid-template-columns: 1fr;
+        }
+        .work-grid,
+        .articles {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .shell {
+          width: min(100% - 22px, 1240px);
+        }
+        .nav {
+          padding: 17px 0 18px;
+        }
+        .hero {
+          padding: 11px;
+          gap: 11px;
+        }
+        .hero-copy,
+        .portrait,
+        .spec,
+        .about-copy,
+        .timeline,
+        .stack,
+        .courses,
+        .experience,
+        .certs,
+        .contact-card,
+        .contact-copy {
+          border-radius: 22px;
+          padding: 22px;
+        }
+        .hero h1 {
+          font-size: 58px;
+        }
+        .hero-side {
+          grid-template-columns: 1fr;
+        }
+        .section {
+          padding-top: 72px;
+        }
+        .section-title {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .about,
+        .data-grid,
+        .contact {
+          gap: 12px;
+        }
+        .image-card {
+          min-height: 230px;
+          border-radius: 22px;
+        }
+        .timeline-item {
+          grid-template-columns: 1fr;
+          gap: 5px;
+        }
+        .course-grid,
+        .certs {
+          grid-template-columns: 1fr;
+        }
+        .work-grid,
+        .articles {
+          grid-template-columns: 1fr;
+          padding: 0;
+          background: none;
+          border: 0;
+          box-shadow: none;
+        }
+        .work,
+        .article {
+          background: var(--glass-strong);
+        }
+        .footer {
+          flex-direction: column;
+        }
+        .footer span {
+          display: block;
+        }
+        .button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .button,
+        .work,
+        .article {
+          transition: none;
+        }
+        .work:hover,
+        .article:hover,
+        .button:hover {
+          transform: none;
+        }
+      }
+    </style>
+    <script>
+      window.THEME_ID = "12-neumorphism";
+    </script>
+    <script src="/shared/profile.js"></script>
+    <script src="/shared/site-data.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <header class="shell nav">
+      <a class="brand" href="#top">Cai<i>·</i>Jiechao</a>
+      <nav class="links" aria-label="Primary">
+        <a href="#about">About</a><a href="#work">Work</a
+        ><a href="#notes">Notes</a><a href="#contact">Contact</a>
+      </nav>
+    </header>
+    <main id="content" class="shell"><div id="app"></div></main>
+    <script>
+      (() => {
+        "use strict";
+        const L = {
+          about: {
+            en: "A softer interface for serious work.",
+            zh: "为严肃工作打造的柔和界面。",
+          },
+          education: { en: "Education / formation", zh: "教育 / 训练" },
+          skills: { en: "Stack / signals", zh: "技术栈 / 信号" },
+          courses: { en: "Core courses", zh: "核心课程" },
+          experience: { en: "Experience / practice", zh: "实践 / 经历" },
+          projects: { en: "Selected projects", zh: "精选项目" },
+          articles: { en: "Field notes", zh: "技术笔记" },
+          certificates: { en: "Credentials", zh: "证书" },
+          contact: { en: "Start a conversation.", zh: "开始一场对话。" },
+          cv: { en: "Download CV", zh: "下载简历" },
+          github: { en: "GitHub", zh: "GitHub" },
+          send: { en: "Send message", zh: "发送消息" },
+          name: { en: "Name", zh: "姓名" },
+          email: { en: "Email", zh: "邮箱" },
+          message: { en: "Message", zh: "留言" },
+          sending: { en: "Sending…", zh: "发送中…" },
+          sent: {
+            en: "Message received — thank you.",
+            zh: "消息已收到，感谢你。",
+          },
+          failed: {
+            en: "Unable to send. Please try again.",
+            zh: "发送失败，请重试。",
+          },
+          offline: {
+            en: "Content is currently unavailable.",
+            zh: "内容暂时无法加载。",
+          },
+          view: { en: "Open record", zh: "查看记录" },
+          role: { en: "Independent study / software", zh: "独立学习 / 软件" },
+          location: { en: "Based in", zh: "常驻" },
+        };
+        let articles = [],
+          projects = [],
+          filter = "all";
+        const $ = (s) => document.querySelector(s),
+          t = (x) => CJCData.t(x),
+          e = (x) => CJCData.escapeHtml(x || ""),
+          P = () => CJCData.profile;
+        const photo = { about: "/index_page/img/portfolio/web.jpg" };
+        function section(title, id, body, note) {
+          return `<section class="section" id="${id}"><div class="section-title"><h2>${e(t(title))}</h2><p>${e(note || "CJC / 2026")}</p></div>${body}</section>`;
+        }
+        function render() {
+          const p = P();
+          $("#app").innerHTML =
+            `<section class="hero panel" id="top"><img class="hero-photo" src="${e(p.hero || "/index_page/img/hero.png")}" alt="${e(t(p.name))}" fetchpriority="high" onerror="this.src='/index_page/img/hero.png'"><div class="hero-copy panel"><p class="eyebrow">${e(t(p.greeting))}</p><h1>${e(t(p.name))}</h1><p class="role">${e(t(p.role))}</p><p class="head">${e(t(p.headline))}</p><div class="actions"><a class="button primary" href="${e(t(p.cv))}" target="_blank" rel="noopener"><i class="fa fa-arrow-down" aria-hidden="true"></i>${e(t(L.cv))}</a><a class="button" href="${e(p.contact.github)}" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i>${e(t(L.github))}</a></div></div><aside class="hero-side"><div class="portrait panel"><img src="${e(p.avatar)}" alt="${e(p.avatarAlt || t(p.name))}"></div><div class="spec panel"><span class="kicker">material / index</span><dl><dt>${e(t(L.role))}</dt><dd>${e(t(p.role))}</dd><dt>${e(t(L.location))}</dt><dd>${e(t(p.location))}</dd><dt>STATUS</dt><dd><span class="dot">●</span> ONLINE</dd></dl></div></aside></section>${section(L.about, "about", `<div class="about"><article class="about-copy panel"><span class="kicker">01 / profile</span><p>${e(t(p.bio[0]))}</p><p>${e(t(p.bio[1]))}</p><span class="location"><i class="fa fa-map-marker" aria-hidden="true"></i>${e(t(p.location))}</span></article><div class="image-card panel"><img src="${photo.about}" alt="Project work" loading="lazy"></div></div>`, "01 / profile")}${section(L.education, "education", `<div class="data-grid"><article class="timeline panel">${p.education.map((x) => `<div class="timeline-item"><span class="date">${e(x.period)}</span><div><h3>${e(t(x.school))}</h3><p>${e(t(x.degree))}</p><p>${e(t(x.note))}</p></div></div>`).join("")}</article><article class="stack panel"><span class="kicker">02 / ${e(t(L.skills))}</span><div class="chips">${p.skillTags.map((x) => `<span class="chip">${e(x)}</span>`).join("")}</div><p class="mono" style="margin:24px 0 0">${p.skills.map(e).join(" · ")}</p></article></div>`, "02 / formation")}${section(L.courses, "courses", `<article class="courses panel"><span class="kicker">03 / curriculum</span><div class="course-grid">${p.courses.map((x) => `<article class="course"><i class="fa ${e(x.icon)}" aria-hidden="true"></i><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></article>`).join("")}</div></article>`, "03 / curriculum")}${section(L.experience, "experience", `<article class="experience panel">${p.experience.map((x) => `<span class="date">${e(x.period)}</span><h3>${e(t(x.company))} — ${e(t(x.role))}</h3><p>${e(t(x.summary))}</p><ul>${x.bullets.map((b) => `<li>${e(t(b))}</li>`).join("")}</ul>`).join("")}</article>`, "04 / practice")}${section(L.projects, "work", `<div class="work-grid panel">${projects.length ? projects.map((x) => `<a class="work" href="${e(x.href)}"><div class="top"><span>${e(x.dateText())}</span><span>${e(x.tech_stack || "PROJECT")}</span></div><h3>${e(x.localTitle())}</h3><p>${e(x.localSummary())}</p><span class="go">${e(t(L.view))} <i class="fa fa-arrow-up" aria-hidden="true"></i></span></a>`).join("") : `<p>${e(t(L.offline))}</p>`}</div>`, "05 / selected")}${section(
+              L.articles,
+              "notes",
+              `<div class="filters" aria-label="Article filters">${p.articleFilters.map((x) => `<button class="filter ${filter === x.key ? "active" : ""}" type="button" data-filter="${e(x.key)}" onclick="window.CJCThemeFilter(this.dataset.filter)">${e(t(x.label))}</button>`).join("")}</div><div class="articles">${
+                articles.length
+                  ? CJCData.filterArticles(articles, filter)
+                      .map(
+                        (x) =>
+                          `<a class="article panel" href="${e(x.href)}"><img src="${e(x.cover_image || "/index_page/img/blogs/1.jpg")}" alt="" loading="lazy" onerror="this.src='/index_page/img/blogs/1.jpg'"><div class="article-body"><div class="meta"><span>${e(x.category || "NOTE")}</span><span>${e(x.dateText())}</span></div><h3>${e(x.localTitle())}</h3><p>${e(x.localSummary())}</p><span class="go">${e(t(L.view))}</span></div></a>`,
+                      )
+                      .join("")
+                  : `<p>${e(t(L.offline))}</p>`
+              }</div>`,
+              "06 / notes",
+            )}${section(L.certificates, "certs", `<article class="certs panel">${p.certificates.map((x) => `<article class="cert"><img src="${e(x.image)}" alt="${e(t(x.title))}" loading="lazy"><div><span class="date">${e(t(x.date))} / ${e(t(x.tag))}</span><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></div></article>`).join("")}</article>`, "07 / credentials")}${section(L.contact, "contact", `<div class="contact"><article class="contact-copy panel"><span class="kicker">08 / contact</span><h2>${e(t(L.contact))}</h2><p>${e(t(p.title))}</p><a href="${e(p.contact.emailTo)}"><i class="fa fa-envelope-o" aria-hidden="true"></i> ${e(p.contact.email)}</a><a href="${e(p.contact.phoneHref)}"><i class="fa fa-phone" aria-hidden="true"></i> ${e(p.contact.phone)}</a><a href="${e(p.contact.github)}" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> ${e(p.contact.githubUser)}</a></article><article class="contact-card panel"><form id="contact-form"><div class="field"><label for="name">${e(t(L.name))}</label><input id="name" name="name" autocomplete="name" required></div><div class="field"><label for="email">${e(t(L.email))}</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="message">${e(t(L.message))}</label><textarea id="message" name="message" required></textarea></div><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><button class="button primary" type="submit">${e(t(L.send))} <i class="fa fa-arrow-right" aria-hidden="true"></i></button><p class="status" id="form-status" aria-live="polite"></p></form></article></div>`, "08 / contact")}<footer class="footer"><span>${e(p.brand)} — ${e(t(p.ui.footer_desc))}</span><span><a href="${e(p.icpUrl)}" target="_blank" rel="noopener">${e(p.icp)}</a> · <a href="/admin.html">Admin Panel</a></span></footer>`;
+          bind();
+        }
+        function bind() {
+          const f = $("#contact-form");
+          f.addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+            const st = $("#form-status"),
+              btn = f.querySelector("button");
+            btn.disabled = true;
+            st.textContent = t(L.sending);
+            try {
+              await CJCData.sendContact({
+                name: f.name.value,
+                email: f.email.value,
+                message: f.message.value,
+                website: f.website.value,
+              });
+              f.reset();
+              st.textContent = t(L.sent);
+            } catch (err) {
+              st.textContent = err.message || t(L.failed);
+            } finally {
+              btn.disabled = false;
+            }
+          });
+        }
+        window.CJCThemeFilter = (key) => {
+          filter = key || "all";
+          render();
+        };
+        document.addEventListener("DOMContentLoaded", async () => {
+          CJCData.setTheme(window.THEME_ID);
+          render();
+          CJCData.mountSwitcher({ accent: "#365af8" });
+          CJCData.onLang(render);
+          try {
+            [articles, projects] = await Promise.all([
+              CJCData.fetchArticles(),
+              CJCData.fetchProjects(),
+            ]);
+            render();
+          } catch (err) {
+            render();
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>
