@@ -413,6 +413,12 @@ window.CJC_THEMES = [
     blurb: { en: "Medieval stronghold — stone walls, heraldic banners, torchlight, royal gold.", zh: "中世纪城堡 —— 石墙、纹章旗帜、火炬、皇家金色。" },
     accent: "#c9a24a", bg: "linear-gradient(160deg,#20242b,#2c3138)", fg: "#e8e2d2", font: "Cinzel / MedievalSharp",
   },
+  {
+    id: "66-racer",
+    name: { en: "Racer Brand", zh: "车手品牌" },
+    blurb: { en: "Athlete personal brand — lime & charcoal, huge type, monogram, on/off-track.", zh: "运动员个人品牌 —— 荧光绿与炭黑、超大字体、字母徽标、赛道内外。" },
+    accent: "#c8ff00", bg: "linear-gradient(160deg,#111111,#1d1d1d)", fg: "#f4f4f4", font: "Anton / Inter",
+  },
 ];
 
 if (typeof module !== "undefined" && module.exports) {
