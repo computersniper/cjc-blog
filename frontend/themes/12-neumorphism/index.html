@@ -56,7 +56,7 @@
         position: fixed;
         inset: -7%;
         z-index: -2;
-        background: url("https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=2200&q=84")
+        background: url("/themes/12-neumorphism/assets/studio-local.jpg")
           center/cover;
         filter: blur(10px);
         transform: scale(1.08);
@@ -452,6 +452,15 @@
         transform: translateY(-6px);
         background: rgba(255, 255, 255, 0.76);
       }
+      .work-cover {
+        width: calc(100% + 42px);
+        height: 136px;
+        margin: -21px -21px 17px;
+        border-radius: 21px 21px 15px 15px;
+        object-fit: cover;
+        background: #d9e2f0;
+        filter: saturate(0.82) contrast(1.04);
+      }
       .work .top,
       .article .meta {
         display: flex;
@@ -818,6 +827,22 @@
               "06 / notes",
             )}${section(L.certificates, "certs", `<article class="certs panel">${p.certificates.map((x) => `<article class="cert"><img src="${e(x.image)}" alt="${e(t(x.title))}" loading="lazy"><div><span class="date">${e(t(x.date))} / ${e(t(x.tag))}</span><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></div></article>`).join("")}</article>`, "07 / credentials")}${section(L.contact, "contact", `<div class="contact"><article class="contact-copy panel"><span class="kicker">08 / contact</span><h2>${e(t(L.contact))}</h2><p>${e(t(p.title))}</p><a href="${e(p.contact.emailTo)}"><i class="fa fa-envelope-o" aria-hidden="true"></i> ${e(p.contact.email)}</a><a href="${e(p.contact.phoneHref)}"><i class="fa fa-phone" aria-hidden="true"></i> ${e(p.contact.phone)}</a><a href="${e(p.contact.github)}" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> ${e(p.contact.githubUser)}</a></article><article class="contact-card panel"><form id="contact-form"><div class="field"><label for="name">${e(t(L.name))}</label><input id="name" name="name" autocomplete="name" required></div><div class="field"><label for="email">${e(t(L.email))}</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="message">${e(t(L.message))}</label><textarea id="message" name="message" required></textarea></div><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><button class="button primary" type="submit">${e(t(L.send))} <i class="fa fa-arrow-right" aria-hidden="true"></i></button><p class="status" id="form-status" aria-live="polite"></p></form></article></div>`, "08 / contact")}<footer class="footer"><span>${e(p.brand)} — ${e(t(p.ui.footer_desc))}</span><span><a href="${e(p.icpUrl)}" target="_blank" rel="noopener">${e(p.icp)}</a> · <a href="/admin.html">Admin Panel</a></span></footer>`;
           bind();
+          mountProjectCovers();
+        }
+        function mountProjectCovers() {
+          document.querySelectorAll(".work").forEach((card, index) => {
+            const project = projects[index];
+            if (!project) return;
+            const cover = document.createElement("img");
+            cover.className = "work-cover";
+            cover.src = project.cover_image || "/index_page/img/blogs/1.jpg";
+            cover.alt = "";
+            cover.loading = "lazy";
+            cover.addEventListener("error", () => {
+              cover.src = "/index_page/img/blogs/1.jpg";
+            });
+            card.prepend(cover);
+          });
         }
         function bind() {
           const f = $("#contact-form");

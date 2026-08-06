@@ -22,6 +22,10 @@ Date: 2026-08-06
 - Confirmed no browser console or page errors during the desktop and mobile passes.
 - Confirmed `prefers-reduced-motion` disables non-essential motion and leaves all content visible.
 - Confirmed the Racer helmet visor sequence auto-plays, can be replayed, and overlays the driver portrait during its active state.
+- Confirmed all five API project covers render and decode in every redesigned theme after scrolling the project section into view.
+- Confirmed all cinematic hero photography is served from the same origin; no theme depends on Unsplash or Wikimedia at runtime.
+- Confirmed the former generic `me.png` illustration is no longer referenced and has been replaced at its public URL with an authentic user photo.
+- Confirmed the supplied campus, graduation, city, and sports photographs are stored locally and used in context-sensitive profile sections.
 
 ## Design assessment
 

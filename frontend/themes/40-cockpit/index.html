@@ -532,6 +532,15 @@
         transform: translateY(-5px);
         background: #273237;
       }
+      .project-cover {
+        width: calc(100% + 42px);
+        height: 136px;
+        margin: -21px -21px 18px;
+        border-bottom: 1px solid var(--line);
+        object-fit: cover;
+        background: #0d1215;
+        filter: saturate(0.7) contrast(1.1);
+      }
       .project .meta,
       .article .meta {
         display: flex;
@@ -881,7 +890,7 @@
     <section class="hero" id="top">
       <img
         class="hero-photo"
-        src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2400&q=86"
+        src="/themes/40-cockpit/assets/track-car.jpg"
         alt="A performance car on a mountain road"
         fetchpriority="high"
         onerror="this.src='/index_page/img/hero.png'"
@@ -906,7 +915,7 @@
         <aside class="helmet-panel">
           <figure>
             <img
-              src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=82"
+              src="/index_page/img/cjc/city.jpg"
               alt="A racing motorcycle cockpit and handlebars"
               loading="eager"
               onerror="this.src='/index_page/img/portfolio/ui1.jpg'"
@@ -1008,6 +1017,32 @@
               }</div>`,
             )}${section(L.certs, "certs", "07", `<div class="certs">${p.certificates.map((x) => `<article class="cert"><img src="${e(x.image)}" alt="${e(t(x.title))}" loading="lazy"><div><small>${e(t(x.date))} / ${e(t(x.tag))}</small><h3>${e(t(x.title))}</h3><p>${e(t(x.desc))}</p></div></article>`).join("")}</div>`)}${section(L.contact, "contact", "08", `<div class="contact"><article class="contact-intro"><span class="mono">OPEN RADIO</span><h2>${e(t(L.contact))}</h2><a href="${e(p.contact.emailTo)}">${e(p.contact.email)}</a><a href="${e(p.contact.phoneHref)}">${e(p.contact.phone)}</a><a href="${e(p.contact.github)}" target="_blank" rel="noopener">${e(p.contact.githubUser)}</a></article><form class="form" id="contact-form"><div class="field"><label for="name">${e(t(L.name))}</label><input id="name" name="name" autocomplete="name" required></div><div class="field"><label for="email">${e(t(L.email))}</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="message">${e(t(L.message))}</label><textarea id="message" name="message" required></textarea></div><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><button class="button lime" type="submit">${e(t(L.send))}<i class="fa fa-arrow-right" aria-hidden="true"></i></button><p class="status" id="status" aria-live="polite"></p></form></div>`)}<footer class="foot"><div class="shell"><span>${e(p.brand)} / ${e(t(p.ui.footer_desc))}</span><span><a href="${e(p.icpUrl)}" target="_blank" rel="noopener">${e(p.icp)}</a> · <a href="/admin.html">Admin Panel</a></span></div></footer>`;
           bind();
+          mountProjectCovers();
+          mountProfilePhoto(p);
+        }
+        function mountProjectCovers() {
+          document.querySelectorAll(".project").forEach((card, index) => {
+            const project = projects[index];
+            if (!project) return;
+            const cover = document.createElement("img");
+            cover.className = "project-cover";
+            cover.src = project.cover_image || "/index_page/img/blogs/1.jpg";
+            cover.alt = "";
+            cover.loading = "lazy";
+            cover.addEventListener("error", () => {
+              cover.src = "/index_page/img/blogs/1.jpg";
+            });
+            card.prepend(cover);
+          });
+        }
+        function mountProfilePhoto(profile) {
+          const photo = document.querySelector(".driver-photo img");
+          if (!photo) return;
+          photo.src =
+            (profile.photos && profile.photos.city) ||
+            profile.avatarAlt ||
+            profile.avatar;
+          photo.alt = t(profile.name);
         }
         function bind() {
           q("#contact-form").addEventListener("submit", async (ev) => {

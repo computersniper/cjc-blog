@@ -33,7 +33,13 @@ window.CJC_PROFILE = {
 
   // --- Portrait images (several angles available) ----------------------------
   avatar: "/index_page/img/me.jpg",
-  avatarAlt: "/index_page/img/me.png",
+  avatarAlt: "/index_page/img/cjc/campus.jpg",
+  photos: {
+    campus: "/index_page/img/cjc/campus.jpg",
+    graduation: "/index_page/img/cjc/graduation.jpg",
+    city: "/index_page/img/cjc/city.jpg",
+    sport: "/index_page/img/cjc/sport.jpg",
+  },
   hero: "/index_page/img/hero.png",
 
   // --- Bio (two paragraphs) --------------------------------------------------
