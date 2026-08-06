@@ -103,6 +103,12 @@
       box-shadow:0 3px 10px rgba(0,0,0,.5)}
     .pipe.v{width:18px;top:-40px;bottom:-40px;
       background:linear-gradient(180deg,#4a2a14,#b06a38 22%,#e6a878 42%,#b06a38 62%,#5e3016)}
+    .pipe.h{height:16px;
+      background:linear-gradient(180deg,#4a2a14,#b06a38 22%,#e6a878 42%,#b06a38 62%,#5e3016)}
+    .pipe.h .coupling{left:auto;right:auto;top:-4px;bottom:-4px;height:auto;width:20px;
+      background:linear-gradient(180deg,#3a2010,#c98a2b 40%,#f0cd7e 50%,#8a5a1e 62%,#3a2010)}
+    .elbow{position:absolute;width:26px;height:26px;border-radius:6px 3px 3px 3px;
+      background:linear-gradient(135deg,#e6a878,#b06a38 55%,#5e3016);box-shadow:inset 0 1px 2px rgba(255,235,205,.4),0 2px 5px rgba(0,0,0,.4)}
     .pipe .coupling{position:absolute;left:-4px;right:-4px;height:22px;border-radius:5px;
       background:linear-gradient(90deg,#3a2010,#c98a2b 40%,#f0cd7e 50%,#8a5a1e 62%,#3a2010);
       box-shadow:inset 0 2px 2px rgba(255,240,200,.4),inset 0 -2px 3px rgba(0,0,0,.5),0 2px 5px rgba(0,0,0,.4)}
@@ -160,6 +166,19 @@
        ========================================================= */
     section.bay{padding:62px 0;position:relative}
     .frame{position:relative;border-radius:16px;padding:9px;}
+    /* exposed bolt strips along the top & bottom of every frame */
+    .frame::before{content:"";position:absolute;left:16px;right:16px;top:-2px;bottom:-2px;pointer-events:none;z-index:4;
+      background:
+        radial-gradient(circle at 5px 5px,#ffe4a8 0 1.5px,#8a5a1e 2px 3px,rgba(0,0,0,.5) 3.2px 4px,transparent 4.3px) left top repeat-x,
+        radial-gradient(circle at 5px 5px,#ffe4a8 0 1.5px,#8a5a1e 2px 3px,rgba(0,0,0,.5) 3.2px 4px,transparent 4.3px) left bottom repeat-x;
+      background-size:26px 11px,26px 11px}
+    /* rust streaks + oil stain worked into the brass frame border */
+    .frame::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;z-index:1;opacity:.8;mix-blend-mode:multiply;
+      background:
+        linear-gradient(90deg,rgba(120,52,16,.34) 0,rgba(120,52,16,.14) 6%,transparent 13%),
+        linear-gradient(270deg,rgba(110,46,14,.3) 0,rgba(110,46,14,.12) 6%,transparent 13%),
+        radial-gradient(50% 26% at 26% 100%,rgba(50,26,8,.4),transparent 60%),
+        radial-gradient(40% 22% at 78% 0%,rgba(60,30,10,.34),transparent 60%)}
     .paper{border-radius:9px;padding:42px 44px;position:relative;overflow:hidden;color:var(--ink-solid);
       background:
         var(--fiber),
@@ -462,6 +481,15 @@
        ENGINE ROOM — fixed industrial backdrop, running machinery
        ========================================================= */
     #engineroom{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;contain:strict}
+    /* riveted steel plate texture + greasy oil stains on the sooty back wall
+       (::before paints behind the machinery so it doesn't dull the brass) */
+    #engineroom::before{content:"";position:absolute;inset:0;opacity:.6;
+      background:
+        radial-gradient(28% 18% at 12% 60%,rgba(8,4,1,.7),transparent 62%),
+        radial-gradient(22% 15% at 84% 38%,rgba(10,5,1,.6),transparent 62%),
+        radial-gradient(20% 13% at 58% 90%,rgba(16,8,2,.6),transparent 62%),
+        radial-gradient(circle at 6px 6px,rgba(210,170,110,.14) 0 1.4px,rgba(0,0,0,.4) 1.8px 2.6px,transparent 3px) 0 0/58px 58px,
+        linear-gradient(180deg,rgba(40,26,14,.4),rgba(10,6,2,.6))}
     /* distant sky depth: airship + smokestacks behind machinery */
     .er-sky{position:absolute;inset:0;opacity:.5}
     .airship{position:absolute;top:9%;left:-280px;width:250px;height:110px;opacity:.6;
@@ -519,6 +547,19 @@
       box-shadow:inset 0 2px 3px rgba(255,240,200,.4),0 4px 8px rgba(0,0,0,.5);animation:spin 1.5s linear infinite}
     .er-piston .crank::after{content:"";position:absolute;left:50%;top:8px;width:8px;height:8px;border-radius:50%;transform:translateX(-50%);
       background:radial-gradient(circle,#ffe9b8,#5e3a12)}
+    /* steam vents that puff a burst periodically */
+    .er-vent{position:absolute;width:30px;height:15px;border-radius:4px;
+      background:linear-gradient(90deg,#2a1810,#c98a2b 45%,#f0cd7e 55%,#5e3016);
+      box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,240,200,.5)}
+    .er-vent::before{content:"";position:absolute;left:-8px;top:2px;width:10px;height:11px;border-radius:3px;
+      background:linear-gradient(90deg,#2a1810,#8a5a1e)}
+    .er-vent::after{content:"";position:absolute;left:100%;top:50%;width:46px;height:46px;border-radius:50%;
+      background:radial-gradient(circle,rgba(242,238,228,.7),transparent 68%);opacity:0;
+      transform:translate(-10%,-50%) scale(.2);animation:ventpuff 4.6s ease-out infinite}
+    .er-vent.v1{left:214px;bottom:236px}
+    .er-vent.v2{right:120px;top:52%;transform:scaleX(-1)}
+    .er-vent.v2::after{animation-delay:2.3s}
+    @keyframes ventpuff{0%,66%{opacity:0;transform:translate(-10%,-50%) scale(.2)}72%{opacity:.75;transform:translate(30%,-58%) scale(1)}100%{opacity:0;transform:translate(120%,-95%) scale(2.4)}}
     /* glowing vacuum tubes (right) */
     .er-tubes{position:absolute;right:44px;top:30%;display:flex;gap:16px}
     .tube{width:22px;height:64px;border-radius:11px 11px 5px 5px;position:relative;
@@ -602,6 +643,8 @@
       <span class="tube"></span><span class="tube t2"></span><span class="tube t3"></span>
     </div>
     <div class="er-tesla" id="er-tesla"></div>
+    <div class="er-vent v1"></div>
+    <div class="er-vent v2"></div>
   </div>
   <div class="steamlayer" aria-hidden="true" id="steamlayer"></div>
   <div class="fog" aria-hidden="true"></div>
@@ -612,6 +655,10 @@
   <div class="pipes" aria-hidden="true">
     <div class="pipe v" style="left:26px"><span class="coupling" style="top:18%"></span><span class="coupling" style="top:70%"></span></div>
     <div class="pipe v" style="right:40px"><span class="coupling" style="top:34%"></span></div>
+    <div class="pipe h" style="left:-30px;width:230px;top:22%"><span class="coupling" style="left:60%"></span></div>
+    <div class="pipe h" style="right:-30px;width:210px;bottom:26%"><span class="coupling" style="left:40%"></span></div>
+    <div class="elbow" style="left:22px;top:22%"></div>
+    <div class="elbow" style="right:36px;bottom:26%"></div>
     <div class="valve" style="left:12px;top:44%"></div>
     <div class="valve" style="right:26px;top:66%"></div>
   </div>
