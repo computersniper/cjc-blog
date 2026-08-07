@@ -361,9 +361,9 @@ window.CJC_THEMES = [
   },
   {
     id: "57-cardrive",
-    name: { en: "Road Trip", zh: "驾驶座舱" },
-    blurb: { en: "First-person driving — steering wheel & dash, scenery rushing past.", zh: "第一人称驾驶 —— 方向盘与仪表台，窗外风景飞驰。" },
-    accent: "#ff7a00", bg: "linear-gradient(180deg,#6db3e8,#101418)", fg: "#eef2f6", font: "Rajdhani / Inter",
+    name: { en: "Rain Drive", zh: "雨中驾驶" },
+    blurb: { en: "A cinematic rainy driver-seat portrait with a real dashboard, open road, and restrained editorial type.", zh: "真实仪表台与雨中公路构成电影感驾驶位静帧，并以克制的编辑排版承载作品内容。" },
+    accent: "#d53b32", bg: "linear-gradient(160deg,#0b0d0f,#30363a)", fg: "#f1efe9", font: "Georgia / Arial",
   },
   {
     id: "58-realistic",
@@ -454,6 +454,12 @@ window.CJC_THEMES = [
     name: { en: "Paper Journal", zh: "纸上日记" },
     blurb: { en: "A conversational hand-drawn journal on warm paper with imperfect ink marks.", zh: "温暖纸张、自然对话与不完美墨迹组成的手绘日记。" },
     accent: "#e95d3b", bg: "#efe2c9", fg: "#211c17", font: "Caveat / Patrick Hand",
+  },
+  {
+    id: "73-cardrive-motion",
+    name: { en: "Road in Motion", zh: "公路动态影像" },
+    blurb: { en: "A cinematic first-person drive with real dashboard footage, restrained motion, and editorial portfolio layers.", zh: "真实驾驶位影像持续向前，以克制动态与暗色编辑排版呈现作品内容。" },
+    accent: "#d9793f", bg: "linear-gradient(160deg,#11181d,#6e5038)", fg: "#f5efe6", font: "Georgia / Arial",
   },
 ];
 

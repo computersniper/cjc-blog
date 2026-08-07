@@ -38,4 +38,23 @@ Date: 2026-08-07
 - The revised Steampunk homepage visibly features Cai Jiechao and no longer references or ships the former stock engineering image.
 - The Paper Journal texture was warm-tinted after visual comparison to retain the reference's cream paper character.
 
+## Driver-view variants
+
+- Rebuilt `57-cardrive` as **Rain Drive**, a static cinematic driver-seat composition using a real modern car interior and rainy road photograph.
+- Added `73-cardrive-motion` as **Road in Motion**, an independent motion variant using a real first-person driving film.
+- The motion asset is an 8.01-second, 854 x 480, H.264 MP4 with no audio track; it is 1.49 MB and uses a circular crossfade for a softened loop boundary.
+- Added a visible pause/play control, static poster fallback, and no-video behavior for reduced-motion, Save-Data, and 2G connections.
+- Removed every remaining game metaphor from both variants: no Canvas road, fake cockpit shell, SVG gauges, speed HUD, steering input, turbo, pedals, or driving easter eggs.
+- Registered both variants distinctly in the theme gallery as `Rain Drive / 雨中驾驶` and `Road in Motion / 公路动态影像`.
+
+## Driver-view verification
+
+- Parsed inline scripts for both themes with Node `vm.Script`; all passed.
+- Ran the Vite production build successfully.
+- Visually checked both variants at 1440 x 900 and 390 x 844; both preserve the driver-eye composition and have no horizontal overflow.
+- Loaded the local FastAPI data source and confirmed 5 project cards, 10 article cards, 6 filters, 19 images, and zero broken images after full-page scrolling.
+- Confirmed EN/ZH rerendering, the LLM article filter, exact four-field contact payload with a local submit stub, and theme-gallery registration.
+- Confirmed the motion video plays and loops while muted, pause state survives language rerendering, and reduced-motion mode leaves `currentSrc` empty while the poster remains visible.
+- Confirmed real user photography remains in the profile section and all external driving media has visible author/license attribution.
+
 final result: passed
