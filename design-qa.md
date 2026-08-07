@@ -67,4 +67,11 @@ Date: 2026-08-07
 - Full-page desktop and 390 x 844 mobile checks found no horizontal overflow and no broken images: 18 of 18 loaded in Cyberpunk and 19 of 19 loaded in Material Space.
 - Under `prefers-reduced-motion: reduce`, all 19 Cyberpunk and 20 Material Space reveal groups remain visible; Material Space also activates its low-effects performance mode.
 
+## Cyberpunk and material-space display repair
+
+- Replaced Cyberpunk's empty location panel with a real local portrait, balanced the profile columns, and added Chinese-specific display typography so the biography no longer breaks into oversized one- or two-character lines.
+- Tuned Material Space's Chinese headings and biography, reduced excessive fixed card heights, compacted its mobile course/project/article layouts, hid the colliding mobile text navigation, and added anchor clearance for the fixed header.
+- Rechecked both languages at 1440 x 900, 1024 x 768, 390 x 844, and 844 x 390: 16 browser cases passed with no horizontal overflow, clipped content, JavaScript errors, hidden reduced-motion content, or broken images.
+- Confirmed both themes still render 5 projects and 10 articles from the local API, and Material Space anchor navigation lands below its fixed header.
+
 final result: passed
