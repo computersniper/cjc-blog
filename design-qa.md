@@ -1,39 +1,41 @@
 # Theme Redesign QA
 
-Date: 2026-08-06
+Date: 2026-08-07
 
 ## Scope
 
-- 12 Neumorphism: liquid-glass material system
-- 25 Starry: editorial observatory
-- 26 Astronaut: cinematic Apollo mission
-- 27 Deepsea: photographic abyss expedition
-- 30 Steampunk: industrial engine-room editorial
-- 40 Cockpit: realistic automotive telemetry
-- 64 Monet: French formal garden and impressionist editorial
-- 66 Racer: CJC/66 driver brand with animated helmet visor
+- 30 Steampunk: removed the unrelated stock-model background and restored Cai Jiechao as the hero subject.
+- 67 Orange Editorial: cream/orange creative-studio composition with a blurred real portrait and monumental serif type.
+- 68 Sanctuary: cinematic soft-focus personal interior with warm neutrals, amber chair geometry, and italic serif display.
+- 69 Violet OS: violet technical operating system with blueprint grid, overlapping windows, and portrait viewport.
+- 70 Warm Editorial: rust, olive, and paper-white field journal with rounded note cards and handwritten accents.
+- 71 Generative Lab: cobalt algorithm console with an interactive canvas form, parameter controls, and technical toolbar.
+- 72 Paper Journal: warm tactile paper, conversational prompt, imperfect ink typography, and consistent outline icons.
+
+## Reference comparison
+
+- Opened each of the six supplied screenshots beside its 1440 x 900 implementation capture.
+- Preserved each reference's dominant composition, typography, palette, density, and visual hierarchy without copying its brand or text.
+- Used authentic same-origin user photography where portraiture was appropriate; no generic stock person remains in the Steampunk hero.
+- The Generative Lab's central visual is a live canvas system, and the Paper Journal uses a real local raster paper texture.
 
 ## Visual and interaction checks
 
-- Reviewed every theme at 1440 x 900 and 375 x 812 in Chromium.
-- Confirmed responsive stacking and no horizontal overflow at the mobile breakpoint.
-- Confirmed real portfolio content, project cards, article cards, filters, contact forms, language controls, and the global theme switcher render in all eight themes.
-- Confirmed English/Chinese switching and article filtering on representative themes.
-- Confirmed no browser console or page errors during the desktop and mobile passes.
-- Confirmed `prefers-reduced-motion` disables non-essential motion and leaves all content visible.
-- Confirmed the Racer helmet visor sequence auto-plays, can be replayed, and overlays the driver portrait during its active state.
-- Confirmed all five API project covers render and decode in every redesigned theme after scrolling the project section into view.
-- Confirmed all cinematic hero photography is served from the same origin; no theme depends on Unsplash or Wikimedia at runtime.
-- Confirmed the former generic `me.png` illustration is no longer referenced and has been replaced at its public URL with an authentic user photo.
-- Confirmed the supplied campus, graduation, city, and sports photographs are stored locally and used in context-sensitive profile sections.
+- Parsed every inline script for themes 30 and 67-72 with Node `vm.Script`; all passed.
+- Ran the Vite production build successfully.
+- Loaded all six new themes in Chromium at 1440 x 900 and at a 375 px mobile viewport equivalent to the requested 390 x 844 check.
+- Confirmed meaningful body content, expected sections, one contact form per theme, and no Vite error overlay.
+- Confirmed `scrollWidth === clientWidth` for every new theme on mobile.
+- Scrolled every new theme through its full document and confirmed every discovered image had `naturalWidth > 0`; no broken image remained.
+- Confirmed English/Chinese re-rendering, article filter state, the global theme gallery/switcher, and the contact-form submit path using a local stub rather than sending a real message.
+- Emulated `prefers-reduced-motion: reduce` for all six themes and confirmed the media query matched and no reveal content remained hidden.
+- Confirmed focus styles, semantic labels, minimum-height form controls/buttons, local image fallbacks, and responsive stacking are present.
 
 ## Design assessment
 
-- Each theme now has a distinct composition, typography, palette, image treatment, and motion language instead of a shared skin.
-- The Astronaut and Deepsea themes use photographic depth and restrained overlays rather than decorative mock objects.
-- The liquid-glass theme uses layered translucent surfaces, refraction color, soft specular edges, and accessible contrast.
-- The Steampunk and Cockpit themes use real industrial and automotive photography to retain physical credibility.
-- The Monet theme uses formal garden axes, terrace greens, warm stone, botanical blush, and editorial serif typography.
-- The Racer theme uses an original lime/off-white motorsport system and a helmet/visor reveal inspired by the energy, not the layout or assets, of the reference site.
+- Each new theme has its own composition and interaction language, rather than being a color reskin.
+- The visual systems remain recognizable against the supplied references while carrying real portfolio content and the shared `CJCData` contract.
+- The revised Steampunk homepage visibly features Cai Jiechao and no longer references or ships the former stock engineering image.
+- The Paper Journal texture was warm-tinted after visual comparison to retain the reference's cream paper character.
 
 final result: passed

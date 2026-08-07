@@ -419,6 +419,42 @@ window.CJC_THEMES = [
     blurb: { en: "Athlete personal brand — lime & charcoal, huge type, monogram, on/off-track.", zh: "运动员个人品牌 —— 荧光绿与炭黑、超大字体、字母徽标、赛道内外。" },
     accent: "#c8ff00", bg: "linear-gradient(160deg,#111111,#1d1d1d)", fg: "#f4f4f4", font: "Anton / Inter",
   },
+  {
+    id: "67-orange-editorial",
+    name: { en: "Orange Editorial", zh: "橙色编辑部" },
+    blurb: { en: "Cream-and-orange creative direction with blurred portraiture and monumental type.", zh: "奶油与亮橙交叠，模糊人像配合纪念碑式排版。" },
+    accent: "#f05a28", bg: "linear-gradient(145deg,#f4ead8,#ef6a2c)", fg: "#1a1713", font: "Cormorant / Inter",
+  },
+  {
+    id: "68-sanctuary",
+    name: { en: "Sanctuary", zh: "静谧居所" },
+    blurb: { en: "A cinematic interior sanctuary in hazy neutrals and chair-yellow light.", zh: "朦胧中性色与椅背黄光构成的电影感静谧空间。" },
+    accent: "#d9b42c", bg: "linear-gradient(145deg,#d8d1c5,#a49783)", fg: "#29241d", font: "Italiana / Manrope",
+  },
+  {
+    id: "69-violet-os",
+    name: { en: "Violet OS", zh: "紫域系统" },
+    blurb: { en: "An experimental violet operating system of grids, windows, and wireframe terrain.", zh: "由网格、浮窗与线框地形组成的实验性紫色操作系统。" },
+    accent: "#7d5cff", bg: "linear-gradient(145deg,#8c6cff,#4c36a8)", fg: "#f7f4ff", font: "Space Grotesk / IBM Plex Mono",
+  },
+  {
+    id: "70-warm-editorial",
+    name: { en: "Warm Editorial", zh: "暖调手帐" },
+    blurb: { en: "Rust, olive, and paper-white shape a tactile editorial planner.", zh: "锈橙、橄榄绿与纸白色构成有触感的编辑式手帐。" },
+    accent: "#c95732", bg: "linear-gradient(145deg,#f1eadb,#c98b66)", fg: "#302a20", font: "Fraunces / Caveat",
+  },
+  {
+    id: "71-generative-lab",
+    name: { en: "Generative Lab", zh: "生成实验室" },
+    blurb: { en: "A cobalt algorithm console with luminous forms, controls, and live technical data.", zh: "钴蓝算法控制台，发光形态、参数控件与实时技术数据并置。" },
+    accent: "#135dff", bg: "linear-gradient(145deg,#07142e,#145bff)", fg: "#e9f2ff", font: "Sora / IBM Plex Mono",
+  },
+  {
+    id: "72-paper-journal",
+    name: { en: "Paper Journal", zh: "纸上日记" },
+    blurb: { en: "A conversational hand-drawn journal on warm paper with imperfect ink marks.", zh: "温暖纸张、自然对话与不完美墨迹组成的手绘日记。" },
+    accent: "#e95d3b", bg: "#efe2c9", fg: "#211c17", font: "Caveat / Patrick Hand",
+  },
 ];
 
 if (typeof module !== "undefined" && module.exports) {
