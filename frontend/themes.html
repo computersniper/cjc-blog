@@ -126,10 +126,41 @@
 
     function T(field){ return CJCData.t(field); }
 
+    function galleryThemes(){
+      const themes = [...window.CJC_THEMES];
+      const generativeIndex = themes.findIndex((theme) => theme.id === '71-generative-lab');
+      const glassIndex = themes.findIndex((theme) => theme.id === '03-glass');
+      if (generativeIndex >= 0 && glassIndex >= 0) {
+        [themes[generativeIndex], themes[glassIndex]] = [themes[glassIndex], themes[generativeIndex]];
+      }
+
+      const afterEditorial = [
+        '67-orange-editorial',
+        '68-sanctuary',
+        '69-violet-os',
+        '70-warm-editorial',
+        '72-paper-journal',
+      ];
+      const finalThemes = [
+        '09-retro90s',
+        '12-neumorphism',
+        '10-aero',
+        '17-organic',
+        '21-liquidglass',
+      ];
+      const relocated = new Set([...afterEditorial, ...finalThemes]);
+      const ordered = themes.filter((theme) => !relocated.has(theme.id));
+      const byId = new Map(themes.map((theme) => [theme.id, theme]));
+      const editorialIndex = ordered.findIndex((theme) => theme.id === '05-editorial');
+      ordered.splice(editorialIndex + 1, 0, ...afterEditorial.map((id) => byId.get(id)).filter(Boolean));
+      ordered.push(...finalThemes.map((id) => byId.get(id)).filter(Boolean));
+      return ordered;
+    }
+
     function render(){
       const lang = CJCData.lang();
       const active = CJCData.getTheme();
-      const themes = window.CJC_THEMES;
+      const themes = galleryThemes();
 
       // header text
       const [a,b,c] = I18N.title[lang];
