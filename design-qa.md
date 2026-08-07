@@ -57,4 +57,14 @@ Date: 2026-08-07
 - Confirmed the motion video plays and loops while muted, pause state survives language rerendering, and reduced-motion mode leaves `currentSrc` empty while the poster remains visible.
 - Confirmed real user photography remains in the profile section and all external driving media has visible author/license attribution.
 
+## Cyberpunk and material-space rebuilds
+
+- Rebuilt `06-cyberpunk` as **Signal Archive**, a near-black asymmetric editorial system with restrained cyan/magenta signals, local Orbitron/JetBrains Mono fonts, real photography, and content-first bento layouts.
+- Rebuilt `24-render3d` as **Material Space**, a dark spatial gallery using chrome, acrylic, frosted surfaces, perspective flooring, and pointer-responsive studio lighting without a heavy WebGL dependency.
+- Preserved the complete shared-data contract in both themes: bilingual navigation/content, profile, education, skills/courses, experience, dynamic projects, dynamic articles and six filters, certificates, four-field contact submission, footer, and theme switcher.
+- Parsed all inline scripts, checked unique DOM IDs and required `CJCData` calls, ran `git diff --check`, and completed the Vite production build.
+- Browser QA confirmed 5 projects, 10 articles, 6 filters, 2 certificates, an LLM filter result of 4 articles, exact contact payload keys, and successful English/Chinese rerendering in both themes.
+- Full-page desktop and 390 x 844 mobile checks found no horizontal overflow and no broken images: 18 of 18 loaded in Cyberpunk and 19 of 19 loaded in Material Space.
+- Under `prefers-reduced-motion: reduce`, all 19 Cyberpunk and 20 Material Space reveal groups remain visible; Material Space also activates its low-effects performance mode.
+
 final result: passed
