@@ -112,15 +112,15 @@
   function hero() {
     var x = L();
     var photo = (P.photos && P.photos.campus) || P.avatar;
-    return '<section class="hero" id="top"><div class="palace-scene"><img class="palace-photo" src="/themes/75-ming-palace/assets/hall-of-supreme-harmony-courtyard-source.jpg" alt="' + esc(x.palaceAlt) + '"><div class="palace-vignette" aria-hidden="true"></div><div class="scene-eaves" aria-hidden="true"><i></i><i></i></div><div class="gate-frame" aria-hidden="true"><i></i><i></i></div><div class="axis-forecourt" aria-hidden="true"></div>' +
+  return '<section class="hero" id="top"><div class="palace-scene"><img class="palace-photo" src="/themes/75-ming-palace/assets/hall-of-supreme-harmony-courtyard-source.jpg" alt="' + esc(x.palaceAlt) + '" fetchpriority="high" decoding="async"><div class="palace-vignette" aria-hidden="true"></div><div class="scene-eaves" aria-hidden="true"><i></i><i></i></div><div class="gate-frame" aria-hidden="true"><i></i><i></i></div><div class="axis-forecourt" aria-hidden="true"></div>' +
       '<div class="hero-panel"><div class="eyebrow">' + esc(x.court) + '</div><h1>' + esc(t(P.name)) + '</h1><p class="hero-role">' + esc(t(P.role)) + '</p><p>' + esc(t(P.greeting)) + ' · ' + esc(t(P.headline)) + '</p><p class="hero-intro">' + esc(x.intro) + '</p><div class="hero-actions"><button class="button primary" type="button" data-open-palace aria-pressed="false">' + esc(x.palace) + '</button><a class="button" href="' + esc(t(P.cv)) + '" download><i class="fa fa-file-text-o" aria-hidden="true"></i>' + esc(x.cv) + '</a><a class="button" href="' + esc(P.contact.github) + '" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i>GitHub</a></div></div>' +
-      '<aside class="identity-folio"><div class="folio-kicker">' + esc(x.folio) + ' · 075</div><img src="' + esc(photo) + '" alt="Portrait of ' + esc(t(P.name)) + '"><div><strong>' + esc(t(P.name)) + '</strong><span>' + esc(t(P.role)) + ' · ' + esc(t(P.location)) + '</span><p>' + esc(x.folioNote) + '</p></div></aside><div class="axis-caption"><span>午门</span><b>中轴 / CENTRAL AXIS</b><span>丹陛</span></div></div></section>';
+    '<aside class="identity-folio"><div class="folio-kicker">' + esc(x.folio) + ' · 075</div><img src="' + esc(photo) + '" alt="Portrait of ' + esc(t(P.name)) + '" decoding="async"><div><strong>' + esc(t(P.name)) + '</strong><span>' + esc(t(P.role)) + ' · ' + esc(t(P.location)) + '</span><p>' + esc(x.folioNote) + '</p></div></aside><div class="axis-caption"><span>午门</span><b>中轴 / CENTRAL AXIS</b><span>丹陛</span></div></div></section>';
   }
 
   function about() {
     var x = L();
     var photo = (P.photos && P.photos.city) || P.avatarAlt || P.avatar;
-    return '<section class="content" id="about"><div class="frame">' + head("about", 1) + '<div class="about-grid reveal"><figure class="portrait-frame"><img src="' + esc(photo) + '" alt="' + esc(t(P.name)) + ' in ' + esc(t(P.location)) + '"></figure><div class="bio-card"><div class="eyebrow">' + esc(t(P.role)) + '</div><p>' + esc(t(P.bio[0])) + '</p><p>' + esc(t(P.bio[1])) + '</p><div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i>' + esc(x.located) + ' · ' + esc(t(P.location)) + '</div></div></div></div></section>';
+  return '<section class="content" id="about"><div class="frame">' + head("about", 1) + '<div class="about-grid reveal"><figure class="portrait-frame"><img src="' + esc(photo) + '" loading="lazy" decoding="async" alt="' + esc(t(P.name)) + ' in ' + esc(t(P.location)) + '"></figure><div class="bio-card"><div class="eyebrow">' + esc(t(P.role)) + '</div><p>' + esc(t(P.bio[0])) + '</p><p>' + esc(t(P.bio[1])) + '</p><div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i>' + esc(x.located) + ' · ' + esc(t(P.location)) + '</div></div></div></div></section>';
   }
 
   function studies() {
@@ -148,7 +148,7 @@
     else if (!projects.length) body = '<div class="archive-state is-empty"><span class="empty-seal" aria-hidden="true">空</span><p>' + esc(x.noProjects) + '</p></div>';
     else body = '<div class="project-grid reveal">' + projects.map(function (p) {
       var cover = p.cover_image || "/index_page/img/blogs/1.jpg";
-      return '<a class="project-card" href="' + esc(p.detailHref) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(p.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(p.dateText()) + ' · ' + esc(p.tech_stack || t(P.ui.tech_stack)) + '</div><h3>' + esc(p.localTitle()) + '</h3><p>' + esc(p.localSummary() || "") + '</p><span class="card-link">' + esc(x.open) + ' →</span></div></a>';
+      return '<a class="project-card" href="' + esc(p.detailHref) + '"><img loading="lazy" decoding="async" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(p.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(p.dateText()) + ' · ' + esc(p.tech_stack || t(P.ui.tech_stack)) + '</div><h3>' + esc(p.localTitle()) + '</h3><p>' + esc(p.localSummary() || "") + '</p><span class="card-link">' + esc(x.open) + ' →</span></div></a>';
     }).join("") + '</div>';
     return '<section class="content" id="projects"><div class="frame">' + head("projects", 4) + body + '</div></section>';
   }
@@ -163,14 +163,14 @@
     else if (!visible.length) body = '<p class="loading">' + esc(t(P.ui.no_articles)) + '</p>';
     else body = '<div class="article-grid reveal">' + visible.map(function (a) {
       var cover = a.cover_image || "/index_page/img/blogs/1.jpg";
-      return '<a class="article-card" href="' + esc(a.detailHref) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || "ARCHIVE") + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
+      return '<a class="article-card" href="' + esc(a.detailHref) + '"><img loading="lazy" decoding="async" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || "ARCHIVE") + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
     }).join("") + '</div>';
     return '<section class="content" id="articles"><div class="frame">' + head("articles", 5) + '<div class="filters" aria-label="Article categories">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + esc(f.key) + '" aria-pressed="' + String(filterKey === f.key) + '" class="' + (filterKey === f.key ? "active" : "") + '">' + esc(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
   }
 
   function certificates() {
     return '<section class="content"><div class="frame">' + head("certificates", 6) + '<div class="certificate-grid reveal">' + P.certificates.map(function (item) {
-      return '<article class="certificate-card"><img loading="lazy" src="' + esc(item.image) + '" alt="' + esc(t(item.title)) + '"><div><div class="card-meta">' + esc(t(item.tag)) + ' · ' + esc(t(item.date)) + '</div><h3>' + esc(t(item.title)) + '</h3><p>' + esc(t(item.desc)) + '</p></div></article>';
+    return '<article class="certificate-card"><img loading="lazy" decoding="async" src="' + esc(item.image) + '" alt="' + esc(t(item.title)) + '"><div><div class="card-meta">' + esc(t(item.tag)) + ' · ' + esc(t(item.date)) + '</div><h3>' + esc(t(item.title)) + '</h3><p>' + esc(t(item.desc)) + '</p></div></article>';
     }).join("") + '</div></div></section>';
   }
 

@@ -17,6 +17,7 @@
   let panelDim = false;
   let revealObserver;
   let toastTimer;
+  let clockTimer = null;
 
   const copy = {
     en: {
@@ -294,7 +295,7 @@
       ${sectionHead(1, x.profile, x.profileLead)}
       <div class="profile-grid">
         <figure class="portrait-frame reveal">
-          <img src="${safe(photo)}" onerror="this.onerror=null;this.src='${safe(P.avatar)}'" alt="${safe(t(P.name))}">
+            <img src="${safe(photo)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${safe(P.avatar)}'" alt="${safe(t(P.name))}">
           <figcaption><span>${safe(x.based)}</span><span>${safe(t(P.location))}</span></figcaption>
         </figure>
         <div class="profile-copy reveal">
@@ -665,7 +666,10 @@
     render();
     CJCData.mountSwitcher({ accent: "#f4ac45" });
     CJCData.onLang(render);
-    window.setInterval(updateClocks, 1000);
+    if (!clockTimer) {
+      updateClocks();
+      clockTimer = window.setInterval(updateClocks, 1000);
+    }
 
     const [projectResult, articleResult] = await Promise.allSettled([
       CJCData.fetchProjects(),

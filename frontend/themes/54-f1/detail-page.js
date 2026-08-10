@@ -2,7 +2,7 @@
   "use strict";
 
   const copy = {
-    en: { home: "Home", projects: "Projects", articles: "Articles", contact: "Contact", themes: "Themes", openChannel: "Open radio channel", retry: "Retry connection" },
+    en: { home: "Home", education: "Education", experience: "Experience", certificates: "Certificates", projects: "Projects", articles: "Articles", contact: "Contact", themes: "Themes", openChannel: "Open radio channel", retry: "Retry connection" },
     zh: { home: "首页", projects: "项目", articles: "文章", contact: "联系", themes: "主题", openChannel: "打开无线电频道", retry: "重新连接" },
   };
 

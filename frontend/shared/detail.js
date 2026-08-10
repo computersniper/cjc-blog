@@ -14,9 +14,7 @@
  *           [<span class="cjc-d-tech">…</span>] <span class="cjc-d-date">…</span></div>
  *      <h1 class="cjc-d-title">…</h1>
  *      <div class="cjc-d-cover"><img …></div>
- *      <div class="cjc-d-body">…rich HTML content…</div>        (content present)
- *        — or —  <div class="cjc-d-summary">…</div>
- *                <a class="cjc-d-readfull" href=readUrl>Read full ↗</a>  (article w/ read_url)
+ *      <div class="cjc-d-body">…rich HTML content or summary fallback…</div>
  *      <div class="cjc-d-nav"><a class="cjc-d-back" href=backHref>← Home</a></div>
  *    </article>
  *
@@ -35,7 +33,6 @@
     loading: { en: "Loading…", zh: "加载中…" },
     idMissing: { en: "No id provided.", zh: "缺少内容 id。" },
     failed: { en: "Failed to load. Is the backend running?", zh: "加载失败，后端是否在运行？" },
-    readFull: { en: "Read full article ↗", zh: "阅读全文 ↗" },
     backHome: { en: "← Home", zh: "← 返回主页" },
   };
 
@@ -44,15 +41,30 @@
 
   // Make relative asset URLs inside injected content resolve from the site root
   // (detail pages live at /themes/<id>/, so bare "blog/x.png" would 404).
-  function absolutizeContent(container) {
-    container.querySelectorAll("img[src], a[href], source[src]").forEach(function (node) {
+  function absolutizeContent(container, sourceUrl) {
+    var base;
+    try { base = new URL(sourceUrl || "/", window.location.origin); }
+    catch (e) { base = new URL("/", window.location.origin); }
+    container.querySelectorAll("img[src], a[href], source[src], video[src]").forEach(function (node) {
       var attr = node.hasAttribute("src") ? "src" : "href";
       var v = node.getAttribute(attr) || "";
       if (!v) return;
       if (/^(https?:)?\/\//i.test(v) || v.charAt(0) === "/" || v.indexOf("data:") === 0 ||
           v.charAt(0) === "#" || v.indexOf("mailto:") === 0 || v.indexOf("tel:") === 0) return;
-      node.setAttribute(attr, "/" + v.replace(/^\.?\/*/, ""));
+      try {
+        var resolved = new URL(v, base);
+        node.setAttribute(attr, resolved.origin === window.location.origin
+          ? resolved.pathname + resolved.search + resolved.hash
+          : resolved.href);
+      } catch (e) {
+        node.setAttribute(attr, "/" + v.replace(/^\.?\/*/, ""));
+      }
     });
+    container.querySelectorAll("img").forEach(function (image) {
+      image.loading = "lazy";
+      image.decoding = "async";
+    });
+    container.querySelectorAll("iframe").forEach(function (frame) { frame.loading = "lazy"; });
   }
 
   function mountDetail(opts) {
@@ -81,17 +93,15 @@
       var body;
       if (content && String(content).trim()) {
         body = '<div class="cjc-d-body"></div>'; // filled after (raw HTML)
-      } else if (kind === "article" && item.readUrl) {
-        body =
-          '<div class="cjc-d-summary">' + esc(summary || "") + "</div>" +
-          '<a class="cjc-d-readfull" href="' + esc(item.readUrl) + '">' + esc(pick(STR.readFull)) + "</a>";
       } else {
+        // Stay inside the active theme even when an old record only has a
+        // summary. CJCData.fetchArticle hydrates legacy bodies when possible.
         body = '<div class="cjc-d-body"><p>' + esc(summary || "") + "</p></div>";
       }
 
       var cover = item.cover_image
         ? '<div class="cjc-d-cover"><img src="' + esc(item.cover_image) +
-          '" alt="' + esc(title) + '" onerror="this.style.display=\'none\'"></div>'
+          '" alt="' + esc(title) + '" decoding="async" fetchpriority="high" onerror="this.style.display=\'none\'"></div>'
         : "";
 
       mount.innerHTML =
@@ -106,7 +116,10 @@
       // Inject raw HTML content (not escaped) and fix relative asset URLs.
       if (content && String(content).trim()) {
         var bodyEl = mount.querySelector(".cjc-d-body");
-        if (bodyEl) { bodyEl.innerHTML = content; absolutizeContent(bodyEl); }
+        if (bodyEl) {
+          bodyEl.innerHTML = content;
+          absolutizeContent(bodyEl, item.contentBaseUrl || item.readUrl || "/");
+        }
       }
       document.title = title + " · " + C.t(C.profile.name);
     }

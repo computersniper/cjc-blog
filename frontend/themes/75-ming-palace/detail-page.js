@@ -88,7 +88,9 @@
     var title = mount.querySelector(".cjc-d-title");
     if (title && !focused) { title.tabIndex = -1; title.focus({ preventScroll: true }); focused = true; }
     var image = mount.querySelector(".cjc-d-cover img");
-    if (image) image.decoding = "async";
+    if (image) { image.decoding = "async"; image.loading = "lazy"; }
+    var readFull = mount.querySelector(".cjc-d-readfull");
+    if (readFull) readFull.remove();
     renderChrome();
   }
 

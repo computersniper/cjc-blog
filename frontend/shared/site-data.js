@@ -29,11 +29,14 @@
   // --- API base (matches the injected /api proxy, falls back to localhost) ----
   var API_BASE =
     window.CJC_BLOG_API_URL ||
-    (["localhost", "127.0.0.1"].indexOf(window.location.hostname) !== -1
+    (window.location.protocol === "file:"
       ? "http://127.0.0.1:8000"
       : window.location.origin + "/api");
 
   var langListeners = [];
+  var requestCache = Object.create(null);
+  var SESSION_CACHE_PREFIX = "cjc:data:";
+  var SESSION_CACHE_TTL = 5 * 60 * 1000;
 
   function lang() {
     return localStorage.getItem(LANG_KEY) || "en";
@@ -97,6 +100,9 @@
       a.read_url && a.read_url.trim() !== "#" && a.read_url.trim() !== ""
         ? absUrl(a.read_url)
         : "";
+    // Legacy long-form posts use assets relative to their original article
+    // folder. Detail renderers use this base without coupling themes to it.
+    a.contentBaseUrl = a.readUrl || "/";
     // Classic-compatible link (external page or the shared reader).
     a.href = a.readUrl || "/read.html?id=" + a.id;
     // Per-theme detail page (relative, resolves inside /themes/<id>/).
@@ -142,10 +148,114 @@
     }
   }
 
+  function readSessionCache(path) {
+    // Only cache summary collections. Full article bodies can be large and are
+    // fetched on demand by their themed detail page.
+    if (!/\/$/.test(path)) return null;
+    try {
+      var raw = sessionStorage.getItem(SESSION_CACHE_PREFIX + path);
+      if (!raw) return null;
+      var saved = JSON.parse(raw);
+      if (!saved || Date.now() - saved.at > SESSION_CACHE_TTL) return null;
+      return saved.value;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeSessionCache(path, value) {
+    if (!/\/$/.test(path)) return;
+    try {
+      sessionStorage.setItem(
+        SESSION_CACHE_PREFIX + path,
+        JSON.stringify({ at: Date.now(), value: value })
+      );
+    } catch (e) {
+      // Storage can be disabled or full; the in-memory cache still works.
+    }
+  }
+
   function fetchJSON(path) {
-    return fetch(API_BASE + path).then(function (r) {
+    if (requestCache[path]) return requestCache[path];
+    var saved = readSessionCache(path);
+    if (saved != null) return Promise.resolve(saved);
+
+    requestCache[path] = fetch(API_BASE + path, {
+      headers: { Accept: "application/json" },
+      credentials: "same-origin",
+    }).then(function (r) {
       if (!r.ok) throw new Error("Request failed: " + path + " (" + r.status + ")");
       return r.json();
+    }).then(function (value) {
+      writeSessionCache(path, value);
+      return value;
+    }).catch(function (error) {
+      delete requestCache[path];
+      throw error;
+    });
+    return requestCache[path];
+  }
+
+  function prepareLegacyContent(node, sourceUrl) {
+    if (!node) return "";
+    var copy = node.cloneNode(true);
+    copy.querySelectorAll(
+      "script,style,link,nav,header,footer,form,.back-button-container,[data-cjc-ui]"
+    ).forEach(function (el) { el.remove(); });
+    copy.querySelectorAll("img[src],source[src],video[src],a[href]").forEach(function (el) {
+      var attr = el.hasAttribute("src") ? "src" : "href";
+      var value = el.getAttribute(attr);
+      if (!value || value.charAt(0) === "#" || /^(data:|mailto:|tel:|javascript:)/i.test(value)) return;
+      try {
+        var resolved = new URL(value, sourceUrl);
+        el.setAttribute(attr, resolved.origin === window.location.origin
+          ? resolved.pathname + resolved.search + resolved.hash
+          : resolved.href);
+      } catch (e) {
+        // Keep author content intact when a URL is malformed.
+      }
+      if (el.tagName === "IMG") {
+        el.setAttribute("loading", "lazy");
+        el.setAttribute("decoding", "async");
+      }
+    });
+    return copy.innerHTML.trim();
+  }
+
+  function normalizeContentHtml(html, sourceUrl) {
+    if (!html) return "";
+    var holder = document.createElement("div");
+    holder.innerHTML = String(html);
+    return prepareLegacyContent(holder, new URL(sourceUrl || "/", window.location.origin).href);
+  }
+
+  // Compatibility bridge for older posts whose body still lives in a legacy
+  // static page. The themed reader imports the body into its own shell instead
+  // of navigating away. The deployment migration moves these bodies into the
+  // API, so this path is only used while an older database is still online.
+  function hydrateArticleContent(article) {
+    if ((article.content && String(article.content).trim()) ||
+        (article.content_zh && String(article.content_zh).trim()) ||
+        !article.readUrl) return Promise.resolve(article);
+
+    var source;
+    try { source = new URL(article.readUrl, window.location.origin); }
+    catch (e) { return Promise.resolve(article); }
+    if (source.origin !== window.location.origin) return Promise.resolve(article);
+
+    return fetch(source.href, { credentials: "same-origin" }).then(function (r) {
+      if (!r.ok) throw new Error("Legacy article unavailable");
+      return r.text();
+    }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      var en = doc.querySelector(".article-lang-en");
+      var zh = doc.querySelector(".article-lang-zh");
+      var fallback = doc.querySelector("article, main .container, main, .container");
+      article.content = prepareLegacyContent(en || fallback, source.href) || article.content;
+      article.content_zh = prepareLegacyContent(zh, source.href) || article.content_zh;
+      return article;
+    }).catch(function () {
+      return article;
     });
   }
 
@@ -163,7 +273,9 @@
 
   // Single-item fetchers for per-theme detail pages (article.html / project.html).
   function fetchArticle(id) {
-    return fetchJSON("/articles/" + encodeURIComponent(id)).then(decorateArticle);
+    return fetchJSON("/articles/" + encodeURIComponent(id))
+      .then(decorateArticle)
+      .then(hydrateArticleContent);
   }
   function fetchProject(id) {
     return fetchJSON("/projects/" + encodeURIComponent(id)).then(decorateProject);
@@ -295,6 +407,8 @@
     fetchProjects: fetchProjects,
     fetchArticle: fetchArticle,
     fetchProject: fetchProject,
+    hydrateArticleContent: hydrateArticleContent,
+    normalizeContentHtml: normalizeContentHtml,
     filterArticles: filterArticles,
     queryId: queryId,
     absUrl: absUrl,

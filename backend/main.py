@@ -204,7 +204,7 @@ def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)
     db.refresh(db_article)
     return db_article
 
-@app.get("/articles/", response_model=List[schemas.Article])
+@app.get("/articles/", response_model=List[schemas.ArticleSummary])
 def read_articles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     articles = db.query(models.Article).order_by(models.Article.created_at.desc()).offset(skip).limit(limit).all()
     return articles
@@ -248,7 +248,7 @@ def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)
     db.refresh(db_project)
     return db_project
 
-@app.get("/projects/", response_model=List[schemas.Project])
+@app.get("/projects/", response_model=List[schemas.ProjectSummary])
 def read_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     projects = db.query(models.Project).order_by(models.Project.created_at.desc()).offset(skip).limit(limit).all()
     return projects

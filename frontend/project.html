@@ -145,13 +145,9 @@
       <a href="/#portfolio" class="back-button">Back</a>
    </div>
 
+   <script src="/shared/profile.js"></script>
+   <script src="/shared/site-data.js"></script>
    <script>
-      const CJC_BLOG_API_URL = window.CJC_BLOG_API_URL || (
-         ['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:'
-            ? 'http://127.0.0.1:8000'
-            : `${window.location.origin}/api`
-      );
-
       async function loadProject() {
          const urlParams = new URLSearchParams(window.location.search);
          const projectId = urlParams.get('id');
@@ -163,9 +159,7 @@
          }
 
          try {
-            const response = await fetch(`${CJC_BLOG_API_URL}/projects/${encodeURIComponent(projectId)}`);
-            if (!response.ok) throw new Error("Project not found");
-            const project = await response.json();
+            const project = await CJCData.fetchProject(projectId);
             
             const date = new Date(project.created_at).toLocaleDateString('en-US', {
                month: 'short', day: 'numeric', year: 'numeric'
@@ -181,10 +175,10 @@
                   </div>
                </div>
                <div class="project-cover text-center" style="margin-bottom: 40px;">
-                  <img src="${project.cover_image}" alt="Cover Image" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);">
+                  <img src="${project.cover_image}" alt="${CJCData.escapeHtml(project.localTitle())}" decoding="async" fetchpriority="high" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);">
                </div>
                <div class="project-content">
-                  ${project.content || project.summary}
+                   ${CJCData.normalizeContentHtml(project.content || project.summary, '/')}
                </div>
             `;
          } catch (error) {

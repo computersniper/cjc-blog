@@ -49,7 +49,7 @@
     .nav{display:flex;gap:16px}
     .nav a{font-family:'Oswald';font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
     .nav a:hover{color:var(--ink)}
-    @media(max-width:880px){.nav{display:none}}
+    @media(max-width:880px){.nav{display:flex;gap:10px;max-width:100%;overflow-x:auto;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav a{white-space:nowrap}}
 
     section{padding:60px 0;position:relative}
     .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:26px}
@@ -441,7 +441,7 @@
   <section id="about"><div class="speed"><span style="top:20%;animation-delay:0s"></span><span style="top:60%;animation-delay:1.4s"></span></div><div class="wrap">
     <div class="sec-head"><span class="n">P01 /</span><h2 id="l-about"></h2><span class="fill"></span></div>
     <div class="about">
-      <div class="portrait"><img id="portrait" alt="Cai Jiechao portrait" /></div>
+          <div class="portrait"><img id="portrait" alt="Cai Jiechao portrait" decoding="async" /></div>
       <div>
         <div id="bio"></div>
         <span class="loc" id="loc"></span>
@@ -758,8 +758,9 @@
 
     function renderStatic(){
       document.getElementById('nav').innerHTML = [
-        ['about','nav_about'],['skills','nav_courses'],['projects','nav_portfolio'],
-        ['articles','nav_article'],['contact','nav_contact']
+        ['about','nav_about'],['education','education_bg'],['skills','core_tech'],['courses','nav_courses'],
+        ['experience','nav_internship'],['projects','nav_portfolio'],['articles','nav_article'],
+        ['certificates','nav_certificate'],['contact','nav_contact']
       ].map(([id,k])=>`<a href="#${id}">${esc(t(P.ui[k]))}</a>`).join('');
       document.getElementById('greet').textContent = t(P.greeting);
       document.getElementById('name').textContent = t(P.name);
@@ -803,7 +804,7 @@
         <ul>${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
 
       document.getElementById('certs').innerHTML=P.certificates.map(c=>`
-        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" onerror="this.src='/index_page/img/blogs/1.jpg'">
+          <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" loading="lazy" decoding="async" onerror="this.src='/index_page/img/blogs/1.jpg'">
         <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
         <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
 
@@ -853,7 +854,7 @@
       if(!list.length){ box.innerHTML=`<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
       box.innerHTML=list.map(a=>`
         <a class="card" href="${esc(a.detailHref)}">
-          <div class="cover"><span class="pod">RACE REPORT</span><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+          <div class="cover"><span class="pod">RACE REPORT</span><img src="${esc(a.cover_image||'')}" loading="lazy" decoding="async" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
           <div class="cbody">
             <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
             <h4>${esc(a.localTitle())}</h4>

@@ -147,13 +147,9 @@
    </div>
 
    <script src="./index_page/js/i18n.js"></script>
+   <script src="/shared/profile.js"></script>
+   <script src="/shared/site-data.js"></script>
    <script>
-      const CJC_BLOG_API_URL = window.CJC_BLOG_API_URL || (
-         ['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:'
-            ? 'http://127.0.0.1:8000'
-            : `${window.location.origin}/api`
-      );
-
       async function loadArticle() {
          const urlParams = new URLSearchParams(window.location.search);
          const articleId = urlParams.get('id');
@@ -161,9 +157,9 @@
          const paramLang = urlParams.get('lang');
          
          if (paramLang) {
-            localStorage.setItem('lang', paramLang);
+            CJCData.setLang(paramLang);
          }
-         const lang = localStorage.getItem('lang') || 'en';
+         const lang = CJCData.lang();
          
          // update initial UI based on lang
          const backBtn = document.querySelector('.back-button');
@@ -181,16 +177,15 @@
          }
 
          try {
-            const response = await fetch(`${CJC_BLOG_API_URL}/articles/${encodeURIComponent(articleId)}`);
-            if (!response.ok) throw new Error("Article not found");
-            const article = await response.json();
+            const article = await CJCData.fetchArticle(articleId);
             
             const date = new Date(article.created_at).toLocaleDateString('en-US', {
                month: 'short', day: 'numeric', year: 'numeric'
             });
 
             const title = lang === 'zh' && article.title_zh ? article.title_zh : article.title;
-            const content = lang === 'zh' && article.content_zh ? article.content_zh : (article.content || article.summary);
+            const rawContent = lang === 'zh' && article.content_zh ? article.content_zh : (article.content || article.summary);
+            const content = CJCData.normalizeContentHtml(rawContent, article.contentBaseUrl || article.readUrl || '/');
             const category = lang === 'zh' && article.category_zh ? article.category_zh : article.category;
 
             wrapper.innerHTML = `
@@ -202,7 +197,7 @@
                   </div>
                </div>
                <div class="article-cover text-center" style="margin-bottom: 40px;">
-                  <img src="${article.cover_image}" alt="Cover Image" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);" onerror="this.style.display='none'">
+                  <img src="${article.cover_image}" alt="${CJCData.escapeHtml(title)}" decoding="async" fetchpriority="high" style="max-height:450px; width:100%; object-fit:cover; border-radius:10px; box-shadow: 0 6px 15px rgba(0,0,0,0.15);" onerror="this.style.display='none'">
                </div>
                <div class="article-content">
                   ${content}

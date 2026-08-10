@@ -18,7 +18,7 @@
     .topbar .inner{display:flex;align-items:center;justify-content:space-between;height:56px}
     .brand{font-weight:900;letter-spacing:-.02em;font-size:18px;text-decoration:none}
     .brand b{color:var(--red)}
-    .topbar .to-gallery{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);text-decoration:none}
+    .topbar .to-gallery{display:none}.gallery-link{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}.gallery-link:hover{color:var(--red)}.detail-nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.detail-navlinks{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}.detail-navlinks a,.lang-btn{min-height:44px;display:inline-flex;align-items:center;font:700 11px inherit;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;border:1px solid var(--ink);padding:8px;background:transparent;cursor:pointer}.detail-navlinks a:hover,.lang-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
 
     main{padding:48px 0 80px}
     /* ---- shared detail structure (.cjc-d-*) styled Swiss ---- */
@@ -42,12 +42,12 @@
     .cjc-d-nav{margin-top:44px;padding-top:20px;border-top:2px solid var(--ink)}
     .cjc-d-back{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none}
     .cjc-d-back:hover{color:var(--red)}
-    @media(max-width:600px){ .cjc-d-body{padding:22px 20px} }
+    @media(max-width:760px){.detail-navlinks{display:none}.detail-nav{justify-content:space-between}}@media(max-width:600px){ .cjc-d-body{padding:22px 20px} }@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
   </style>
 </head>
 <body>
-  <div class="topbar"><div class="container inner">
-    <a class="brand" href="./">Cai<b>Jiechao</b></a>
+  <div class="topbar"><div class="container inner detail-nav">
+    <a class="brand" href="./">Cai<b>Jiechao</b></a><nav class="detail-navlinks" aria-label="Primary"><a href="./#about">About</a><a href="./#courses">Courses</a><a href="./#projects">Projects</a><a href="./#articles">Articles</a><a href="./#certificates">Certificates</a><a href="./#experience">Experience</a><a href="./#contact">Contact</a></nav><button class="lang-btn" id="langBtn" type="button">中文</button><a class="gallery-link" href="/themes.html">Themes &rarr;</a>
     <a class="to-gallery" href="/themes.html">Themes ↗</a>
   </div></div>
   <main><div class="container"><div id="detail"></div></div></main>
@@ -58,8 +58,8 @@
   <script src="/shared/detail.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      CJCData.setTheme(window.THEME_ID);
-      CJCData.mountDetail({ kind: "article", mount: "#detail", accent: "#e2231a", backHref: "./" });
+      CJCData.setTheme(window.THEME_ID); var b=document.getElementById('langBtn'); b.textContent=CJCData.lang()==='en'?'中文':'EN'; b.addEventListener('click',CJCData.toggleLang); CJCData.onLang(function(l){b.textContent=l==='en'?'中文':'EN'});
+      CJCData.mountDetail({ kind: "article", mount: "#detail", accent: "#e2231a", backHref: "./#articles" });
     });
   </script>
 </body>

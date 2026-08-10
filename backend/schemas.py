@@ -62,6 +62,20 @@ class Article(ArticleBase):
     class Config:
         from_attributes = True
 
+class ArticleSummary(BaseModel):
+    id: int
+    title: str
+    title_zh: Optional[str] = ""
+    category: str
+    summary: str
+    summary_zh: Optional[str] = ""
+    cover_image: str
+    read_url: Optional[str] = "#"
+    created_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
 class ProjectBase(BaseModel):
     title: str
     title_zh: Optional[str] = ""
@@ -81,6 +95,20 @@ class ProjectUpdate(ProjectBase):
 
 class Project(ProjectBase):
     id: int
+    created_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+class ProjectSummary(BaseModel):
+    id: int
+    title: str
+    title_zh: Optional[str] = ""
+    category: str
+    summary: str
+    summary_zh: Optional[str] = ""
+    cover_image: str
+    tech_stack: Optional[str] = None
     created_at: datetime.datetime
 
     class Config:

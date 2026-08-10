@@ -168,7 +168,7 @@
   <section id="about"><div class="container">
     <div class="sec-head"><span class="sec-num">01</span><span class="sec-label" id="l-about"></span></div>
     <div class="grid about-grid">
-      <img class="portrait" id="portrait" alt="Cai Jiechao" />
+      <img class="portrait" id="portrait" alt="Cai Jiechao" loading="lazy" decoding="async" />
       <div class="about-text" id="about-text"></div>
     </div>
   </div></section>
@@ -299,7 +299,7 @@
         ${x.bullets.map(b=>`<li>${esc(t(b))}</li>`).join('')}</ul></div></div>`).join('');
       // certificates
       document.getElementById('certs-list').innerHTML = P.certificates.map(c=>`
-        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}">
+        <div class="cert"><img src="${esc(c.image)}" alt="${esc(t(c.title))}" loading="lazy" decoding="async">
         <div class="ct"><div class="meta"><span>${esc(t(c.tag))}</span><span>${esc(t(c.date))}</span></div>
         <h4>${esc(t(c.title))}</h4><p>${esc(t(c.desc))}</p></div></div>`).join('');
       // contact
@@ -334,7 +334,7 @@
       if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
       box.className='grid cards';
       box.innerHTML = projects.map(p=>`
-        <a class="card" href="${esc(p.href)}">
+        <a class="card" href="${esc(p.detailHref)}">
           <div class="cbody">
             <div class="ctag"><span>${esc(t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
             <h4>${esc(p.localTitle())}</h4>
@@ -349,8 +349,8 @@
       const list = CJCData.filterArticles(articles, filterKey);
       if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
       box.innerHTML = list.map(a=>`
-        <a class="card" href="${esc(a.href)}">
-          <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
+        <a class="card" href="${esc(a.detailHref)}">
+          <div class="cover"><img src="${esc(a.cover_image||'')}" loading="lazy" decoding="async" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
           <div class="cbody">
             <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
             <h4>${esc(a.localTitle())}</h4>

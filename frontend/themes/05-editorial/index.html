@@ -44,6 +44,8 @@
     .mast nav a{font-family:"Source Serif 4",serif;text-transform:uppercase;letter-spacing:.16em;
       font-size:11.5px;font-weight:600;text-decoration:none;color:var(--grey);padding-bottom:2px;
       border-bottom:1px solid transparent;transition:.2s}
+    .lang-toggle{min-width:44px;min-height:44px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:600 11px "Source Serif 4",serif;letter-spacing:.08em;cursor:pointer}
+    .lang-toggle:hover{background:var(--accent);border-color:var(--accent);color:var(--paper)}
     .mast nav a:hover{color:var(--accent);border-color:var(--accent)}
     @media(max-width:860px){.mast nav{display:none}}
 
@@ -218,6 +220,7 @@
     <div class="wrap row">
       <a class="logo" href="#top">Cai<i>Jiechao</i></a>
       <nav id="nav"></nav>
+      <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">中 / EN</button>
     </div>
   </header>
 
@@ -437,7 +440,7 @@
       const box = document.getElementById('projects-list');
       if(!projects.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_projects))}</div>`; return; }
       box.innerHTML = projects.map(p=>`
-        <a class="card" href="${esc(p.href)}">
+        <a class="card" href="${esc(p.detailHref)}">
           <div class="ctag"><span>${esc(p.tech_stack||t(P.ui.tech_stack))}</span><span>${esc(p.dateText())}</span></div>
           <h4>${esc(p.localTitle())}</h4>
           <p>${esc(p.localSummary()||'')}</p>
@@ -449,7 +452,7 @@
       const list = CJCData.filterArticles(articles, filterKey);
       if(!list.length){ box.innerHTML = `<div class="load-note">${esc(t(P.ui.no_articles))}</div>`; return; }
       box.innerHTML = list.map(a=>`
-        <a class="card" href="${esc(a.href)}">
+        <a class="card" href="${esc(a.detailHref)}">
           <div class="cover"><img src="${esc(a.cover_image||'')}" onerror="this.src='/index_page/img/blogs/1.jpg'" alt=""></div>
           <div class="ctag"><span>${esc(a.category||'')}</span><span>${esc(a.dateText())}</span></div>
           <h4>${esc(a.localTitle())}</h4>
@@ -480,8 +483,10 @@
     document.addEventListener('DOMContentLoaded', ()=>{
       CJCData.setTheme(window.THEME_ID);
       renderStatic();
+      const langButton = document.getElementById('lang-toggle');
+      if (langButton) { langButton.textContent = CJCData.lang()==='zh' ? 'EN / 中' : '中 / EN'; langButton.addEventListener('click', ()=>CJCData.toggleLang()); }
       CJCData.mountSwitcher({ accent:'#b8433a' });
-      CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
+      CJCData.onLang(()=>{ if(langButton) langButton.textContent = CJCData.lang()==='zh' ? 'EN / 中' : '中 / EN'; renderStatic(); renderProjects(); renderArticles(); });
       loadDynamic();
     });
   })();

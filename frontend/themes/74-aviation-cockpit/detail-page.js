@@ -5,6 +5,7 @@
   const safe = CJCData.escapeHtml;
   const mount = document.getElementById("detail");
   let titleFocused = false;
+  let clockTimer = null;
 
   const copy = {
     en: {
@@ -175,8 +176,10 @@
     const id = rawId ? String(rawId).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 12) : "---";
     if (record) record.textContent = `CJC-074-${kind === "project" ? "P" : "L"}${id.padStart(3, "0")}`;
     localize();
-    updateClock();
-    window.setInterval(updateClock, 1000);
+    if (!clockTimer) {
+      updateClock();
+      clockTimer = window.setInterval(updateClock, 1000);
+    }
     CJCData.onLang(localize);
     new MutationObserver(enhanceDetail).observe(mount, { childList: true, subtree: true });
     CJCData.mountDetail({
