@@ -368,7 +368,7 @@
         schedule: project.dateText ? project.dateText({ month: "short", year: "numeric" }) : "2026",
         gate: (project.tech_stack || "WEB").split(",")[0].slice(0, 12),
         status: x.open,
-        href: project.href,
+        href: project.detailHref,
       }));
     }
     if (boardMode === "articles") {
@@ -378,7 +378,7 @@
         schedule: article.dateText ? article.dateText({ month: "short", day: "numeric" }) : "FILED",
         gate: (article.category || "NOTE").slice(0, 12),
         status: x.open,
-        href: article.href,
+        href: article.detailHref,
       }));
     }
     return P.certificates.map((certificate, index) => ({
@@ -471,7 +471,7 @@
       const gate = `A${String((index % 9) + 1).padStart(2, "0")}`;
       const seat = `${String(index + 1).padStart(2, "0")}A`;
       const date = project.dateText ? project.dateText({ month: "short", year: "numeric" }) : "2026";
-      return `<a class="project-card boarding-pass reveal" href="${safe(project.href)}" aria-label="${safe(`${x.viewProject}: ${project.localTitle()}`)}">
+      return `<a class="project-card boarding-pass reveal" href="${safe(project.detailHref)}" aria-label="${safe(`${x.viewProject}: ${project.localTitle()}`)}">
         <div class="boarding-main">
           <div class="pass-header"><span>${safe(x.boardingPass)}</span><strong>${safe(flightNumber)}</strong></div>
           <figure class="project-image"><img src="${safe(project.cover_image || "/index_page/img/blogs/1.jpg")}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/index_page/img/blogs/1.jpg'" alt="${safe(project.localTitle())}"><figcaption class="project-flight">${safe(flightNumber)}</figcaption></figure>
@@ -510,7 +510,7 @@
     else body = `<div class="article-grid">${list.map((article) => `<article class="article-card reveal">
       <div class="article-meta">${safe(article.category || "LOG")} / ${safe(article.dateText())}</div>
       <img src="${safe(article.cover_image || "/index_page/img/blogs/1.jpg")}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/index_page/img/blogs/1.jpg'" alt="${safe(article.localTitle())}">
-      <h3>${safe(article.localTitle())}</h3><p>${safe(article.localSummary() || "")}</p><a href="${safe(article.href)}">${safe(x.read)} →</a>
+      <h3>${safe(article.localTitle())}</h3><p>${safe(article.localSummary() || "")}</p><a href="${safe(article.detailHref)}">${safe(x.read)} →</a>
     </article>`).join("")}</div>`;
     return `<section class="section dark" id="journal"><div class="shell">${sectionHead(6, x.journal, x.journalLead)}
       <div class="filters" aria-label="Article categories">${P.articleFilters.map((item) => `<button type="button" class="filter-button${filter === item.key ? " active" : ""}" data-filter="${safe(item.key)}" aria-pressed="${String(filter === item.key)}">${safe(t(item.label))}</button>`).join("")}</div>${body}

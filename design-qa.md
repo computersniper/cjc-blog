@@ -91,3 +91,18 @@ Date: 2026-08-07
 - Kept all reference and QA screenshots out of the production bundle; real shipped imagery is stored locally with asset-license documentation.
 
 final result: passed
+
+## Theme-local detail pages and Classic parity
+
+Date: 2026-08-10
+
+- Added independent project and article detail pages for `54-f1`, `74-aviation-cockpit`, `75-ming-palace`, and `76-jinyiwei`; every homepage card and aviation split-flap row now stays inside its selected theme.
+- Preserved the four visual languages on full records: F1 telemetry, aviation flight deck, Ming court register, and Jinyiwei restricted archive.
+- Kept the Classic site's portfolio coverage on each homepage: projects, filterable articles, certificates, CV, email, phone, GitHub, WeChat, contact form, bilingual content, and theme switching.
+- Added theme-aware back links, URL language handling, loading/missing/error states, retry actions, accessible focus and live regions, rich-content overflow protection, 44 px controls, mobile navigation where required, and reduced-motion handling.
+- Parsed 13 inline scripts and checked six changed JavaScript files with Node; the Vite production build and targeted `git diff --check` passed.
+- Browser-tested all eight detail routes with valid project `3` and article `12` fixtures at 1440 x 900 and 375 x 812. Every route loaded its localized title, returned to the correct themed section, had zero horizontal overflow, zero broken images, and no browser errors.
+- Browser-tested all four homepages at 375 x 812. Each exposed theme-local project/article links, CV, email, phone, GitHub, WeChat, and responsive content with zero horizontal overflow or broken images.
+- Confirmed the shared language control re-rendered a loaded F1 article from English to Chinese, and confirmed the Ming/Jinyiwei mobile directories expanded with correct `aria-expanded` state.
+
+final result: passed

@@ -7,6 +7,7 @@
   var projects = [];
   var articles = [];
   var filterKey = "all";
+  var loadState = { projects: "loading", articles: "loading" };
   var observer;
 
   var copy = {
@@ -42,6 +43,11 @@
       open: "Inspect work",
       read: "Open memorial",
       fail: "The archive is temporarily unavailable. Please return shortly.",
+      retry: "Retry archive",
+      noProjects: "No works are recorded in this hall yet.",
+      noArticles: "No memorials have been entered in the archive yet.",
+      menu: "Open court directory",
+      closeMenu: "Close court directory",
       name: "Your name",
       email: "Email address",
       message: "Your message",
@@ -82,6 +88,11 @@
       open: "查阅作品",
       read: "展开奏议",
       fail: "档案暂时无法调取，请稍后再来。",
+      retry: "重新调取",
+      noProjects: "造物之殿尚未录入作品。",
+      noArticles: "奏议文库尚未收录文章。",
+      menu: "展开宫门导览",
+      closeMenu: "收起宫门导览",
       name: "尊姓大名",
       email: "电子信函",
       message: "来函正文",
@@ -131,10 +142,14 @@
 
   function projectSection() {
     var x = L();
-    var body = projects.length ? '<div class="project-grid reveal">' + projects.map(function (p) {
+    var body;
+    if (loadState.projects === "loading") body = '<div class="archive-state is-loading" role="status"><span class="state-mark" aria-hidden="true"></span><p>' + esc(t(P.ui.loading_projects)) + '</p></div>';
+    else if (loadState.projects === "error") body = '<div class="archive-state is-error" role="alert"><p>' + esc(x.fail) + '</p><button class="button" type="button" data-retry="projects">' + esc(x.retry) + '</button></div>';
+    else if (!projects.length) body = '<div class="archive-state is-empty"><span class="empty-seal" aria-hidden="true">空</span><p>' + esc(x.noProjects) + '</p></div>';
+    else body = '<div class="project-grid reveal">' + projects.map(function (p) {
       var cover = p.cover_image || "/index_page/img/blogs/1.jpg";
-      return '<a class="project-card" href="' + esc(p.href) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(p.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(p.dateText()) + ' · ' + esc(p.tech_stack || t(P.ui.tech_stack)) + '</div><h3>' + esc(p.localTitle()) + '</h3><p>' + esc(p.localSummary() || "") + '</p><span class="card-link">' + esc(x.open) + ' →</span></div></a>';
-    }).join("") + '</div>' : '<p class="loading">' + esc(t(P.ui.loading_projects)) + '</p>';
+      return '<a class="project-card" href="' + esc(p.detailHref) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(p.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(p.dateText()) + ' · ' + esc(p.tech_stack || t(P.ui.tech_stack)) + '</div><h3>' + esc(p.localTitle()) + '</h3><p>' + esc(p.localSummary() || "") + '</p><span class="card-link">' + esc(x.open) + ' →</span></div></a>';
+    }).join("") + '</div>';
     return '<section class="content" id="projects"><div class="frame">' + head("projects", 4) + body + '</div></section>';
   }
 
@@ -142,13 +157,15 @@
     var x = L();
     var visible = CJCData.filterArticles(articles, filterKey);
     var body;
-    if (!articles.length) body = '<p class="loading">' + esc(t(P.ui.loading_articles)) + '</p>';
+    if (loadState.articles === "loading") body = '<div class="archive-state is-loading" role="status"><span class="state-mark" aria-hidden="true"></span><p>' + esc(t(P.ui.loading_articles)) + '</p></div>';
+    else if (loadState.articles === "error") body = '<div class="archive-state is-error" role="alert"><p>' + esc(x.fail) + '</p><button class="button" type="button" data-retry="articles">' + esc(x.retry) + '</button></div>';
+    else if (!articles.length) body = '<div class="archive-state is-empty"><span class="empty-seal" aria-hidden="true">空</span><p>' + esc(x.noArticles) + '</p></div>';
     else if (!visible.length) body = '<p class="loading">' + esc(t(P.ui.no_articles)) + '</p>';
     else body = '<div class="article-grid reveal">' + visible.map(function (a) {
       var cover = a.cover_image || "/index_page/img/blogs/1.jpg";
-      return '<a class="article-card" href="' + esc(a.href) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || "ARCHIVE") + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
+      return '<a class="article-card" href="' + esc(a.detailHref) + '"><img loading="lazy" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || "ARCHIVE") + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
     }).join("") + '</div>';
-    return '<section class="content" id="articles"><div class="frame">' + head("articles", 5) + '<div class="filters">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + esc(f.key) + '" class="' + (filterKey === f.key ? "active" : "") + '">' + esc(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
+    return '<section class="content" id="articles"><div class="frame">' + head("articles", 5) + '<div class="filters" aria-label="Article categories">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + esc(f.key) + '" aria-pressed="' + String(filterKey === f.key) + '" class="' + (filterKey === f.key ? "active" : "") + '">' + esc(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
   }
 
   function certificates() {
@@ -168,6 +185,8 @@
     document.querySelector(".skip").textContent = x.skip;
     document.getElementById("brand").textContent = P.brand;
     document.getElementById("nav").innerHTML = x.nav.map(function (item) { return '<a href="#' + esc(item[0]) + '">' + esc(item[1]) + '</a>'; }).join("");
+    var navToggleLabel = document.querySelector(".nav-toggle-label");
+    if (navToggleLabel) navToggleLabel.textContent = x.menu;
     document.getElementById("main").innerHTML = hero() + about() + studies() + experience() + projectSection() + articleSection() + certificates() + contact();
     document.getElementById("footer-brand").textContent = P.brand + " · 75";
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
@@ -177,6 +196,17 @@
   }
 
   function wire() {
+    var navToggle = document.getElementById("nav-toggle");
+    var nav = document.getElementById("nav");
+    if (navToggle && nav) {
+      navToggle.onclick = function () {
+        var open = navToggle.getAttribute("aria-expanded") !== "true";
+        navToggle.setAttribute("aria-expanded", String(open));
+        nav.classList.toggle("is-open", open);
+        navToggle.querySelector(".nav-toggle-label").textContent = open ? L().closeMenu : L().menu;
+      };
+      nav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { navToggle.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); }); });
+    }
     var gateButton = document.querySelector("[data-open-palace]");
     if (gateButton) gateButton.addEventListener("click", function () {
       var heroNode = document.querySelector(".hero");
@@ -187,6 +217,9 @@
     });
     document.querySelectorAll("[data-filter]").forEach(function (button) {
       button.addEventListener("click", function () { filterKey = button.dataset.filter; render(); });
+    });
+    document.querySelectorAll("[data-retry]").forEach(function (button) {
+      button.addEventListener("click", function () { loadContent(button.dataset.retry); });
     });
     var form = document.getElementById("contact-form");
     if (form) form.addEventListener("submit", async function (event) {
@@ -205,6 +238,21 @@
     });
   }
 
+  function loadContent(kind) {
+    loadState[kind] = "loading";
+    render();
+    var request = kind === "projects" ? CJCData.fetchProjects() : CJCData.fetchArticles();
+    return request.then(function (items) {
+      if (kind === "projects") projects = items || [];
+      else articles = items || [];
+      loadState[kind] = "ready";
+      render();
+    }).catch(function () {
+      loadState[kind] = "error";
+      render();
+    });
+  }
+
   function observe() {
     var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) { document.querySelectorAll(".reveal").forEach(function (node) { node.classList.add("in"); }); return; }
@@ -218,9 +266,6 @@
     render();
     CJCData.mountSwitcher({ accent: "#8f1719" });
     CJCData.onLang(render);
-    try {
-      var results = await Promise.all([CJCData.fetchProjects(), CJCData.fetchArticles()]);
-      projects = results[0]; articles = results[1]; render();
-    } catch (error) { document.querySelectorAll(".loading").forEach(function (node) { node.textContent = L().fail; }); }
+    await Promise.allSettled([loadContent("projects"), loadContent("articles")]);
   });
 })();

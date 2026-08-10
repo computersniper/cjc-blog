@@ -4,6 +4,7 @@
   var t = CJCData.t.bind(CJCData);
   var e = CJCData.escapeHtml;
   var projects = [], articles = [], filter = "all", observer;
+  var loadState = { projects: "loading", articles: "loading" };
   var copy = {
     en: {
       nav: [["profile", "Subject"], ["training", "Training"], ["missions", "Missions"], ["reports", "Reports"], ["contact", "Channel"]],
@@ -30,7 +31,7 @@
       reports: "Intelligence Reports", reportsLead: "Filtered technical writing and research notes from the live archive.",
       awards: "Commendation Register", awardsLead: "Certificates and milestones retained as verifiable evidence.",
       contact: "Secure Channel", contactLead: "Open a direct channel for software, agent systems, or collaboration.",
-      inspect: "Inspect file", read: "Read report", fail: "Archive link unavailable. Retry shortly.",
+      inspect: "Inspect file", read: "Read report", fail: "Archive link unavailable. Retry shortly.", retry: "Retry link", noProjects: "No mission files have been authorized yet.", noArticles: "No intelligence reports have been filed yet.", menu: "Open archive index", closeMenu: "Close archive index",
       name: "Contact name", email: "Return address", message: "Message / intelligence", send: "Transmit", sending: "Encrypting and transmitting…", sent: "Transmission received.", skip: "Skip to content"
     },
     zh: {
@@ -58,7 +59,7 @@
       reports: "缇骑密报", reportsLead: "来自实时档案、可按类别筛选的技术文章与研究札记。",
       awards: "勘合功册", awardsLead: "将证书与里程碑作为可核验的证据留档。",
       contact: "密线联络", contactLead: "就软件、智能体系统或未来合作开启一条直接通道。",
-      inspect: "查阅案卷", read: "读取密报", fail: "档案线路暂不可用，请稍后重试。",
+      inspect: "查阅案卷", read: "读取密报", fail: "档案线路暂不可用，请稍后重试。", retry: "重连线路", noProjects: "行动案卷尚未获准入档。", noArticles: "缇骑密报尚未录入。", menu: "展开密档目录", closeMenu: "收起密档目录",
       name: "联络人姓名", email: "回信地址", message: "来函 / 情报", send: "加密传递", sending: "正在加密传递……", sent: "传递已经收讫。", skip: "跳至正文"
     }
   };
@@ -87,16 +88,22 @@
 
   function projectSection() {
     var x = L();
-    var body = projects.length ? '<div class="file-grid reveal">' + projects.map(function (p, i) { var cover = p.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(p.href) + '"><img loading="lazy" src="' + e(cover) + '" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(p.localTitle()) + '"><div class="file-copy"><div class="file-meta">MISSION_' + String(i + 1).padStart(2, "0") + ' · ' + e(p.dateText()) + '</div><h3>' + e(p.localTitle()) + '</h3><p>' + e(p.localSummary() || "") + '</p><span class="file-action">' + e(x.inspect) + ' →</span></div></a>'; }).join("") + '</div>' : '<p class="loading">' + e(t(P.ui.loading_projects)) + '</p>';
+    var body;
+    if (loadState.projects === "loading") body = '<div class="archive-state is-loading" role="status"><span class="state-mark" aria-hidden="true"></span><p>' + e(t(P.ui.loading_projects)) + '</p></div>';
+    else if (loadState.projects === "error") body = '<div class="archive-state is-error" role="alert"><p>' + e(x.fail) + '</p><button class="action" type="button" data-retry="projects">' + e(x.retry) + '</button></div>';
+    else if (!projects.length) body = '<div class="archive-state is-empty"><span class="empty-stamp" aria-hidden="true">空卷</span><p>' + e(x.noProjects) + '</p></div>';
+    else body = '<div class="file-grid reveal">' + projects.map(function (p, i) { var cover = p.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(p.detailHref) + '"><img loading="lazy" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(p.localTitle()) + '"><div class="file-copy"><div class="file-meta">MISSION_' + String(i + 1).padStart(2, "0") + ' · ' + e(p.dateText()) + '</div><h3>' + e(p.localTitle()) + '</h3><p>' + e(p.localSummary() || "") + '</p><span class="file-action">' + e(x.inspect) + ' →</span></div></a>'; }).join("") + '</div>';
     return '<section class="section" id="missions"><div class="wrap">' + head("projects", 4) + body + '</div></section>';
   }
 
   function reportSection() {
     var x = L(), list = CJCData.filterArticles(articles, filter), body;
-    if (!articles.length) body = '<p class="loading">' + e(t(P.ui.loading_articles)) + '</p>';
+    if (loadState.articles === "loading") body = '<div class="archive-state is-loading" role="status"><span class="state-mark" aria-hidden="true"></span><p>' + e(t(P.ui.loading_articles)) + '</p></div>';
+    else if (loadState.articles === "error") body = '<div class="archive-state is-error" role="alert"><p>' + e(x.fail) + '</p><button class="action" type="button" data-retry="articles">' + e(x.retry) + '</button></div>';
+    else if (!articles.length) body = '<div class="archive-state is-empty"><span class="empty-stamp" aria-hidden="true">空卷</span><p>' + e(x.noArticles) + '</p></div>';
     else if (!list.length) body = '<p class="loading">' + e(t(P.ui.no_articles)) + '</p>';
-    else body = '<div class="file-grid reveal">' + list.map(function (a, i) { var cover = a.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(a.href) + '"><img loading="lazy" src="' + e(cover) + '" onerror="this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(a.localTitle()) + '"><div class="file-copy"><div class="file-meta">REPORT_' + String(i + 1).padStart(2, "0") + ' · ' + e(a.category || "INTEL") + ' · ' + e(a.dateText()) + '</div><h3>' + e(a.localTitle()) + '</h3><p>' + e(a.localSummary() || "") + '</p><span class="file-action">' + e(x.read) + ' →</span></div></a>'; }).join("") + '</div>';
-    return '<section class="section" id="reports"><div class="wrap">' + head("reports", 5) + '<div class="filters">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + e(f.key) + '" class="' + (filter === f.key ? "active" : "") + '">' + e(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
+    else body = '<div class="file-grid reveal">' + list.map(function (a, i) { var cover = a.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(a.detailHref) + '"><img loading="lazy" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(a.localTitle()) + '"><div class="file-copy"><div class="file-meta">REPORT_' + String(i + 1).padStart(2, "0") + ' · ' + e(a.category || "INTEL") + ' · ' + e(a.dateText()) + '</div><h3>' + e(a.localTitle()) + '</h3><p>' + e(a.localSummary() || "") + '</p><span class="file-action">' + e(x.read) + ' →</span></div></a>'; }).join("") + '</div>';
+    return '<section class="section" id="reports"><div class="wrap">' + head("reports", 5) + '<div class="filters" aria-label="Report categories">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + e(f.key) + '" aria-pressed="' + String(filter === f.key) + '" class="' + (filter === f.key ? "active" : "") + '">' + e(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
   }
 
   function awards() {
@@ -114,6 +121,8 @@
     document.querySelector(".skip").textContent = x.skip;
     document.getElementById("brand").textContent = P.brand;
     document.getElementById("nav").innerHTML = x.nav.map(function (v) { return '<a href="#' + e(v[0]) + '">' + e(v[1]) + '</a>'; }).join("");
+    var navToggleLabel = document.querySelector(".nav-toggle-label");
+    if (navToggleLabel) navToggleLabel.textContent = x.menu;
     document.getElementById("main").innerHTML = hero() + profile() + training() + mission() + projectSection() + reportSection() + awards() + contact();
     document.getElementById("footer-brand").textContent = P.brand + " · ARCHIVE 76";
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
@@ -122,12 +131,19 @@
   }
 
   function wire() {
+    var navToggle = document.getElementById("nav-toggle"), nav = document.getElementById("nav");
+    if (navToggle && nav) {
+      navToggle.onclick = function () { var open = navToggle.getAttribute("aria-expanded") !== "true"; navToggle.setAttribute("aria-expanded", String(open)); nav.classList.toggle("is-open", open); navToggle.querySelector(".nav-toggle-label").textContent = open ? L().closeMenu : L().menu; };
+      nav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { navToggle.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); }); });
+    }
     var unseal = document.querySelector("[data-unseal]");
     if (unseal) unseal.addEventListener("click", function () { var heroNode = document.querySelector(".hero"), open = !heroNode.classList.contains("archive-open"); heroNode.classList.toggle("archive-open", open); unseal.setAttribute("aria-pressed", String(open)); unseal.textContent = open ? L().seal : L().unseal; });
     document.querySelectorAll("[data-filter]").forEach(function (button) { button.addEventListener("click", function () { filter = button.dataset.filter; render(); }); });
+    document.querySelectorAll("[data-retry]").forEach(function (button) { button.addEventListener("click", function () { loadContent(button.dataset.retry); }); });
     var form = document.getElementById("contact-form");
     if (form) form.addEventListener("submit", async function (event) { event.preventDefault(); var status = document.getElementById("status"), button = form.querySelector("button[type=submit]"); button.disabled = true; status.textContent = L().sending; try { var result = await CJCData.sendContact({ name: form.name.value, email: form.email.value, message: form.message.value, website: form.website.value }); status.textContent = result.message || L().sent; form.reset(); } catch (error) { status.textContent = error.message || L().fail; } finally { button.disabled = false; } });
   }
+  function loadContent(kind) { loadState[kind] = "loading"; render(); var request = kind === "projects" ? CJCData.fetchProjects() : CJCData.fetchArticles(); return request.then(function (items) { if (kind === "projects") projects = items || []; else articles = items || []; loadState[kind] = "ready"; render(); }).catch(function () { loadState[kind] = "error"; render(); }); }
   function observe() { if (matchMedia("(prefers-reduced-motion: reduce)").matches) { document.querySelectorAll(".reveal").forEach(function (n) { n.classList.add("in"); }); return; } if (observer) observer.disconnect(); observer = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("in"); observer.unobserve(entry.target); } }); }, { threshold: .1 }); document.querySelectorAll(".reveal").forEach(function (n) { observer.observe(n); }); }
-  document.addEventListener("DOMContentLoaded", async function () { CJCData.setTheme(window.THEME_ID); render(); CJCData.mountSwitcher({ accent: "#a91f24" }); CJCData.onLang(render); try { var result = await Promise.all([CJCData.fetchProjects(), CJCData.fetchArticles()]); projects = result[0]; articles = result[1]; render(); } catch (error) { document.querySelectorAll(".loading").forEach(function (n) { n.textContent = L().fail; }); } });
+  document.addEventListener("DOMContentLoaded", async function () { CJCData.setTheme(window.THEME_ID); render(); CJCData.mountSwitcher({ accent: "#a91f24" }); CJCData.onLang(render); await Promise.allSettled([loadContent("projects"), loadContent("articles")]); });
 })();
