@@ -7,27 +7,70 @@
   <meta name="description" content="Cai Jiechao aviation cockpit journal record">
   <title>Journal record · CJC Flight Deck 74</title>
   <link rel="icon" href="/index_page/img/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./detail.css">
 </head>
 <body class="detail-page" data-kind="article">
-  <a class="skip-link" href="#detail">Skip to journal record</a>
+  <a class="skip-link" href="#detail" data-copy="skipArticle">Skip to journal record</a>
   <header class="site-header detail-header">
     <a class="brand" href="./" aria-label="CJC Flight Deck 74 home">
       <span class="brand-mark" aria-hidden="true">CJC</span>
       <span class="brand-copy"><strong>Flight Deck 74</strong><small data-copy="systems">Systems online</small></span>
     </a>
-    <nav class="top-nav detail-nav" aria-label="Primary navigation">
+    <nav class="top-nav detail-nav" aria-label="Primary navigation" data-aria-copy="primaryNav">
       <a href="./" data-copy="home">Home</a>
+      <a href="./#profile" data-copy="profile">Crew</a>
+      <a href="./#training" data-copy="training">Training</a>
+      <a href="./#experience" data-copy="experience">Logbook</a>
+      <a href="./#departures" data-copy="departures">Departures</a>
       <a href="./#projects" data-copy="projects">Projects</a>
       <a href="./#journal" aria-current="page" data-copy="journal">Journal</a>
+      <a href="./#certificates" data-copy="certificates">Credentials</a>
       <a href="./#contact" data-copy="contact">Contact</a>
-      <a href="/themes.html" data-copy="themes">Themes</a>
     </nav>
   </header>
   <main class="aviation-detail-main" id="main-content">
-    <div class="route-strip" aria-hidden="true"><span>ROUTE</span><b>CJC / JOURNAL</b><span>STATUS</span><b class="status-ok">FILED</b></div>
-    <div id="detail" class="detail-mount" aria-live="polite"></div>
+    <section class="flight-record-hero" aria-labelledby="record-heading">
+      <div class="route-strip"><span data-copy="route">Route</span><b data-copy="articleRoute">CJC / Journal archive</b><span data-copy="status">Status</span><b class="status-ok" data-copy="filed">Filed</b></div>
+      <div class="record-hero-grid">
+        <div class="record-intro">
+          <p class="record-kicker" data-copy="flightRecord">Flight record</p>
+          <h2 id="record-heading" data-copy="articleRecord">Flight journal record</h2>
+          <p data-copy="articleLead">A complete field note from software engineering, AI systems, and the craft of building.</p>
+        </div>
+        <div class="record-ticket" aria-label="Flight record identifier" data-aria-copy="recordIdentifier">
+          <span data-copy="recordNumber">Record number</span><strong id="record-number">CJC-074-L---</strong>
+          <span class="barcode" aria-hidden="true"></span>
+        </div>
+      </div>
+      <dl class="instrument-bank">
+        <div><dt>UTC</dt><dd id="detail-utc">--:--:--</dd></div>
+        <div><dt data-copy="system">System</dt><dd data-copy="online">Online</dd></div>
+        <div><dt data-copy="recordType">Record type</dt><dd data-copy="article">Journal</dd></div>
+        <div><dt data-copy="language">Language</dt><dd id="detail-language">EN</dd></div>
+      </dl>
+    </section>
+    <div class="record-layout">
+      <aside class="record-sidebar" aria-label="Record route and contact channels" data-aria-copy="sidebarLabel">
+        <section class="route-card">
+          <p class="side-kicker" data-copy="routePlan">Route plan</p>
+          <dl>
+            <div><dt data-copy="origin">Origin</dt><dd>FLIGHT DECK 74</dd></div>
+            <div><dt data-copy="destination">Destination</dt><dd data-copy="journalArchive">JOURNAL ARCHIVE</dd></div>
+            <div><dt data-copy="clearance">Clearance</dt><dd class="status-ok" data-copy="filed">FILED</dd></div>
+          </dl>
+          <a class="sidebar-back" href="./#journal" data-copy="backJournal">Back to journal</a>
+        </section>
+        <section class="channel-card">
+          <p class="side-kicker" data-copy="channels">Communication channels</p>
+          <div id="detail-channels" class="detail-channels"></div>
+        </section>
+      </aside>
+      <div id="detail" class="detail-mount" aria-live="polite"></div>
+    </div>
   </main>
   <footer class="site-footer detail-footer"><div class="shell"><strong>CJC / FLIGHT DECK 74</strong><a href="./#contact" data-copy="openChannel">Open communication channel</a></div></footer>
   <script>window.THEME_ID = "74-aviation-cockpit";</script>

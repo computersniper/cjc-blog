@@ -6,30 +6,154 @@
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 0, rgba(120,212,214,.12), transparent 38%),
-    linear-gradient(90deg, transparent 49.85%, rgba(244,172,69,.08) 50%, transparent 50.15%);
+    radial-gradient(circle at 50% 0, rgba(120,212,214,.11), transparent 38%),
+    linear-gradient(90deg, transparent 49.85%, rgba(244,172,69,.07) 50%, transparent 50.15%);
 }
-.detail-header { position: sticky; top: 0; }
+.detail-header { position: sticky; top: 0; padding-right: 220px; }
+.detail-nav { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--amber) transparent; }
+.detail-nav a { flex: 0 0 auto; padding-inline: 8px; }
 .detail-nav a[aria-current="page"] { color: var(--amber-bright); background: rgba(244,172,69,.12); }
-.aviation-detail-main { width: var(--shell); min-height: 68vh; margin: 42px auto 80px; }
+.aviation-detail-main { width: var(--shell); min-height: 68vh; margin: 32px auto 80px; }
+
+.flight-record-hero {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  background:
+    linear-gradient(90deg, rgba(2,6,8,.96) 0%, rgba(3,8,11,.84) 48%, rgba(3,7,10,.6) 100%),
+    linear-gradient(0deg, rgba(2,6,8,.76), transparent 64%),
+    url("./assets/cockpit-night.jpg") center 44% / cover no-repeat;
+  box-shadow: var(--shadow);
+  isolation: isolate;
+}
+.flight-record-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .14;
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.12) 4px);
+}
 .route-strip {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
   gap: 14px;
   align-items: center;
-  padding: 12px 15px;
-  border: 1px solid var(--line-strong);
-  border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #18242d, #0d151b);
+  min-height: 48px;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--line-strong);
+  background: linear-gradient(180deg, rgba(24,36,45,.96), rgba(13,21,27,.9));
   box-shadow: inset 0 0 20px rgba(120,212,214,.06);
   font: 600 11px/1.2 var(--mono);
   letter-spacing: .11em;
   text-transform: uppercase;
 }
 .route-strip span { color: var(--muted); }
-.route-strip .status-ok { color: var(--green); }
-.detail-mount { min-height: 50vh; }
-.cjc-d-wrap { padding-top: clamp(38px, 7vw, 84px); }
+.status-ok { color: var(--green) !important; }
+.record-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(230px,320px);
+  gap: clamp(24px,5vw,72px);
+  align-items: center;
+  min-height: 244px;
+  padding: clamp(28px,5vw,58px);
+}
+.record-kicker, .side-kicker {
+  margin: 0 0 12px;
+  color: var(--amber-bright);
+  font: 600 10px/1.2 var(--mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.record-intro h2 {
+  max-width: 14ch;
+  margin: 0;
+  color: #f5fbfc;
+  font: 700 clamp(38px,5.2vw,72px)/.9 var(--display);
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.record-intro > p:last-child { max-width: 58ch; margin: 20px 0 0; color: #c9d5d8; font-size: 15px; }
+.record-ticket {
+  display: grid;
+  align-content: center;
+  min-height: 150px;
+  padding: 22px;
+  border: 1px solid rgba(244,172,69,.55);
+  border-radius: 4px;
+  background: rgba(4,9,12,.78);
+  box-shadow: inset 0 0 24px rgba(244,172,69,.08);
+}
+.record-ticket > span:first-child { color: var(--muted); font: 500 9px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.record-ticket strong { margin: 12px 0 22px; color: var(--amber-bright); font: 700 clamp(19px,2.4vw,28px)/1 var(--mono); letter-spacing: -.04em; }
+.record-ticket .barcode, .route-card::after {
+  display: block;
+  height: 25px;
+  opacity: .7;
+  background: repeating-linear-gradient(90deg, #dfe7e8 0 2px, transparent 2px 4px, #dfe7e8 4px 5px, transparent 5px 9px);
+}
+.instrument-bank {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  margin: 0;
+  border-top: 1px solid var(--line-strong);
+  background: rgba(3,8,11,.88);
+}
+.instrument-bank > div { min-width: 0; padding: 13px 16px; border-right: 1px solid var(--line); }
+.instrument-bank > div:last-child { border-right: 0; }
+.instrument-bank dt { color: var(--muted); font: 500 9px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.instrument-bank dd { margin: 7px 0 0; overflow: hidden; color: var(--cyan); font: 600 13px/1 var(--mono); text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+
+.record-layout {
+  display: grid;
+  grid-template-columns: minmax(230px,280px) minmax(0,1fr);
+  gap: clamp(24px,4vw,54px);
+  align-items: start;
+  margin-top: clamp(34px,6vw,70px);
+}
+.record-sidebar { position: sticky; top: 98px; display: grid; gap: 18px; }
+.route-card, .channel-card {
+  overflow: hidden;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(21,33,42,.96), rgba(8,14,18,.96));
+  box-shadow: 0 18px 45px rgba(0,0,0,.26);
+}
+.route-card dl { margin: 0; }
+.route-card dl > div { padding: 12px 0; border-top: 1px solid var(--line); }
+.route-card dt { color: var(--muted); font: 500 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.route-card dd { margin: 7px 0 0; color: var(--ink); font: 600 12px/1.35 var(--mono); text-transform: uppercase; }
+.route-card::after { content: ""; margin-top: 20px; }
+.sidebar-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 6px;
+  color: var(--amber-bright);
+  font: 600 10px/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.detail-channels { display: grid; }
+.detail-channels a {
+  display: grid;
+  min-height: 54px;
+  align-content: center;
+  border-top: 1px solid var(--line);
+  transition: color .2s ease, background-color .2s ease;
+}
+.detail-channels a:first-child { border-top: 0; }
+.detail-channels a:hover { color: var(--amber-bright); background: rgba(244,172,69,.06); }
+.detail-channels span { color: var(--muted); font: 500 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.detail-channels strong { margin-top: 7px; overflow-wrap: anywhere; color: var(--ink); font: 500 11px/1.35 var(--mono); }
+
+.detail-mount { min-width: 0; min-height: 50vh; }
+.cjc-d-wrap { padding-top: 0; }
 .cjc-d-meta { display: flex; flex-wrap: wrap; gap: 8px; }
 .cjc-d-meta span {
   padding: 7px 10px;
@@ -44,48 +168,52 @@
 .cjc-d-meta .cjc-d-cat { border-color: rgba(244,172,69,.55); color: var(--amber-bright); }
 .cjc-d-meta .cjc-d-tech { color: var(--cyan); }
 .cjc-d-title {
-  max-width: 19ch;
-  margin: 18px 0 30px;
+  max-width: 17ch;
+  margin: 18px 0 28px;
   color: var(--ink);
-  font: 700 clamp(42px, 8vw, 92px)/.92 var(--display);
-  letter-spacing: -.025em;
+  font: 700 clamp(38px,5.6vw,72px)/.95 var(--display);
+  letter-spacing: -.02em;
   text-transform: uppercase;
   text-wrap: balance;
 }
-.cjc-d-title::before { content: "RECORD / "; display: block; margin-bottom: 13px; color: var(--amber); font: 600 11px/1 var(--mono); letter-spacing: .14em; }
+.cjc-d-title:focus { outline: 2px solid var(--amber); outline-offset: 8px; }
+.cjc-d-title::before { content: "RECORD / "; display: block; margin-bottom: 13px; color: var(--amber); font: 600 10px/1 var(--mono); letter-spacing: .14em; }
 .cjc-d-cover {
   position: relative;
-  max-height: 560px;
-  margin-bottom: 28px;
+  width: min(100%,880px);
+  aspect-ratio: 16 / 10;
+  margin: 0 auto 30px;
   overflow: hidden;
   border: 1px solid var(--line-strong);
   border-radius: 4px;
   background: var(--panel);
   box-shadow: var(--shadow);
 }
-.cjc-d-cover::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 8px rgba(4,8,10,.35); }
-.cjc-d-cover img { width: 100%; max-height: 560px; object-fit: cover; }
+.cjc-d-cover::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 7px rgba(4,8,10,.28); }
+.cjc-d-cover img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .cjc-d-body, .cjc-d-summary { overflow-wrap: anywhere; border-radius: 4px; box-shadow: var(--shadow); }
 .cjc-d-body {
-  padding: clamp(24px, 5vw, 60px);
+  padding: clamp(24px,5vw,58px);
+  border: 1px solid #cad1cf;
   border-top: 6px solid var(--amber);
-  background: #f2f4f1;
+  background: linear-gradient(180deg,#f5f7f4,#eef1ee);
   color: #172126;
   line-height: 1.78;
 }
+.cjc-d-body::before { content: attr(data-briefing); display: block; margin-bottom: 30px; color: #69777a; font: 600 9px/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; }
 .cjc-d-body h1, .cjc-d-body h2, .cjc-d-body h3, .cjc-d-body h4 { color: #10191d; font-family: var(--display); line-height: 1.15; }
 .cjc-d-body a { color: #83530b; text-decoration: underline; text-underline-offset: 3px; }
 .cjc-d-body pre { max-width: 100%; overflow: auto; padding: 18px; border-radius: 3px; background: #11191e; color: #edf5f6; }
 .cjc-d-body code { overflow-wrap: anywhere; }
 .cjc-d-body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
-.cjc-d-body img { height: auto; margin: 26px auto; }
+.cjc-d-body img { max-width: 100%; height: auto; margin: 26px auto; }
 .cjc-d-summary {
-  padding: clamp(24px, 5vw, 48px);
+  padding: clamp(24px,5vw,48px);
   border: 1px solid var(--line-strong);
   border-left: 6px solid var(--amber);
-  background: linear-gradient(135deg, var(--panel-2), #0b1217);
+  background: linear-gradient(135deg,var(--panel-2),#0b1217);
   color: #d9e3e5;
-  font-size: clamp(17px, 2vw, 21px);
+  font-size: clamp(17px,2vw,21px);
 }
 .cjc-d-readfull, .cjc-d-back, .cjc-d-retry {
   display: inline-flex;
@@ -106,9 +234,12 @@
 .cjc-d-retry { cursor: pointer; margin-left: 12px; }
 .cjc-d-readfull:hover, .cjc-d-back:hover, .cjc-d-retry:hover { background: var(--amber); color: #101315; transform: translateY(-2px); }
 .cjc-d-nav { margin-top: 30px; border-top: 1px solid var(--line); }
-.cjc-d-loading, .cjc-d-error {
-  margin-top: 46px;
-  padding: 30px;
+.cjc-d-loading, .cjc-d-error, .cjc-d-empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin-top: 0;
+  padding: clamp(30px,7vw,70px) 24px;
   border: 1px dashed var(--line-strong);
   border-radius: 4px;
   background: var(--panel-soft);
@@ -116,27 +247,55 @@
   text-align: center;
   font-family: var(--mono);
 }
-.cjc-d-error .cjc-d-back { display: flex; width: fit-content; margin-inline: auto; }
+.cjc-d-loading strong, .cjc-d-error strong, .cjc-d-empty strong { color: var(--ink); font: 700 clamp(20px,3vw,30px)/1 var(--display); letter-spacing: .03em; text-transform: uppercase; }
+.cjc-d-loading > span:last-child, .cjc-d-error > span:last-of-type, .cjc-d-empty > span:last-child { max-width: 56ch; }
+.state-beacon { width: 13px; height: 13px; margin-bottom: 8px; border: 2px solid var(--green); border-radius: 50%; background: var(--green); box-shadow: 0 0 16px rgba(143,219,154,.7); animation: beacon 1.4s ease-in-out infinite; }
+.state-beacon.warning { border-color: var(--amber); background: transparent; box-shadow: 0 0 14px rgba(244,172,69,.45); animation: none; }
+@keyframes beacon { 50% { opacity: .34; transform: scale(.72); } }
+.cjc-d-error .cjc-d-back { display: flex; width: fit-content; }
 .detail-footer { padding-block: 30px; }
 .detail-footer .shell { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--muted); font: 500 11px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .detail-footer a { color: var(--amber-bright); }
 
-@media (max-width: 840px) {
-  .detail-header { padding-left: 14px; padding-right: 112px; }
+@media (max-width: 1120px) {
+  .detail-header { padding-right: 205px; }
   .detail-header .brand-copy { display: none; }
-  .detail-nav { max-width: 100%; overflow-x: auto; }
-  .detail-nav a { flex: 0 0 auto; }
-  .aviation-detail-main { width: min(100% - 28px, 1400px); margin-top: 26px; }
+  .detail-nav a { padding-inline: 7px; font-size: 10px; }
+}
+@media (max-width: 980px) {
+  .record-layout { grid-template-columns: minmax(0,1fr); }
+  .record-sidebar { position: static; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); order: 2; }
+  .detail-mount { order: 1; }
+}
+@media (max-width: 920px) {
+  .detail-header { padding-left: 12px; padding-right: 204px; }
+  .detail-nav { display: flex !important; max-width: 100%; }
+  .record-hero-grid { grid-template-columns: minmax(0,1fr) minmax(210px,260px); }
+}
+@media (max-width: 700px) {
+  .aviation-detail-main { width: min(100% - 28px,1400px); margin-top: 20px; }
+  .flight-record-hero { min-height: 0; }
   .route-strip { grid-template-columns: auto 1fr; }
-  .cjc-d-title { font-size: clamp(36px, 12vw, 66px); }
-  .cjc-d-body { padding: 24px 18px; }
+  .record-hero-grid { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 28px 20px; }
+  .record-intro h2 { font-size: clamp(35px,11vw,56px); }
+  .record-ticket { min-height: 120px; }
+  .instrument-bank { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .instrument-bank > div:nth-child(2) { border-right: 0; }
+  .instrument-bank > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .record-sidebar { grid-template-columns: minmax(0,1fr); }
+  .cjc-d-title { font-size: clamp(35px,10vw,54px); }
+  .cjc-d-body { padding: 26px 18px; }
   .detail-footer .shell { flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 480px) {
-  .detail-header { padding-left: 6px; padding-right: 102px; }
+@media (max-width: 620px) {
+  .detail-header { display: flex; height: 64px; padding: 0 154px 0 8px; }
   .detail-header .brand { display: none; }
-  .detail-nav a { padding-inline: 9px; font-size: 9px; }
+  .detail-nav { width: 100%; }
+  .detail-nav a { min-height: 44px; padding-inline: 10px; font-size: 10px; }
+  .cjc-d-cover { width: 100%; aspect-ratio: 16 / 10; }
+  .cjc-d-retry { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .state-beacon { animation: none; }
   .cjc-d-readfull:hover, .cjc-d-back:hover, .cjc-d-retry:hover { transform: none; }
 }

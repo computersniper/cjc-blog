@@ -106,3 +106,18 @@ Date: 2026-08-10
 - Confirmed the shared language control re-rendered a loaded F1 article from English to Chinese, and confirmed the Ming/Jinyiwei mobile directories expanded with correct `aria-expanded` state.
 
 final result: passed
+
+## Aviation record and Jinyiwei completion pass
+
+Date: 2026-08-10
+
+- Rebuilt the aviation project/article detail chrome around a real Flight Record: cockpit backdrop, route clearance, dynamic record number, UTC/system/type/language instruments, route-plan barcode card, and profile-backed communication channels.
+- Corrected aviation cover rendering from a distorted 1193 x 560 box to a bounded 16:10 crop, reduced the oversized record title, retained all nine detail navigation routes on mobile via an accessible horizontal rail, and localized the full status/ARIA layer.
+- Completed the Jinyiwei information architecture with stable Field Work and Awards anchors, then extended both detail types with a three-part historical evidence strip for personnel, Feiyu robe textile, and Xiuchun-dao reference imagery.
+- Replaced the implementation-facing Jinyiwei brand with CaiJiechao/Northern Bureau, added profile-backed Email, Phone, GitHub, and WeChat channels, synchronized the mobile menu label with `aria-expanded`, and restored focus after article filtering.
+- Browser-tested both project and article pages at 1440 x 900 and 375 x 812 with English and Chinese content. All four routes had zero page overflow, zero broken images, visible data, complete contact channels, no console errors, and active reduced-motion handling.
+- Verified aviation mobile navigation remains visible with nine links and a scrollable rail; the programmatically focused title retains a visible 2 px outline.
+- Verified localized missing-id and failed-request states for both themes, including alert semantics and retry controls.
+- Parsed six inline scripts, checked four JavaScript files, completed the Vite production build, and passed targeted `git diff --check`.
+
+final result: passed

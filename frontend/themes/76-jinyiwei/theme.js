@@ -7,7 +7,7 @@
   var loadState = { projects: "loading", articles: "loading" };
   var copy = {
     en: {
-      nav: [["profile", "Subject"], ["training", "Training"], ["missions", "Missions"], ["reports", "Reports"], ["contact", "Channel"]],
+      nav: [["profile", "Subject"], ["training", "Training"], ["experience", "Field Work"], ["missions", "Missions"], ["reports", "Reports"], ["awards", "Awards"], ["contact", "Channel"]],
       classified: "IMPERIAL ARCHIVE / RESTRICTED ACCESS",
       archiveNo: "FILE · CJC / 2026 / 076",
       intro: "A software portfolio re-cut as a restrained cinematic intelligence archive: night rain, iron, cinnabar, and facts.",
@@ -35,7 +35,7 @@
       name: "Contact name", email: "Return address", message: "Message / intelligence", send: "Transmit", sending: "Encrypting and transmitting…", sent: "Transmission received.", skip: "Skip to content"
     },
     zh: {
-      nav: [["profile", "人员卷宗"], ["training", "校阅录"], ["missions", "案卷"], ["reports", "密报"], ["contact", "联络"]],
+      nav: [["profile", "人员卷宗"], ["training", "校阅录"], ["experience", "差遣"], ["missions", "案卷"], ["reports", "密报"], ["awards", "功册"], ["contact", "联络"]],
       classified: "御前案牍 / 限定查阅",
       archiveNo: "密档 · CJC / 2026 / 076",
       intro: "将软件作品集剪辑成一部克制的电影式密档：夜雨、冷铁、朱砂与确凿事实。",
@@ -83,7 +83,7 @@
 
   function mission() {
     var v = P.experience[0];
-    return '<section class="section mission"><div class="wrap">' + head("mission", 3) + '<div class="mission-sheet reveal"><div class="mission-meta">' + e(v.period) + '<br>' + e(t(v.company)) + '</div><div class="mission-body"><h3>' + e(t(v.role)) + '</h3><p>' + e(t(v.summary)) + '</p><ul class="mission-list">' + v.bullets.map(function (b) { return '<li>' + e(t(b)) + '</li>'; }).join("") + '</ul></div></div></div></section>';
+    return '<section class="section mission" id="experience"><div class="wrap">' + head("mission", 3) + '<div class="mission-sheet reveal"><div class="mission-meta">' + e(v.period) + '<br>' + e(t(v.company)) + '</div><div class="mission-body"><h3>' + e(t(v.role)) + '</h3><p>' + e(t(v.summary)) + '</p><ul class="mission-list">' + v.bullets.map(function (b) { return '<li>' + e(t(b)) + '</li>'; }).join("") + '</ul></div></div></div></section>';
   }
 
   function projectSection() {
@@ -107,7 +107,7 @@
   }
 
   function awards() {
-    return '<section class="section"><div class="wrap">' + head("awards", 6) + '<div class="commendations reveal">' + P.certificates.map(function (v) { return '<article class="commendation"><img loading="lazy" src="' + e(v.image) + '" alt="' + e(t(v.title)) + '"><div><div class="file-meta">' + e(t(v.tag)) + ' · ' + e(t(v.date)) + '</div><h3>' + e(t(v.title)) + '</h3><p>' + e(t(v.desc)) + '</p></div></article>'; }).join("") + '</div></div></section>';
+    return '<section class="section" id="awards"><div class="wrap">' + head("awards", 6) + '<div class="commendations reveal">' + P.certificates.map(function (v) { return '<article class="commendation"><img loading="lazy" src="' + e(v.image) + '" alt="' + e(t(v.title)) + '"><div><div class="file-meta">' + e(t(v.tag)) + ' · ' + e(t(v.date)) + '</div><h3>' + e(t(v.title)) + '</h3><p>' + e(t(v.desc)) + '</p></div></article>'; }).join("") + '</div></div></section>';
   }
 
   function contact() {
@@ -122,7 +122,8 @@
     document.getElementById("brand").textContent = P.brand;
     document.getElementById("nav").innerHTML = x.nav.map(function (v) { return '<a href="#' + e(v[0]) + '">' + e(v[1]) + '</a>'; }).join("");
     var navToggleLabel = document.querySelector(".nav-toggle-label");
-    if (navToggleLabel) navToggleLabel.textContent = x.menu;
+    var navToggle = document.getElementById("nav-toggle");
+    if (navToggleLabel) navToggleLabel.textContent = navToggle && navToggle.getAttribute("aria-expanded") === "true" ? x.closeMenu : x.menu;
     document.getElementById("main").innerHTML = hero() + profile() + training() + mission() + projectSection() + reportSection() + awards() + contact();
     document.getElementById("footer-brand").textContent = P.brand + " · ARCHIVE 76";
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
@@ -134,11 +135,11 @@
     var navToggle = document.getElementById("nav-toggle"), nav = document.getElementById("nav");
     if (navToggle && nav) {
       navToggle.onclick = function () { var open = navToggle.getAttribute("aria-expanded") !== "true"; navToggle.setAttribute("aria-expanded", String(open)); nav.classList.toggle("is-open", open); navToggle.querySelector(".nav-toggle-label").textContent = open ? L().closeMenu : L().menu; };
-      nav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { navToggle.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); }); });
+      nav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { navToggle.setAttribute("aria-expanded", "false"); nav.classList.remove("is-open"); navToggle.querySelector(".nav-toggle-label").textContent = L().menu; }); });
     }
     var unseal = document.querySelector("[data-unseal]");
     if (unseal) unseal.addEventListener("click", function () { var heroNode = document.querySelector(".hero"), open = !heroNode.classList.contains("archive-open"); heroNode.classList.toggle("archive-open", open); unseal.setAttribute("aria-pressed", String(open)); unseal.textContent = open ? L().seal : L().unseal; });
-    document.querySelectorAll("[data-filter]").forEach(function (button) { button.addEventListener("click", function () { filter = button.dataset.filter; render(); }); });
+    document.querySelectorAll("[data-filter]").forEach(function (button) { button.addEventListener("click", function () { var nextFilter = button.dataset.filter; filter = nextFilter; render(); var restored = Array.from(document.querySelectorAll("[data-filter]")).find(function (node) { return node.dataset.filter === nextFilter; }); if (restored) restored.focus({ preventScroll: true }); }); });
     document.querySelectorAll("[data-retry]").forEach(function (button) { button.addEventListener("click", function () { loadContent(button.dataset.retry); }); });
     var form = document.getElementById("contact-form");
     if (form) form.addEventListener("submit", async function (event) { event.preventDefault(); var status = document.getElementById("status"), button = form.querySelector("button[type=submit]"); button.disabled = true; status.textContent = L().sending; try { var result = await CJCData.sendContact({ name: form.name.value, email: form.email.value, message: form.message.value, website: form.website.value }); status.textContent = result.message || L().sent; form.reset(); } catch (error) { status.textContent = error.message || L().fail; } finally { button.disabled = false; } });
