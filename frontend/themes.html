@@ -104,15 +104,18 @@
     .spectrum-stage{position:relative;z-index:1;display:grid;grid-template-columns:minmax(320px,1.08fr) minmax(280px,.92fr);
       align-items:center;gap:clamp(24px,5vw,70px)}
     .spectrum-visual{display:grid;place-items:center;min-width:0}
-    .spectrum-wheel{--knob-x:50;--knob-y:7;width:min(43vw,480px);max-width:100%;aspect-ratio:1;border-radius:50%;
+    .spectrum-wheel{--knob-x:50;--knob-y:7;--spectrum-step-angle:4.675deg;width:min(43vw,480px);max-width:100%;aspect-ratio:1;border-radius:50%;
       position:relative;cursor:crosshair;touch-action:none;user-select:none;
-      background:conic-gradient(from -90deg,#ff3b30,#ff9f0a,#ffd60a,#34c759,#30d5c8,#0a84ff,#5e5ce6,#bf5af2,#ff375f,#ff3b30);
+      background:
+        radial-gradient(circle,rgba(255,255,255,.82) 0,rgba(255,255,255,.58) 39%,rgba(255,255,255,.18) 66%,transparent 88%),
+        conic-gradient(from 0deg,#ff3b30,#ff9f0a,#ffd60a,#34c759,#30d5c8,#0a84ff,#5e5ce6,#bf5af2,#ff375f,#ff3b30);
+      background-blend-mode:screen,normal;
       box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 75px color-mix(in srgb,var(--spectrum-accent,#7c8cff) 34%,transparent),inset 0 0 36px rgba(255,255,255,.32);
       transition:box-shadow .3s ease}
-    .spectrum-wheel::before{content:"";position:absolute;inset:10%;border-radius:50%;background:var(--bg);
+    .spectrum-wheel::before{content:"";position:absolute;inset:22%;border-radius:50%;background:var(--bg);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 0 42px rgba(0,0,0,.58),0 0 0 2px rgba(0,0,0,.18)}
     .spectrum-wheel::after{content:"";position:absolute;inset:3%;border-radius:50%;pointer-events:none;
-      background:repeating-conic-gradient(from -90deg,rgba(255,255,255,.72) 0 .3deg,transparent .3deg 4.74deg);
+      background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.72) 0 .3deg,transparent .3deg var(--spectrum-step-angle));
       mask:radial-gradient(circle,transparent 0 82%,#000 82.3% 86%,transparent 86.3%)}
     .spectrum-core{position:absolute;inset:22%;z-index:2;border-radius:50%;display:flex;flex-direction:column;
       align-items:center;justify-content:center;text-align:center;padding:22px;background:var(--selected-bg,#141821);
@@ -160,7 +163,7 @@
     @media(max-width:420px){
       .wrap{padding-inline:14px}.view-switch{display:grid;grid-template-columns:1fr 1fr;width:100%}
       .view-tab{padding-inline:10px}.spectrum-core{inset:24%;padding:12px}.spectrum-core small{display:none}
-      .spectrum-detail p{font-size:15px}.spectrum-nav{gap:8px}.nearby{gap:7px}.nearby-theme{width:40px;height:40px}
+      .spectrum-detail p{font-size:15px}.spectrum-nav{gap:8px}.nearby{gap:7px}.nearby-theme{width:44px;height:44px}
     }
     @media(prefers-reduced-motion:reduce){
       *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -239,7 +242,7 @@
       viewLabel:{ en: 'Gallery view', zh: '图库展示方式' },
       orbitLabel:{ en: 'Theme spectrum', zh: '主题光谱选择器' },
       orbitHint:{ en: 'Move around the color ring', zh: '沿色环移动取色' },
-      orbitNote:{ en: 'Drag, move your pointer, scroll, or use arrow keys to explore.', zh: '拖动、移动鼠标、滚轮或方向键，连续探索相邻主题。' },
+      orbitNote:{ en: 'Pick by color: hue follows the ring, while the inner edge favors softer and neutral themes.', zh: '按颜色取主题：沿色环选择色相，靠内更柔和中性，靠外更鲜艳。' },
       selection:{ en: 'Spectrum selection', zh: '光谱当前选择' },
       open:    { en: 'Open this theme →', zh: '进入此主题 →' },
       previous:{ en: 'Previous theme', zh: '上一个主题' },
@@ -283,44 +286,120 @@
       return ordered;
     }
 
+    const spectrumDescriptorCache = new WeakMap();
+    const neutralHue = { '07-minimal': 210, '13-newspaper': 42 };
+
+    function parseHexColor(value){
+      const match = String(value || '').trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+      if (!match) return null;
+      const hex = match[1].length === 3 ? match[1].split('').map(char => char + char).join('') : match[1];
+      return {
+        r: parseInt(hex.slice(0,2),16) / 255,
+        g: parseInt(hex.slice(2,4),16) / 255,
+        b: parseInt(hex.slice(4,6),16) / 255,
+      };
+    }
+
+    function rgbToHsl({r,g,b}){
+      const max = Math.max(r,g,b);
+      const min = Math.min(r,g,b);
+      const delta = max - min;
+      const lightness = (max + min) / 2;
+      let hue = 0;
+      let saturation = 0;
+      if (delta > .0001) {
+        saturation = delta / (1 - Math.abs(2 * lightness - 1));
+        if (max === r) hue = 60 * (((g - b) / delta) % 6);
+        else if (max === g) hue = 60 * (((b - r) / delta) + 2);
+        else hue = 60 * (((r - g) / delta) + 4);
+      }
+      return { hue:(hue + 360) % 360, saturation, lightness };
+    }
+
+    function spectrumDescriptor(theme){
+      if (spectrumDescriptorCache.has(theme)) return spectrumDescriptorCache.get(theme);
+      const accentRgb = parseHexColor(theme.accent) || {r:.5,g:.5,b:.5};
+      const accent = rgbToHsl(accentRgb);
+      let hue = accent.hue;
+      let saturation = accent.saturation;
+      if (saturation < .08) {
+        const candidates = (String(theme.bg || '').match(/#[0-9a-f]{3,6}/ig) || [])
+          .map(parseHexColor).filter(Boolean).map(rgbToHsl).sort((a,b) => b.saturation - a.saturation);
+        const fallback = candidates.find(color => color.saturation >= .08);
+        hue = fallback ? fallback.hue : (neutralHue[theme.id] ?? 210);
+        saturation = fallback ? Math.min(.22, fallback.saturation * .45) : 0;
+      }
+      const radius = Math.max(31, Math.min(46, 31 + saturation * 15));
+      const angle = hue / 360 * Math.PI * 2 - Math.PI / 2;
+      const descriptor = {
+        hue, saturation, lightness:accent.lightness, radius,
+        x:50 + Math.cos(angle) * radius,
+        y:50 + Math.sin(angle) * radius,
+      };
+      spectrumDescriptorCache.set(theme, descriptor);
+      return descriptor;
+    }
+
+    function circularHueDistance(a,b){
+      const delta = Math.abs(a - b) % 360;
+      return Math.min(delta, 360 - delta);
+    }
+
+    function spectrumDistance(sample, theme){
+      const color = spectrumDescriptor(theme);
+      const hueWeight = .2 + .8 * Math.max(sample.saturation, color.saturation);
+      const hue = circularHueDistance(sample.hue, color.hue) / 180 * hueWeight;
+      const saturation = sample.saturation - color.saturation;
+      const lightness = sample.lightness - color.lightness;
+      return hue * hue * 4 + saturation * saturation * 1.6 + lightness * lightness * .18;
+    }
+
+    function buildSpectrumThemes(themes){
+      return [...themes].sort((a,b) => {
+        const colorA = spectrumDescriptor(a);
+        const colorB = spectrumDescriptor(b);
+        return colorA.hue - colorB.hue || colorA.saturation - colorB.saturation || colorA.lightness - colorB.lightness;
+      });
+    }
+
     let currentThemes = [];
+    let spectrumThemes = [];
     let selectedIndex = -1;
     let galleryView = 'grid';
     try { galleryView = localStorage.getItem('cjc-gallery-view') === 'spectrum' ? 'spectrum' : 'grid'; } catch (error) {}
 
     function selectSpectrum(index, options = {}){
-      if (!currentThemes.length) return;
-      selectedIndex = (index % currentThemes.length + currentThemes.length) % currentThemes.length;
-      const theme = currentThemes[selectedIndex];
+      if (!spectrumThemes.length) return;
+      selectedIndex = (index % spectrumThemes.length + spectrumThemes.length) % spectrumThemes.length;
+      const theme = spectrumThemes[selectedIndex];
       const lang = CJCData.lang();
-      const angle = (selectedIndex / currentThemes.length) * Math.PI * 2 - Math.PI / 2;
-      const x = 50 + Math.cos(angle) * 43;
-      const y = 50 + Math.sin(angle) * 43;
+      const color = spectrumDescriptor(theme);
       const panel = document.getElementById('spectrumPanel');
       const wheel = document.getElementById('spectrumWheel');
 
       panel.style.setProperty('--spectrum-accent', theme.accent);
       panel.style.setProperty('--selected-bg', theme.bg);
       panel.style.setProperty('--selected-fg', theme.fg);
-      wheel.style.setProperty('--knob-x', x.toFixed(3));
-      wheel.style.setProperty('--knob-y', y.toFixed(3));
-      wheel.setAttribute('aria-valuemax', String(currentThemes.length - 1));
+      wheel.style.setProperty('--knob-x', color.x.toFixed(3));
+      wheel.style.setProperty('--knob-y', color.y.toFixed(3));
+      wheel.style.setProperty('--spectrum-step-angle', (360 / spectrumThemes.length).toFixed(4) + 'deg');
+      wheel.setAttribute('aria-valuemax', String(spectrumThemes.length - 1));
       wheel.setAttribute('aria-valuenow', String(selectedIndex));
       wheel.setAttribute('aria-valuetext', CJCData.t(theme.name));
 
-      document.getElementById('spectrumIndex').textContent = String(selectedIndex + 1).padStart(2,'0') + ' / ' + String(currentThemes.length).padStart(2,'0');
+      document.getElementById('spectrumIndex').textContent = String(selectedIndex + 1).padStart(2,'0') + ' / ' + String(spectrumThemes.length).padStart(2,'0');
       document.getElementById('spectrumCoreName').textContent = CJCData.t(theme.name);
       document.getElementById('spectrumName').textContent = CJCData.t(theme.name);
       document.getElementById('spectrumBlurb').textContent = CJCData.t(theme.blurb);
       document.getElementById('spectrumFont').textContent = theme.font;
-      document.getElementById('spectrumPosition').textContent = I18N.position[lang](selectedIndex + 1, currentThemes.length);
+      document.getElementById('spectrumPosition').textContent = I18N.position[lang](selectedIndex + 1, spectrumThemes.length);
       document.getElementById('spectrumOpen').href = CJCData.themeUrl(theme.id);
 
       const nearby = document.getElementById('nearbyThemes');
       nearby.innerHTML = '';
       [-3,-2,-1,0,1,2,3].forEach(offset => {
-        const itemIndex = (selectedIndex + offset + currentThemes.length) % currentThemes.length;
-        const item = currentThemes[itemIndex];
+        const itemIndex = (selectedIndex + offset + spectrumThemes.length) % spectrumThemes.length;
+        const item = spectrumThemes[itemIndex];
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'nearby-theme';
@@ -348,9 +427,10 @@
       const lang = CJCData.lang();
       const active = CJCData.getTheme();
       const themes = galleryThemes();
-      const selectedId = currentThemes[selectedIndex]?.id;
+      const selectedId = spectrumThemes[selectedIndex]?.id;
       currentThemes = themes;
-      selectedIndex = Math.max(0, themes.findIndex(theme => theme.id === (selectedId || active)));
+      spectrumThemes = buildSpectrumThemes(themes);
+      selectedIndex = Math.max(0, spectrumThemes.findIndex(theme => theme.id === (selectedId || active)));
 
       // header text
       const [a,b,c] = I18N.title[lang];
@@ -411,7 +491,7 @@
     document.getElementById('spectrumPrev').addEventListener('click', () => selectSpectrum(selectedIndex - 1, {announce:true}));
     document.getElementById('spectrumNext').addEventListener('click', () => selectSpectrum(selectedIndex + 1, {announce:true}));
     document.getElementById('spectrumOpen').addEventListener('click', () => {
-      const theme = currentThemes[selectedIndex];
+      const theme = spectrumThemes[selectedIndex];
       if (theme) CJCData.setTheme(theme.id);
     });
 
@@ -423,9 +503,20 @@
       const rect = wheel.getBoundingClientRect();
       const dx = x - (rect.left + rect.width / 2);
       const dy = y - (rect.top + rect.height / 2);
-      if (Math.hypot(dx,dy) < rect.width * .29) return null;
-      const degrees = (Math.atan2(dy,dx) * 180 / Math.PI + 90 + 360) % 360;
-      return Math.round(degrees / 360 * currentThemes.length) % currentThemes.length;
+      const distance = Math.hypot(dx,dy);
+      if (distance < rect.width * .29 || distance > rect.width * .52) return null;
+      const sample = {
+        hue:(Math.atan2(dy,dx) * 180 / Math.PI + 90 + 360) % 360,
+        saturation:Math.max(0, Math.min(1, (distance / rect.width - .29) / .19)),
+        lightness:.56,
+      };
+      let bestIndex = 0;
+      let bestDistance = Infinity;
+      spectrumThemes.forEach((theme,index) => {
+        const score = spectrumDistance(sample,theme);
+        if (score < bestDistance) { bestDistance = score; bestIndex = index; }
+      });
+      return bestIndex;
     }
     function queuePointerSelection(event){
       queuedPoint = {x:event.clientX,y:event.clientY};
@@ -469,7 +560,7 @@
       else if (event.key === 'PageDown') next += 5;
       else if (event.key === 'PageUp') next -= 5;
       else if (event.key === 'Home') next = 0;
-      else if (event.key === 'End') next = currentThemes.length - 1;
+      else if (event.key === 'End') next = spectrumThemes.length - 1;
       else if (event.key === 'Enter') { document.getElementById('spectrumOpen').click(); return; }
       else return;
       event.preventDefault();

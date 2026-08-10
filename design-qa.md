@@ -121,3 +121,16 @@ Date: 2026-08-10
 - Parsed six inline scripts, checked four JavaScript files, completed the Vite production build, and passed targeted `git diff --check`.
 
 final result: passed
+
+## Spectrum color affinity
+
+Date: 2026-08-10
+
+- Replaced gallery-order spectrum selection with a color-distance model based on each theme's registered accent palette.
+- Mapped wheel angle to hue and radial distance to saturation: the inner edge favors neutral/soft themes while the outer edge favors vivid themes.
+- Kept the card-grid editorial ordering independent from the spectrum ordering; previous/next, wheel, keyboard, and nearby swatches now traverse themes grouped by color similarity.
+- Browser-tested five sampling points: red selected Swiss International (`#e2231a`), yellow-green selected Racer Brand (`#c8ff00`), cyan selected Cockpit (`#37e0c8`), violet selected Aurora 3D (`#8b5cf6`), and an inner neutral point selected Newspaper (`#111111`).
+- Confirmed the red neighborhood contained only red-family accents, the current blue Classic selection showed blue-family nearby swatches, keyboard stepping remained functional, and mobile had zero horizontal overflow with 44 px visible swatches.
+- Parsed the gallery inline script, completed the Vite production build, and passed targeted `git diff --check`.
+
+final result: passed
