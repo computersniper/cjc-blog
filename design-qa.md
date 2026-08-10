@@ -74,4 +74,20 @@ Date: 2026-08-07
 - Rechecked both languages at 1440 x 900, 1024 x 768, 390 x 844, and 844 x 390: 16 browser cases passed with no horizontal overflow, clipped content, JavaScript errors, hidden reduced-motion content, or broken images.
 - Confirmed both themes still render 5 projects and 10 articles from the local API, and Material Space anchor navigation lands below its fixed header.
 
+## Spectrum, aviation, Ming, and motorsport expansion
+
+- Added a Spectrum Orbit mode beside the existing theme-card grid, with pointer, drag, wheel, touch, keyboard, and visible nearby-theme controls.
+- Kept `57-cardrive` and `73-cardrive-motion` independently selectable as the still and looping driver-view variants.
+- Added `74-aviation-cockpit` with a real licensed flight-deck photograph, dense illuminated instruments, a split-flap departures board, captain log, and boarding-pass project cards.
+- Added `75-ming-palace` as a realistic axial Forbidden City courtyard composition with vermilion-and-gold court-document styling.
+- Added `76-jinyiwei` with a Ming warrior painting, Feiyu robe textile study, cloud-and-sea border vocabulary, waist-token details, and a museum-sourced seventeenth-century saber as a restrained Xiuchun-dao reference.
+- Added two locally stored, visibly attributed Formula One trackside photographs to theme 54.
+
+## Expansion verification
+
+- Parsed the new theme scripts and the inline gallery/F1 scripts, completed the Vite production build, and passed `git diff --check`.
+- Browser-tested gallery selection, keyboard and wheel navigation, mobile overflow, Jinyiwei archive open/close, image loading, Chinese switching, and reduced-motion behavior.
+- Confirmed the Jinyiwei wording consistently uses **Feiyu robe** and contains no incorrect "fishtail robe" terminology.
+- Kept all reference and QA screenshots out of the production bundle; real shipped imagery is stored locally with asset-license documentation.
+
 final result: passed

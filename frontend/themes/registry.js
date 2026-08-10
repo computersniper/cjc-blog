@@ -361,7 +361,7 @@ window.CJC_THEMES = [
   },
   {
     id: "57-cardrive",
-    name: { en: "Rain Drive", zh: "雨中驾驶" },
+    name: { en: "Rain Drive — Still", zh: "雨中驾驶·静帧" },
     blurb: { en: "A cinematic rainy driver-seat portrait with a real dashboard, open road, and restrained editorial type.", zh: "真实仪表台与雨中公路构成电影感驾驶位静帧，并以克制的编辑排版承载作品内容。" },
     accent: "#d53b32", bg: "linear-gradient(160deg,#0b0d0f,#30363a)", fg: "#f1efe9", font: "Georgia / Arial",
   },
@@ -457,9 +457,27 @@ window.CJC_THEMES = [
   },
   {
     id: "73-cardrive-motion",
-    name: { en: "Road in Motion", zh: "公路动态影像" },
+    name: { en: "Road in Motion — Loop", zh: "公路驾驶·动态循环" },
     blurb: { en: "A cinematic first-person drive with real dashboard footage, restrained motion, and editorial portfolio layers.", zh: "真实驾驶位影像持续向前，以克制动态与暗色编辑排版呈现作品内容。" },
     accent: "#d9793f", bg: "linear-gradient(160deg,#11181d,#6e5038)", fg: "#f5efe6", font: "Georgia / Arial",
+  },
+  {
+    id: "74-aviation-cockpit",
+    name: { en: "Aviation Cockpit", zh: "民航驾驶舱" },
+    blurb: { en: "A night-flight command deck of glowing instruments, split-flap departures, captain logs, and precision checklists.", zh: "夜航仪表、机械翻牌航班大屏、机长日志与精密检查单组成的民航驾驶舱。" },
+    accent: "#f2a640", bg: "linear-gradient(160deg,#080d12,#172531 58%,#e28b24)", fg: "#eef7f9", font: "DIN / IBM Plex Mono",
+  },
+  {
+    id: "75-ming-palace",
+    name: { en: "Ming Imperial Palace", zh: "明代宫廷" },
+    blurb: { en: "Vermilion gates, glazed-gold roofs, cloud motifs, and stately Ming court ceremony.", zh: "朱门、琉璃金瓦、祥云纹与明代宫廷礼序构成的东方皇家气象。" },
+    accent: "#c9a44a", bg: "linear-gradient(160deg,#4b0908,#851713 58%,#d5ad58)", fg: "#fff4d6", font: "Noto Serif SC / Ma Shan Zheng",
+  },
+  {
+    id: "76-jinyiwei",
+    name: { en: "Jinyiwei", zh: "锦衣卫" },
+    blurb: { en: "A rain-dark imperial dossier with flying-fish robes, embroidered steel, seals, and secret dispatches.", zh: "雨夜诏狱、飞鱼服、绣春刀、朱印密牒交织出的锦衣卫暗黑档案。" },
+    accent: "#b9232d", bg: "linear-gradient(160deg,#090b0d,#172027 62%,#541219)", fg: "#e8e1d1", font: "Noto Serif SC / Cinzel",
   },
 ];
 
