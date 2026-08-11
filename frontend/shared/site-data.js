@@ -37,6 +37,14 @@
   var requestCache = Object.create(null);
   var SESSION_CACHE_PREFIX = "cjc:data:";
   var SESSION_CACHE_TTL = 5 * 60 * 1000;
+  var themePathMatch = window.location.pathname.match(/^\/themes\/([^/]+)\//);
+
+  // Keep contact journeys inside the active visual theme. Every themed page
+  // exposes its own qr_code.html, while classic pages retain the classic route.
+  if (themePathMatch && window.CJC_PROFILE && window.CJC_PROFILE.contact) {
+    window.CJC_PROFILE.contact.wechatQrPage =
+      "/themes/" + encodeURIComponent(themePathMatch[1]) + "/qr_code.html";
+  }
 
   function lang() {
     return localStorage.getItem(LANG_KEY) || "en";
@@ -202,15 +210,20 @@
     copy.querySelectorAll(
       "script,style,link,nav,header,footer,form,.back-button-container,[data-cjc-ui]"
     ).forEach(function (el) { el.remove(); });
-    copy.querySelectorAll("img[src],source[src],video[src],a[href]").forEach(function (el) {
-      var attr = el.hasAttribute("src") ? "src" : "href";
+    var hasPdf = false;
+    copy.querySelectorAll(
+      "img[src],source[src],video[src],iframe[src],embed[src],object[data],a[href]"
+    ).forEach(function (el) {
+      var attr = el.hasAttribute("src") ? "src" : (el.hasAttribute("href") ? "href" : "data");
       var value = el.getAttribute(attr);
       if (!value || value.charAt(0) === "#" || /^(data:|mailto:|tel:|javascript:)/i.test(value)) return;
+      var resolvedValue = value;
       try {
         var resolved = new URL(value, sourceUrl);
-        el.setAttribute(attr, resolved.origin === window.location.origin
+        resolvedValue = resolved.origin === window.location.origin
           ? resolved.pathname + resolved.search + resolved.hash
-          : resolved.href);
+          : resolved.href;
+        el.setAttribute(attr, resolvedValue);
       } catch (e) {
         // Keep author content intact when a URL is malformed.
       }
@@ -218,7 +231,31 @@
         el.setAttribute("loading", "lazy");
         el.setAttribute("decoding", "async");
       }
+      if (/\.pdf(?:$|[?#])/i.test(resolvedValue) && /^(IFRAME|EMBED|OBJECT)$/.test(el.tagName)) {
+        hasPdf = true;
+        el.classList.add("cjc-d-pdf");
+        if (el.tagName === "IFRAME") el.setAttribute("loading", "lazy");
+        if (!el.getAttribute("title")) {
+          el.setAttribute("title", lang() === "zh" ? "嵌入式 PDF 文档" : "Embedded PDF document");
+        }
+        if (!el.nextElementSibling || !el.nextElementSibling.classList.contains("cjc-d-pdf-open")) {
+          var openLink = copy.ownerDocument.createElement("a");
+          openLink.className = "cjc-d-pdf-open";
+          openLink.href = resolvedValue;
+          openLink.target = "_blank";
+          openLink.rel = "noopener";
+          openLink.textContent = lang() === "zh" ? "在新窗口打开或下载 PDF" : "Open or download PDF";
+          el.insertAdjacentElement("afterend", openLink);
+        }
+      }
     });
+    if (hasPdf && !document.getElementById("cjc-content-embed-css")) {
+      var stylesheet = document.createElement("link");
+      stylesheet.id = "cjc-content-embed-css";
+      stylesheet.rel = "stylesheet";
+      stylesheet.href = "/shared/content-embed.css";
+      document.head.appendChild(stylesheet);
+    }
     return copy.innerHTML.trim();
   }
 

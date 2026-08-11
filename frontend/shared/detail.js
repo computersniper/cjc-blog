@@ -117,8 +117,13 @@
       if (content && String(content).trim()) {
         var bodyEl = mount.querySelector(".cjc-d-body");
         if (bodyEl) {
-          bodyEl.innerHTML = content;
-          absolutizeContent(bodyEl, item.contentBaseUrl || item.readUrl || "/");
+          var contentBase = item.contentBaseUrl || item.readUrl || "/";
+          if (C.normalizeContentHtml) {
+            bodyEl.innerHTML = C.normalizeContentHtml(content, contentBase);
+          } else {
+            bodyEl.innerHTML = content;
+            absolutizeContent(bodyEl, contentBase);
+          }
         }
       }
       document.title = title + " · " + C.t(C.profile.name);
