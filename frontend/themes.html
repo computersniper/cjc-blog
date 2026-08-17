@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/react-bits.css" />
   <style>
     :root{
       --bg:#0b0d12; --panel:#151922; --panel2:#1c2230; --line:rgba(255,255,255,.08);
@@ -181,18 +182,18 @@
     </header>
 
     <section class="hero">
-      <h1 id="galleryTitle">Choose your <em>homepage</em>.</h1>
+      <h1 id="galleryTitle" data-rb="gradient-text" style="--rb-accent:var(--accent)">Choose your <em>homepage</em>.</h1>
       <p id="gallerySub">Twenty independently designed homepages — one shared source of truth. Your content stays identical; only the world around it changes. Pick one and it becomes your default.</p>
       <div class="count" id="countLine"></div>
       <div class="view-switch" id="viewSwitch" role="group" aria-label="Gallery view">
-        <button class="view-tab" id="gridViewBtn" type="button" aria-pressed="true">Card grid</button>
-        <button class="view-tab" id="spectrumViewBtn" type="button" aria-pressed="false">Spectrum orbit</button>
+        <button class="view-tab" id="gridViewBtn" data-rb="magnet" type="button" aria-pressed="true">Card grid</button>
+        <button class="view-tab" id="spectrumViewBtn" data-rb="magnet" type="button" aria-pressed="false">Spectrum orbit</button>
       </div>
     </section>
 
     <main id="galleryMain">
       <section class="grid view-panel" id="grid"></section>
-      <section class="spectrum-panel view-panel" id="spectrumPanel" hidden aria-labelledby="spectrumName">
+      <section class="spectrum-panel view-panel" id="spectrumPanel" data-rb="spotlight" hidden aria-labelledby="spectrumName">
         <div class="spectrum-stage">
           <div class="spectrum-visual">
             <div class="spectrum-wheel" id="spectrumWheel" role="slider" tabindex="0" aria-valuemin="0" aria-valuenow="0" aria-label="Theme spectrum">
@@ -211,7 +212,7 @@
             <h2 id="spectrumName">Classic</h2>
             <p id="spectrumBlurb"></p>
             <div class="spectrum-meta"><span id="spectrumFont"></span><span id="spectrumPosition"></span></div>
-            <div class="spectrum-actions"><a class="spectrum-open" id="spectrumOpen" href="/">Open this theme →</a></div>
+            <div class="spectrum-actions"><a class="spectrum-open" id="spectrumOpen" data-rb="magnet star-border" href="/">Open this theme →</a></div>
           </article>
         </div>
         <div class="spectrum-nav">
@@ -227,6 +228,7 @@
 
   <script src="/shared/profile.js"></script>
   <script src="/shared/site-data.js"></script>
+  <script src="/shared/react-bits.js"></script>
   <script src="/themes/registry.js"></script>
   <script>
     const I18N = {
@@ -460,6 +462,8 @@
         const isActive = th.id === active;
         const card = document.createElement('a');
         card.className = 'card' + (isActive ? ' active' : '');
+        card.dataset.rb = 'spotlight reveal';
+        card.style.setProperty('--rb-accent', th.accent);
         card.href = CJCData.themeUrl(th.id);
         card.addEventListener('click', () => { CJCData.setTheme(th.id); });
         card.innerHTML = `
@@ -481,6 +485,7 @@
           </div>`;
         grid.appendChild(card);
       });
+      if (window.CJCReactBits) window.CJCReactBits.refresh(grid);
       selectSpectrum(selectedIndex);
       setView(galleryView, false);
     }
@@ -534,7 +539,10 @@
       const index = indexFromPoint(event.clientX,event.clientY);
       if (index === null) return;
       dragging = true;
-      wheel.setPointerCapture(event.pointerId);
+      // Synthetic events (used by some assistive/test tooling) do not always
+      // have an active pointer to capture. Pointer capture is an enhancement,
+      // so keep selection usable when the browser rejects that call.
+      try { wheel.setPointerCapture(event.pointerId); } catch (error) {}
       selectSpectrum(index);
       event.preventDefault();
     });
@@ -544,7 +552,9 @@
     function finishPointer(event){
       if (!dragging) return;
       dragging = false;
-      if (wheel.hasPointerCapture(event.pointerId)) wheel.releasePointerCapture(event.pointerId);
+      try {
+        if (wheel.hasPointerCapture(event.pointerId)) wheel.releasePointerCapture(event.pointerId);
+      } catch (error) {}
       selectSpectrum(selectedIndex, {announce:true});
     }
     wheel.addEventListener('pointerup', finishPointer);

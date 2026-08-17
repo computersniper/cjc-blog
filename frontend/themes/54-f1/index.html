@@ -346,6 +346,7 @@
       .race-shot img{transition:none!important}.race-shot:hover img{transform:none}
     }
   </style>
+  <link rel="stylesheet" href="/shared/react-bits.css" />
 </head>
 <body>
   <div class="lights" id="lights" aria-hidden="true">
@@ -547,6 +548,7 @@
   <script>window.THEME_ID = "54-f1";</script>
   <script src="/shared/profile.js"></script>
   <script src="/shared/site-data.js"></script>
+  <script src="/shared/react-bits.js"></script>
   <script>
   (function(){
     const P = CJCData.profile, t = CJCData.t.bind(CJCData), esc = CJCData.escapeHtml;
@@ -832,6 +834,7 @@
       document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
         filterKey=b.dataset.k; renderStatic(); renderArticles();
       }));
+      if(window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID,document);
     }
 
     function renderProjects(){
@@ -847,6 +850,7 @@
             <p>${esc(p.localSummary()||'')}</p>
             <span class="more">${esc(t(P.ui.view_project))} →</span>
           </div></a>`).join('');
+      if(window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID,box);
     }
     function renderArticles(){
       const box=document.getElementById('articles-box');
@@ -861,6 +865,7 @@
             <p>${esc(a.localSummary()||'')}</p>
             <span class="more">${esc(t(P.ui.read_more))} →</span>
           </div></a>`).join('');
+      if(window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID,box);
     }
     async function loadDynamic(){
       try{ projects=await CJCData.fetchProjects(); renderProjects(); }

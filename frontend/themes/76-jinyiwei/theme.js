@@ -129,6 +129,7 @@
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
     document.getElementById("footer-links").innerHTML = '<a href="' + e(P.contact.github) + '">GitHub</a><a href="mailto:' + e(P.contact.email) + '">Email</a><a href="/themes/76-jinyiwei/ASSET_LICENSE.md">' + e(x.credits) + '</a><a href="/admin.html">' + e(t(P.ui.admin_panel)) + '</a><a href="' + e(P.icpUrl) + '">' + e(P.icp) + '</a>';
     wire(); observe();
+    if (window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID, document.getElementById("main"));
   }
 
   function wire() {

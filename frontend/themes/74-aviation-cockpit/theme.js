@@ -567,6 +567,7 @@
     renderBoard(false);
     updateClocks();
     observeReveals();
+    if (window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID, document.getElementById("main-content"));
   }
 
   function wire() {

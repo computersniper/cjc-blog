@@ -34,6 +34,7 @@
     html[lang="zh"] .project h3,html[lang="zh"] .article h3{font-size:20px;line-height:1.28}
     @media(max-width:980px){#about .about-grid{grid-template-columns:1fr}.location-module{min-height:420px}}
     @media(max-width:600px){section{padding:72px 0}.bio-module{min-height:0;padding:28px 22px}.bio-module blockquote{font-size:23px;line-height:1.4}.location-module{min-height:300px}.location-module figcaption{padding:18px}.location-module b{font-size:25px}html[lang="zh"] .hero h1{font-size:46px;line-height:.94}html[lang="zh"] .section-head h2{font-size:38px;line-height:1}html[lang="zh"] .bio-module blockquote{font-size:24px;line-height:1.42}.course{min-height:142px;padding:17px}.course h3{margin:22px 0 8px}.article{padding:12px}.article img{height:138px;margin:10px 0 13px}.article p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.project h3,.article h3{font-size:18px;line-height:1.3}}
+    .rb-decrypt{cursor:default;text-shadow:0 0 18px rgba(84,232,225,.22)}
   </style>
 </head>
 <body>
@@ -61,6 +62,23 @@ function hero(){const x=l(),photo=P.photos&&P.photos.graduation||P.avatar;return
     function wire(){document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;render()}));const f=document.getElementById('contact-form');if(f)f.addEventListener('submit',async ev=>{ev.preventDefault();const s=document.getElementById('status'),x=l(),btn=f.querySelector('button');btn.disabled=true;s.textContent=x.sending;try{const r=await CJCData.sendContact({name:f.name.value,email:f.email.value,message:f.message.value,website:f.website.value});s.textContent=r.message||x.sent;f.reset()}catch(err){s.textContent=err.message||x.failed}finally{btn.disabled=false}})}
     let observer;function observe(){if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.reveal').forEach(n=>n.classList.add('in'));return}if(observer)observer.disconnect();observer=new IntersectionObserver(entries=>entries.forEach(v=>{if(v.isIntersecting){v.target.classList.add('in');observer.unobserve(v.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(n=>observer.observe(n))}
     document.addEventListener('DOMContentLoaded',async()=>{CJCData.setTheme(window.THEME_ID);render();const langButton=document.getElementById('lang-toggle');if(langButton){langButton.textContent=CJCData.lang()==='zh'?'EN / 中':'中 / EN';langButton.addEventListener('click',()=>CJCData.toggleLang());}CJCData.mountSwitcher({accent:'#54e8e1'});CJCData.onLang(()=>{if(langButton)langButton.textContent=CJCData.lang()==='zh'?'EN / 中':'中 / EN';render()});try{[projects,articles]=await Promise.all([CJCData.fetchProjects(),CJCData.fetchArticles()]);render()}catch(err){document.querySelectorAll('.loading').forEach(n=>{n.className='failure';n.textContent=l().failed})}});
+  })();
+  </script>
+  <script>
+  (()=>{
+    'use strict';
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const glyphs='01<>/[]{}_-';
+    const wired=new WeakSet();
+    const decrypt=el=>{
+      if(reduce||el.dataset.rbBusy==='1')return;
+      const original=el.textContent;if(!original.trim())return;
+      el.dataset.rbBusy='1';el.setAttribute('aria-label',original);let frame=0;const total=15;
+      const tick=()=>{frame+=1;const settled=Math.floor((frame/total)*original.length);el.textContent=Array.from(original).map((char,index)=>index<settled||/\s/.test(char)?char:glyphs[(index+frame)%glyphs.length]).join('');if(frame<total){setTimeout(tick,24)}else{el.textContent=original;delete el.dataset.rbBusy}};tick();
+    };
+    const bind=el=>{if(wired.has(el))return;wired.add(el);el.classList.add('rb-decrypt');el.addEventListener('pointerenter',()=>decrypt(el));el.addEventListener('focusin',()=>decrypt(el));};
+    const scan=root=>(root.matches?.('.section-head h2')&&bind(root),root.querySelectorAll?.('.section-head h2').forEach(bind));
+    addEventListener('DOMContentLoaded',()=>{scan(document);new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>node.nodeType===1&&scan(node)))).observe(document.getElementById('content'),{childList:true,subtree:true})});
   })();
   </script>
 </body>

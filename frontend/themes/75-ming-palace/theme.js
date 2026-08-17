@@ -193,6 +193,7 @@
     document.getElementById("footer-links").innerHTML = '<a href="' + esc(P.contact.github) + '">GitHub</a><a href="mailto:' + esc(P.contact.email) + '">Email</a><a href="/themes/75-ming-palace/ASSET_LICENSE.md">' + esc(x.credits) + '</a><a href="/admin.html">' + esc(t(P.ui.admin_panel)) + '</a><a href="' + esc(P.icpUrl) + '">' + esc(P.icp) + '</a>';
     wire();
     observe();
+    if (window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID, document.getElementById("main"));
   }
 
   function wire() {

@@ -141,6 +141,18 @@
     footer a:hover{color:var(--ink)}
     .muted{color:var(--grey);font-size:12.5px}
     .load-note{color:var(--grey);font-size:14px;grid-column:1/-1}
+
+    /* React Bits inspired: a restrained Swiss target cursor, never replacing the native pointer. */
+    .rb-swiss-target{position:fixed;left:0;top:0;z-index:850;width:30px;height:30px;pointer-events:none;
+      opacity:0;transform:translate3d(-60px,-60px,0);transition:opacity .18s ease,scale .18s ease;
+      border:1px solid rgba(226,35,26,.78);mix-blend-mode:multiply}
+    .rb-swiss-target::before,.rb-swiss-target::after{content:"";position:absolute;background:var(--red)}
+    .rb-swiss-target::before{left:50%;top:-7px;width:1px;height:42px;transform:translateX(-50%)}
+    .rb-swiss-target::after{top:50%;left:-7px;height:1px;width:42px;transform:translateY(-50%)}
+    .rb-swiss-target.is-visible{opacity:1}.rb-swiss-target.is-active{scale:1.45}
+    :focus-visible{outline:3px solid var(--red);outline-offset:4px}
+    .cta,.filters button,.contact-form button{min-height:44px}
+    @media(pointer:coarse),(prefers-reduced-motion:reduce){.rb-swiss-target{display:none}html{scroll-behavior:auto}}
   </style>
 </head>
 <body>
@@ -388,6 +400,21 @@
       CJCData.onLang(()=>{ renderStatic(); renderProjects(); renderArticles(); });
       loadDynamic();
     });
+  })();
+  </script>
+  <script>
+  (()=>{
+    'use strict';
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine=matchMedia('(pointer: fine)').matches;
+    if(reduce||!fine)return;
+    const target=document.createElement('span');
+    target.className='rb-swiss-target';target.setAttribute('aria-hidden','true');document.body.appendChild(target);
+    let x=-60,y=-60,raf=0;
+    const paint=()=>{target.style.transform=`translate3d(${x-15}px,${y-15}px,0)`;raf=0};
+    addEventListener('pointermove',event=>{x=event.clientX;y=event.clientY;target.classList.add('is-visible');if(!raf)raf=requestAnimationFrame(paint)},{passive:true});
+    document.addEventListener('pointerover',event=>target.classList.toggle('is-active',!!event.target.closest('a,button,input,textarea')));
+    document.addEventListener('pointerout',event=>{if(!event.relatedTarget)target.classList.remove('is-visible')});
   })();
   </script>
 </body>

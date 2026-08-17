@@ -1,0 +1,151 @@
+/*
+ * CJC React Bits adapter
+ * Visual algorithms adapted for this portfolio from React Bits at commit
+ * c7109dccb42e06592d1d9bc50bc87204697240e2.
+ * See /THIRD_PARTY_NOTICES.txt for the upstream license notice.
+ */
+
+[data-rb] {
+  --rb-accent: #5f88e0;
+  --rb-spotlight: color-mix(in srgb, var(--rb-accent) 24%, transparent);
+  --rb-x: 50%;
+  --rb-y: 50%;
+  --rb-magnet-x: 0px;
+  --rb-magnet-y: 0px;
+}
+
+[data-rb~="spotlight"] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+[data-rb~="spotlight"]::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(360px circle at var(--rb-x) var(--rb-y), var(--rb-spotlight), transparent 68%);
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+}
+
+[data-rb~="spotlight"]:hover::before,
+[data-rb~="spotlight"]:focus-within::before {
+  opacity: 1;
+}
+
+[data-rb~="spotlight"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-rb~="magnet"] {
+  transform: translate3d(var(--rb-magnet-x), var(--rb-magnet-y), 0);
+  transition: transform 180ms cubic-bezier(.2, .8, .2, 1);
+}
+
+[data-rb~="magnet"].rb-interacting {
+  transition-duration: 70ms;
+  will-change: transform;
+}
+
+[data-rb~="reveal"],
+[data-rb~="blur-text"] {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  filter: blur(8px);
+  transition: opacity 520ms ease-out, transform 520ms cubic-bezier(.2, .8, .2, 1), filter 520ms ease-out;
+}
+
+[data-rb~="reveal"].rb-visible,
+[data-rb~="blur-text"].rb-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+[data-rb~="gradient-text"],
+[data-rb~="shiny-text"] {
+  color: currentColor;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  [data-rb~="gradient-text"] {
+    background: linear-gradient(92deg, currentColor 0%, var(--rb-accent) 42%, currentColor 76%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-rb~="shiny-text"] {
+    background: linear-gradient(110deg, currentColor 25%, var(--rb-accent) 48%, #fff 52%, currentColor 76%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-rb~="gradient-text"].rb-in-view,
+  [data-rb~="shiny-text"].rb-in-view {
+    animation: rb-text-sweep 4.8s ease-in-out infinite;
+  }
+}
+
+[data-rb~="star-border"] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-rb~="star-border"]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 38%, var(--rb-accent) 48%, #fff 52%, transparent 62% 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: .72;
+}
+
+[data-rb~="star-border"].rb-in-view::after {
+  animation: rb-border-orbit 5.5s linear infinite;
+}
+
+@keyframes rb-text-sweep {
+  0%, 16% { background-position: 100% 50%; }
+  52%, 100% { background-position: -110% 50%; }
+}
+
+@keyframes rb-border-orbit {
+  to { transform: rotate(1turn); }
+}
+
+@media (hover: none), (pointer: coarse) {
+  [data-rb~="spotlight"]::before { display: none; }
+  [data-rb~="magnet"] { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-rb~="spotlight"]::before { display: none; }
+  [data-rb~="magnet"],
+  [data-rb~="reveal"],
+  [data-rb~="blur-text"] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  [data-rb~="gradient-text"],
+  [data-rb~="shiny-text"],
+  [data-rb~="star-border"]::after {
+    animation: none !important;
+  }
+}

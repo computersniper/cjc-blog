@@ -211,8 +211,15 @@
     .muted{color:var(--grey);font-size:13px;font-style:italic}
     .load-note{color:var(--grey);font-style:italic;grid-column:1/-1;padding:20px 0}
 
+    /* React Bits inspired ScrollReveal: page furniture rises like type entering a press sheet. */
+    .rb-editorial-reveal{opacity:0;transform:translateY(28px);clip-path:inset(0 0 18% 0);
+      transition:opacity .46s ease-out,transform .46s cubic-bezier(.2,.8,.2,1),clip-path .46s ease-out}
+    .rb-editorial-reveal.rb-visible{opacity:1;transform:none;clip-path:inset(0)}
+    .sec-head.rb-editorial-reveal{transform:translateY(14px)}
+    .sec-head.rb-editorial-reveal.rb-visible{transform:none}
+
     :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-    @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rb-editorial-reveal{opacity:1;transform:none;clip-path:none}}
   </style>
 </head>
 <body>
@@ -489,6 +496,17 @@
       CJCData.onLang(()=>{ if(langButton) langButton.textContent = CJCData.lang()==='zh' ? 'EN / 中' : '中 / EN'; renderStatic(); renderProjects(); renderArticles(); });
       loadDynamic();
     });
+  })();
+  </script>
+  <script>
+  (()=>{
+    'use strict';
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wired=new WeakSet();
+    const observer=reduce?null:new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('rb-visible');observer.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -6%'});
+    const bind=el=>{if(wired.has(el))return;wired.add(el);el.classList.add('rb-editorial-reveal');if(reduce)el.classList.add('rb-visible');else observer.observe(el)};
+    const scan=root=>(root.matches?.('.sec-head,.pullquote,.lrow,.course,.card,.cert')&&bind(root),root.querySelectorAll?.('.sec-head,.pullquote,.lrow,.course,.card,.cert').forEach(bind));
+    addEventListener('DOMContentLoaded',()=>{scan(document);new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>node.nodeType===1&&scan(node)))).observe(document.body,{childList:true,subtree:true})});
   })();
   </script>
 </body>

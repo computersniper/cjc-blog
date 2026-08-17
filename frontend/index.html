@@ -33,6 +33,7 @@
    <link href="./index_page/css/blog.css" rel="stylesheet" />
    <link href="./index_page/css/contact.css" rel="stylesheet" />
    <link href="./index_page/css/footer.css" rel="stylesheet" />
+   <link href="./shared/react-bits.css" rel="stylesheet" />
    <!-- AOS Animation CSS -->
    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -226,6 +227,14 @@
          from { opacity: 0; transform: translateY(20px); }
          to { opacity: 1; transform: translateY(0); }
       }
+
+      /* The carousel arrows intentionally sit a few pixels outside their
+         cards. Keep that affordance visible without letting the transformed
+         track widen the document on narrow viewports. */
+      html, body { overflow-x: hidden; }
+      @media (max-width: 767px) {
+         .blog, .portfolio { overflow-x: hidden; }
+      }
     </style>
 </head>
 
@@ -249,7 +258,7 @@
                   <li><a href="#certificate" data-i18n="nav_certificate">Certificates</a></li>
                   <li><a href="#internship" data-i18n="nav_internship">Internship</a></li>
                   <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-                  <li><a href="/themes.html" id="theme-switch-btn" data-i18n="switch_theme" style="color: #5f88e0; font-weight: bold;">🎨 Themes</a></li>
+                  <li><a href="/themes.html" id="theme-switch-btn" data-rb="magnet star-border" data-i18n="switch_theme" style="--rb-accent:#5f88e0;color:#5f88e0;font-weight:bold;">Themes</a></li>
                   <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">中文</a></li>
                </ul>
             </div>
@@ -262,10 +271,10 @@
             <div class="home-content">
                <div class="block">
                   <h6 data-i18n="hi_name">Hi, my name is</h6>
-                  <h1 data-i18n="my_name">Cai Jiechao</h1>
-                  <h3 data-i18n="build_things">I build things for the world</h3>
+                  <h1 data-rb="gradient-text" style="--rb-accent:#86a8ef" data-i18n="my_name">Cai Jiechao</h1>
+                  <h3 data-rb="blur-text" data-i18n="build_things">I build things for the world</h3>
                   <div class="cv-btn">
-                     <a href="#" onclick="showLanguageSelection(event)" data-i18n="download_cv">Download CV</a>
+                     <a href="#" data-rb="magnet star-border" style="--rb-accent:#86a8ef" onclick="showLanguageSelection(event)" data-i18n="download_cv">Download CV</a>
                   </div>
                </div>
             </div>
@@ -294,7 +303,7 @@
          <div class="row">
             <div class="about-content">
                <div class="row">
-                  <div class="img">
+                  <div class="img" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                      <img src="index_page/img/me.jpg" alt='me' />
                   </div>
                   <div class="text">
@@ -351,32 +360,32 @@
          </div>
          <div class="row">
             <div class="service-content">
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-sitemap"></i></div>
                   <h5 data-i18n="dl_title">Deep Learning & Neural Networks</h5>
                   <p data-i18n="dl_desc">Studied advanced AI techniques including Deep Learning and Neural Networks architectures, building strong foundations for LLM engineering.</p>
                </div>
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-language"></i></div>
                   <h5 data-i18n="nlp_title">Natural Language Processing</h5>
                   <p data-i18n="nlp_desc">Learned text processing, language modeling, and advanced NLP techniques, essential for understanding and developing modern AI Agent systems.</p>
                </div>
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-cogs"></i></div>
                   <h5 data-i18n="ml_title">Machine Learning</h5>
                   <p data-i18n="ml_desc">Mastered core ML algorithms, data preprocessing, and model evaluation metrics, applying them to solve complex predictive and classification problems.</p>
                </div>
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-code"></i></div>
                   <h5 data-i18n="dsa_title">Data Structure & Algorithm</h5>
                   <p data-i18n="dsa_desc">Learned fundamental to complex data structures and algorithms, analyzing time and space complexity to write optimized, high-performance code.</p>
                </div>
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-linux"></i></div>
                   <h5 data-i18n="os_title">Operating System</h5>
                   <p data-i18n="os_desc">Deeply understood OS principles including process scheduling, memory management, file systems, and Linux system programming.</p>
                </div>
-               <div class="box">
+               <div class="box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                   <div class="icon"><i class="fa fa-wifi"></i></div>
                   <h5 data-i18n="net_title">Data Communications & Networking</h5>
                   <p data-i18n="net_desc">Learned the principles of data communication, OSI reference model, TCP/IP protocols, and applied theory through socket programming projects.</p>
@@ -667,6 +676,7 @@
       <span class="close-lightbox fa fa-close"></span>
       <img src="" alt="portfolio" />
    </div>
+   <script src="./shared/react-bits.js"></script>
    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
    <script>
       AOS.init({
@@ -778,7 +788,7 @@
 
                container.innerHTML += `
                <div class="${wrapperClass}">
-                  <div class="blog-box">
+                  <div class="blog-box" data-rb="spotlight reveal" style="--rb-accent:#5f88e0">
                      <div class="blog-img">
                         <img src='${article.cover_image}' onerror="this.src='index_page/img/blogs/1.jpg'" style="width:100%; object-fit:cover; height: 250px;" />
                      </div>
@@ -795,6 +805,7 @@
                </div>
                `;
             });
+            if (window.CJCReactBits) window.CJCReactBits.refresh(container);
          }
 
          window.renderArticles = renderArticles;
@@ -887,7 +898,7 @@
 
                container.innerHTML += `
                <div class="slider-item">
-                  <div class="inner" style="height: 100%; padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.3s ease; display:flex; flex-direction:column;" onmouseover="this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'" onclick="window.location.href='project.html?id=${project.id}'">
+                  <a class="inner" data-rb="spotlight reveal" href="project.html?id=${project.id}" style="--rb-accent:#5f88e0;height:100%;padding:20px;border:1px solid #eee;border-radius:8px;text-align:left;transition:all .3s ease;display:flex;flex-direction:column;text-decoration:none;">
                      <div style="flex:1;">
                         <h4 style="margin-bottom: 10px; color: #01143e;">${title} <span style="font-size: 14px; color: #666; font-weight: normal;">(${date})</span></h4>
                         <p style="margin-bottom: 10px; font-size: 14px; color: #555;"><strong>${techStackText}</strong> ${project.tech_stack}</p>
@@ -895,10 +906,11 @@
                            ${summary}
                         </p>
                      </div>
-                  </div>
+                  </a>
                </div>
                `;
             });
+            if (window.CJCReactBits) window.CJCReactBits.refresh(container);
          } catch (error) {
             console.error('Error fetching projects:', error);
             container.innerHTML = '<div style="text-align:center; width:100%;"><p>Failed to load projects.</p></div>';
