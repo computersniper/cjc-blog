@@ -236,6 +236,22 @@ body[data-theme="57-cardrive"] {
 body[data-theme="57-cardrive"] .qr-card { border-bottom-width: 8px; }
 body[data-theme="57-cardrive"] .qr-card-head span::before { content: "READY / "; color: #64f08a; }
 
+/* 67 — Signal Orange Editorial */
+body[data-theme="67-orange-editorial"] {
+  --qr-bg: #f2efe7; --qr-surface: #fffdf8; --qr-ink: #171714; --qr-muted: #625f59;
+  --qr-accent: #ee4d19; --qr-line: #171714; --qr-shadow: 14px 14px 0 rgba(238,77,25,.2); --qr-radius: 0;
+  --qr-font: Arial, "Helvetica Neue", sans-serif; --qr-display: Georgia, "Times New Roman", serif;
+  background-image: linear-gradient(90deg, transparent calc(50% - .5px), rgba(23,23,20,.08) 50%, transparent calc(50% + .5px));
+}
+body[data-theme="67-orange-editorial"] .qr-header { border-top: 8px solid var(--qr-accent); border-bottom-color: var(--qr-ink); }
+body[data-theme="67-orange-editorial"] .qr-back { min-height: 44px; display: inline-flex; align-items: center; }
+body[data-theme="67-orange-editorial"] .qr-intro h1 { max-width: 9ch; font-weight: 400; letter-spacing: -.075em; line-height: .82; }
+body[data-theme="67-orange-editorial"] .qr-card { border-top-width: 8px; }
+body[data-theme="67-orange-editorial"] .qr-card-head { font-family: "Courier New", monospace; letter-spacing: .08em; text-transform: uppercase; }
+body[data-theme="67-orange-editorial"] .qr-image-shell { border-width: 1px; }
+body[data-theme="67-orange-editorial"] .qr-art span:nth-child(1),
+body[data-theme="67-orange-editorial"] .qr-art span:nth-child(4) { flex: 2.4; }
+
 /* 73 — Road in motion */
 body[data-theme="73-cardrive-motion"] {
   --qr-bg: #071117; --qr-surface: rgba(13,27,35,.94); --qr-ink: #ecf8fa; --qr-muted: #94aab2;

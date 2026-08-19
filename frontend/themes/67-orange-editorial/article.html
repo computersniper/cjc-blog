@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Cai Jiechao's writing in the Signal Orange editorial theme.">
+  <meta name="theme-color" content="#f2efe7">
+  <title>Journal · Signal Orange Editorial</title>
+  <link rel="icon" href="/index_page/img/favicon.ico">
+  <link rel="stylesheet" href="./detail.css">
+</head>
+<body>
+  <a class="skip" href="#detail">Skip to article</a>
+  <header class="detail-head">
+    <div class="shell row">
+      <a class="brand" href="./">Cai<b>Jiechao</b></a>
+      <nav class="detail-nav" aria-label="Primary navigation">
+        <a href="./">Home</a><a href="./#about">Profile</a><a href="./#education">Study</a><a href="./#work">Projects</a><a href="./#journal" aria-current="page">Journal</a><a href="./#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="detail-main" id="detail">
+    <div class="detail-shell">
+      <div class="detail-mast">
+        <p class="detail-kicker">Issue 067<br>Journal desk</p>
+        <h1>Signal <em>Notes</em></h1>
+        <p class="detail-note">Essay / research / field record<br>CJC editorial archive</p>
+      </div>
+      <div id="mount" aria-live="polite"></div>
+    </div>
+  </main>
+  <footer class="detail-foot"><div class="shell row"><span>Cai Jiechao · Signal Orange / Journal desk</span><a href="./#contact">Start a signal ↗</a></div></footer>
+  <script>window.THEME_ID='67-orange-editorial';</script>
+  <script src="/shared/profile.js"></script>
+  <script src="/shared/site-data.js"></script>
+  <script src="/shared/detail.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+      CJCData.setTheme(window.THEME_ID);
+      CJCData.mountDetail({kind:'article',mount:'#mount',accent:'#ee4d19',backHref:'./#journal'});
+    });
+  </script>
+</body>
+</html>

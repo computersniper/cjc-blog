@@ -15,6 +15,7 @@
     "06-cyberpunk": { en: "NEON HANDSHAKE / NODE 06", zh: "霓虹握手协议 / 节点 06" },
     "54-f1": { en: "PIT WALL COMMS / CAR 54", zh: "维修区通信 / 54 号赛车" },
     "57-cardrive": { en: "ROADLINK / CHANNEL 57", zh: "道路联络 / 频道 57" },
+    "67-orange-editorial": { en: "SIGNAL ORANGE CORRESPONDENCE / 067", zh: "信号橙通信编辑部 / 067" },
     "73-cardrive-motion": { en: "MOTION LINK / CHANNEL 73", zh: "动态道路联络 / 频道 73" },
     "74-aviation-cockpit": { en: "BOARDING CHANNEL / GATE 74", zh: "登机通信频道 / 74 号登机口" },
     "75-ming-palace": { en: "VERMILION CORRESPONDENCE / 75", zh: "御前通函 / 卷七十五" },
