@@ -17,6 +17,7 @@
     "57-cardrive": { en: "ROADLINK / CHANNEL 57", zh: "道路联络 / 频道 57" },
     "67-orange-editorial": { en: "SIGNAL ORANGE CORRESPONDENCE / 067", zh: "信号橙通信编辑部 / 067" },
     "68-sanctuary": { en: "SANCTUARY VISITOR CARD / 068", zh: "静谧居所访客卡 / 068" },
+    "69-violet-os": { en: "VIOLET OS CONTACT CHANNEL / 069", zh: "紫罗兰系统联络频道 / 069" },
     "73-cardrive-motion": { en: "MOTION LINK / CHANNEL 73", zh: "动态道路联络 / 频道 73" },
     "74-aviation-cockpit": { en: "BOARDING CHANNEL / GATE 74", zh: "登机通信频道 / 74 号登机口" },
     "75-ming-palace": { en: "VERMILION CORRESPONDENCE / 75", zh: "御前通函 / 卷七十五" },

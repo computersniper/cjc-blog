@@ -271,9 +271,11 @@
   // of navigating away. The deployment migration moves these bodies into the
   // API, so this path is only used while an older database is still online.
   function hydrateArticleContent(article) {
-    if ((article.content && String(article.content).trim()) ||
-        (article.content_zh && String(article.content_zh).trim()) ||
-        !article.readUrl) return Promise.resolve(article);
+    // A number of migrated records contain only a short database excerpt while
+    // their canonical static page still holds the complete article, media and
+    // embedded PDF. Import that canonical body whenever it is available; the
+    // existing API content remains the fallback if the legacy page cannot load.
+    if (!article.readUrl) return Promise.resolve(article);
 
     var source;
     try { source = new URL(article.readUrl, window.location.origin); }
