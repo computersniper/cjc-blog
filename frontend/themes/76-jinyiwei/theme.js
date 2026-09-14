@@ -32,7 +32,7 @@
       awards: "Commendation Register", awardsLead: "Certificates and milestones retained as verifiable evidence.",
       contact: "Secure Channel", contactLead: "Open a direct channel for software, agent systems, or collaboration.",
       inspect: "Inspect file", read: "Read report", fail: "Archive link unavailable. Retry shortly.", retry: "Retry link", noProjects: "No mission files have been authorized yet.", noArticles: "No intelligence reports have been filed yet.", menu: "Open archive index", closeMenu: "Close archive index",
-      name: "Contact name", email: "Return address", message: "Message / intelligence", send: "Transmit", sending: "Encrypting and transmitting…", sent: "Transmission received.", skip: "Skip to content"
+      name: "Contact name", email: "Return address", message: "Message / intelligence", send: "Transmit", sending: "Encrypting and transmitting…", sent: "Transmission received.", skip: "Skip to content", pageTitle: "Jinyiwei Archive", github: "GitHub", emailLabel: "Email", phoneLabel: "Phone", wechatLabel: "WeChat", missionLabel: "MISSION", reportLabel: "REPORT"
     },
     zh: {
       nav: [["profile", "人员卷宗"], ["training", "校阅录"], ["experience", "差遣"], ["missions", "案卷"], ["reports", "密报"], ["awards", "功册"], ["contact", "联络"]],
@@ -60,7 +60,7 @@
       awards: "勘合功册", awardsLead: "将证书与里程碑作为可核验的证据留档。",
       contact: "密线联络", contactLead: "就软件、智能体系统或未来合作开启一条直接通道。",
       inspect: "查阅案卷", read: "读取密报", fail: "档案线路暂不可用，请稍后重试。", retry: "重连线路", noProjects: "行动案卷尚未获准入档。", noArticles: "缇骑密报尚未录入。", menu: "展开密档目录", closeMenu: "收起密档目录",
-      name: "联络人姓名", email: "回信地址", message: "来函 / 情报", send: "加密传递", sending: "正在加密传递……", sent: "传递已经收讫。", skip: "跳至正文"
+      name: "联络人姓名", email: "回信地址", message: "来函 / 情报", send: "加密传递", sending: "正在加密传递……", sent: "传递已经收讫。", skip: "跳至正文", pageTitle: "锦衣卫密档", github: "GitHub", emailLabel: "电子信函", phoneLabel: "电话", wechatLabel: "微信", missionLabel: "案卷", reportLabel: "密报"
     }
   };
   function L() { return copy[CJCData.lang()]; }
@@ -92,7 +92,7 @@
     if (loadState.projects === "loading") body = '<div class="archive-state is-loading" role="status"><span class="state-mark" aria-hidden="true"></span><p>' + e(t(P.ui.loading_projects)) + '</p></div>';
     else if (loadState.projects === "error") body = '<div class="archive-state is-error" role="alert"><p>' + e(x.fail) + '</p><button class="action" type="button" data-retry="projects">' + e(x.retry) + '</button></div>';
     else if (!projects.length) body = '<div class="archive-state is-empty"><span class="empty-stamp" aria-hidden="true">空卷</span><p>' + e(x.noProjects) + '</p></div>';
-  else body = '<div class="file-grid reveal">' + projects.map(function (p, i) { var cover = p.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(p.detailHref) + '"><img loading="lazy" decoding="async" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(p.localTitle()) + '"><div class="file-copy"><div class="file-meta">MISSION_' + String(i + 1).padStart(2, "0") + ' · ' + e(p.dateText()) + '</div><h3>' + e(p.localTitle()) + '</h3><p>' + e(p.localSummary() || "") + '</p><span class="file-action">' + e(x.inspect) + ' →</span></div></a>'; }).join("") + '</div>';
+  else body = '<div class="file-grid reveal">' + projects.map(function (p, i) { var cover = p.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(p.detailHref) + '"><img loading="lazy" decoding="async" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(p.localTitle()) + '"><div class="file-copy"><div class="file-meta">' + e(x.missionLabel) + '_' + String(i + 1).padStart(2, "0") + ' · ' + e(p.dateText()) + '</div><h3>' + e(p.localTitle()) + '</h3><p>' + e(p.localSummary() || "") + '</p><span class="file-action">' + e(x.inspect) + ' →</span></div></a>'; }).join("") + '</div>';
     return '<section class="section" id="missions"><div class="wrap">' + head("projects", 4) + body + '</div></section>';
   }
 
@@ -102,7 +102,7 @@
     else if (loadState.articles === "error") body = '<div class="archive-state is-error" role="alert"><p>' + e(x.fail) + '</p><button class="action" type="button" data-retry="articles">' + e(x.retry) + '</button></div>';
     else if (!articles.length) body = '<div class="archive-state is-empty"><span class="empty-stamp" aria-hidden="true">空卷</span><p>' + e(x.noArticles) + '</p></div>';
     else if (!list.length) body = '<p class="loading">' + e(t(P.ui.no_articles)) + '</p>';
-  else body = '<div class="file-grid reveal">' + list.map(function (a, i) { var cover = a.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(a.detailHref) + '"><img loading="lazy" decoding="async" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(a.localTitle()) + '"><div class="file-copy"><div class="file-meta">REPORT_' + String(i + 1).padStart(2, "0") + ' · ' + e(a.category || "INTEL") + ' · ' + e(a.dateText()) + '</div><h3>' + e(a.localTitle()) + '</h3><p>' + e(a.localSummary() || "") + '</p><span class="file-action">' + e(x.read) + ' →</span></div></a>'; }).join("") + '</div>';
+  else body = '<div class="file-grid reveal">' + list.map(function (a, i) { var cover = a.cover_image || "/index_page/img/blogs/1.jpg"; return '<a class="case-file" href="' + e(a.detailHref) + '"><img loading="lazy" decoding="async" src="' + e(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + e(a.localTitle()) + '"><div class="file-copy"><div class="file-meta">' + e(x.reportLabel) + '_' + String(i + 1).padStart(2, "0") + ' · ' + e(a.category || x.reportLabel) + ' · ' + e(a.dateText()) + '</div><h3>' + e(a.localTitle()) + '</h3><p>' + e(a.localSummary() || "") + '</p><span class="file-action">' + e(x.read) + ' →</span></div></a>'; }).join("") + '</div>';
     return '<section class="section" id="reports"><div class="wrap">' + head("reports", 5) + '<div class="filters" aria-label="Report categories">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + e(f.key) + '" aria-pressed="' + String(filter === f.key) + '" class="' + (filter === f.key ? "active" : "") + '">' + e(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
   }
 
@@ -112,12 +112,13 @@
 
   function contact() {
     var x = L();
-    return '<section class="section contact-section" id="contact"><div class="wrap">' + head("contact", 7) + '<div class="contact-grid reveal"><div class="secure-channels"><a href="mailto:' + e(P.contact.email) + '"><span>Email</span><span>' + e(P.contact.email) + '</span></a><a href="' + e(P.contact.phoneHref) + '"><span>Phone</span><span>' + e(P.contact.phone) + '</span></a><a href="' + e(P.contact.github) + '" target="_blank" rel="noopener"><span>GitHub</span><span>@' + e(P.contact.githubUser) + '</span></a><a href="' + e(P.contact.wechatQrPage) + '"><span>WeChat</span><span>QR</span></a></div><form class="archive-form" id="contact-form"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><label for="name">' + e(x.name) + '</label><input id="name" name="name" autocomplete="name" required><label for="email">' + e(x.email) + '</label><input id="email" type="email" name="email" autocomplete="email" required><label for="message">' + e(x.message) + '</label><textarea id="message" name="message" required></textarea><button class="action primary" type="submit">' + e(x.send) + '</button><p class="status" id="status" role="status" aria-live="polite"></p></form></div></div></section>';
+    return '<section class="section contact-section" id="contact"><div class="wrap">' + head("contact", 7) + '<div class="contact-grid reveal"><div class="secure-channels"><a href="mailto:' + e(P.contact.email) + '"><span>' + e(x.emailLabel) + '</span><span>' + e(P.contact.email) + '</span></a><a href="' + e(P.contact.phoneHref) + '"><span>' + e(x.phoneLabel) + '</span><span>' + e(P.contact.phone) + '</span></a><a href="' + e(P.contact.github) + '" target="_blank" rel="noopener"><span>' + e(x.github) + '</span><span>@' + e(P.contact.githubUser) + '</span></a><a href="' + e(P.contact.wechatQrPage) + '"><span>' + e(x.wechatLabel) + '</span><span>' + e(x.reportLabel) + '</span></a></div><form class="archive-form" id="contact-form"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><label for="name">' + e(x.name) + '</label><input id="name" name="name" autocomplete="name" required><label for="email">' + e(x.email) + '</label><input id="email" type="email" name="email" autocomplete="email" required><label for="message">' + e(x.message) + '</label><textarea id="message" name="message" required></textarea><button class="action primary" type="submit">' + e(x.send) + '</button><p class="status" id="status" role="status" aria-live="polite"></p></form></div></div></section>';
   }
 
   function render() {
     var x = L();
-    document.title = "Jinyiwei Archive · " + t(P.name);
+    document.documentElement.lang = CJCData.lang() === "zh" ? "zh-CN" : "en";
+    document.title = L().pageTitle + " · " + t(P.name);
     document.querySelector(".skip").textContent = x.skip;
     document.getElementById("brand").textContent = P.brand;
     document.getElementById("nav").innerHTML = x.nav.map(function (v) { return '<a href="#' + e(v[0]) + '">' + e(v[1]) + '</a>'; }).join("");
@@ -130,7 +131,7 @@
     if (unsealNode) { unsealNode.setAttribute("aria-pressed", String(archiveOpen)); unsealNode.textContent = archiveOpen ? x.seal : x.unseal; }
     document.getElementById("footer-brand").textContent = P.brand + " · ARCHIVE 76";
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
-    document.getElementById("footer-links").innerHTML = '<a href="' + e(P.contact.github) + '">GitHub</a><a href="mailto:' + e(P.contact.email) + '">Email</a><a href="/themes/76-jinyiwei/ASSET_LICENSE.md">' + e(x.credits) + '</a><a href="/admin.html">' + e(t(P.ui.admin_panel)) + '</a><a href="' + e(P.icpUrl) + '">' + e(P.icp) + '</a>';
+    document.getElementById("footer-links").innerHTML = '<a href="' + e(P.contact.github) + '">' + e(x.github) + '</a><a href="mailto:' + e(P.contact.email) + '">' + e(x.emailLabel) + '</a><a href="/themes/76-jinyiwei/ASSET_LICENSE.md">' + e(x.credits) + '</a><a href="/admin.html">' + e(t(P.ui.admin_panel)) + '</a><a href="' + e(P.icpUrl) + '">' + e(P.icp) + '</a>';
     wire(); observe();
     if (window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID, document.getElementById("main"));
   }

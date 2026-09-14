@@ -116,6 +116,34 @@
       .race-overlay{left:19px;top:17px}.race-data{display:none}.photo-credit{left:19px}.photo-credit .track{width:100%}
     }
 
+    /* ---- Driver cockpit / steering wheel ---- */
+    .driver-cockpit{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:14px;margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,rgba(20,24,31,.96),rgba(7,9,12,.98));box-shadow:0 20px 55px rgba(0,0,0,.38);overflow:hidden;position:relative}
+    .driver-cockpit::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 0 49.7%,rgba(225,6,0,.18) 50%,transparent 50.3%),repeating-linear-gradient(0deg,transparent 0 11px,rgba(255,255,255,.022) 12px);opacity:.8}
+    .wheel-stage,.wheel-readouts{position:relative;z-index:1;min-width:0}
+    .cockpit-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;color:var(--mut);font:600 10px/1 'Oswald';letter-spacing:.16em;text-transform:uppercase}
+    .cockpit-head strong{color:var(--red);font-size:13px}
+    .wheel-stage{min-height:212px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 50% 58%,rgba(225,6,0,.16),transparent 30%),#0b0e12}
+    .wheel{position:relative;width:min(235px,72%);aspect-ratio:1/1;border:17px solid #171b20;border-radius:50%;box-shadow:0 0 0 2px #3a424b,0 18px 36px rgba(0,0,0,.72),inset 0 0 0 5px #080a0d;transform:rotate(-3deg);transition:transform .22s ease}
+    .wheel::before,.wheel::after{content:"";position:absolute;background:#242c34;box-shadow:inset 0 0 0 2px #090b0f}
+    .wheel::before{width:42%;height:12px;left:29%;top:50%;transform:translateY(-50%)}
+    .wheel::after{width:12px;height:55%;left:50%;top:26%;transform:translateX(-50%);background:#161c22}
+    .wheel-core{position:absolute;inset:27%;display:grid;place-items:center;border-radius:7px;background:linear-gradient(145deg,#272f38,#0b0e12);border:2px solid #4a5159;color:#fff;text-align:center;font:700 12px/1 'Oswald';letter-spacing:.08em;z-index:2}
+    .wheel-core small{display:block;margin-top:5px;color:var(--red);font:600 8px 'Titillium Web';letter-spacing:.12em}
+    .wheel-button{position:absolute;width:23px;height:23px;border-radius:5px;background:#bf160f;border:2px solid #ff625c;box-shadow:0 0 9px rgba(225,6,0,.45);z-index:3}
+    .wheel-button.a{left:18%;top:32%}.wheel-button.b{right:18%;top:32%;background:var(--amber);border-color:#ffd477}.wheel-button.c{left:17%;bottom:29%;background:var(--green);border-color:#6effc1}.wheel-button.d{right:17%;bottom:29%;background:var(--cyan);border-color:#9df1ff}
+    .wheel-leds{position:absolute;left:50%;top:8px;display:flex;gap:4px;transform:translateX(-50%);z-index:4}
+    .wheel-leds i{width:11px;height:6px;background:#3c1514;border-radius:2px;box-shadow:inset 0 0 3px #000}
+    .wheel-leds i.on{background:var(--red);box-shadow:0 0 8px var(--red)}
+    .wheel-readouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+    .wheel-readout{padding:11px 10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.025);min-width:0}
+    .wheel-readout span{display:block;color:var(--mut);font:600 9px/1 'Oswald';letter-spacing:.12em;text-transform:uppercase}
+    .wheel-readout strong{display:block;margin-top:7px;color:#fff;font:700 21px/1 'Oswald';font-variant-numeric:tabular-nums}
+    .wheel-readout em{display:block;margin-top:4px;color:var(--amber);font:400 10px/1 'Titillium Web';font-style:normal;white-space:nowrap}
+    .wheel-bar{height:5px;margin-top:9px;border-radius:3px;background:#202832;overflow:hidden}
+    .wheel-bar i{display:block;width:72%;height:100%;background:linear-gradient(90deg,var(--red),var(--amber));transition:width .16s ease}
+    @media(max-width:720px){.driver-cockpit{grid-template-columns:1fr}.wheel-stage{min-height:190px}.wheel-readouts{grid-template-columns:repeat(4,minmax(0,1fr))}.wheel-readout{padding:9px 7px}.wheel-readout strong{font-size:16px}.wheel-readout em{font-size:9px}}
+    @media(max-width:520px){.driver-cockpit{padding:11px}.wheel-readouts{grid-template-columns:repeat(2,minmax(0,1fr))}.cockpit-head{font-size:9px}.wheel{width:190px}}
+
     /* HUD panel */
     .hud{background:linear-gradient(180deg,rgba(20,24,31,.9),rgba(12,14,19,.9));
       border:1px solid var(--line);border-radius:12px;padding:16px;position:relative;overflow:hidden}
@@ -437,6 +465,22 @@
         </figcaption>
       </figure>
     </div>
+    <section class="driver-cockpit" id="driverCockpit" aria-label="F1 driver cockpit telemetry">
+      <div class="wheel-stage">
+        <div class="cockpit-head"><strong id="cockpitTitle">DRIVER COCKPIT</strong><span id="cockpitMode">STEERING WHEEL / LIVE</span></div>
+        <div class="wheel" id="steeringWheel" aria-hidden="true">
+          <div class="wheel-leds" id="wheelLeds"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <b class="wheel-button a"></b><b class="wheel-button b"></b><b class="wheel-button c"></b><b class="wheel-button d"></b>
+          <div class="wheel-core">CJC<small>F1 / 11</small></div>
+        </div>
+      </div>
+      <div class="wheel-readouts">
+        <div class="wheel-readout"><span id="brakeLabel">Brake bias</span><strong id="brakeBias">55.0</strong><em id="brakeUnit">% front</em><div class="wheel-bar"><i id="brakeBar"></i></div></div>
+        <div class="wheel-readout"><span id="throttleLabel">Throttle</span><strong id="throttleVal">00</strong><em id="throttleUnit">% pedal</em><div class="wheel-bar"><i id="throttleBar"></i></div></div>
+        <div class="wheel-readout"><span id="steeringLabel">Steering</span><strong id="steerVal">−03</strong><em id="steeringUnit">degrees</em><div class="wheel-bar"><i id="steerBar"></i></div></div>
+        <div class="wheel-readout"><span id="fuelLabel">Fuel mode</span><strong id="fuelMode">PUSH</strong><em id="fuelUnit">race strategy</em><div class="wheel-bar"><i style="width:86%"></i></div></div>
+      </div>
+    </section>
   </div></header>
 
   <section id="about"><div class="speed"><span style="top:20%;animation-delay:0s"></span><span style="top:60%;animation-delay:1.4s"></span></div><div class="wrap">
@@ -533,7 +577,7 @@
   </div>
 
   <div class="pit" id="pit" aria-hidden="true"><div class="pit-box">
-    <div class="pit-title">🔧 PIT STOP · 进站</div>
+    <div class="pit-title">PIT STOP · 进站</div>
     <div class="pit-car">
       <div class="body"></div>
       <div class="pit-wheel" style="left:20px;top:14px"></div>
@@ -586,6 +630,10 @@
       {en:"Mode push, mode push.",zh:"切到推进模式。"},
       {en:"Fuel and tyres are fine.",zh:"油量与轮胎正常。"}
     ];
+    const COCKPIT_COPY={
+      en:{aria:'F1 driver cockpit telemetry',title:'DRIVER COCKPIT',mode:'STEERING WHEEL / LIVE',brake:'Brake bias',brakeUnit:'% front',throttle:'Throttle',throttleUnit:'% pedal',steering:'Steering',steeringUnit:'degrees',fuel:'Fuel mode',fuelUnit:'race strategy',push:'PUSH'},
+      zh:{aria:'F1 车手驾驶舱遥测',title:'车手驾驶舱',mode:'方向盘 / 实时',brake:'制动平衡',brakeUnit:'% 前轴',throttle:'油门',throttleUnit:'% 踏板',steering:'转向角',steeringUnit:'度',fuel:'燃油模式',fuelUnit:'比赛策略',push:'推进'}
+    };
     let radioCur=RADIO[3], radioTimer=0;
     function paintRadio(){ const el=$('radioTxt'); if(el) el.textContent=t(radioCur); }
     function radio(msg){ radioCur=msg||RADIO[Math.floor(Math.random()*RADIO.length)]; paintRadio(); }
@@ -617,6 +665,24 @@
       const gr=$('gear'); if(gr) gr.textContent=S.gear;
       const rb=$('rpmbar'); if(rb){ const pct=Math.min(100,(S.rpm/15400)*100); rb.style.width=pct+'%'; rb.parentElement.classList.toggle('rev',pct>92); }
       const dv=$('drsVal'); if(dv){ dv.textContent=S.drs?'OPEN':'CLOSED'; dv.classList.toggle('closed',!S.drs); }
+      paintCockpit();
+    }
+
+    function paintCockpit(){
+      const throttle=Math.max(0,Math.min(100,Math.round((S.speed-70)/2.45)));
+      const steer=Math.round(Math.sin(S.phase*1.9)*7-3);
+      const bias=(55+Math.sin(S.phase*.55)*.7).toFixed(1);
+      const brake=$('brakeBias'), throttleValue=$('throttleVal'), steerValue=$('steerVal');
+      if(brake) brake.textContent=bias;
+      if(throttleValue) throttleValue.textContent=String(throttle).padStart(2,'0');
+      if(steerValue) steerValue.textContent=(steer<0?'−':'+' )+String(Math.abs(steer)).padStart(2,'0');
+      const brakeBar=$('brakeBar'), throttleBar=$('throttleBar'), steerBar=$('steerBar');
+      if(brakeBar) brakeBar.style.width=bias+'%';
+      if(throttleBar) throttleBar.style.width=throttle+'%';
+      if(steerBar) steerBar.style.width=Math.min(100,Math.abs(steer)*8+18)+'%';
+      const wheel=$('steeringWheel'); if(wheel) wheel.style.transform=`rotate(${steer}deg)`;
+      const leds=document.querySelectorAll('#wheelLeds i');
+      leds.forEach((led,i)=>led.classList.toggle('on',S.rpm>9000+i*700));
     }
 
     function completeSector(i){
@@ -759,6 +825,10 @@
     }
 
     function renderStatic(){
+      const cockpitCopy=COCKPIT_COPY[CJCData.lang()]||COCKPIT_COPY.en;
+      document.title=(CJCData.lang()==='zh'?'F1 赛车遥测':'F1 Telemetry')+' · '+t(P.name);
+      const cockpit=$('driverCockpit'); if(cockpit) cockpit.setAttribute('aria-label',cockpitCopy.aria);
+      [['cockpitTitle','title'],['cockpitMode','mode'],['brakeLabel','brake'],['brakeUnit','brakeUnit'],['throttleLabel','throttle'],['throttleUnit','throttleUnit'],['steeringLabel','steering'],['steeringUnit','steeringUnit'],['fuelLabel','fuel'],['fuelUnit','fuelUnit'],['fuelMode','push']].forEach(([id,key])=>{ const node=$(id); if(node) node.textContent=cockpitCopy[key]; });
       document.getElementById('nav').innerHTML = [
         ['about','nav_about'],['education','education_bg'],['skills','core_tech'],['courses','nav_courses'],
         ['experience','nav_internship'],['projects','nav_portfolio'],['articles','nav_article'],

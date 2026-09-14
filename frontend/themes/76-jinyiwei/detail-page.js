@@ -8,7 +8,8 @@
   var copy = {
     en: {
       skip: "Skip to classified record",
-      bureau: "Northern Bureau",
+      bureau: "Northern Bureau", articleTitle: "Report · Jinyiwei Archive", projectTitle: "Case · Jinyiwei Archive",
+      email: "Email", phone: "Phone", wechat: "WeChat", github: "GitHub",
       profile: "Subject",
       training: "Training",
       experience: "Field Work",
@@ -39,7 +40,8 @@
     },
     zh: {
       skip: "跳至密档正文",
-      bureau: "北镇抚司",
+      bureau: "北镇抚司", articleTitle: "密报 · 锦衣卫档案", projectTitle: "案卷 · 锦衣卫档案",
+      email: "电子信函", phone: "电话", wechat: "微信", github: "GitHub",
       profile: "人员卷宗",
       training: "校阅录",
       experience: "差遣实录",
@@ -75,6 +77,8 @@
 
   function renderChrome() {
     var c = L();
+    document.documentElement.lang = CJCData.lang() === "zh" ? "zh-CN" : "en";
+    document.title = (kind === "project" ? c.projectTitle : c.articleTitle) + " · " + CJCData.t(CJCData.profile.name);
     document.querySelectorAll("[data-detail-copy]").forEach(function (node) {
       node.textContent = c[node.dataset.detailCopy] || "";
     });
@@ -89,10 +93,10 @@
     var phone = document.getElementById("detail-phone");
     var github = document.getElementById("detail-github");
     var wechat = document.getElementById("detail-wechat");
-    if (email) { email.href = "mailto:" + P.contact.email; email.textContent = "Email · " + P.contact.email; }
-    if (phone) { phone.href = P.contact.phoneHref; phone.textContent = "Phone · " + P.contact.phone; }
-    if (github) { github.href = P.contact.github; github.textContent = "GitHub · @" + P.contact.githubUser; }
-    if (wechat) { wechat.href = P.contact.wechatQrPage; wechat.textContent = "WeChat · QR"; }
+    if (email) { email.href = "mailto:" + P.contact.email; email.textContent = c.email + " · " + P.contact.email; }
+    if (phone) { phone.href = P.contact.phoneHref; phone.textContent = c.phone + " · " + P.contact.phone; }
+    if (github) { github.href = P.contact.github; github.textContent = c.github + " · @" + P.contact.githubUser; }
+    if (wechat) { wechat.href = P.contact.wechatQrPage; wechat.textContent = c.wechat + " · QR"; }
     document.getElementById("detail-kicker").textContent = kind === "project" ? c.projectKicker : c.articleKicker;
     document.getElementById("detail-place").textContent = kind === "project" ? c.projectPlace : c.articlePlace;
     var back = mount.querySelector(".cjc-d-back");

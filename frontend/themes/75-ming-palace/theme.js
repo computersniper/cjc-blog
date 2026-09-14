@@ -54,7 +54,7 @@
       send: "Dispatch correspondence",
       sending: "Dispatching…",
       sent: "Your correspondence has been received.",
-      skip: "Skip to content"
+      skip: "Skip to content", pageTitle: "Ming Palace", github: "GitHub", emailLabel: "Email", phoneLabel: "Phone", wechatLabel: "WeChat", archiveLabel: "ARCHIVE"
     },
     zh: {
       nav: [["about", "奉天殿"], ["studies", "文华阁"], ["projects", "造物"], ["articles", "奏议"], ["contact", "通函"]],
@@ -99,7 +99,7 @@
       send: "发出通函",
       sending: "正在递送……",
       sent: "来函已经收讫。",
-      skip: "跳至正文"
+      skip: "跳至正文", pageTitle: "明代宫廷", github: "GitHub", emailLabel: "电子信函", phoneLabel: "电话", wechatLabel: "微信", archiveLabel: "档案"
     }
   };
 
@@ -113,7 +113,7 @@
     var x = L();
     var photo = (P.photos && P.photos.campus) || P.avatar;
   return '<section class="hero" id="top"><div class="palace-scene"><img class="palace-photo" src="/themes/75-ming-palace/assets/hall-of-supreme-harmony-courtyard-source.jpg" alt="' + esc(x.palaceAlt) + '" fetchpriority="high" decoding="async"><div class="palace-vignette" aria-hidden="true"></div><div class="scene-eaves" aria-hidden="true"><i></i><i></i></div><div class="gate-frame" aria-hidden="true"><i></i><i></i></div><div class="axis-forecourt" aria-hidden="true"></div>' +
-      '<div class="hero-panel"><div class="eyebrow">' + esc(x.court) + '</div><h1>' + esc(t(P.name)) + '</h1><p class="hero-role">' + esc(t(P.role)) + '</p><p>' + esc(t(P.greeting)) + ' · ' + esc(t(P.headline)) + '</p><p class="hero-intro">' + esc(x.intro) + '</p><div class="hero-actions"><button class="button primary" type="button" data-open-palace aria-pressed="false">' + esc(x.palace) + '</button><a class="button" href="' + esc(t(P.cv)) + '" download><i class="fa fa-file-text-o" aria-hidden="true"></i>' + esc(x.cv) + '</a><a class="button" href="' + esc(P.contact.github) + '" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i>GitHub</a></div></div>' +
+      '<div class="hero-panel"><div class="eyebrow">' + esc(x.court) + '</div><h1>' + esc(t(P.name)) + '</h1><p class="hero-role">' + esc(t(P.role)) + '</p><p>' + esc(t(P.greeting)) + ' · ' + esc(t(P.headline)) + '</p><p class="hero-intro">' + esc(x.intro) + '</p><div class="hero-actions"><button class="button primary" type="button" data-open-palace aria-pressed="false">' + esc(x.palace) + '</button><a class="button" href="' + esc(t(P.cv)) + '" download><i class="fa fa-file-text-o" aria-hidden="true"></i>' + esc(x.cv) + '</a><a class="button" href="' + esc(P.contact.github) + '" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i>' + esc(x.github) + '</a></div></div>' +
     '<aside class="identity-folio"><div class="folio-kicker">' + esc(x.folio) + ' · 075</div><img src="' + esc(photo) + '" alt="Portrait of ' + esc(t(P.name)) + '" decoding="async"><div><strong>' + esc(t(P.name)) + '</strong><span>' + esc(t(P.role)) + ' · ' + esc(t(P.location)) + '</span><p>' + esc(x.folioNote) + '</p></div></aside><div class="axis-caption"><span>午门</span><b>中轴 / CENTRAL AXIS</b><span>丹陛</span></div></div></section>';
   }
 
@@ -137,7 +137,7 @@
 
   function experience() {
     var item = P.experience[0];
-    return '<section class="content experience"><div class="frame">' + head("experience", 3) + '<div class="experience-card reveal"><div class="experience-stamp">' + esc(item.period) + '<br>' + esc(t(item.company)) + '</div><div class="experience-body"><h3>' + esc(t(item.role)) + '</h3><p>' + esc(t(item.summary)) + '</p><ul class="decree-list">' + item.bullets.map(function (b) { return '<li>' + esc(t(b)) + '</li>'; }).join("") + '</ul></div></div></div></section>';
+    return '<section class="content experience" id="experience"><div class="frame">' + head("experience", 3) + '<div class="experience-card reveal"><div class="experience-stamp">' + esc(item.period) + '<br>' + esc(t(item.company)) + '</div><div class="experience-body"><h3>' + esc(t(item.role)) + '</h3><p>' + esc(t(item.summary)) + '</p><ul class="decree-list">' + item.bullets.map(function (b) { return '<li>' + esc(t(b)) + '</li>'; }).join("") + '</ul></div></div></div></section>';
   }
 
   function projectSection() {
@@ -163,7 +163,7 @@
     else if (!visible.length) body = '<p class="loading">' + esc(t(P.ui.no_articles)) + '</p>';
     else body = '<div class="article-grid reveal">' + visible.map(function (a) {
       var cover = a.cover_image || "/index_page/img/blogs/1.jpg";
-      return '<a class="article-card" href="' + esc(a.detailHref) + '"><img loading="lazy" decoding="async" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || "ARCHIVE") + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
+      return '<a class="article-card" href="' + esc(a.detailHref) + '"><img loading="lazy" decoding="async" src="' + esc(cover) + '" onerror="this.onerror=null;this.src=\'/index_page/img/blogs/1.jpg\'" alt="' + esc(a.localTitle()) + '"><div class="card-copy"><div class="card-meta">' + esc(a.category || x.archiveLabel) + ' · ' + esc(a.dateText()) + '</div><h3>' + esc(a.localTitle()) + '</h3><p>' + esc(a.localSummary() || "") + '</p><span class="card-link">' + esc(x.read) + ' →</span></div></a>';
     }).join("") + '</div>';
     return '<section class="content" id="articles"><div class="frame">' + head("articles", 5) + '<div class="filters" aria-label="Article categories">' + P.articleFilters.map(function (f) { return '<button type="button" data-filter="' + esc(f.key) + '" aria-pressed="' + String(filterKey === f.key) + '" class="' + (filterKey === f.key ? "active" : "") + '">' + esc(t(f.label)) + '</button>'; }).join("") + '</div>' + body + '</div></section>';
   }
@@ -176,12 +176,13 @@
 
   function contact() {
     var x = L();
-    return '<section class="content contact-section" id="contact"><div class="frame">' + head("contact", 7) + '<div class="contact-grid reveal"><div class="contact-links"><a href="mailto:' + esc(P.contact.email) + '"><span>Email</span><span>' + esc(P.contact.email) + '</span></a><a href="' + esc(P.contact.phoneHref) + '"><span>Phone</span><span>' + esc(P.contact.phone) + '</span></a><a href="' + esc(P.contact.github) + '" target="_blank" rel="noopener"><span>GitHub</span><span>@' + esc(P.contact.githubUser) + '</span></a><a href="' + esc(P.contact.wechatQrPage) + '"><span>WeChat</span><span>QR</span></a></div><form class="contact-form" id="contact-form"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><label for="contact-name">' + esc(x.name) + '</label><input id="contact-name" name="name" autocomplete="name" required><label for="contact-email">' + esc(x.email) + '</label><input id="contact-email" type="email" name="email" autocomplete="email" required><label for="contact-message">' + esc(x.message) + '</label><textarea id="contact-message" name="message" required></textarea><button class="button primary" type="submit">' + esc(x.send) + '</button><p class="status" id="status" role="status" aria-live="polite"></p></form></div></div></section>';
+    return '<section class="content contact-section" id="contact"><div class="frame">' + head("contact", 7) + '<div class="contact-grid reveal"><div class="contact-links"><a href="mailto:' + esc(P.contact.email) + '"><span>' + esc(x.emailLabel) + '</span><span>' + esc(P.contact.email) + '</span></a><a href="' + esc(P.contact.phoneHref) + '"><span>' + esc(x.phoneLabel) + '</span><span>' + esc(P.contact.phone) + '</span></a><a href="' + esc(P.contact.github) + '" target="_blank" rel="noopener"><span>' + esc(x.github) + '</span><span>@' + esc(P.contact.githubUser) + '</span></a><a href="' + esc(P.contact.wechatQrPage) + '"><span>' + esc(x.wechatLabel) + '</span><span>' + esc(x.archiveLabel) + '</span></a></div><form class="contact-form" id="contact-form"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><label for="contact-name">' + esc(x.name) + '</label><input id="contact-name" name="name" autocomplete="name" required><label for="contact-email">' + esc(x.email) + '</label><input id="contact-email" type="email" name="email" autocomplete="email" required><label for="contact-message">' + esc(x.message) + '</label><textarea id="contact-message" name="message" required></textarea><button class="button primary" type="submit">' + esc(x.send) + '</button><p class="status" id="status" role="status" aria-live="polite"></p></form></div></div></section>';
   }
 
   function render() {
     var x = L();
-    document.title = "Ming Palace · " + t(P.name);
+    document.documentElement.lang = CJCData.lang() === "zh" ? "zh-CN" : "en";
+    document.title = L().pageTitle + " · " + t(P.name);
     document.querySelector(".skip").textContent = x.skip;
     document.getElementById("brand").textContent = P.brand;
     document.getElementById("nav").innerHTML = x.nav.map(function (item) { return '<a href="#' + esc(item[0]) + '">' + esc(item[1]) + '</a>'; }).join("");
@@ -190,7 +191,7 @@
     document.getElementById("main").innerHTML = hero() + about() + studies() + experience() + projectSection() + articleSection() + certificates() + contact();
     document.getElementById("footer-brand").textContent = P.brand + " · 75";
     document.getElementById("footer-note").textContent = t(P.ui.footer_desc);
-    document.getElementById("footer-links").innerHTML = '<a href="' + esc(P.contact.github) + '">GitHub</a><a href="mailto:' + esc(P.contact.email) + '">Email</a><a href="/themes/75-ming-palace/ASSET_LICENSE.md">' + esc(x.credits) + '</a><a href="/admin.html">' + esc(t(P.ui.admin_panel)) + '</a><a href="' + esc(P.icpUrl) + '">' + esc(P.icp) + '</a>';
+    document.getElementById("footer-links").innerHTML = '<a href="' + esc(P.contact.github) + '">' + esc(x.github) + '</a><a href="mailto:' + esc(P.contact.email) + '">' + esc(x.emailLabel) + '</a><a href="/themes/75-ming-palace/ASSET_LICENSE.md">' + esc(x.credits) + '</a><a href="/admin.html">' + esc(t(P.ui.admin_panel)) + '</a><a href="' + esc(P.icpUrl) + '">' + esc(P.icp) + '</a>';
     wire();
     observe();
     if (window.CJCReactBits) CJCReactBits.applyThemePreset(window.THEME_ID, document.getElementById("main"));

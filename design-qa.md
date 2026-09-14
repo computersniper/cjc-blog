@@ -134,3 +134,16 @@ Date: 2026-08-10
 - Parsed the gallery inline script, completed the Vite production build, and passed targeted `git diff --check`.
 
 final result: passed
+
+## Cockpit and historical-theme continuation audit
+
+Date: 2026-09-14
+
+- Added a driver-cockpit telemetry module to `54-f1`: steering wheel, shift lights, brake bias, throttle, steering angle, and fuel strategy now respond to the existing race simulation while retaining the two licensed trackside photographs.
+- Localized the new cockpit readouts and kept continuously changing telemetry out of live regions so assistive technology is not repeatedly interrupted.
+- Completed bilingual chrome and anchor repair across the Ming Palace and Jinyiwei home/detail pages, including the missing Palace experience target, localized page titles, contact channels, archive labels, and correct detail navigation.
+- Re-audited the existing 77-theme Spectrum Orbit: card/spectrum mode switching, pointer, drag, wheel, touch, arrow-key exploration, named selection feedback, and 44 px controls remain functional.
+- Ran 30 browser cases covering the gallery, four themed homepages in English and Chinese at 1440 x 900, 390 x 844, and 844 x 390, plus four historical detail routes. All passed with five projects, ten articles, no horizontal overflow, no broken images, and no JavaScript errors under reduced-motion mode.
+- Rechecked the production build, JavaScript syntax, and `git diff --check`; all passed.
+
+final result: passed

@@ -7,7 +7,8 @@
   var copy = {
     en: {
       skip: "Skip to record",
-      brand: "CaiJiechao · Vermilion Archive",
+      brand: "CaiJiechao · Vermilion Archive", articleTitle: "Memorial · Ming Palace", projectTitle: "Work · Ming Palace",
+      home: "Home", about: "About", education: "Education", experience: "Experience", certificates: "Certificates", email: "Email", phone: "Phone", wechat: "WeChat", github: "GitHub",
       works: "Hall of Works",
       memorials: "Memorial Archive",
       contact: "Correspondence",
@@ -24,7 +25,8 @@
     },
     zh: {
       skip: "跳至卷宗正文",
-      brand: "CaiJiechao · 朱明宫藏",
+      brand: "CaiJiechao · 朱明宫藏", articleTitle: "奏议 · 明代宫廷", projectTitle: "造物 · 明代宫廷",
+      home: "首页", about: "奉天殿", education: "文华阁", experience: "履职诰录", certificates: "功册宝匣", email: "电子信函", phone: "电话", wechat: "微信", github: "GitHub",
       works: "造物之殿",
       memorials: "奏议文库",
       contact: "通函之殿",
@@ -46,6 +48,8 @@
 
   function renderChrome() {
     var c = L();
+    document.documentElement.lang = CJCData.lang() === "zh" ? "zh-CN" : "en";
+    document.title = (kind === "project" ? c.projectTitle : c.articleTitle) + " · " + CJCData.t(CJCData.profile.name);
     document.querySelectorAll("[data-detail-copy]").forEach(function (node) {
       var key = node.dataset.detailCopy;
       node.textContent = c[key] || "";
