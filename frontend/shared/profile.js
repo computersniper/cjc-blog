@@ -17,7 +17,7 @@ window.CJC_PROFILE = {
   // --- Brand / site meta -----------------------------------------------------
   brand: "CaiJiechao",
   favicon: "/index_page/img/favicon.ico",
-  icp: "粤ICP备2024277938号",
+  icp: "粤ICP备2024277938号-1",
   icpUrl: "https://beian.miit.gov.cn/",
 
   // --- Identity --------------------------------------------------------------
