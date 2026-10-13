@@ -1,0 +1,35 @@
+/* Extend the classic homepage's blue accent, white cards and section headings. */
+.learning-sites { scroll-margin-top: 85px; }
+.learning-sites .title p { letter-spacing: .5px; line-height: 1.8; font-size: 14px; }
+.learning-sites-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.learning-site-card.box { max-width: none; margin: 0; display: flex; flex-direction: column; align-items: center; color: #01143e; }
+.learning-site-card h2 { font-size: 18px; line-height: 1.5; font-weight: 600; margin: 0 0 10px; }
+.learning-site-card p { margin-bottom: 22px; }
+.learning-site-link { color: #416bbd; font-size: 14px; font-weight: 600; margin-top: auto; }
+.learning-site-card:hover, .learning-site-card:focus-visible { border-color: #5f88e0; }
+.learning-site-card:focus-visible, .learning-sites-nav summary:focus-visible { outline: 2px solid #5f88e0; outline-offset: 4px; }
+.learning-site-badge { position: absolute; top: 16px; right: 16px; padding: 4px 9px; background: #ecf1fa; color: #416bbd; font-size: 11px; border-radius: 4px; }
+.navbar > ul > li { margin-left: 20px; }
+.learning-sites-nav details { display: inline-block; position: relative; }
+.learning-sites-nav summary { cursor: pointer; list-style: none; color: rgb(236, 241, 250); font-size: 15px; font-weight: 600; line-height: 72px; }
+.learning-sites-nav summary::-webkit-details-marker { display: none; }
+.fixed .learning-sites-nav summary { color: #000; }
+.learning-sites-dropdown { position: absolute; top: 62px; left: 0; min-width: 245px; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 8px 24px rgb(1 20 62 / 12%); }
+.navbar .learning-sites-dropdown a { display: block; line-height: 1.5; padding: 10px 12px; color: #01143e; font-size: 13px; white-space: normal; }
+.navbar .learning-sites-dropdown a::before { content: none; }
+.navbar .learning-sites-dropdown a:hover, .navbar .learning-sites-dropdown a:focus-visible { background: #ecf1fa; color: #416bbd; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  header .row { justify-content: center; }
+  .navbar > ul > li { margin-left: 14px; }
+  .navbar > ul > li > a, .learning-sites-nav summary { font-size: 13px; line-height: 50px; }
+  .learning-sites-dropdown { top: 45px; }
+}
+@media (max-width: 900px) { .learning-sites-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 767px) {
+  .learning-sites-grid { grid-template-columns: 1fr; gap: 18px; }
+  .navbar > ul > li { margin-left: 0; }
+  .learning-sites-nav details { display: block; }
+  .learning-sites-nav summary { color: #01143e; line-height: 42px; }
+  .learning-sites-dropdown { position: static; min-width: 0; box-shadow: none; margin-bottom: 8px; }
+  .navbar.show { max-height: calc(100dvh - 60px); overflow-y: auto; }
+}

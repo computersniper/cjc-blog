@@ -387,17 +387,26 @@
     css.textContent =
       "#cjc-switcher{position:fixed;top:16px;right:16px;z-index:99999;display:flex;gap:8px;" +
       "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}" +
-      "#cjc-switcher button{cursor:pointer;border:1px solid rgba(128,128,128,.35);" +
+      "#cjc-switcher button,#cjc-switcher a{cursor:pointer;border:1px solid rgba(128,128,128,.35);" +
       "background:rgba(255,255,255,.72);color:#111;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);" +
       "border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;letter-spacing:.01em;" +
       "line-height:1;display:inline-flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(0,0,0,.12);" +
       "transition:transform .15s ease, box-shadow .15s ease;}" +
-      "#cjc-switcher button:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.18);}" +
+      "#cjc-switcher a{text-decoration:none;}#cjc-switcher button:hover,#cjc-switcher a:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.18);}" +
       "#cjc-switcher .cjc-theme-btn{background:" + accent + ";color:#fff;border-color:transparent;}" +
-      "@media (prefers-color-scheme: dark){#cjc-switcher button{background:rgba(20,20,24,.72);color:#eee;border-color:rgba(255,255,255,.16);}" +
+      "@media (prefers-color-scheme: dark){#cjc-switcher button,#cjc-switcher a{background:rgba(20,20,24,.72);color:#eee;border-color:rgba(255,255,255,.16);}" +
       "#cjc-switcher .cjc-theme-btn{color:#fff;}}" +
-      "@media (max-width:600px){#cjc-switcher{top:10px;right:10px;}#cjc-switcher button{padding:7px 11px;font-size:12px;}}";
+      "@media (max-width:600px){#cjc-switcher{top:10px;right:10px;}#cjc-switcher button,#cjc-switcher a{padding:7px 11px;font-size:12px;}" +
+      "#cjc-switcher .cjc-sites-link{position:absolute;right:0;top:calc(100% + 8px);white-space:nowrap;}}";
     document.head.appendChild(css);
+
+    var sitesLink = document.createElement("a");
+    sitesLink.className = "cjc-sites-link";
+    sitesLink.href = "/?view=classic#learning-sites";
+    var updateSitesLabel = function () { sitesLink.textContent = lang() === "zh" ? "学习站点" : "Learning Sites"; };
+    updateSitesLabel();
+    onLang(updateSitesLabel);
+    wrap.appendChild(sitesLink);
 
     if (showLang) {
       var langBtn = document.createElement("button");
