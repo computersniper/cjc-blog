@@ -14,7 +14,7 @@
 .learning-sites-nav summary { cursor: pointer; list-style: none; color: rgb(236, 241, 250); font-size: 15px; font-weight: 600; line-height: 72px; }
 .learning-sites-nav summary::-webkit-details-marker { display: none; }
 .fixed .learning-sites-nav summary { color: #000; }
-.learning-sites-dropdown { position: absolute; top: 62px; left: 0; min-width: 245px; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 8px 24px rgb(1 20 62 / 12%); }
+.learning-sites-dropdown { position: absolute; top: 62px; right: 0; min-width: 245px; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 8px 24px rgb(1 20 62 / 12%); }
 .navbar .learning-sites-dropdown a { display: block; line-height: 1.5; padding: 10px 12px; color: #01143e; font-size: 13px; white-space: normal; }
 .navbar .learning-sites-dropdown a::before { content: none; }
 .navbar .learning-sites-dropdown a:hover, .navbar .learning-sites-dropdown a:focus-visible { background: #ecf1fa; color: #416bbd; }

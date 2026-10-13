@@ -45,7 +45,7 @@ for item in manifest:
     path=root/'frontend'/item['name']
     assert digest(backup/'incoming'/item['name'])==item['hash'], item['name']
     if item['expected'] is None:assert not path.exists(), 'New file already exists: '+str(path)
-    else:assert path.is_file() and digest(path) in item['expected'], 'Production changed since baseline: '+str(path)
+    else:assert path.is_file() and (digest(path) in item['expected'] or hashlib.sha256(path.read_bytes().replace(bytes([13,10]),bytes([10]))).hexdigest() in item['expected']), 'Production changed since baseline: '+str(path)
 for item in manifest:
     path=root/'frontend'/item['name']
     if path.exists():

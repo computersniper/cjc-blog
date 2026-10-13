@@ -254,14 +254,6 @@
                   <li><a href="#home" class="active" data-i18n="nav_home">Home</a></li>
                   <li><a href="#about" data-i18n="nav_about">About</a></li>
                   <li><a href="#services" data-i18n="nav_courses">Courses</a></li>
-                  <li class="learning-sites-nav"><details id="learning-sites-menu"><summary><span data-i18n="nav_sites">Learning Sites</span> <span aria-hidden="true">▾</span></summary><div class="learning-sites-dropdown">
-                     <a href="/llm-visualized/" data-i18n="site_llm">LLM Visualized</a>
-                     <a href="/llm-visualized/#/interview-library" data-i18n="site_interview">LLM Interview Library</a>
-                     <a href="/llm-visualized/#/coding-review" data-i18n="site_coding">Python Coding Review</a>
-                     <a href="/blackbox/" data-i18n="site_blackbox">Inside the Black Box</a>
-                     <a href="/accounting/" data-i18n="site_accounting">Accounting · Explained</a>
-                     <a href="#learning-sites" data-i18n="sites_view_all">Explore all learning sites →</a>
-                  </div></details></li>
                   <li><a href="#blog" data-i18n="nav_article">Article</a></li>
                   <li><a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a></li>
                   <li><a href="#certificate" data-i18n="nav_certificate">Certificates</a></li>
@@ -269,6 +261,13 @@
                   <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
                   <li><a href="/themes.html" id="theme-switch-btn" data-rb="magnet star-border" data-i18n="switch_theme" style="--rb-accent:#5f88e0;color:#5f88e0;font-weight:bold;">Themes</a></li>
                   <li><a href="javascript:void(0);" onclick="toggleLanguage()" id="lang-toggle-btn" style="color: #5f88e0; font-weight: bold;">中文</a></li>
+                  <li class="learning-sites-nav"><details id="learning-sites-menu"><summary><span data-i18n="nav_sites">Learning Sites</span> <span aria-hidden="true">▾</span></summary><div class="learning-sites-dropdown">
+                     <a href="/llm-visualized/" data-i18n="site_llm">LLM Visualized</a>
+                     <a href="/llm-visualized/#/interview-library" data-i18n="site_interview">LLM Interview Library</a>
+                     <a href="/llm-visualized/#/coding-review" data-i18n="site_coding">Python Coding Review</a>
+                     <a href="/blackbox/" data-i18n="site_blackbox">Inside the Black Box</a>
+                     <a href="#learning-sites" data-i18n="sites_view_all">Explore all learning sites →</a>
+                  </div></details></li>
                </ul>
             </div>
          </div>
@@ -298,48 +297,6 @@
                onclick="closeModal()">中文</a>
             <a class="modal-btn" href="./contact/caijiechao-cv-english.pdf" download="caijiechao-cv-english.pdf"
                onclick="closeModal()">English</a>
-         </div>
-      </div>
-   </section>
-   <section class="learning-sites services" id="learning-sites" aria-labelledby="learning-sites-title">
-      <div class="container">
-         <div class="row"><div class="title text-center">
-            <h1 id="learning-sites-title" data-i18n="sites_title">Learning Sites</h1>
-            <p data-i18n="sites_intro">Explore, understand, and practise — my learning tools in one place.</p>
-         </div></div>
-         <div class="learning-sites-grid">
-            <a class="box learning-site-card" href="/llm-visualized/" data-site="llm">
-               <div class="icon" aria-hidden="true"><i class="fa fa-cubes"></i></div>
-               <h2 data-i18n="site_llm">LLM Visualized</h2>
-               <p data-i18n="site_llm_desc">Interactive explanations of Transformer, attention, and language models, with course knowledge bases.</p>
-               <span class="learning-site-link" data-i18n="site_open">Explore the site →</span>
-            </a>
-            <a class="box learning-site-card" href="/llm-visualized/#/interview-library" data-site="interview">
-               <span class="learning-site-badge" data-i18n="site_new">New</span>
-               <div class="icon" aria-hidden="true"><i class="fa fa-book"></i></div>
-               <h2 data-i18n="site_interview">LLM Interview Library</h2>
-               <p data-i18n="site_interview_desc">Review LLM, Transformer, RAG, and fine-tuning topics. Search imported materials and read the original PDF pages.</p>
-               <span class="learning-site-link" data-i18n="site_interview_open">Browse interview materials →</span>
-            </a>
-            <a class="box learning-site-card" href="/llm-visualized/#/coding-review" data-site="coding">
-               <span class="learning-site-badge" data-i18n="site_new">New</span>
-               <div class="icon" aria-hidden="true"><i class="fa fa-code"></i></div>
-               <h2 data-i18n="site_coding">Python Coding Review</h2>
-               <p data-i18n="site_coding_desc">All 100 Hot100 problems, algorithm templates, and common Python operations. Switch between pseudocode and Python.</p>
-               <span class="learning-site-link" data-i18n="site_coding_open">Start coding review →</span>
-            </a>
-            <a class="box learning-site-card" href="/blackbox/" data-site="blackbox">
-               <div class="icon" aria-hidden="true"><i class="fa fa-search"></i></div>
-               <h2 data-i18n="site_blackbox">Inside the Black Box</h2>
-               <p data-i18n="site_blackbox_desc">Follow how a language model predicts each token, from input text to its next word.</p>
-               <span class="learning-site-link" data-i18n="site_open">Explore the site →</span>
-            </a>
-            <a class="box learning-site-card" href="/accounting/" data-site="accounting">
-               <div class="icon" aria-hidden="true"><i class="fa fa-calculator"></i></div>
-               <h2 data-i18n="site_accounting">Accounting · Explained</h2>
-               <p data-i18n="site_accounting_desc">Learn accounting through original course materials, clear explanations, and worked examples.</p>
-               <span class="learning-site-link" data-i18n="site_open">Explore the site →</span>
-            </a>
          </div>
       </div>
    </section>
@@ -687,6 +644,42 @@
                   <p id="contactStatus" style="margin-top: 12px; min-height: 24px;"></p>
                </form> 
             </div>
+         </div>
+      </div>
+   </section>
+   <section class="learning-sites services" id="learning-sites" aria-labelledby="learning-sites-title">
+      <div class="container">
+         <div class="row"><div class="title text-center">
+            <h1 id="learning-sites-title" data-i18n="sites_title">Learning Sites</h1>
+            <p data-i18n="sites_intro">Explore, understand, and practise — my learning tools in one place.</p>
+         </div></div>
+         <div class="learning-sites-grid">
+            <a class="box learning-site-card" href="/llm-visualized/" data-site="llm">
+               <div class="icon" aria-hidden="true"><i class="fa fa-cubes"></i></div>
+               <h2 data-i18n="site_llm">LLM Visualized</h2>
+               <p data-i18n="site_llm_desc">Interactive explanations of Transformer, attention, and language models, with course knowledge bases.</p>
+               <span class="learning-site-link" data-i18n="site_open">Explore the site →</span>
+            </a>
+            <a class="box learning-site-card" href="/llm-visualized/#/interview-library" data-site="interview">
+               <span class="learning-site-badge" data-i18n="site_new">New</span>
+               <div class="icon" aria-hidden="true"><i class="fa fa-book"></i></div>
+               <h2 data-i18n="site_interview">LLM Interview Library</h2>
+               <p data-i18n="site_interview_desc">Review LLM, Transformer, RAG, and fine-tuning topics. Search imported materials and read the original PDF pages.</p>
+               <span class="learning-site-link" data-i18n="site_interview_open">Browse interview materials →</span>
+            </a>
+            <a class="box learning-site-card" href="/llm-visualized/#/coding-review" data-site="coding">
+               <span class="learning-site-badge" data-i18n="site_new">New</span>
+               <div class="icon" aria-hidden="true"><i class="fa fa-code"></i></div>
+               <h2 data-i18n="site_coding">Python Coding Review</h2>
+               <p data-i18n="site_coding_desc">All 100 Hot100 problems, algorithm templates, and common Python operations. Switch between pseudocode and Python.</p>
+               <span class="learning-site-link" data-i18n="site_coding_open">Start coding review →</span>
+            </a>
+            <a class="box learning-site-card" href="/blackbox/" data-site="blackbox">
+               <div class="icon" aria-hidden="true"><i class="fa fa-search"></i></div>
+               <h2 data-i18n="site_blackbox">Inside the Black Box</h2>
+               <p data-i18n="site_blackbox_desc">Follow how a language model predicts each token, from input text to its next word.</p>
+               <span class="learning-site-link" data-i18n="site_open">Explore the site →</span>
+            </a>
          </div>
       </div>
    </section>
