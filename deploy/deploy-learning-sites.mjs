@@ -57,7 +57,7 @@ for item in manifest:
     path=root/'frontend'/item['name'];temp=path.with_name(path.name+'.homepage-next')
     shutil.copyfile(backup/'incoming'/item['name'],temp);os.chmod(temp,0o644);os.chown(temp,uid,gid);os.replace(temp,path)
 for item in manifest:assert digest(root/'frontend'/item['name'])==item['hash']
-marker.write_text('${commit}\n')
+marker.write_text('${commit}'+chr(10))
 report={'commit':'${commit}','backup':str(backup),'files':manifest,'verified':True}
 (backup/'deployment.json').write_text(json.dumps(report,indent=2))
 print(json.dumps(report,indent=2))
